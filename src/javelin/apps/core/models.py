@@ -72,7 +72,7 @@ class Alert(TimeStampedModel):
     pending_time = models.DateTimeField(null=True, blank=True)
     location_accuracy = models.FloatField(null=True, blank=True)
     location_address =\
-        models.CharField(max_length=255, null=True, blank=True)    
+        models.CharField(max_length=255, null=True, blank=True)
     location_altitude = models.FloatField(null=True, blank=True)
     location_latitude = models.FloatField(null=True, blank=True)
     location_longitude = models.FloatField(null=True, blank=True)
