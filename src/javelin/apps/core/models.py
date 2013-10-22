@@ -22,6 +22,7 @@ class Agency(TimeStampedModel):
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
+    alert_completed_message = models.TextField(null=True, blank=True)
 
     objects = models.Manager()
     geo = models.GeoManager()
@@ -31,6 +32,53 @@ class Agency(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+
+class Alert(TimeStampedModel):
+    STATUS_CHOICES = (
+        ('A', 'Accepted'),
+        ('C', 'Completed'),
+        ('D', 'Disarmed'),
+        ('N', 'New'),
+        ('P', 'Pending'),
+    )
+
+    ALERT_INITIATED_BY_CHOICES = (
+        ('C', 'Chat'),
+        ('E', 'Emergency'),
+        ('T', 'Timer'),
+    )
+
+    ALERT_CATEGORY = (
+        ('GE', 'General'),
+        ('ME', 'Medical'),
+        ('FI', 'Fire'),
+        ('AU', 'Auto'),
+        ('DR', 'Drugs/Alcohol'),
+        ('SA', 'Sexual Assault'),
+        ('RO', 'Robbery'),
+        ('SP', 'Suspicious Person'),
+    )
+
+    agency = models.ForeignKey('Agency')
+    agency_user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                    related_name="alert_agency_user")
+    agency_dispatcher =\
+        models.ForeignKey(settings.AUTH_USER_MODEL,
+                          related_name="alert_agency_dispatcher")
+    accepted_time = models.DateTimeField(null=True, blank=True)
+    completed_time = models.DateTimeField(null=True, blank=True)
+    disarmed_time = models.DateTimeField(null=True, blank=True)
+    pending_time = models.DateTimeField(null=True, blank=True)
+    location_accuracy = models.FloatField(null=True, blank=True)
+    location_address =\
+        models.CharField(max_length=255, null=True, blank=True)    
+    location_altitude = models.FloatField(null=True, blank=True)
+    location_latitude = models.FloatField(null=True, blank=True)
+    location_longitude = models.FloatField(null=True, blank=True)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    initiated_by = models.CharField(max_length=2,
+                                    choices=ALERT_INITIATED_BY_CHOICES)
 
 
 class AgencyUser(AbstractUser):
@@ -106,3 +154,9 @@ class UserProfile(models.Model):
     emergency_contact_relationship =\
         models.CharField(max_length=2, choices=RELATIONSHIP_CHOICES,
                          null=True, blank=True)
+
+
+class ChatMessage(TimeStampedModel):
+    alert = models.ForeignKey('Alert')
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL)
+    message = models.TextField()
