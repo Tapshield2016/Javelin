@@ -9,6 +9,8 @@ class Agency(models.Model):
     dispatcher_phone_number = models.CharField(max_length=24)
     dispatcher_secondary_phone_number = models.CharField(max_length=24,
                                                          null=True, blank=True)
+    dispatcher_schedule_start = models.DateTimeField(null=True, blank=True)
+    dispatcher_schedule_end = models.DateTimeField(null=True, blank=True)
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
