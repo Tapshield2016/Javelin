@@ -6,7 +6,9 @@ from django.contrib.gis.db import models
 class Agency(models.Model):
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
-    dispatcher_phone_number = models.CharField(max_length=24)    
+    dispatcher_phone_number = models.CharField(max_length=24)
+    dispatcher_secondary_phone_number = models.CharField(max_length=24,
+                                                         null=True, blank=True)
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
