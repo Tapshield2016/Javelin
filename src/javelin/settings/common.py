@@ -105,6 +105,9 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.gis',
+
+    'core',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
@@ -137,3 +140,5 @@ LOGGING = {
         },
     }
 }
+
+AUTH_USER_MODEL = 'core.AgencyUser'
