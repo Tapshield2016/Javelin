@@ -81,6 +81,12 @@ class Alert(TimeStampedModel):
                                     choices=ALERT_INITIATED_BY_CHOICES)
 
 
+class MassAlert(TimeStampedModel):
+    agency = models.ForeignKey('Agency')
+    agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
+    message = models.TextField()
+
+
 class AgencyUser(AbstractUser):
     agency = models.ForeignKey('Agency', null=True, blank=True)
     phone_number = models.CharField(max_length=24)
