@@ -3,7 +3,15 @@ from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 
 
-class Agency(models.Model):
+class TimeStampedModel(models.Model):
+    creation_date = models.DateTimeField(auto_now_add=True)
+    last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Agency(TimeStampedModel):
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
     dispatcher_phone_number = models.CharField(max_length=24)
