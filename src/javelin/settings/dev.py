@@ -12,3 +12,7 @@ DATABASES = {
         'PORT': '',
     }
 }
+
+INSTALLED_APPS += (
+    'devserver',
+)
