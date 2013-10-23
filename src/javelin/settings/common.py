@@ -145,3 +145,9 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'core.AgencyUser'
+
+# django-rest-framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAdminUser',),
+    'PAGINATE_BY': 20,
+}
