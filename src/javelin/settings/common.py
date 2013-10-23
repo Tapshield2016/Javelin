@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
 
+    'rest_framework',
     'south',
 
     'core',
