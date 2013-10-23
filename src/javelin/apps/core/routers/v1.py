@@ -1,7 +1,8 @@
 from rest_framework import routers
-from core.views import (UserViewSet, GroupViewSet, AgencyViewSet, AlertViewSet,
-                        ChatMessageViewSet, MassAlertViewSet,
-                        UserProfileViewSet)
+
+from core.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
+                              AlertViewSet, ChatMessageViewSet,
+                              MassAlertViewSet, UserProfileViewSet)
 
 
 router_v1 = routers.DefaultRouter()
