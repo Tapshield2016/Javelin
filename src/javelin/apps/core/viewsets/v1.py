@@ -15,7 +15,8 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.prefetch_related('groups').all()
+    queryset = User.objects.select_related('agency')\
+        .prefetch_related('groups').all()
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
@@ -31,21 +32,21 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
 
 class AlertViewSet(viewsets.ModelViewSet):
-    queryset = Alert.objects.all()
+    queryset = Alert.objects.select_related().all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
 
 
 class ChatMessageViewSet(viewsets.ModelViewSet):
-    queryset = ChatMessage.objects.all()
+    queryset = ChatMessage.objects.select_related().all()
     serializer_class = ChatMessageSerializer
     filter_fields = ('alert', 'sender', 'creation_date', 'last_modified',
                      'sender__agency',)
 
 
 class MassAlertViewSet(viewsets.ModelViewSet):
-    queryset = MassAlert.objects.all()
+    queryset = MassAlert.objects.select_related().all()
     serializer_class = MassAlertSerializer
     filter_fields = ('agency', 'agency_dispatcher',)
 
