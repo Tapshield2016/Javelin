@@ -18,6 +18,10 @@ class TimeStampedModel(models.Model):
 class Agency(TimeStampedModel):
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
+    agency_point_of_contact =\
+        models.ForeignKey(settings.AUTH_USER_MODEL,
+                          related_name='agency_point_of_contact',
+                          null=True, blank=True)
     dispatcher_phone_number = models.CharField(max_length=24)
     dispatcher_secondary_phone_number = models.CharField(max_length=24,
                                                          null=True, blank=True)

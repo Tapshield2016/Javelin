@@ -27,7 +27,7 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.all()
+    queryset = Agency.objects.select_related('agency_point_of_contact').all()
     serializer_class = AgencySerializer
 
 
