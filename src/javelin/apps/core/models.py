@@ -98,6 +98,7 @@ class Alert(TimeStampedModel):
             except UserProfile.DoesNotExist:
                 pass
 
+
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
