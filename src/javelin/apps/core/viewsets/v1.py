@@ -14,7 +14,7 @@ User = get_user_model()
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
+    queryset = User.objects.prefetch_related('groups').all()
     serializer_class = UserSerializer
 
 
