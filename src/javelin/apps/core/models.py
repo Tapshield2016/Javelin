@@ -99,6 +99,9 @@ class MassAlert(TimeStampedModel):
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
 
+    class Meta:
+        ordering = ['-creation_date']
+
 
 class AgencyUser(AbstractUser):
     agency = models.ForeignKey('Agency', null=True, blank=True)
@@ -179,6 +182,9 @@ class ChatMessage(TimeStampedModel):
     alert = models.ForeignKey('Alert')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
+
+    class Meta:
+        ordering = ['creation_date']
 
 
 @receiver(pre_save, sender=AgencyUser)
