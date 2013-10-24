@@ -176,3 +176,10 @@ class ChatMessage(TimeStampedModel):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(post_save, sender=AgencyUser)
+def verify_email_address(sender, instance=None, created=False, **kwargs):
+    if created:
+        # We'll want to fire off the verification process here
+        pass
