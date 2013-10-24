@@ -85,6 +85,14 @@ class Alert(TimeStampedModel):
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES)
 
+    def save(self, *args, **kwargs):
+        super(Alert, self).save(*args, **kwargs)
+        if self.status == 'C':
+            try:
+                profile = self.agency_user.get_profile()
+                profile.delete()
+            except UserProfile.DoesNotExist:
+                pass
 
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')

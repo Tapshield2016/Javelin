@@ -146,6 +146,7 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'core.AgencyUser'
+AUTH_PROFILE_MODULE = 'core.UserProfile'
 
 # django-rest-framework
 REST_FRAMEWORK = {
