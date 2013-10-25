@@ -3,8 +3,6 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
-from core.routers.v1 import router_v1
-
 
 urlpatterns = patterns('',
     url(r'^admin/', include(admin.site.urls)),
@@ -12,5 +10,5 @@ urlpatterns = patterns('',
                                namespace='rest_framework')),
     url(r'^api/retrieve-token/$',
         'rest_framework.authtoken.views.obtain_auth_token'),
-    url(r'^api/v1/', include(router_v1.urls)),
+    url(r'^api/', include('core.urls')),
 )
