@@ -182,6 +182,8 @@ class UserProfile(models.Model):
     emergency_contact_relationship =\
         models.CharField(max_length=2, choices=RELATIONSHIP_CHOICES,
                          null=True, blank=True)
+    profile_image = models.ImageField(upload_to='images/profiles',
+                                      null=True, blank=True)
 
 
 class ChatMessage(TimeStampedModel):
