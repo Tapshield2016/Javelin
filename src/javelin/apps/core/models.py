@@ -114,6 +114,7 @@ class AgencyUser(AbstractUser):
     disarm_code = models.CharField(max_length=10)
     email_verified = models.BooleanField(default=False)
     phone_number_verified = models.BooleanField(default=False)
+    device_token = models.CharField(max_length=255, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
