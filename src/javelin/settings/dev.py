@@ -16,3 +16,9 @@ DATABASES = {
 INSTALLED_APPS += (
     'devserver',
 )
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'beathan@gmail.com'
+EMAIL_HOST_PASSWORD = 'blryunthuimaefkw'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

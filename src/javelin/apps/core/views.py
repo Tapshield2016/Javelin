@@ -1,5 +1,8 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.sites.models import get_current_site
+
+from registration.models import RegistrationProfile
 
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
@@ -10,18 +13,13 @@ from serializers.v1 import UserSerializer
 
 @api_view(['POST'])
 def register_user(request):
-    VALID_USER_FIELDS = [f.name for f in get_user_model()._meta.fields]
-    DEFAULTS = {
-        # we could provide field defaults here if needed...
-    }
-
     serialized = UserSerializer(data=request.DATA)
     if serialized.is_valid():
-        user_data = {field: data for (field, data) in request.DATA.items()\
-                         if field in VALID_USER_FIELDS}
-        user_data.update(DEFAULTS)
-        user = get_user_model().objects.create_user(
-            **user_data
+        user = RegistrationProfile.objects.create_inactive_user(
+            serialized.init_data['email'],
+            serialized.init_data['username'],
+            serialized.init_data['password'],
+            get_current_site(request),
         )
         user_group = Group.objects.get(name='Users')
         user.groups.add(user_group)

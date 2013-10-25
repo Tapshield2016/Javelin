@@ -192,20 +192,7 @@ class ChatMessage(TimeStampedModel):
         ordering = ['creation_date']
 
 
-@receiver(pre_save, sender=AgencyUser)
-def mark_new_user_inactive(sender, instance=None, *args, **kwargs):
-    if instance.pk is None:
-        instance.is_active = False
-
-
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
-
-
-@receiver(post_save, sender=AgencyUser)
-def verify_email_address(sender, instance=None, created=False, **kwargs):
-    if created:
-        # We'll want to fire off the verification process here
-        pass

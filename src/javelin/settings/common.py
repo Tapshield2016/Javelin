@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
 
+    'registration',
     'rest_framework',
     'rest_framework.authtoken',
     'south',
@@ -164,3 +165,6 @@ REST_FRAMEWORK = {
     'PAGINATE_BY_PARAM': 'page_size',
     'MAX_PAGINATE_BY': 100
 }
+
+# django-registration
+ACCOUNT_ACTIVATION_DAYS = 30
