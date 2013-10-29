@@ -15,6 +15,7 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
+from models import Agency
 from serializers.v1 import UserSerializer
 
 User = get_user_model()
@@ -22,8 +23,17 @@ User = get_user_model()
 
 @api_view(['POST'])
 def register_user(request):
-    serialized = UserSerializer(data=request.DATA)
-    if serialized.is_valid():
+    request_data = request.DATA.copy()
+    agency_id = request_data.get('agency', None)
+    if agency_id:
+        del request_data['agency']
+    try:
+        agency = Agency.objects.get(pk=agency_id)
+    except Agency.DoesNotExist:
+        agency_id = None
+
+    serialized = UserSerializer(data=request_data)
+    if serialized.is_valid() and agency_id:
         user = RegistrationProfile.objects.create_inactive_user(
             serialized.init_data['email'],
             serialized.init_data['username'],
@@ -32,6 +42,8 @@ def register_user(request):
         )
         user_group = Group.objects.get(name='Users')
         user.groups.add(user_group)
+        user.agency = agency
+        user.save()
         return Response(UserSerializer(instance=user).data,
                         status=status.HTTP_201_CREATED)
     else:
