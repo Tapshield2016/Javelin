@@ -1,8 +1,13 @@
 import datetime
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import (authenticate, get_user_model,
+                                 login as auth_login)
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import get_current_site
+from django.http import HttpResponse, HttpResponseForbidden
+from django.shortcuts import render_to_response
+from django.template import RequestContext
+from django.views.decorators.csrf import ensure_csrf_cookie
 
 from registration.models import RegistrationProfile
 
@@ -57,3 +62,35 @@ def resend_verification_email(request):
         return Response("Email required.",
                         status=status.HTTP_400_BAD_REQUEST)
     return Response("Ok.", status=status.HTTP_200_OK)
+
+
+@ensure_csrf_cookie
+def login(request):
+    login_failed = False
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            if user.is_active:
+                auth_login(request, user)
+            else:
+                return HttpResponseForbidden(\
+                    content='Your account is not active.')
+        else:
+            login_failed = True
+
+    if request.user.is_authenticated():
+        status = 200
+        message = "Authenticated."
+    else:
+        status = 401
+        message = "Authorization required."
+
+    response = HttpResponse(content=message)
+    response.status_code = status
+
+    if login_failed:
+        response['Auth-Response'] = 'Login failed'
+
+    return response
