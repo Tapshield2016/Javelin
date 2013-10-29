@@ -12,7 +12,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups', 'agency',)
+        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
