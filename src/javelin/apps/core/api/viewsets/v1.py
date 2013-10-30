@@ -27,6 +27,24 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
+    @action()
+    def update_device_token(self, request, pk=None):
+        if request.user.is_superuser or request.user.pk == pk:
+            token = request.DATA.get('token', None)
+            if not token:
+                return Response({'message': 'token is a required parameter'},
+                                status=status.HTTP_400_BAD_REQUEST)
+            else:
+                try:
+                    user = User.objects.get(pk=pk)
+                    user.device_token = token
+                    user.save()
+                    return Response({'message': 'Success'})
+                except User.DoesNotExit:
+                    return Response({'message': 'user not found'},
+                                    status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Not found.'},
+                         status=status.HTTP_404_NOT_FOUND)
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
