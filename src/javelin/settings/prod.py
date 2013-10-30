@@ -32,3 +32,7 @@ AWS_HEADERS = {
     'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
     'Cache-Control': 'max-age=86400',
 }
+
+# AWS
+DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJ34SY3EAOK6STBBA'
+DYNAMO_DB_SECRET_ACCESS_KEY = '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'
