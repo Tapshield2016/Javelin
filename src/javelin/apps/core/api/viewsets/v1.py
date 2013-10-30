@@ -53,7 +53,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         except ValueError:
             return Response(\
                 {'message': "sender must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST)   
+                status=status.HTTP_400_BAD_REQUEST)
         except TypeError:
             sender_id = None
         if message and sender_id:
