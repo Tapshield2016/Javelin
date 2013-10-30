@@ -16,7 +16,7 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 
 from models import Agency
-from serializers.v1 import UserSerializer
+from api.serializers.v1 import UserSerializer
 
 User = get_user_model()
 

@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, include, url
 
-from routers.v1 import router_v1
+from api.routers.v1 import router_v1
 
 
 urlpatterns = patterns('',
