@@ -67,7 +67,16 @@ class AlertViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST)
 
     @action(methods=['get'])
-    def chats_since(self, request, pk=None):
+    def messages(self, request, pk=None):
+        table = get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
+        results = table.query(alert_id__eq=int(pk))
+        messages = []
+        for res in results:
+            messages.append(dict([(key, val) for key, val in res.items()]))
+        return Response(messages)
+
+    @action(methods=['get'])
+    def messages_since(self, request, pk=None):
         timestamp = request.GET.get('timestamp', None)
         if not timestamp:
             return Response({'message': 'timestamp is a required parameter'},
