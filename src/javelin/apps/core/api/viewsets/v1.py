@@ -45,7 +45,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                      'status', 'initiated_by',)
 
     @action()
-    def send_chat(self, request, pk=None):
+    def send_message(self, request, pk=None):
         message = request.DATA.get('message', None)
         sender_id = request.DATA.get('sender', None)
         try:
