@@ -4,10 +4,11 @@ from django.contrib.auth.models import Group
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 from rest_framework import viewsets
 
-from core.serializers.v1 import (UserSerializer, GroupSerializer,
-                                 AgencySerializer, AlertSerializer,
-                                 ChatMessageSerializer, MassAlertSerializer,
-                                 UserProfileSerializer)
+from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
+                                     AgencySerializer, AlertSerializer,
+                                     ChatMessageSerializer,
+                                     MassAlertSerializer,
+                                     UserProfileSerializer)
 
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
 
