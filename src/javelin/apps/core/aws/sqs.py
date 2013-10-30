@@ -1,47 +1,34 @@
 from django.conf import settings
 
-from boto.dynamodb2 import connect_to_region
-from boto.dynamodb2.fields import HashKey, RangeKey, KeysOnlyIndex, AllIndex
-from boto.dynamodb2.layer1 import DynamoDBConnection
-from boto.dynamodb2.table import Table
-from boto.dynamodb2.types import NUMBER
+import boto.sqs
+from boto.sqs.connection import SQSConnection
+from boto.sqs.message import RawMessage
 
 
-def create_connection():
-    #if settings.DEBUG:
-    #    return DynamoDBConnection(
-    #        aws_access_key_id=settings.DYNAMO_DB_ACCESS_KEY_ID,
-    #        aws_secret_access_key=settings.DYNAMO_DB_SECRET_ACCESS_KEY,
-    #        host='0.0.0.0', port=7819)
-    #else:
-    return connect_to_region(\
-        'us-east-1',
-        aws_access_key_id=settings.DYNAMO_DB_ACCESS_KEY_ID,
-        aws_secret_access_key=settings.DYNAMO_DB_SECRET_ACCESS_KEY)
+def get_sqs_connection():
+    return SQSConnection(aws_access_key_id=settings.SQS_ACCESS_KEY_ID,
+                         aws_secret_access_key=settings.SQS_SECRET_ACCESS_KEY)
 
-def create_table(table_name, read_throughput, write_throughput):
-    chat_messages = Table.create(table_name,
-            connection=create_connection(),
-            schema=[
-                HashKey('alert_id', data_type=NUMBER),
-                RangeKey('timestamp', data_type=NUMBER),
-            ],
-            throughput={
-                'read': read_throughput,
-                'write': write_throughput,
-            },
-            indexes=[
-                AllIndex('MessageTimeIndex', parts=[
-                        HashKey('alert_id'),
-                        RangeKey('timestamp'),
-                    ]),
-            ]
-        )
-    return chat_messages
 
-def get_table(table_name):
-    return Table(table_name, connection=create_connection())
+def get_queue(queue_name):
+    connection = get_sqs_connection()
+    return connection.create_queue(queue_name)
 
-def save_item_to_table(table_name, data):
-    table = get_table(table_name)
-    table.put_item(data=data)
+
+def get_alert_queue():
+    return get_queue(settings.SQS_ALERT_QUEUE)
+
+
+def check_alert_queue():
+    queue = get_alert_queue()
+    result = queue.get_messages()
+    if result:
+        message = result[0]
+        return message
+
+def test_alert():
+    queue = get_alert_queue()
+    m = RawMessage()
+    m.set_body("""{"blah": "booo", "derp": 3"}""")
+    status = queue.write(m)
+    print status

@@ -15,7 +15,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer)
 
-from core.aws import save_item_to_table, get_table
+from core.aws.dynamodb import save_item_to_table, get_table
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
 
 User = get_user_model()
