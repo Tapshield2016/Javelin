@@ -1,8 +1,13 @@
+import time
+
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
+from rest_framework import status, viewsets
+from rest_framework.decorators import action
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
-from rest_framework import viewsets
+from rest_framework.response import Response
 
 from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AgencySerializer, AlertSerializer,
@@ -10,6 +15,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer)
 
+from core.aws import save_item_to_table, get_table
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
 
 User = get_user_model()
@@ -37,6 +43,49 @@ class AlertViewSet(viewsets.ModelViewSet):
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
+
+    @action()
+    def send_chat(self, request, pk=None):
+        message = request.DATA.get('message', None)
+        sender_id = request.DATA.get('sender', None)
+        try:
+            sender_id = int(sender_id)
+        except ValueError:
+            return Response(\
+                {'message': "sender must be an integer"},
+                status=status.HTTP_400_BAD_REQUEST)   
+        except TypeError:
+            sender_id = None
+        if message and sender_id:
+            save_item_to_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
+                               {'alert_id': int(pk), 'sender_id': sender_id,
+                                'message': message, 'timestamp': time.time()})
+            return Response({'message': 'Chat received'})
+        else:
+            return Response(\
+                {'message': "message and sender are required parameters"},
+                status=status.HTTP_400_BAD_REQUEST)
+
+    @action(methods=['get'])
+    def chats_since(self, request, pk=None):
+        timestamp = request.GET.get('timestamp', None)
+        if not timestamp:
+            return Response({'message': 'timestamp is a required parameter'},
+                             status=status.HTTP_400_BAD_REQUEST)
+        try:
+            timestamp = float(timestamp)
+            table = get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
+            results = table.query(alert_id__eq=int(pk),
+                                  timestamp__gte=timestamp,
+                                  index='MessageTimeIndex')
+            messages = []
+            for res in results:
+                messages.append(dict([(key, val) for key, val in res.items()]))
+            return Response(messages)
+        except ValueError:
+            return Response(\
+                {'message': "timestamp must be an Unix timestamp"},
+                status=status.HTTP_400_BAD_REQUEST)
 
 
 class ChatMessageViewSet(viewsets.ModelViewSet):
