@@ -21,10 +21,12 @@ def get_alert_queue():
 
 def check_alert_queue():
     queue = get_alert_queue()
+    queue.set_message_class(RawMessage)
     result = queue.get_messages()
     if result:
         message = result[0]
         return message
+
 
 def test_alert():
     queue = get_alert_queue()
