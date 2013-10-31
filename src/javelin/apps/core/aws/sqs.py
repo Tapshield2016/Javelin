@@ -26,11 +26,3 @@ def check_alert_queue():
     if result:
         message = result[0]
         return message
-
-
-def test_alert():
-    queue = get_alert_queue()
-    m = RawMessage()
-    m.set_body("""{"blah": "booo", "derp": 3"}""")
-    status = queue.write(m)
-    print status
