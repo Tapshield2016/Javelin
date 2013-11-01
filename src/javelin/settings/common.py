@@ -169,3 +169,6 @@ REST_FRAMEWORK = {
 
 # django-registration
 ACCOUNT_ACTIVATION_DAYS = 30
+
+# celery
+BROKER_TRANSPORT_OPTIONS = {'polling_interval': 1.0}
