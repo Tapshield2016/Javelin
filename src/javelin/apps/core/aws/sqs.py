@@ -23,6 +23,6 @@ class SQSManager(object):
 
     def check_alert_queue(self, num_messages=1):
         queue = self.get_alert_queue()
-        queue.set_message_class(RawMessage)
+        #queue.set_message_class(RawMessage)
         messages = queue.get_messages(num_messages=num_messages)
         return messages

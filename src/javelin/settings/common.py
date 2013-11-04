@@ -107,6 +107,7 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
 
+    'djcelery',
     'registration',
     'rest_framework',
     'rest_framework.authtoken',

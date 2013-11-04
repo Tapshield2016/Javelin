@@ -15,7 +15,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer)
 
-from core.aws.dynamodb import save_item_to_table, get_table
+from core.aws.dynamodb import DynamoDBManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
 
 User = get_user_model()
@@ -75,9 +75,11 @@ class AlertViewSet(viewsets.ModelViewSet):
         except TypeError:
             sender_id = None
         if message and sender_id:
-            save_item_to_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
-                               {'alert_id': int(pk), 'sender_id': sender_id,
-                                'message': message, 'timestamp': time.time()})
+            dynamo_db = DynamoDBManager()
+            dynamo_db.save_item_to_table(\
+                settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
+                {'alert_id': int(pk), 'sender_id': sender_id,
+                 'message': message, 'timestamp': time.time()})
             return Response({'message': 'Chat received'})
         else:
             return Response(\
@@ -86,7 +88,8 @@ class AlertViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'])
     def messages(self, request, pk=None):
-        table = get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
+        dynamo_db = DynamoDBManager()
+        table = dynamo_db.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
         results = table.query(alert_id__eq=int(pk))
         messages = []
         for res in results:
@@ -101,7 +104,8 @@ class AlertViewSet(viewsets.ModelViewSet):
                              status=status.HTTP_400_BAD_REQUEST)
         try:
             timestamp = float(timestamp)
-            table = get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
+            dynamo_db = DynamoDBManager()
+            table = dynamo_db.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
             results = table.query(alert_id__eq=int(pk),
                                   timestamp__gte=timestamp,
                                   index='MessageTimeIndex')
