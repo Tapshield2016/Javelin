@@ -38,9 +38,3 @@ SQS_SECRET_ACCESS_KEY = 'pMslACdKYyMMgrtDL8SaLoAfJYNcoNwZchWXKuWB'
 BROKER_URL = "sqs://%s:%s@sqs.us-east-1.amazonaws.com/175861827001/"\
     % (SQS_ACCESS_KEY_ID, SQS_SECRET_ACCESS_KEY)
 CELERY_DEFAULT_QUEUE = SQS_ALERT_QUEUE
-CELERY_ROUTES = {
-    'core.tasks.get_new_alerts': {
-        'queue': SQS_ALERT_QUEUE,
-        'routing_key': 'core.get_new_alerts',
-    },
-}
