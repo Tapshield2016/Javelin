@@ -73,7 +73,8 @@ class Alert(TimeStampedModel):
                                     related_name="alert_agency_user")
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
-                          related_name="alert_agency_dispatcher")
+                          related_name="alert_agency_dispatcher",
+                          blank=True, null=True)
     accepted_time = models.DateTimeField(null=True, blank=True)
     completed_time = models.DateTimeField(null=True, blank=True)
     disarmed_time = models.DateTimeField(null=True, blank=True)
@@ -87,7 +88,8 @@ class Alert(TimeStampedModel):
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default='N')
     initiated_by = models.CharField(max_length=2,
-                                    choices=ALERT_INITIATED_BY_CHOICES)
+                                    choices=ALERT_INITIATED_BY_CHOICES,
+                                    default='E')
 
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
