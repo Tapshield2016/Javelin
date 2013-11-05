@@ -30,10 +30,11 @@ class UserViewSet(viewsets.ModelViewSet):
     @action()
     def update_device_token(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == pk:
-            token = request.DATA.get('token', None)
+            token = request.DATA.get('deviceToken', None)
             if not token:
-                return Response({'message': 'token is a required parameter'},
-                                status=status.HTTP_400_BAD_REQUEST)
+                return Response(\
+                    {'message': 'deviceToken is a required parameter'},
+                    status=status.HTTP_400_BAD_REQUEST)
             else:
                 try:
                     user = User.objects.get(pk=pk)
