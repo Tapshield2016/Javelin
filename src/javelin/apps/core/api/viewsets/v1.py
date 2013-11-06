@@ -29,7 +29,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action()
     def update_device_token(self, request, pk=None):
-        if request.user.is_superuser or request.user.pk == pk:
+        if request.user.is_superuser or request.user.pk == int(pk):
             token = request.DATA.get('deviceToken', None)
             if not token:
                 return Response(\
