@@ -47,6 +47,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
+
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
