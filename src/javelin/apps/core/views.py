@@ -110,3 +110,21 @@ def login(request):
         response['Auth-Response'] = 'Login failed'
 
     return response
+
+
+@api_view(['GET'])
+def verified(request):
+    agency_id = request.GET.get('agency', None)
+    user_id = request.GET.get('user', None)
+    message = ''
+    if agency_id and user_id:
+        try:
+            user = User.objects.get(pk=user_id, agency__pk=agency_id)
+            message = user.is_active
+            return Response({'message': message})
+        except User.DoesNotExist:
+            message = 'user not found'
+    else:
+        message = 'agency and user are required parameters'
+    return Response({'message': message},
+                    status=status.HTTP_400_BAD_REQUEST)
