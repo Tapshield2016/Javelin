@@ -30,7 +30,8 @@ class Agency(TimeStampedModel):
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
-    alert_completed_message = models.TextField(null=True, blank=True)
+    alert_completed_message = models.TextField(null=True, blank=True,
+                                               default="Thank you for using TapShield. Please enter disarm code to complete this session.")
 
     objects = models.Manager()
     geo = models.GeoManager()
