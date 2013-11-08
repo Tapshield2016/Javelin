@@ -88,4 +88,10 @@ def create_agency_topic(agency_id, topic_name=None):
 @task
 def publish_to_agency_topic(agency_topic_arn, message):
     sns = SNSManager()
-    print sns.publish_to_topic(message, agency_topic_arn)
+    return sns.publish_to_topic(message, agency_topic_arn)
+
+
+@task
+def publish_to_device(device_endpoint_arn, message):
+    sns = SNSManager()
+    return sns.publish_to_device(message, device_endpoint_arn)

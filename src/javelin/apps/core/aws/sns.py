@@ -26,13 +26,13 @@ class SNSManager(object):
         topic_name = slugify(topic_name)
         return self.connection.create_topic(topic_name)
 
-    def subscribe(self, agency_topic_arn, protocol, user_device_endpoint):
+    def subscribe(self, agency_topic_arn, protocol, device_endpoint_arn):
         return self.connection.subscribe(agency_topic_arn, protocol,
-                                         user_device_endpoint)
+                                         device_endpoint_arn)
 
-    def publish_to_device(self, message, user_device_arn):
+    def publish_to_device(self, message, device_endpoint_arn):
         return self.connection.publish(message=message,
-                                       target_arn=user_device_arn)
+                                       target_arn=device_endpoint_arn)
 
     def publish_to_topic(self, message, agency_topic_arn):
         return self.connection.publish(message=message,
