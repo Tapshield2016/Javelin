@@ -17,6 +17,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
 
 from core.aws.dynamodb import DynamoDBManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
+from core.tasks import create_user_device_endpoint
 
 User = get_user_model()
 
@@ -40,6 +41,8 @@ class UserViewSet(viewsets.ModelViewSet):
                     user = User.objects.get(pk=pk)
                     user.device_token = token
                     user.save()
+                    create_user_device_endpoint.delay(user.pk,
+                                                      user.device_token)
                     return Response({'message': 'Success'})
                 except User.DoesNotExit:
                     return Response({'message': 'user not found'},
