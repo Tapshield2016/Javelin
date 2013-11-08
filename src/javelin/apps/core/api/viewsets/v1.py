@@ -84,23 +84,14 @@ class AlertViewSet(viewsets.ModelViewSet):
     @action()
     def send_message(self, request, pk=None):
         message = request.DATA.get('message', None)
-        sender_id = request.DATA.get('sender', None)
-        try:
-            sender_id = int(sender_id)
-        except ValueError:
-            return Response(\
-                {'message': "sender must be an integer"},
-                status=status.HTTP_400_BAD_REQUEST)
-        except TypeError:
-            sender_id = None
-        if message and sender_id:
+        if message:
             dynamo_db = DynamoDBManager()
             dynamo_db.save_item_to_table(\
                 settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
-                {'alert_id': int(pk), 'sender_id': sender_id,
+                {'alert_id': int(pk), 'sender_id': request.user.id,
                  'message': message, 'timestamp': time.time()})
             alert = self.get_object()
-            if not sender_id == alert.agency_user.id:
+            if not request.user.id == alert.agency_user.id:
                 user = alert.agency_user
                 publish_to_device.delay(user.device_endpoint_arn,
                                         message)
