@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
 from rest_framework import status, viewsets
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 from rest_framework.response import Response
@@ -16,6 +17,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      UserProfileSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
+from core.aws.sns import SNSManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
 from core.tasks import create_user_device_endpoint
 
@@ -38,7 +40,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST)
             else:
                 try:
-                    user = User.objects.get(pk=pk)
+                    user = self.get_object()
                     user.device_token = token
                     user.save()
                     create_user_device_endpoint.delay(user.pk,
@@ -59,6 +61,19 @@ class GroupViewSet(viewsets.ModelViewSet):
 class AgencyViewSet(viewsets.ModelViewSet):
     queryset = Agency.objects.select_related('agency_point_of_contact').all()
     serializer_class = AgencySerializer
+
+    @action()
+    def send_mass_alert(self, request, pk=None):
+        message = request.DATA.get('message', None)
+        if not message:
+            return Response({'message': 'message is a required parameter'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        sns = SNSManager()
+        agency = self.get_object()
+        result = sns.publish_to_topic(message, agency.sns_primary_topic_arn)
+        return Response({'message': 'Ok'},
+                        status=status.HTTP_200_OK)
 
 
 class AlertViewSet(viewsets.ModelViewSet):

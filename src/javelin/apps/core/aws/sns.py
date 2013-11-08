@@ -29,3 +29,11 @@ class SNSManager(object):
     def subscribe(self, agency_topic_arn, protocol, user_device_endpoint):
         return self.connection.subscribe(agency_topic_arn, protocol,
                                          user_device_endpoint)
+
+    def publish_to_device(self, message, user_device_arn):
+        return self.connection.publish(message=message,
+                                       target_arn=user_device_arn)
+
+    def publish_to_topic(self, message, agency_topic_arn):
+        return self.connection.publish(message=message,
+                                       topic=agency_topic_arn)
