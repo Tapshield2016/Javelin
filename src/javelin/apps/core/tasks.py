@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
-from core.models import Alert, AgencyUser
+from core.models import Alert, Agency, AgencyUser
 
 User = get_user_model()
 
@@ -53,6 +53,33 @@ def create_user_device_endpoint(user_id, device_token):
             result = response['CreatePlatformEndpointResult']
             if 'EndpointArn' in result:
                 endpoint_arn = result['EndpointArn']
-                user = User.objects.get(pk=user_id)
+                user = User.objects.select_related('agency').get(pk=user_id)
                 user.device_endpoint_arn = endpoint_arn
                 user.save()
+                if user.agency.sns_primary_topic_arn:
+                    sns.subscribe(user.agency.sns_primary_topic_arn,
+                                  'Application', user.device_endpoint_arn)
+
+
+@task
+def create_agency_topic(agency_id, topic_name=None):
+    """
+    We expect to see a response that is something like this:
+    {u'CreateTopicResponse':
+        {u'ResponseMetadata':
+            {u'RequestId': u'020a88af-aec2-5532-9f34-c258a2739126'},
+             u'CreateTopicResult': {u'TopicArn': u'arn:aws:sns:us-east-1:175861827001:Test_Agency'}}}
+    """
+    agency = Agency.objects.get(pk=agency_id)
+    if not topic_name:
+        topic_name = agency.name
+    sns = SNSManager()
+    response = sns.create_topic(topic_name)
+    if 'CreateTopicResponse' in response:
+        response = response['CreateTopicResponse']
+        if 'CreateTopicResult' in response:
+            result = response['CreateTopicResult']
+            if 'TopicArn' in result:
+                agency_topic_arn = result['TopicArn']
+                agency.sns_primary_topic_arn = agency_topic_arn
+                agency.save()

@@ -32,6 +32,8 @@ class Agency(TimeStampedModel):
     agency_center_longitude = models.FloatField()
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
+    sns_primary_topic_arn = models.CharField(max_length=255,
+                                             null=True, blank=True)
 
     objects = models.Manager()
     geo = models.GeoManager()
@@ -41,6 +43,12 @@ class Agency(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        from tasks import create_agency_topic
+        super(Agency, self).save(*args, **kwargs)
+        if not self.sns_primary_topic_arn:
+            create_agency_topic.delay(self.pk)
 
 
 class Alert(TimeStampedModel):
