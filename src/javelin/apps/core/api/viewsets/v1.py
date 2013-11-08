@@ -5,7 +5,6 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
 from rest_framework import status, viewsets
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.decorators import action
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 from rest_framework.response import Response
@@ -19,7 +18,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
-from core.tasks import create_user_device_endpoint, publish_to_agency_topic
+from core.tasks import (create_user_device_endpoint, publish_to_agency_topic, publish_to_device)
 
 User = get_user_model()
 
@@ -100,6 +99,11 @@ class AlertViewSet(viewsets.ModelViewSet):
                 settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
                 {'alert_id': int(pk), 'sender_id': sender_id,
                  'message': message, 'timestamp': time.time()})
+            alert = self.get_object()
+            if not sender_id == alert.agency_user.id:
+                user = alert.agency_user
+                publish_to_device.delay(user.device_endpoint_arn,
+                                        message)
             return Response({'message': 'Chat received'})
         else:
             return Response(\
