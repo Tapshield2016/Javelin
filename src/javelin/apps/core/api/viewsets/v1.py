@@ -19,7 +19,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
-from core.tasks import create_user_device_endpoint
+from core.tasks import create_user_device_endpoint, publish_to_agency_topic
 
 User = get_user_model()
 
@@ -71,7 +71,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
         sns = SNSManager()
         agency = self.get_object()
-        result = sns.publish_to_topic(message, agency.sns_primary_topic_arn)
+        publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
         return Response({'message': 'Ok'},
                         status=status.HTTP_200_OK)
 

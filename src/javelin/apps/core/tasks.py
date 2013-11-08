@@ -83,3 +83,9 @@ def create_agency_topic(agency_id, topic_name=None):
                 agency_topic_arn = result['TopicArn']
                 agency.sns_primary_topic_arn = agency_topic_arn
                 agency.save()
+
+
+@task
+def publish_to_agency_topic(agency_topic_arn, message):
+    sns = SNSManager()
+    print sns.publish_to_topic(message, agency_topic_arn)
