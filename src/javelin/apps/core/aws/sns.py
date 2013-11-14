@@ -30,10 +30,16 @@ class SNSManager(object):
         return self.connection.subscribe(agency_topic_arn, protocol,
                                          device_endpoint_arn)
 
-    def publish_to_device(self, message, device_endpoint_arn):
-        return self.connection.publish(message=message,
+    def publish_to_device(self, message_json, device_endpoint_arn):
+        return self.connection.publish(message=message_json,
+                                       message_structure='json',
                                        target_arn=device_endpoint_arn)
 
     def publish_to_topic(self, message, agency_topic_arn):
         return self.connection.publish(message=message,
+                                       message_structure='json',
                                        topic=agency_topic_arn)
+
+    def get_message_json(self, endpoint, message_body, alert_type, alert_id):
+        msg_json = """{"%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 1}}"}""" % (endpoint, message_body, alert_type, alert_id)
+        return msg_json

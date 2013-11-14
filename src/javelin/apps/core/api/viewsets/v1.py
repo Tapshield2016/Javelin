@@ -1,4 +1,5 @@
 import time
+import uuid
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -18,7 +19,8 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
-from core.tasks import (create_user_device_endpoint, publish_to_agency_topic, publish_to_device)
+from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
+                        publish_to_device, notify_new_chat_message_available)
 
 User = get_user_model()
 
@@ -85,16 +87,19 @@ class AlertViewSet(viewsets.ModelViewSet):
     def send_message(self, request, pk=None):
         message = request.DATA.get('message', None)
         if message:
+            message_id = str(uuid.uuid1())
             dynamo_db = DynamoDBManager()
             dynamo_db.save_item_to_table(\
                 settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
                 {'alert_id': int(pk), 'sender_id': request.user.id,
-                 'message': message, 'timestamp': time.time()})
+                 'message': message, 'timestamp': time.time(),
+                 'message_id': message_id})
             alert = self.get_object()
             if not request.user.id == alert.agency_user.id:
                 user = alert.agency_user
-                publish_to_device.delay(user.device_endpoint_arn,
-                                        message)
+                notify_new_chat_message_available.delay(\
+                    message, message_id,
+                    user.device_endpoint_arn)
             return Response({'message': 'Chat received'})
         else:
             return Response(\

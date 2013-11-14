@@ -29,6 +29,8 @@ def new_alert(message):
         incoming_alert.agency = message['agency_user'].agency
         incoming_alert.save()
         message_valid = True
+        notify_alert_received.delay(incoming_alert.id,
+                                    message['agency_user'].device_endpoint_arn)
     else:
         pass
 
@@ -95,3 +97,19 @@ def publish_to_agency_topic(agency_topic_arn, message):
 def publish_to_device(device_endpoint_arn, message):
     sns = SNSManager()
     return sns.publish_to_device(message, device_endpoint_arn)
+
+
+@task
+def notify_alert_received(alert_id, device_endpoint_arn):
+    sns = SNSManager()
+    msg = sns.get_message_json("The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def notify_new_chat_message_available(chat_message, chat_message_id,
+                                      device_endpoint_arn):
+    sns = SNSManager()
+    msg = sns.get_message_json("APNS_SANDBOX", chat_message,
+                               "chat-message-available", chat_message_id)
+    sns.publish_to_device(msg, device_endpoint_arn)
