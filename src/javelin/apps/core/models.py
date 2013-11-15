@@ -1,6 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
+from django.db.models.signals import pre_save, post_save
+from django.dispatch import receiver
+
+from rest_framework.authtoken.models import Token
 
 
 class TimeStampedModel(models.Model):
@@ -14,15 +18,22 @@ class TimeStampedModel(models.Model):
 class Agency(TimeStampedModel):
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
+    agency_point_of_contact =\
+        models.ForeignKey(settings.AUTH_USER_MODEL,
+                          related_name='agency_point_of_contact',
+                          null=True, blank=True)
     dispatcher_phone_number = models.CharField(max_length=24)
     dispatcher_secondary_phone_number = models.CharField(max_length=24,
                                                          null=True, blank=True)
-    dispatcher_schedule_start = models.DateTimeField(null=True, blank=True)
-    dispatcher_schedule_end = models.DateTimeField(null=True, blank=True)
+    dispatcher_schedule_start = models.TimeField(null=True, blank=True)
+    dispatcher_schedule_end = models.TimeField(null=True, blank=True)
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
-    alert_completed_message = models.TextField(null=True, blank=True)
+    alert_completed_message = models.TextField(null=True, blank=True,
+                                               default="Thank you for using TapShield. Please enter disarm code to complete this session.")
+    sns_primary_topic_arn = models.CharField(max_length=255,
+                                             null=True, blank=True)
 
     objects = models.Manager()
     geo = models.GeoManager()
@@ -32,6 +43,12 @@ class Agency(TimeStampedModel):
 
     def __unicode__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        from tasks import create_agency_topic
+        super(Agency, self).save(*args, **kwargs)
+        if not self.sns_primary_topic_arn:
+            create_agency_topic.delay(self.pk)
 
 
 class Alert(TimeStampedModel):
@@ -65,7 +82,8 @@ class Alert(TimeStampedModel):
                                     related_name="alert_agency_user")
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
-                          related_name="alert_agency_dispatcher")
+                          related_name="alert_agency_dispatcher",
+                          blank=True, null=True)
     accepted_time = models.DateTimeField(null=True, blank=True)
     completed_time = models.DateTimeField(null=True, blank=True)
     disarmed_time = models.DateTimeField(null=True, blank=True)
@@ -76,15 +94,29 @@ class Alert(TimeStampedModel):
     location_altitude = models.FloatField(null=True, blank=True)
     location_latitude = models.FloatField(null=True, blank=True)
     location_longitude = models.FloatField(null=True, blank=True)
-    status = models.CharField(max_length=1, choices=STATUS_CHOICES)
+    status = models.CharField(max_length=1, choices=STATUS_CHOICES,
+                              default='N')
     initiated_by = models.CharField(max_length=2,
-                                    choices=ALERT_INITIATED_BY_CHOICES)
+                                    choices=ALERT_INITIATED_BY_CHOICES,
+                                    default='E')
+
+    def save(self, *args, **kwargs):
+        super(Alert, self).save(*args, **kwargs)
+        if self.status == 'C':
+            try:
+                profile = self.agency_user.get_profile()
+                profile.delete()
+            except UserProfile.DoesNotExist:
+                pass
 
 
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
+
+    class Meta:
+        ordering = ['-creation_date']
 
 
 class AgencyUser(AbstractUser):
@@ -93,6 +125,9 @@ class AgencyUser(AbstractUser):
     disarm_code = models.CharField(max_length=10)
     email_verified = models.BooleanField(default=False)
     phone_number_verified = models.BooleanField(default=False)
+    device_token = models.CharField(max_length=255, null=True, blank=True)
+    device_endpoint_arn = models.CharField(max_length=255,
+                                           null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
@@ -160,9 +195,20 @@ class UserProfile(models.Model):
     emergency_contact_relationship =\
         models.CharField(max_length=2, choices=RELATIONSHIP_CHOICES,
                          null=True, blank=True)
+    profile_image = models.ImageField(upload_to='images/profiles',
+                                      null=True, blank=True)
 
 
 class ChatMessage(TimeStampedModel):
     alert = models.ForeignKey('Alert')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
+
+    class Meta:
+        ordering = ['creation_date']
+
+
+@receiver(post_save, sender=AgencyUser)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)

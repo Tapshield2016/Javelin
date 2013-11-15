@@ -107,7 +107,12 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.gis',
 
+    'djcelery',
+    'registration',
+    'rest_framework',
+    'rest_framework.authtoken',
     'south',
+    'storages',
 
     'core',
 )
@@ -144,3 +149,25 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'core.AgencyUser'
+AUTH_PROFILE_MODULE = 'core.UserProfile'
+
+# django-rest-framework
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',
+                                'rest_framework.filters.OrderingFilter',),
+    'PAGINATE_BY': 20,
+    'PAGINATE_BY_PARAM': 'page_size',
+    'MAX_PAGINATE_BY': 100
+}
+
+# django-registration
+ACCOUNT_ACTIVATION_DAYS = 30
+
+# celery
+BROKER_TRANSPORT_OPTIONS = {'polling_interval': 1.0}

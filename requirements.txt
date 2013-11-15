@@ -7,7 +7,9 @@ anyjson==0.3.3
 billiard==2.7.3.34
 boto==2.17.0
 celery==3.0.24
+django-devserver==0.6.2
 django-filter==0.7
+django-registration==1.0
 django-storages==1.1.8
 djangorestframework==2.3.8
 ecdsa==0.9
