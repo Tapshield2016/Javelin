@@ -1,4 +1,5 @@
 import datetime
+import json
 
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
@@ -7,7 +8,6 @@ from django.contrib.sites.models import get_current_site
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.template import RequestContext
-from django.utils import simplejson
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from registration.models import RegistrationProfile
@@ -96,7 +96,7 @@ def login(request):
     if request.user.is_authenticated():
         status = 200
         serialized = UserSerializer(request.user, context={'request': request})
-        message = simplejson.dumps(serialized.data)
+        message = json.dumps(serialized.data)
     else:
         status = 401
         message = "Authorization required."
