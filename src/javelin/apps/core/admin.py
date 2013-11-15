@@ -1,10 +1,11 @@
 from django.contrib import admin
+from django.contrib.gis import admin as gis_admin
 
 from models import (Agency, AgencyUser, Alert, MassAlert,
                     ChatMessage, UserProfile)
 
 
-class AgencyAdmin(admin.ModelAdmin):
+class AgencyAdmin(gis_admin.GeoModelAdmin):
     pass
 
 
