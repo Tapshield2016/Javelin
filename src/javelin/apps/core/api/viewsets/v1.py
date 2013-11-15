@@ -109,8 +109,7 @@ class AlertViewSet(viewsets.ModelViewSet):
     @action(methods=['get'])
     def messages(self, request, pk=None):
         dynamo_db = DynamoDBManager()
-        table = dynamo_db.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
-        results = table.query(alert_id__eq=int(pk))
+        results = dynamo_db.get_messages_for_alert(pk)
         messages = []
         for res in results:
             messages.append(dict([(key, val) for key, val in res.items()]))
@@ -123,12 +122,9 @@ class AlertViewSet(viewsets.ModelViewSet):
             return Response({'message': 'timestamp is a required parameter'},
                              status=status.HTTP_400_BAD_REQUEST)
         try:
-            timestamp = float(timestamp)
             dynamo_db = DynamoDBManager()
-            table = dynamo_db.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
-            results = table.query(alert_id__eq=int(pk),
-                                  timestamp__gte=timestamp,
-                                  index='MessageTimeIndex')
+            results = dynamo_db.get_messages_for_alert_since_time(pk,
+                                                                  timestamp)
             messages = []
             for res in results:
                 messages.append(dict([(key, val) for key, val in res.items()]))
