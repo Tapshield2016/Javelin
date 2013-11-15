@@ -109,10 +109,7 @@ class AlertViewSet(viewsets.ModelViewSet):
     @action(methods=['get'])
     def messages(self, request, pk=None):
         dynamo_db = DynamoDBManager()
-        results = dynamo_db.get_messages_for_alert(pk)
-        messages = []
-        for res in results:
-            messages.append(dict([(key, val) for key, val in res.items()]))
+        messages = dynamo_db.get_messages_for_alert(pk)
         return Response(messages)
 
     @action(methods=['get'])
@@ -123,11 +120,8 @@ class AlertViewSet(viewsets.ModelViewSet):
                              status=status.HTTP_400_BAD_REQUEST)
         try:
             dynamo_db = DynamoDBManager()
-            results = dynamo_db.get_messages_for_alert_since_time(pk,
-                                                                  timestamp)
-            messages = []
-            for res in results:
-                messages.append(dict([(key, val) for key, val in res.items()]))
+            messages = dynamo_db.get_messages_for_alert_since_time(pk,
+                                                                   timestamp)
             return Response(messages)
         except ValueError:
             return Response(\

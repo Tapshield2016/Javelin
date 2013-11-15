@@ -47,14 +47,20 @@ class DynamoDBManager(object):
         table.put_item(data=data)
 
     def get_messages_for_alert(self, alert_id):
+        messages = []
         table = self.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
         results = table.query(alert_id__eq=int(alert_id))
-        return results
+        for res in results:
+            messages.append(dict([(key, val) for key, val in res.items()]))
+        return messages
 
     def get_messages_for_alert_since_time(self, alert_id, timestamp):
+        messages = []
         timestamp = float(timestamp)
         table = self.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
         results = table.query(alert_id__eq=int(alert_id),
                               timestamp__gte=timestamp,
                               index='MessageTimeIndex')
-        return results
+        for res in results:
+            messages.append(dict([(key, val) for key, val in res.items()]))
+        return messages
