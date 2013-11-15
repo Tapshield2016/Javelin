@@ -77,7 +77,8 @@ def resend_verification_email(request):
     return Response("Ok.", status=status.HTTP_200_OK)
 
 
-@ensure_csrf_cookie
+#@ensure_csrf_cookie
+@csrf_exempt
 def login(request):
     login_failed = False
     if request.method == "POST":

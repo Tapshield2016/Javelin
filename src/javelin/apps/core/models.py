@@ -1,8 +1,11 @@
+from datetime import datetime
+
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
+import django.utils.timezone
 
 from rest_framework.authtoken.models import Token
 
@@ -108,6 +111,40 @@ class Alert(TimeStampedModel):
                 profile.delete()
             except UserProfile.DoesNotExist:
                 pass
+            self.store_chat_messages()
+
+    def store_chat_messages(self):
+        from aws.dynamodb import DynamoDBManager
+        db = DynamoDBManager()
+        messages = db.get_messages_for_alert(self.pk)
+        senders = {self.agency_user.pk: self.agency_user,
+                   self.agency_dispatcher.pk: self.agency_dispatcher}
+        sender_ids = [msg['sender_id'] for msg in messages]
+        known_senders = [self.agency_user.pk, self.agency_dispatcher.pk]
+        unknown_senders = list(set(sender_ids) - set(known_senders))
+        if unknown_senders:
+            unknowns = AgencyUser.objects.filter(pk__in=unknown_senders)
+            for unknown in unknowns:
+                senders[unknown.pk] = unknown
+        existing_messages = ChatMessage.objects.filter(alert=self)
+        existing_message_ids = [msg.message_id for msg in existing_messages]
+        for message in messages:
+            if message['message_id'] in existing_message_ids:
+                continue
+            try:
+                timestamp = float(message['timestamp'])
+                timestamp = datetime.fromtimestamp(timestamp)
+            except ValueError:
+                timestamp = datetime.now()
+            ChatMessage.objects.bulk_create(
+                [
+                    ChatMessage(alert=self,
+                                sender=senders[message['sender_id']],
+                                message=message['message'],
+                                message_id=message['message_id'],
+                                message_sent_time=timestamp)
+                ]
+            )
 
 
 class MassAlert(TimeStampedModel):
@@ -203,9 +240,14 @@ class ChatMessage(TimeStampedModel):
     alert = models.ForeignKey('Alert')
     sender = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
+    message_id = models.CharField(max_length=100, unique=True)
+    message_sent_time = models.DateTimeField(default=django.utils.timezone.now)
 
     class Meta:
-        ordering = ['creation_date']
+        ordering = ['message_sent_time']
+
+    def __unicode__(self):
+        return u"%s - %s..." % (self.sender.first_name, self.message[:50])
 
 
 @receiver(post_save, sender=AgencyUser)
