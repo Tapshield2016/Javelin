@@ -14,7 +14,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
 
 
 class AlertAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('agency_user', 'creation_date', 'last_modified')
 
 
 class MassAlertAdmin(admin.ModelAdmin):

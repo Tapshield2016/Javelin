@@ -10,6 +10,8 @@ import django.utils.timezone
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
+from tasks import notify_alert_received
+
 
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -103,6 +105,7 @@ class Alert(TimeStampedModel):
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
+    user_notified_of_receipt = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
@@ -113,6 +116,9 @@ class Alert(TimeStampedModel):
             except UserProfile.DoesNotExist:
                 pass
             self.store_chat_messages()
+        elif self.status == 'N' and not self.user_notified_of_receipt:
+            notify_alert_received.delay(self.pk,
+                                        self.agency_user.device_endpoint_arn)
 
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
@@ -257,7 +263,7 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
         Token.objects.create(user=instance)
 
 
-@receiver(user_activated, sender=AgencyUser)
 def set_email_verified(sender, user, request, **kwargs):
     user.email_verified = True
     user.save()
+user_activated.connect(set_email_verified)

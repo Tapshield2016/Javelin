@@ -77,7 +77,6 @@ def resend_verification_email(request):
     return Response("Ok.", status=status.HTTP_200_OK)
 
 
-#@ensure_csrf_cookie
 @csrf_exempt
 def login(request):
     login_failed = False
@@ -120,7 +119,7 @@ def verified(request):
     if user_email:
         try:
             user = User.objects.get(email=user_email)
-            message = user.is_active
+            message = user.email_verified
             return Response({'message': message})
         except User.DoesNotExist:
             message = 'user not found'
