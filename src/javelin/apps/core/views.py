@@ -115,17 +115,18 @@ def login(request):
 
 @api_view(['GET'])
 def verified(request):
-    agency_id = request.GET.get('agency', None)
-    user_id = request.GET.get('user', None)
+    user_email = request.GET.get('user', None)
     message = ''
-    if agency_id and user_id:
+    if user_email:
         try:
-            user = User.objects.get(pk=user_id, agency__pk=agency_id)
+            user = User.objects.get(email=user_email)
             message = user.is_active
             return Response({'message': message})
         except User.DoesNotExist:
             message = 'user not found'
+        except ValueError:
+            message = 'user must be an integer'
     else:
-        message = 'agency and user are required parameters'
+        message = 'user is a required parameters'
     return Response({'message': message},
                     status=status.HTTP_400_BAD_REQUEST)

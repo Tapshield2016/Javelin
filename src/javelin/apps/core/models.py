@@ -7,6 +7,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 import django.utils.timezone
 
+from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
 
@@ -254,3 +255,9 @@ class ChatMessage(TimeStampedModel):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(user_activated, sender=AgencyUser)
+def set_email_verified(sender, user, request, **kwargs):
+    user.email_verified = True
+    user.save()
