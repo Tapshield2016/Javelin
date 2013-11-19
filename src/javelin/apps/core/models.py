@@ -109,21 +109,35 @@ class Alert(TimeStampedModel):
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
         if self.status == 'C':
+            if not self.completed_time:
+                self.completed_time = datetime.now()
             try:
                 profile = self.agency_user.get_profile()
                 profile.delete()
             except UserProfile.DoesNotExist:
                 pass
             self.store_chat_messages()
-
+        else:
+            if self.status == 'A':
+                if not self.accepted_time:
+                    self.accepted_time = datetime.now()
+            elif self.status == 'D':
+                if not self.disarmed_time:
+                    self.disarmed_time = datetime.now()
+            elif self.status == 'P':
+                if not self.pending_time:
+                    self.pending_time = datetime.now()
+            super(Alert, self).save(*args, **kwargs)
+                
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
         db = DynamoDBManager()
         messages = db.get_messages_for_alert(self.pk)
-        senders = {self.agency_user.pk: self.agency_user,
-                   self.agency_dispatcher.pk: self.agency_dispatcher}
+        senders = {self.agency_user.pk: self.agency_user}
+        if self.agency_dispatcher:
+            senders[self.agency_dispatcher.pk] = self.agency_dispatcher
         sender_ids = [msg['sender_id'] for msg in messages]
-        known_senders = [self.agency_user.pk, self.agency_dispatcher.pk]
+        known_senders = senders.keys()
         unknown_senders = list(set(sender_ids) - set(known_senders))
         if unknown_senders:
             unknowns = AgencyUser.objects.filter(pk__in=unknown_senders)
