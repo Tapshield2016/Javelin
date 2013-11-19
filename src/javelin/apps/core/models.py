@@ -160,6 +160,13 @@ class MassAlert(TimeStampedModel):
 
 
 class AgencyUser(AbstractUser):
+    DEVICE_TYPE_CHOICES = (
+        ('I', 'iOS'),
+        ('A', 'Android'),
+        ('B', 'Blackberry'),
+        ('W', 'Windows'),
+    )
+
     agency = models.ForeignKey('Agency', null=True, blank=True)
     phone_number = models.CharField(max_length=24)
     disarm_code = models.CharField(max_length=10)
@@ -168,6 +175,8 @@ class AgencyUser(AbstractUser):
     device_token = models.CharField(max_length=255, null=True, blank=True)
     device_endpoint_arn = models.CharField(max_length=255,
                                            null=True, blank=True)
+    device_type = models.CharField(max_length=2, null=True, blank=True,
+                                   choices=DEVICE_TYPE_CHOICES)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]

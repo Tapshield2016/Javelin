@@ -34,15 +34,21 @@ class UserViewSet(viewsets.ModelViewSet):
     @action()
     def update_device_token(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
-            token = request.DATA.get('deviceToken', None)
-            if not token:
+            device_token = request.DATA.get('deviceToken', None)
+            device_type = request.DATA.get('deviceType', None)
+            if not device_token:
                 return Response(\
                     {'message': 'deviceToken is a required parameter'},
+                    status=status.HTTP_400_BAD_REQUEST)
+            elif not device_type:
+                return Response(\
+                    {'message': 'deviceType is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             else:
                 try:
                     user = self.get_object()
-                    user.device_token = token
+                    user.device_token = device_token
+                    user.device_type = device_type
                     user.save()
                     create_user_device_endpoint.delay(user.pk,
                                                       user.device_token)
