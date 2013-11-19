@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
 from core.models import Alert, Agency, AgencyUser
+from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
 
@@ -29,7 +30,8 @@ def new_alert(message):
         incoming_alert.agency = message['agency_user'].agency
         incoming_alert.save()
         message_valid = True
-        notify_alert_received.delay(incoming_alert.id,
+        serialized = AlertSerializer(instance=incoming_alert)
+        notify_alert_received.delay(serialized.data['url'],
                                     message['agency_user'].device_endpoint_arn)
     else:
         pass
@@ -102,7 +104,7 @@ def publish_to_device(device_endpoint_arn, message):
 @task
 def notify_alert_received(alert_id, device_endpoint_arn):
     sns = SNSManager()
-    msg = sns.get_message_json("The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
+    msg = sns.get_message_json("APNS_SANDBOX", "The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
     sns.publish_to_device(msg, device_endpoint_arn)
 
 

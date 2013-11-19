@@ -10,8 +10,6 @@ import django.utils.timezone
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
-from tasks import notify_alert_received
-
 
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -116,9 +114,6 @@ class Alert(TimeStampedModel):
             except UserProfile.DoesNotExist:
                 pass
             self.store_chat_messages()
-        elif self.status == 'N' and not self.user_notified_of_receipt:
-            notify_alert_received.delay(self.pk,
-                                        self.agency_user.device_endpoint_arn)
 
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
