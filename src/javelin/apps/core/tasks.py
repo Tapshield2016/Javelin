@@ -33,6 +33,8 @@ def new_alert(message):
         serialized = AlertSerializer(instance=incoming_alert)
         notify_alert_received.delay(serialized.data['url'],
                                     message['agency_user'].device_endpoint_arn)
+        incoming_alert.user_notified_of_receipt = True
+        incoming_alert.save()
     else:
         pass
 

@@ -34,6 +34,7 @@ class Agency(TimeStampedModel):
     agency_boundaries = models.MultiPolygonField()
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
+    default_map_zoop_level = models.PositiveIntegerField(default=15)
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
     sns_primary_topic_arn = models.CharField(max_length=255,
