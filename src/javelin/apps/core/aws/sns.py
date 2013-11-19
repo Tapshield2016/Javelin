@@ -16,8 +16,11 @@ class SNSManager(object):
             aws_secret_access_key=settings.SNS_SECRET_ACCESS_KEY)
 
     def create_endpoint(self, arn, device_token):
-        return self.connection.create_platform_endpoint(settings.SNS_IOS_ARN,
+        return self.connection.create_platform_endpoint(arn,
                                                         token=device_token)
+
+    def create_android_endpoint(self, device_token):
+        return self.create_endpoint(settings.SNS_ANDROID_ARN, device_token)
 
     def create_ios_endpoint(self, device_token):
         return self.create_endpoint(settings.SNS_IOS_ARN, device_token)

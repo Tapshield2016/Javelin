@@ -51,6 +51,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     user.device_type = device_type
                     user.save()
                     create_user_device_endpoint.delay(user.pk,
+                                                      user.device_type,
                                                       user.device_token)
                     return Response({'message': 'Success'})
                 except User.DoesNotExit:
@@ -105,6 +106,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                 user = alert.agency_user
                 notify_new_chat_message_available.delay(\
                     message, message_id,
+                    user.device_type,
                     user.device_endpoint_arn)
             return Response({'message': 'Chat received'})
         else:

@@ -38,9 +38,14 @@ SNS_ACCESS_KEY_ID = 'AKIAITQVGREAX47VJCYQ'
 SNS_SECRET_ACCESS_KEY = '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'
 SNS_IOS_ARN = 'arn:aws:sns:us-east-1:175861827001:app/APNS_SANDBOX/Javelin-iOS-Dev'
 SNS_IOS_PLATFORM = 'APNS_SANDBOX'
-SNS_ANDROID_ARN = ''
+SNS_ANDROID_ARN = 'arn:aws:sns:us-east-1:175861827001:app/GCM/Javelin-Android-Dev'
+SNS_ANDROID_PLATFORM = 'GCM'
 SNS_ENDPOINT_QUEUE = 'endpoint_creation_queue_dev'
-SNS_ANDROID_PLATFORM = ''
+
+SNS_APP_ENDPOINTS = {
+    "I": "APNS_SANDBOX",
+    "A": "GCM",
+}
 
 # celery
 BROKER_URL = "sqs://%s:%s@sqs.us-east-1.amazonaws.com/175861827001/"\

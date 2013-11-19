@@ -32,6 +32,7 @@ def new_alert(message):
         message_valid = True
         serialized = AlertSerializer(instance=incoming_alert)
         notify_alert_received.delay(serialized.data['url'],
+                                    message['agency_user'].device_type,
                                     message['agency_user'].device_endpoint_arn)
         incoming_alert.user_notified_of_receipt = True
         incoming_alert.save()
@@ -42,7 +43,7 @@ def new_alert(message):
 
 
 @task
-def create_user_device_endpoint(user_id, device_token):
+def create_user_device_endpoint(user_id, device_type, device_token):
     """
     We expect to see a response that is something like this:
     {u'CreatePlatformEndpointResponse':
@@ -52,7 +53,11 @@ def create_user_device_endpoint(user_id, device_token):
             {u'RequestId': u'f1cf7de0-6c5b-5492-b7aa-37169d3f1cd8'}}}
     """
     sns = SNSManager()
-    response = sns.create_ios_endpoint(device_token)
+    response = {}
+    if device_type == "I":
+        response = sns.create_ios_endpoint(device_token)
+    elif device_type == "A":
+        response = sns.create_android_endpoint(device_token)
     if 'CreatePlatformEndpointResponse' in response:
         response = response['CreatePlatformEndpointResponse']
         if 'CreatePlatformEndpointResult' in response:
@@ -104,16 +109,18 @@ def publish_to_device(device_endpoint_arn, message):
 
 
 @task
-def notify_alert_received(alert_id, device_endpoint_arn):
+def notify_alert_received(alert_id, device_type, device_endpoint_arn):
     sns = SNSManager()
-    msg = sns.get_message_json("APNS_SANDBOX", "The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, "The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
 @task
 def notify_new_chat_message_available(chat_message, chat_message_id,
-                                      device_endpoint_arn):
+                                      device_type, device_endpoint_arn):
     sns = SNSManager()
-    msg = sns.get_message_json("APNS_SANDBOX", chat_message,
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, chat_message,
                                "chat-message-available", chat_message_id)
     sns.publish_to_device(msg, device_endpoint_arn)
