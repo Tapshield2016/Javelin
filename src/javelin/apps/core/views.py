@@ -85,11 +85,17 @@ def login(request):
         password = request.POST.get('password')
         user = authenticate(username=username, password=password)
         if user is not None:
-            if user.is_active:
+            if user.is_active and user.email_verified:
                 auth_login(request, user)
             else:
-                return HttpResponseForbidden(\
-                    content='Your account is not active.')
+                if not user.is_active:
+                    return HttpResponseForbidden(\
+                        content='Your account is not active.')
+                if not user.email_verified:
+                    response = HttpResponse(content='User email address has not been verified')
+                    response.status_code = 401
+                    response['Auth-Response'] = 'Email unverified'
+                    return response
         else:
             login_failed = True
 
