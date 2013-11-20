@@ -36,8 +36,8 @@ def register_user(request):
     serialized = UserSerializer(data=request_data)
     if serialized.is_valid() and agency_id:
         user = RegistrationProfile.objects.create_inactive_user(
-            serialized.init_data['email'],
-            serialized.init_data['username'],
+            serialized.init_data['email'].lower(),
+            serialized.init_data['username'].lower(),
             serialized.init_data['password'],
             get_current_site(request),
         )
