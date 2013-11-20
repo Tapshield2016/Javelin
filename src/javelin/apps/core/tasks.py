@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
-from core.models import Alert, Agency, AgencyUser
+from core.models import Agency, AgencyUser, Alert, AlertLocation
 from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
@@ -24,16 +24,27 @@ def new_alert(message):
     """
     message_valid = False
     if 'user' in message:
-        message['agency_user'] = AgencyUser.objects.get(email=message['user'])
-        del message['user']
-        incoming_alert = Alert(**message)
-        incoming_alert.agency = message['agency_user'].agency
+        user = AgencyUser.objects.get(email=message['user'])
+        location_latitude = message['location_latitude']
+        location_longitude = message['location_longitude']
+        location_altitude = message['location_altitude']
+        location_accuracy = message['location_accuracy']
+
+        incoming_alert = Alert(agency=user.agency, agency_user=user)
         incoming_alert.save()
+
+        incoming_alert_location = AlertLocation(alert=incoming_alert,
+                                                altitude=location_altitude,
+                                                longitude=location_longitude,
+                                                latitude=location_latitude,
+                                                accuracy=location_accuracy)
+        incoming_alert_location.save()
+
         message_valid = True
         serialized = AlertSerializer(instance=incoming_alert)
         notify_alert_received.delay(serialized.data['url'],
-                                    message['agency_user'].device_type,
-                                    message['agency_user'].device_endpoint_arn)
+                                    user.device_type,
+                                    user.device_endpoint_arn)
         incoming_alert.user_notified_of_receipt = True
         incoming_alert.save()
     else:

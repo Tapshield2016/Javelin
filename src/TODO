@@ -1,0 +1,6 @@
+- Need Android agency topic endpoint
+- Need to subscribe devices based on iOS/Android
+- Need to set various accept/complete/disarm times in Alert model
+- Need to figure out MultiPointField or other alternative for alert location
+- Need to look into Android push notification tokens
+- Need to make message timestamps timezone-specific, e.g. standardize on UTC

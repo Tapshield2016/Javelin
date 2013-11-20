@@ -3,7 +3,8 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
-from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
+from core.models import (Agency, Alert, AlertLocation,
+                         ChatMessage, MassAlert, UserProfile)
 
 User = get_user_model()
 
@@ -28,7 +29,14 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         model = Agency
 
 
+class AlertLocationSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = AlertLocation
+
+
 class AlertSerializer(serializers.HyperlinkedModelSerializer):
+    locations = AlertLocationSerializer(many=True)
 
     class Meta:
         model = Alert

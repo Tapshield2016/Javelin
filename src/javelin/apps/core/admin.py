@@ -13,7 +13,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
     pass
 
 
-class AlertAdmin(admin.ModelAdmin):
+class AlertAdmin(gis_admin.GeoModelAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
 
 

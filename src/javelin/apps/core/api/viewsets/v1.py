@@ -12,13 +12,15 @@ from rest_framework.response import Response
 
 from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AgencySerializer, AlertSerializer,
+                                     AlertLocationSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
-from core.models import Agency, Alert, ChatMessage, MassAlert, UserProfile
+from core.models import (Agency, Alert, AlertLocation,
+                         ChatMessage, MassAlert, UserProfile)
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
@@ -135,6 +137,12 @@ class AlertViewSet(viewsets.ModelViewSet):
             return Response(\
                 {'message': "timestamp must be an Unix timestamp"},
                 status=status.HTTP_400_BAD_REQUEST)
+
+
+class AlertLocationViewSet(viewsets.ModelViewSet):
+    queryset = AlertLocation.objects.select_related().all()
+    serializer_class = AlertLocationSerializer
+    filter_fields = ('alert',)
 
 
 class ChatMessageViewSet(viewsets.ModelViewSet):

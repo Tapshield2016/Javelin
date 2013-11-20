@@ -93,18 +93,15 @@ class Alert(TimeStampedModel):
     completed_time = models.DateTimeField(null=True, blank=True)
     disarmed_time = models.DateTimeField(null=True, blank=True)
     pending_time = models.DateTimeField(null=True, blank=True)
-    location_accuracy = models.FloatField(null=True, blank=True)
-    location_address =\
-        models.CharField(max_length=255, null=True, blank=True)
-    location_altitude = models.FloatField(null=True, blank=True)
-    location_latitude = models.FloatField(null=True, blank=True)
-    location_longitude = models.FloatField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=STATUS_CHOICES,
                               default='N')
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
     user_notified_of_receipt = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-creation_date']
 
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
@@ -163,6 +160,16 @@ class Alert(TimeStampedModel):
                 ]
             )
 
+
+class AlertLocation(TimeStampedModel):
+    alert = models.ForeignKey('Alert', related_name='locations')
+    accuracy = models.FloatField(null=True, blank=True)
+    altitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)    
+
+    class Meta:
+        ordering = ['creation_date']
 
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')
