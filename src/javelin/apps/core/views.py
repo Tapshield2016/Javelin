@@ -1,6 +1,7 @@
 import datetime
 import json
 
+from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
 from django.contrib.auth.models import Group
@@ -15,6 +16,8 @@ from registration.models import RegistrationProfile
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+
+from twilio.util import TwilioCapability
 
 from models import Agency
 from api.serializers.v1 import UserSerializer
@@ -129,3 +132,11 @@ def verified(request):
         message = 'user is a required parameters'
     return Response({'message': message},
                     status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def twilio_call_token(request):
+    capability = TwilioCapability(settings.TWILIO_ACCOUNT_SID,
+                                  settings.TWILIO_AUTH_TOKEN)
+    capability.allow_client_outgoing(settings.TWILIO_APP_SID)
+    return Response({'token': capability.generate(expires=60 * 120)},
+                    status=status.HTTP_200_OK)
