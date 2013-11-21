@@ -29,8 +29,10 @@ def new_alert(message):
         location_longitude = message['location_longitude']
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
+        alert_initiated_by = message['alert_type']
 
-        incoming_alert = Alert(agency=user.agency, agency_user=user)
+        incoming_alert = Alert(agency=user.agency, agency_user=user,
+                               initiated_by=alert_initiated_by)
         incoming_alert.save()
 
         incoming_alert_location = AlertLocation(alert=incoming_alert,
