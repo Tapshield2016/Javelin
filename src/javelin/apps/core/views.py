@@ -4,6 +4,7 @@ import json
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
 from django.contrib.auth.models import Group
+from django.contrib.auth.views import password_reset
 from django.contrib.sites.models import get_current_site
 from django.http import HttpResponse, HttpResponseForbidden
 from django.shortcuts import render_to_response
@@ -137,3 +138,10 @@ def verified(request):
         message = 'user is a required parameters'
     return Response({'message': message},
                     status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def api_user_password_reset(request):
+    password_reset(request)
+    return Response({'message': 'OK'},
+                    status=status.HTTP_200_OK)
