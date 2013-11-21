@@ -54,6 +54,8 @@ def register_user(request):
 @api_view(['POST'])
 def resend_verification_email(request):
     email = request.DATA.get('email', None)
+    message = "Ok"
+    response_status = status.HTTP_200_OK
     if email:
         try:
             user = User.objects.get(email=email)
@@ -66,15 +68,15 @@ def resend_verification_email(request):
                 user.date_joined = datetime.datetime.now()
                 user.save()
             else:
-                return Response("User has already been activated",
-                                status=status.HTTP_400_BAD_REQUEST)
+                message = "User has already been activated"
+                response_status = status.HTTP_400_BAD_REQUEST
         except User.DoesNotExist, RegistrationProfile.DoesNotExist:
-            return Response("User not found",
-                            status=status.HTTP_400_BAD_REQUEST)
+            message = "User not found"
+            response_status = status.HTTP_400_BAD_REQUEST
     else:
-        return Response("Email required.",
-                        status=status.HTTP_400_BAD_REQUEST)
-    return Response("Ok.", status=status.HTTP_200_OK)
+        message = "Email required"
+        response_status = status.HTTP_400_BAD_REQUEST
+    return Response({"message": message}, status=response_status)
 
 
 @csrf_exempt
@@ -88,14 +90,14 @@ def login(request):
             if user.is_active and user.email_verified:
                 auth_login(request, user)
             else:
-                if not user.is_active:
-                    return HttpResponseForbidden(\
-                        content='Your account is not active.')
                 if not user.email_verified:
                     response = HttpResponse(content='User email address has not been verified')
                     response.status_code = 401
                     response['Auth-Response'] = 'Email unverified'
                     return response
+                if not user.is_active:
+                    return HttpResponseForbidden(\
+                        content='Your account is not active.')
         else:
             login_failed = True
 
