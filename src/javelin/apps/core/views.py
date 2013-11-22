@@ -122,7 +122,7 @@ def login(request):
 
 @api_view(['GET'])
 def verified(request):
-    user_email = request.GET.get('user', None)
+    user_email = request.GET.get('email', None)
     message = ''
     if user_email:
         try:
