@@ -33,6 +33,9 @@ def register_user(request):
     except Agency.DoesNotExist:
         agency_id = None
 
+    if not 'username' in request_data:
+        request_data['username'] = request_data.get('email', None)
+
     serialized = UserSerializer(data=request_data)
     if serialized.is_valid() and agency_id:
         user = RegistrationProfile.objects.create_inactive_user(
@@ -44,6 +47,10 @@ def register_user(request):
         user_group = Group.objects.get(name='Users')
         user.groups.add(user_group)
         user.agency = agency
+        user.phone_number = request_data.get('phone_number', '')
+        user.disarm_code = request_data.get('disarm_code', '')
+        user.first_name = request_data.get('first_name', '')
+        user.last_name = request_data.get('last_name', '')
         user.save()
         return Response(UserSerializer(instance=user).data,
                         status=status.HTTP_201_CREATED)
