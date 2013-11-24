@@ -67,13 +67,18 @@ def resend_verification_email(request):
         try:
             user = User.objects.get(email=email)
             if not user.is_active:
-                profile = RegistrationProfile.objects.get(user=user)
-                if profile.activation_key_expired():
-                    profile.delete()
-                    profile = RegistrationProfile.objects.create_profile(user)
-                profile.send_activation_email(get_current_site(request))
-                user.date_joined = datetime.datetime.now()
-                user.save()
+                try:
+                    profile = RegistrationProfile.objects.get(user=user)
+                    if profile.activation_key_expired():
+                        profile.delete()
+                        profile =\
+                            RegistrationProfile.objects.create_profile(user)
+                    profile.send_activation_email(get_current_site(request))
+                    user.date_joined = datetime.datetime.now()
+                    user.save()
+                except RegistrationProfile.DoesNotExist:
+                    message = "No registration profile found for user."
+                    response_status = status.HTTP_400_BAD_REQUEST
             else:
                 message = "User has already been activated"
                 response_status = status.HTTP_400_BAD_REQUEST
