@@ -27,6 +27,28 @@ User = get_user_model()
 
 @api_view(['POST'])
 def register_user(request):
+    """
+    Registers a new user under the specified agency. If a phone number is
+    provided, an SMS verification message will be sent to the user with an
+    auto-generated verification code.
+
+    The user will receive a verification email with a link back to our site,
+    which will activate the user's account and mark the email_verified field
+    as 'True'. The verification link will expire after 30 days, after which
+    time the user can re-register with the same info if needed.
+
+    Email addresses are unique identifiers in this system and registration
+    will fail if a user has previously registered with the provided address.
+
+    agency -- (Required) Numerical ID of the agency
+    email -- (Required) The user's email address
+    password -- (Required) The user's desired password in plain text
+    phone_number -- (Optional) The user's phone number
+    disarm_code -- (Optional) The user's alert disarm code
+    first_name -- (Optional) The user's first name
+    last_name -- (Optional) The user's last name
+
+    """
     request_data = request.DATA.copy()
     agency_id = request_data.get('agency', None)
     if agency_id:
@@ -63,6 +85,19 @@ def register_user(request):
 
 @api_view(['POST'])
 def resend_verification_email(request):
+    """
+    Sends another email to verify the email address provided by the user.
+    If the email is sent without issue, a 200 status code will be returned.
+    Other scenarios can occur and result in a 400, such as:
+
+    - No registration profile found for user: This happens when a user is
+      created through the Django admin and not the API's register method.
+    - User has already been actived
+    - User not found (e.g. email address is unknown)
+    - Email required (email address is missing from query parameters)
+
+    email -- (Required) The email address of the user requesting resending.
+    """
     email = request.DATA.get('email', None)
     message = "Ok"
     response_status = status.HTTP_200_OK
@@ -96,6 +131,29 @@ def resend_verification_email(request):
 
 @csrf_exempt
 def login(request):
+    """
+    Attempts to login the user represented by the provided username and
+    password. The username should be the user's email address.
+
+    The flow works as follows:
+
+    1. If request method is GET:
+       a. Returns a 200 if the user is already logged in.
+       b. Otherwise, returns a 401 and an 'Auth-Response' header with a 'Login
+          failed' message. An attempt should be made to POST login info now.
+    2. If request method is POST:
+       a. Attempts to authenticate the user
+          1. If successful:
+             a. Logs in user if the user is active and has a verified 
+                email address. 
+             b. Otherwise, returns a 401 or 403 with a message specifying which
+                check failed. Since we must resend verification if the email 
+                address is not verified, that error is prioritized.
+                This also allows for deactivation of users to prevent login
+                after email verification is complete (403).
+          2. Otherwise, returns a 401 and an 'Auth-Response' header with a 
+             'Login failed' message.
+    """
     login_failed = False
     if request.method == "POST":
         username = request.POST.get('username')
@@ -137,6 +195,11 @@ def login(request):
 
 @api_view(['GET'])
 def verified(request):
+    """
+    Checks if the supplied email address has been verified.
+
+    email -- (Required) The email address to check
+    """
     user_email = request.GET.get('email', None)
     message = ''
     if user_email:
@@ -156,6 +219,10 @@ def verified(request):
 
 @api_view(['GET'])
 def twilio_call_token(request):
+    """
+    Returns a Twilio capability token allowing for an outbound client call
+    to be made with an expiration of 2 hours.
+    """
     capability = TwilioCapability(settings.TWILIO_ACCOUNT_SID,
                                   settings.TWILIO_AUTH_TOKEN)
     capability.allow_client_outgoing(settings.TWILIO_APP_SID)

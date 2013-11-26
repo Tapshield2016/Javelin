@@ -35,6 +35,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action()
     def update_device_token(self, request, pk=None):
+        """
+        Set the device token for the specified user.
+
+        deviceToken -- The push notification token to store
+        deviceType -- iOS, Android, etc. Use 'I' for iOS, 'A' for Android.
+        """
         if request.user.is_superuser or request.user.pk == int(pk):
             device_token = request.DATA.get('deviceToken', None)
             device_type = request.DATA.get('deviceType', None)
@@ -64,6 +70,12 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action()
     def check_sms_verification_code(self, request, pk=None):
+        """
+        Checks the provided code against the code sent to the user
+        via SMS for phone number verification.
+
+        code -- The code to check
+        """
         if request.user.is_superuser or request.user.pk == int(pk):
             code = request.DATA.get('code', None)
             if not code:
@@ -100,6 +112,12 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
     @action()
     def send_mass_alert(self, request, pk=None):
+        """
+        Sends a message to all devices subscribed to the agency's SNS topic
+        endpoint.
+
+        message -- The message to send
+        """
         message = request.DATA.get('message', None)
         if not message:
             return Response({'message': 'message is a required parameter'},
@@ -120,6 +138,13 @@ class AlertViewSet(viewsets.ModelViewSet):
 
     @action()
     def send_message(self, request, pk=None):
+        """
+        Sends a chat message to DynamoDB, tied to the specified alert's PK.
+        The message will automatically receive the appropriate sender PK,
+        UUID, and Unix timestamp
+
+        message -- The message to send
+        """
         message = request.DATA.get('message', None)
         if message:
             message_id = str(uuid.uuid1())
@@ -144,12 +169,20 @@ class AlertViewSet(viewsets.ModelViewSet):
 
     @action(methods=['get'])
     def messages(self, request, pk=None):
+        """
+        Get all messages for the given alert.
+        """
         dynamo_db = DynamoDBManager()
         messages = dynamo_db.get_messages_for_alert(pk)
         return Response(messages)
 
     @action(methods=['get'])
     def messages_since(self, request, pk=None):
+        """
+        Get all messages for the given alert since the provided Unix timestamp.
+
+        timestamp -- Get messages since this Unix timestamp.
+        """
         timestamp = request.GET.get('timestamp', None)
         if not timestamp:
             return Response({'message': 'timestamp is a required parameter'},
