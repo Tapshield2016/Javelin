@@ -13,6 +13,7 @@ django-celery==3.1.1
 django-devserver==0.6.2
 django-filter==0.7
 django-registration==1.0
+django-rest-swagger==0.1.10
 django-storages==1.1.8
 django-twilio==0.4
 djangorestframework==2.3.8

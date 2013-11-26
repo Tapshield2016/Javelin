@@ -17,6 +17,7 @@ DATABASES = {
 
 INSTALLED_APPS += (
     'devserver',
+    'rest_framework_swagger',
 )
 
 EMAIL_HOST = 'smtp.gmail.com'
@@ -59,3 +60,18 @@ TWILIO_ACCOUNT_SID = 'AC16b20300998d261efefb490dbc4a6302'
 TWILIO_AUTH_TOKEN = '560b03d57aa563661444e63f0f7527e8'
 TWILIO_APP_SID = 'AP299c4eeef7fb59999a8258140fc3d8a2'
 TWILIO_SMS_FROM_NUMBER = '+17066807385'
+
+# Swagger
+SWAGGER_SETTINGS = {
+    "exclude_namespaces": [], # List URL namespaces to ignore
+    "api_version": '1',  # Specify your API's version
+    "enabled_methods": [  # Specify which methods to enable in Swagger UI
+        'get',
+        'post',
+        'put',
+        'patch',
+        'delete'
+    ],
+    "is_authenticated": True,  # Set to True to enforce user authentication,
+    "is_superuser": True,  # Set to True to enforce admin only access
+}

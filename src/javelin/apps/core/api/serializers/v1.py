@@ -37,7 +37,7 @@ class AlertLocationSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AlertSerializer(serializers.HyperlinkedModelSerializer):
-    locations = AlertLocationSerializer(many=True)
+    locations = AlertLocationSerializer(many=True, required=False)
 
     class Meta:
         model = Alert

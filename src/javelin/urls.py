@@ -26,4 +26,5 @@ urlpatterns = patterns('',
     url(r'^api/retrieve-token/$',
         'rest_framework.authtoken.views.obtain_auth_token'),
     url(r'^api/', include('core.urls')),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
 )
