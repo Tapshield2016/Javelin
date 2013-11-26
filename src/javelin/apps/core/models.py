@@ -1,11 +1,15 @@
+import random
+
 from datetime import datetime
+
+import django.utils.timezone
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
-import django.utils.timezone
+from django.utils.text import slugify
 
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
@@ -190,9 +194,10 @@ class AgencyUser(AbstractUser):
 
     agency = models.ForeignKey('Agency', null=True, blank=True)
     phone_number = models.CharField(max_length=24)
+    phone_number_verification_code = models.PositiveIntegerField()
+    phone_number_verified = models.BooleanField(default=False)
     disarm_code = models.CharField(max_length=10)
     email_verified = models.BooleanField(default=False)
-    phone_number_verified = models.BooleanField(default=False)
     device_token = models.CharField(max_length=255, null=True, blank=True)
     device_endpoint_arn = models.CharField(max_length=255,
                                            null=True, blank=True)
@@ -201,6 +206,15 @@ class AgencyUser(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+    def save(self, *args, **kwargs):
+        if not self.phone_number_verification_code:
+            self.phone_number_verification_code =\
+                random.randrange(10001, 700000)
+        super(AgencyUser, self).save(*args, **kwargs)
+
+    def sms_verification_topic_name(self):
+        return u"sms-verification-topic-%s" % slugify(self.phone_number)
 
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
 
@@ -287,6 +301,22 @@ class ChatMessage(TimeStampedModel):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(pre_save, sender=AgencyUser)
+def send_phone_number_verification_code(sender, instance, **kwargs):
+    perform_check_anyway = False
+    try:
+        obj = AgencyUser.objects.get(pk=instance.pk)
+    except AgencyUser.DoesNotExist:
+        perform_check_anyway = True
+    else:
+        if not obj.phone_number == instance.phone_number\
+                or perform_check_anyway:
+            from core.tasks import send_phone_number_verification
+            send_phone_number_verification.delay(\
+                instance.phone_number,
+                instance.phone_number_verification_code)
 
 
 def set_email_verified(sender, user, request, **kwargs):

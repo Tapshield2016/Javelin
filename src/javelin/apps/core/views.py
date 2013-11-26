@@ -153,6 +153,7 @@ def verified(request):
     return Response({'message': message},
                     status=status.HTTP_400_BAD_REQUEST)
 
+
 @api_view(['GET'])
 def twilio_call_token(request):
     capability = TwilioCapability(settings.TWILIO_ACCOUNT_SID,

@@ -1,4 +1,8 @@
+import re
+
 from celery import task
+
+from django_twilio.client import twilio_client
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -53,6 +57,16 @@ def new_alert(message):
         pass
 
     return message_valid
+
+
+@task
+def send_phone_number_verification(phone_number, verification_code):
+    phone_number = re.sub("\D", "", phone_number)
+    phone_number = "+1%s" % phone_number[-10:]
+    resp = twilio_client.messages.create(\
+        to=phone_number,
+        from_=settings.TWILIO_SMS_FROM_NUMBER,
+        body="Your TapShield verification code is: %s" % verification_code)
 
 
 @task

@@ -62,6 +62,32 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
+    @action()
+    def check_sms_verification_code(self, request, pk=None):
+        if request.user.is_superuser or request.user.pk == int(pk):
+            code = request.DATA.get('code', None)
+            if not code:
+                return Response(\
+                    {'message': 'code is a required parameter'},
+                    status=status.HTTP_400_BAD_REQUEST)
+            try:
+                code = int(code.strip())
+            except ValueError:
+                return Response(\
+                    {'message': 'Incorrect type for code'},
+                    status=status.HTTP_400_BAD_REQUEST)                
+            user = self.get_object()
+            if code == user.phone_number_verification_code:
+                user.phone_number_verified = True
+                user.save()
+                return Response(\
+                    {'message': 'OK'},
+                    status=status.HTTP_200_OK)
+            else:
+                return Response(\
+                    {'message': 'Incorrect code'},
+                    status=status.HTTP_400_BAD_REQUEST)
+
 
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
