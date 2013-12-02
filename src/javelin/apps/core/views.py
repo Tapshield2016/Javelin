@@ -1,5 +1,6 @@
 import datetime
 import json
+from time import mktime
 
 from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
@@ -23,6 +24,15 @@ from models import Agency
 from api.serializers.v1 import UserSerializer
 
 User = get_user_model()
+
+
+class DatetimeEncoder(json.JSONEncoder):
+
+    def default(self, obj):
+        if isinstance(obj, datetime.datetime):
+            return int(mktime(obj.timetuple()))
+
+        return json.JSONEncoder.default(self, obj)
 
 
 @api_view(['POST'])
@@ -177,7 +187,7 @@ def login(request):
     if request.user.is_authenticated():
         status = 200
         serialized = UserSerializer(request.user, context={'request': request})
-        message = json.dumps(serialized.data)
+        message = json.dumps(serialized.data, cls=DatetimeEncoder)
     else:
         status = 401
         message = "Authorization required."
