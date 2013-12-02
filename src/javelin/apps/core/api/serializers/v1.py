@@ -9,7 +9,14 @@ from core.models import (Agency, Alert, AlertLocation,
 User = get_user_model()
 
 
+class AgencySerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Agency
+
+
 class UserSerializer(serializers.HyperlinkedModelSerializer):
+    agency = AgencySerializer(required=False)
 
     class Meta:
         model = User
@@ -22,12 +29,6 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ('url', 'name')
-
-
-class AgencySerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Agency
 
 
 class AlertLocationSerializer(serializers.HyperlinkedModelSerializer):
