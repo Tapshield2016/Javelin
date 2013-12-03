@@ -16,7 +16,8 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    agency = AgencySerializer(required=False)
+    agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 view_name='agency-detail')
 
     class Meta:
         model = User

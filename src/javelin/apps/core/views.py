@@ -21,7 +21,7 @@ from rest_framework.response import Response
 from twilio.util import TwilioCapability
 
 from models import Agency
-from api.serializers.v1 import UserSerializer
+from api.serializers.v1 import AgencySerializer, UserSerializer
 
 User = get_user_model()
 
@@ -187,6 +187,9 @@ def login(request):
     if request.user.is_authenticated():
         status = 200
         serialized = UserSerializer(request.user, context={'request': request})
+        if request.user.agency:
+            serialized.data['agency'] =\
+                AgencySerializer(request.user.agency).data
         message = json.dumps(serialized.data, cls=DatetimeEncoder)
     else:
         status = 401
