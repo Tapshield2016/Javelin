@@ -7,6 +7,7 @@ from django_twilio.client import twilio_client
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
+from core.aws.s3 import S3Manager
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
 from core.models import Agency, AgencyUser, Alert, AlertLocation
@@ -152,3 +153,9 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
     msg = sns.get_message_json(app_endpoint, chat_message,
                                "chat-message-available", chat_message_id)
     sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def delete_file_from_s3(url):
+    s3 = S3Manager()
+    s3.delete_file(url)

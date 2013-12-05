@@ -7,7 +7,7 @@ import django.utils.timezone
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.gis.db import models
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
@@ -303,6 +303,26 @@ class ChatMessage(TimeStampedModel):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+
+@receiver(pre_save, sender=UserProfile)
+def delete_profile_image_if_changed(sender, instance, **kwargs):
+    try:
+        obj = UserProfile.objects.get(pk=instance.pk)
+    except UserProfile.DoesNotExist:
+        pass
+    else:
+        if obj.profile_image_url and\
+                not obj.profile_image_url == instance.profile_image_url:
+            from core.tasks import delete_file_from_s3
+            delete_file_from_s3.delay(obj.profile_image_url)
+
+
+@receiver(post_delete, sender=UserProfile)
+def delete_profile_image(sender, instance, **kwargs):
+    if instance.profile_image_url:
+        from core.tasks import delete_file_from_s3
+        delete_file_from_s3.delay(instance.profile_image_url)
 
 
 @receiver(pre_save, sender=AgencyUser)
