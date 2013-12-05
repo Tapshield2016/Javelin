@@ -281,6 +281,8 @@ class UserProfile(models.Model):
                          null=True, blank=True)
     profile_image = models.ImageField(upload_to='images/profiles',
                                       null=True, blank=True)
+    profile_image_url = models.CharField(max_length=255, null=True, blank=True,
+                                         help_text="Location of asset on S3")
 
 
 class ChatMessage(TimeStampedModel):
