@@ -14,6 +14,13 @@ from django.utils.text import slugify
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
+from managers import (ActiveAlertManager, InactiveAlertManager,
+                      AcceptedAlertManager, CompletedAlertManager,
+                      DisarmedAlertManager, NewAlertManager,
+                      PendingAlertManager, InitiatedByChatAlertManager,
+                      InitiatedByEmergencyAlertManager,
+                      InitiatedByTimerAlertManager)
+
 
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
@@ -103,6 +110,18 @@ class Alert(TimeStampedModel):
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
     user_notified_of_receipt = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    active = ActiveAlertManager()
+    inactive = InactiveAlertManager()
+    accepted = AcceptedAlertManager()
+    completed = CompletedAlertManager()
+    disarmed = DisarmedAlertManager()
+    new = NewAlertManager()
+    pending = PendingAlertManager()
+    initiated_by_chat = InitiatedByChatAlertManager()
+    initiated_by_emergency = InitiatedByEmergencyAlertManager()
+    initiated_by_timer = InitiatedByTimerAlertManager()
 
     class Meta:
         ordering = ['-creation_date']
