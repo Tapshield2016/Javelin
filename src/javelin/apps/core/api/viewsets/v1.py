@@ -126,6 +126,10 @@ class AgencyViewSet(viewsets.ModelViewSet):
         sns = SNSManager()
         agency = self.get_object()
         publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
+        mass_alert = MassAlert(agency_dispatcher=request.user,
+                               agency=agency,
+                               message=message)
+        mass_alert.save()
         return Response({'message': 'Ok'},
                         status=status.HTTP_200_OK)
 
