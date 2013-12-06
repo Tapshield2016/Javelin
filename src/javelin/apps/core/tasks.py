@@ -36,9 +36,10 @@ def new_alert(message):
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
 
-        try:
-            incoming_alert = Alert.active.get(agency_user=user)
-        except Alert.DoesNotExist:
+        active_alerts = Alert.active.filter(agency_user=user)
+        if active_alerts:
+            incoming_alert = active_alerts[0]
+        else:
             incoming_alert = Alert(agency=user.agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
             incoming_alert.save()
