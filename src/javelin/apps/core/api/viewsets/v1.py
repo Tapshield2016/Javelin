@@ -29,7 +29,7 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups').all()
+        .prefetch_related('groups', 'locations').all()
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
