@@ -15,6 +15,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
 
 class AlertAdmin(gis_admin.GeoModelAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
+    list_filter = ('agency_user', 'status')
 
 
 class MassAlertAdmin(admin.ModelAdmin):
