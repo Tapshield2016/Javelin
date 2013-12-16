@@ -16,8 +16,13 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
+    'corsheaders',
     'devserver',
     'rest_framework_swagger',
+)
+
+MIDDLEWARE_CLASSES = (
+    'corsheaders.middleware.CorsMiddleware',
 )
 
 EMAIL_HOST = 'smtp.gmail.com'
@@ -78,3 +83,6 @@ SWAGGER_SETTINGS = {
     "is_authenticated": True,  # Set to True to enforce user authentication,
     "is_superuser": True,  # Set to True to enforce admin only access
 }
+
+# cors
+CORS_ORIGIN_ALLOW_ALL = True

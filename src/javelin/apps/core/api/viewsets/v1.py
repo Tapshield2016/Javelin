@@ -29,7 +29,7 @@ User = get_user_model()
 
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups', 'locations').all()
+        .prefetch_related('groups').all()
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
@@ -62,7 +62,7 @@ class UserViewSet(viewsets.ModelViewSet):
                                                       user.device_type,
                                                       user.device_token)
                     return Response({'message': 'Success'})
-                except User.DoesNotExit:
+                except User.DoesNotExist:
                     return Response({'message': 'user not found'},
                                     status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'Not found.'},

@@ -132,7 +132,8 @@ def create_agency_topic(agency_id, topic_name=None):
 def publish_to_agency_topic(agency_topic_arn, message):
     sns = SNSManager()
     msg = sns.get_topic_message_json(message, "mass-alert", "heyyyy")
-    return sns.publish_to_topic(msg, agency_topic_arn)
+    print msg
+    print sns.publish_to_topic(msg, agency_topic_arn)
 
 
 @task
