@@ -243,11 +243,13 @@ def twilio_call_token(request):
                     status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
 def dial(request):
+    from_number = settings.TWILIO_SMS_FROM_NUMBER
     content = """<Response>
     <Dial callerId="%s">
         <Number>%s</Number>
     </Dial>
     <Say>Thank you, goodbye!</Say>
-</Response>""" % (request.GET.get('From', None), request.GET.get('To', None))
+</Response>""" % (from_number, request.GET.get('To', None))
     return HttpResponse(content, mimetype='text/xml')
