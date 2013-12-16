@@ -21,7 +21,7 @@ INSTALLED_APPS += (
     'rest_framework_swagger',
 )
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES += (
     'corsheaders.middleware.CorsMiddleware',
 )
 
