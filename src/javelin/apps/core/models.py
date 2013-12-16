@@ -138,7 +138,7 @@ class Alert(TimeStampedModel):
             except UserProfile.DoesNotExist:
                 pass
             self.store_chat_messages()
-        else:
+        elif self.status != 'N':
             if self.status == 'A':
                 if not self.accepted_time:
                     self.accepted_time = datetime.now()
@@ -193,7 +193,7 @@ class AlertLocation(TimeStampedModel):
     longitude = models.FloatField(null=True, blank=True)    
 
     class Meta:
-        ordering = ['creation_date']
+        ordering = ['-creation_date']
 
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')
