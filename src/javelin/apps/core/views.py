@@ -241,3 +241,13 @@ def twilio_call_token(request):
     capability.allow_client_outgoing(settings.TWILIO_APP_SID)
     return Response({'token': capability.generate(expires=60 * 120)},
                     status=status.HTTP_200_OK)
+
+
+def dial(request):
+    content = """<Response>
+    <Dial callerId="%s">
+        <Number>%s</Number>
+    </Dial>
+    <Say>Thank you, goodbye!</Say>
+</Response>""" % (request.GET.get('From', None), request.GET.get('To', None))
+    return HttpResponse(content, mimetype='text/xml')
