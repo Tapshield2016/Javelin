@@ -243,7 +243,6 @@ def twilio_call_token(request):
                     status=status.HTTP_200_OK)
 
 
-@api_view(['GET'])
 def dial(request):
     from_number = settings.TWILIO_SMS_FROM_NUMBER
     content = """<Response>

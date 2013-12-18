@@ -138,6 +138,8 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
 
 class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
+    last_alert_received = django_filters.NumberFilter(name="id",
+                                                      lookup_type='gt')
     modified_since = IsoDateTimeFilter(name="last_modified",
                                        lookup_type='gte',
                                        input_formats=(ISO_8601,
