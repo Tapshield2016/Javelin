@@ -1,11 +1,13 @@
 import time
 import uuid
 
+import django_filters
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 
-from rest_framework import status, viewsets
+from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
 from rest_framework.filters import DjangoFilterBackend, OrderingFilter
 from rest_framework.response import Response
@@ -19,6 +21,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
+from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile)
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
@@ -134,11 +137,22 @@ class AgencyViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_200_OK)
 
 
+class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
+    modified_since = IsoDateTimeFilter(name="last_modified",
+                                       lookup_type='gte',
+                                       input_formats=(ISO_8601,
+                                                      '%m/%d/%Y %H:%M:%S'))
+
+    class Meta:
+        model = Alert
+
+
 class AlertViewSet(viewsets.ModelViewSet):
     queryset = Alert.objects.select_related().all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
+    filter_class = AlertsModifiedSinceFilterBackend
 
     @action()
     def send_message(self, request, pk=None):
