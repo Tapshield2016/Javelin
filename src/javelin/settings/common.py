@@ -91,7 +91,7 @@ MIDDLEWARE_CLASSES = (
 ROOT_URLCONF = 'javelin.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'javelin.wsgi.application'
+WSGI_APPLICATION = 'javelin.wsgi.dev.application'
 
 TEMPLATE_DIRS = (
     os.path.join(PROJECT_DIR, 'templates'),

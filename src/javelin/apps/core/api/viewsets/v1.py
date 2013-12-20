@@ -239,6 +239,6 @@ class MassAlertViewSet(viewsets.ModelViewSet):
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.all()
+    queryset = UserProfile.objects.select_related().all()
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
