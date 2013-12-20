@@ -6,7 +6,7 @@ djcelery.setup_loader()
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.contrib.gis.db.backends.postgis',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'javelin',
         'USER': 'javelin_user',
         'PASSWORD': '',
@@ -16,14 +16,18 @@ DATABASES = {
 }
 
 INSTALLED_APPS += (
-    'corsheaders',
-    'devserver',
-    'rest_framework_swagger',
+    #'corsheaders',
+    #'devserver',
+    #'rest_framework_swagger',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES += (
-    'corsheaders.middleware.CorsMiddleware',
+    #'corsheaders.middleware.CorsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
+
+INTERNAL_IPS = ('127.0.0.1',)
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'beathan@gmail.com'

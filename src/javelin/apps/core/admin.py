@@ -1,11 +1,10 @@
 from django.contrib import admin
-from django.contrib.gis import admin as gis_admin
 
 from models import (Agency, AgencyUser, Alert, MassAlert,
                     ChatMessage, UserProfile)
 
 
-class AgencyAdmin(gis_admin.GeoModelAdmin):
+class AgencyAdmin(admin.ModelAdmin):
     pass
 
 
@@ -13,7 +12,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
     pass
 
 
-class AlertAdmin(gis_admin.GeoModelAdmin):
+class AlertAdmin(admin.ModelAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
     list_filter = ('agency_user', 'status')
 

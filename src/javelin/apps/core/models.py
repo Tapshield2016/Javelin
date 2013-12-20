@@ -6,7 +6,7 @@ import django.utils.timezone
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
-from django.contrib.gis.db import models
+from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
@@ -42,7 +42,6 @@ class Agency(TimeStampedModel):
                                                          null=True, blank=True)
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
-    #agency_boundaries = models.MultiPolygonField()
     agency_boundaries = models.TextField(null=True, blank=True)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
@@ -53,7 +52,6 @@ class Agency(TimeStampedModel):
                                              null=True, blank=True)
 
     objects = models.Manager()
-    geo = models.GeoManager()
 
     class Meta:
         verbose_name_plural = "Agencies"
