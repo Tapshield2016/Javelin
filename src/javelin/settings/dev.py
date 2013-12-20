@@ -19,12 +19,12 @@ INSTALLED_APPS += (
     #'corsheaders',
     'devserver',
     #'rest_framework_swagger',
-    'debug_toolbar',
+    #'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES += (
     #'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 DEVSERVER_MODULES = (
@@ -97,3 +97,6 @@ SWAGGER_SETTINGS = {
 
 # cors
 CORS_ORIGIN_ALLOW_ALL = True
+
+# Shield Command
+SHIELD_COMMAND_API_VERSION = "v1"

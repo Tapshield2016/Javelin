@@ -1,0 +1,653 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>JavelinJS</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <!-- build:css styles/vendor.css -->
+        <!-- bower:css -->
+        <!-- endbower -->
+        <!-- endbuild -->
+        <!-- build:css(.tmp) styles/main.css -->
+        <link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/styles/main.css">
+        <!-- endbuild -->
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
+        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+    </head>
+    <body>
+
+        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <div class="container-full">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a id="logo" href="#"><img src="{{ STATIC_URL }}shieldcommand/images/logo.png" /></a>
+                </div>
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav pull-right">
+                        <li><a href="#" data-toggle="modal" data-target="#commandAlert">Command Alert</a></li>
+                        <li class="dropdown">
+                            <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ request.user.first_name }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Agency Settings</a></li>
+                                <li role="presentation" class="divider"></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div><!--/.nav-collapse -->
+            </div>
+        </div>
+
+        <div class="container-full">
+            <div class="row full-height">
+                <!-- sidebar -->
+                <div class="col-md-3 sidebar">
+                    <div class="panel-group" id="accordion">
+                      <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+                          <h4 class="panel-title">
+                            My Alerts (4)
+                          </h4>
+                        </div>
+                        <div id="collapseOne" class="panel-collapse collapse in">
+                            <div class="panel-body">
+                                <!-- My Alerts -->
+                                <ul class="alerts-list">
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat new-chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat new-chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                </ul>
+                            </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+                          <h4 class="panel-title">
+                            New Alerts (2)
+                          </h4>
+                        </div>
+                        <div id="collapseTwo" class="panel-collapse collapse">
+                          <div class="panel-body">
+                          <!-- New Alerts -->
+
+                                <ul class="alerts-list">
+
+                                    <li class="alert new">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>                                    
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type emergency">
+                                            <i class="icon-emergency_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>
+
+                                    <li class="alert">
+                                        <div class="alert-type chat">
+                                            <i class="icon-chat_type"></i>
+                                        </div>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
+                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
+                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        </div>
+                                    </li>  
+                                </ul>
+
+                          </div>
+                        </div>
+                      </div>
+                      <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
+                          <h4 class="panel-title">
+                            Pending Alerts (0)
+                          </h4>
+                        </div>
+                        <div id="collapseThree" class="panel-collapse collapse">
+                          <div class="panel-body">
+                          <!-- Alerts -->
+                          </div>
+                        </div>
+                      </div>
+                       <div class="panel panel-default">
+                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
+                          <h4 class="panel-title">
+                            Past Alerts (0)
+                          </h4>
+                        </div>
+                        <div id="collapseFour" class="panel-collapse collapse">
+                          <div class="panel-body">  
+                          <!-- Alerts -->
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                </div>
+
+                <!-- map -->
+                <div class="col-md-9 no-gutter">
+                    <div class="full-width">
+                        <div id="map-canvas" class="col-md-12"></div>
+
+                        <!-- profile -->
+                        <div id="profile" class="col-md-3 hidden">
+                            <p class="profile-title">Profile</p>
+                            <div class="profile-content">
+                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="{{ STATIC_URL }}shieldcommand/images/dev/branden.jpg" class="img-rounded profile-image" /></a>
+                                <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
+                                    <div class="modal-dialog" style="width: 365px;">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                <h4 class="modal-title" id="profileImageLabel">Branden Anderson</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <img src="{{ STATIC_URL }}shieldcommand/images/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
+                                            </div>
+                                        </div><!-- /.modal-content -->
+                                    </div><!-- /.modal-dialog -->
+                                </div><!-- /.modal -->
+                                <div class="disarm-code">
+                                    <div class="title">Disarm Code</div>
+                                        <div class="code">1234</div>
+                                    </div><!-- /.title -->
+                                </div><!-- /.disarm-code -->
+
+                                <div class="profile-information">
+
+                                    <table class="table table-condensed">
+                                        <tr class="first">
+                                            <td>Name</td>
+                                            <td>Branden Anderson</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phone</td>
+                                            <td>(704) 724-6335</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Email</td>
+                                            <td>branden.anderson@tapshield.com</td>
+                                        </tr>        
+                                        <tr>
+                                            <td>DOB</td>
+                                            <td>07/11/1974</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Address</td>
+                                            <td>5057 NW 44th Ln, Gainesville, FL 32606</td>
+                                        </tr>                                   
+                                    </table>
+
+                                    <table class="table table-condensed">
+                                        <caption>Characteristics</caption>
+                                        <tr>
+                                            <td>Sex</td>
+                                            <td>Male</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Age</td>
+                                            <td>07/11/1974</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Race</td>
+                                            <td>White/Caucasian</td>
+                                        </tr>        
+                                        <tr>
+                                            <td>Height</td>
+                                            <td>6'-4"</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Weight</td>
+                                            <td>220 lbs</td>
+                                        </tr>                                     
+                                        <tr>
+                                            <td>Hair</td>
+                                            <td>Blonde</td>
+                                        </tr>                                                                             
+                                    </table>
+
+                                    <table class="table table-condensed">
+                                        <caption>Medical</caption>
+                                        <tr>
+                                            <td>Allergies</td>
+                                            <td>Mushrooms</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Medication</td>
+                                            <td>Penicillin</td>
+                                        </tr>
+                                    </table>
+
+                                    <table class="table table-condensed">
+                                        <caption>Emergency Contact</caption>
+                                        <tr>
+                                            <td>Name</td>
+                                            <td>Tito Jackson</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Phone</td>
+                                            <td>(704) 724-6335</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Relation</td>
+                                            <td>Friend</td>
+                                        </tr>        
+                                    </table>
+
+                                    <table class="table table-condensed">
+                                        <caption>Past Alerts</caption>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Type</th>
+                                        </tr>
+                                        <tr>
+                                            <td>07/11/2012</td>
+                                            <td>Arson</td>
+                                        </tr>
+                                        <tr>
+                                            <td>07/12/2012</td>
+                                            <td>Bar Fight</td>
+                                        </tr>
+                                    </table>
+
+                                </div><!-- /.profile-information -->
+
+                                <div class="profile-buttons">
+                                    <h5>Mark Alert As</h5>
+                                    <div class="btn-group btn-group-justified">
+                                        <a href="#" type="button" class="btn btn-primary">Complete</a>
+                                        <a href="#" type="button" class="btn btn-warning">Pending</a>
+                                    </div>
+                                </div>
+
+                           </div><!-- /.profile-content -->
+                        </div><!-- /.profile -->
+
+                        <!-- /.profile -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="commandAlertLabel">Command Alert</h4>
+              </div>
+              <div class="modal-body">
+                <textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
+              </div>
+              <div class="modal-footer">
+                <p class="pull-left">0 / 140 characters remaining</p>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Send Message</button>
+              </div>
+            </div><!-- /.modal-content -->
+          </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
+
+
+        <!-- build:js scripts/vendor.js -->
+        <!-- bower:js -->
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script>
+        <!-- endbower -->
+        <!-- endbuild -->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X');ga('send','pageview');
+        </script>
+
+        <!-- build:js scripts/main.js -->
+        <script src="{{ STATIC_URL }}shieldcommand/scripts/jquery.rest.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/scripts/javelin.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/scripts/main.js"></script>
+        <script>
+            var googleMap;
+            var googleMapMarker = new google.maps.Marker()
+	        var googleMapAccuracyCircle = new google.maps.Circle()
+	        var googleMapGeocoder = new google.maps.Geocoder()
+
+            {% if agency_boundaries %}
+            var googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}]
+            {% endif %}
+            function initializeMap() {
+                var map_canvas = document.getElementById('map-canvas');
+                var map_options = {
+                  center: new google.maps.LatLng({{ agency.agency_center_latitude }}, {{ agency.agency_center_longitude }}),
+                  zoom: {{ agency.default_map_zoom_level }},
+                  mapTypeId: google.maps.MapTypeId.ROADMAP
+                };
+
+                googleMap = new google.maps.Map(map_canvas, map_options);
+				markerOptions = {
+					map: googleMap,
+					animation: google.maps.Animation.DROP
+				};
+
+				circleOptions = {
+					strokeColor: '#41c4f2',
+					strokeOpacity: 0.8,
+					strokeWeight: 2,
+					fillColor: '#41c4f2',
+					fillOpacity: 0.35,
+					map: googleMap
+				};
+
+				googleMapMarker.setOptions(markerOptions);
+				googleMapAccuracyCircle.setOptions(circleOptions);
+
+                {% if agency_boundaries %}
+                bermudaTriangle = new google.maps.Polygon({
+                            paths: googleMapAgencyBoundaries,
+                            strokeColor: '#0ab60a',
+                            strokeOpacity: 0.9,
+                            strokeWeight: 2,
+                            fillColor: '#76b676',
+                            fillOpacity: 0.15
+                        });
+
+				bermudaTriangle.setMap(googleMap);
+				{% endif %}
+            }
+            google.maps.event.addDomListener(window, 'load', initializeMap);
+            Javelin.initialize("/api/{{ api_version }}/", {{ agency.id }}, '{{ auth_token }}');
+        </script>
+        <!-- endbuild -->
+
+        <!-- build:js scripts/plugins.js -->
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/affix.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/carousel.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/scrollspy.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
+        <!-- endbuild -->
+</body>
+</html>

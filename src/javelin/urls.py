@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 
 from django.contrib import admin
@@ -27,4 +28,12 @@ urlpatterns = patterns('',
         'rest_framework.authtoken.views.obtain_auth_token'),
     url(r'^api/', include('core.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
+    url(r'^', include('shieldcommand.urls')),
+
+)
+
+if settings.DEBUG:
+    urlpatterns += patterns('',
+        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+            'document_root': settings.MEDIA_ROOT,}),
 )
