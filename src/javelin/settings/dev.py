@@ -17,7 +17,7 @@ DATABASES = {
 
 INSTALLED_APPS += (
     #'corsheaders',
-    #'devserver',
+    'devserver',
     #'rest_framework_swagger',
     'debug_toolbar',
 )
@@ -25,6 +25,13 @@ INSTALLED_APPS += (
 MIDDLEWARE_CLASSES += (
     #'corsheaders.middleware.CorsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+)
+
+DEVSERVER_MODULES = (
+    'devserver.modules.sql.SQLRealTimeModule',
+    'devserver.modules.sql.SQLSummaryModule',
+    'devserver.modules.profile.ProfileSummaryModule',
+    'devserver.modules.profile.LineProfilerModule',
 )
 
 INTERNAL_IPS = ('127.0.0.1',)
