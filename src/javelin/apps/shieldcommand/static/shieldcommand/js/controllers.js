@@ -2,8 +2,27 @@
 
 /* Controllers */
 
-angular.module('shieldCommand.controllers', []).
-  controller('AlertsListController', ['$scope', '$filter', 'alertService', function($scope, $filter, alertService) {
+angular.module('shieldCommand.controllers', [])
+
+.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertServce) {
+
+	$scope.toggle = function() {
+		$scope.isProfileVisible = !$scope.isProfileVisible;
+	}
+
+	$scope.isProfileVisible = false;
+
+	$scope.$on('toggleProfile', function() {
+		$scope.toggle();
+	});
+
+	$scope.$on('toggleProfileOpen', function() {
+		$scope.isProfileVisible = true;
+	});
+
+}])
+
+.controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
 
   	function updateAlerts(alerts) {
 		$scope.alerts = alerts;
@@ -35,9 +54,21 @@ angular.module('shieldCommand.controllers', []).
   		});
   	}
 
-  	$scope.alertClicked = function(index) {
-  		console.log(index + " clicked");
+  	$scope.alertClicked = function(alert) {
+  		if (alert === alertService.activeAlert) {
+  			$rootScope.$broadcast('toggleProfile');
+  			alertService.activeAlert = null;
+  		}
+  		else {
+	  		alertService.setActiveAlert(alert);
+  			$rootScope.$broadcast('activeAlertUpdated');
+			$rootScope.$broadcast('toggleProfileOpen');
+  		}
   	};
+
+    $scope.selectedClass = function(alert) {
+        return alert === alertService.activeAlert ? 'selected' : undefined;
+    };
 
   	$scope.acceptClicked = function(url) {
   		for (var i = 0; i < $scope.alerts.length; i++) {

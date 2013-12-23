@@ -10,6 +10,7 @@ angular.module('shieldCommand.services', [])
 .value('version', '1.0')
 
 .factory('alertService', [function () {
+	this.activeAlert = null;
 
 	this.loadInitialAlerts = function (callback) {
 		Javelin.loadInitialAlerts(function(initialAlerts) {
@@ -40,15 +41,29 @@ angular.module('shieldCommand.services', [])
 		});
 	}
 
+	this.setActiveAlert = function(alert) {
+		this.activeAlert = alert;
+		Javelin.setActiveAlert(alert);
+	}
+
 	this.claimAlertForActiveUser = function(alert, callback) {
 		Javelin.claimAlertForActiveUser(alert.object_id, function(data) {
 			callback(data);
-		})
+		});
 	}
 
+	this.markAlertAsCompleted = function(alert, callback) {
+		Javelin.markAlertAsCompleted(alert.object_id, function(data) {
+			callback(data);
+		});
+	}	
+
 	return {
+		activeAlert: this.activeAlert,
 		loadInitialAlerts: this.loadInitialAlerts,
 		getUpdatedAlerts: this.getUpdatedAlerts,
 		claimAlertForActiveUser: this.claimAlertForActiveUser,
+		markAlertAsCompleted: this.markAlertAsCompleted,
+		setActiveAlert: this.setActiveAlert,
 	}
 }]);

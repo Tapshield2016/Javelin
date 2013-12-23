@@ -149,6 +149,10 @@
 		Javelin.activeAgencyUser = new AgencyUser(attributes);
 	}
 
+	Javelin.setActiveAlert = function(alert) {
+		Javelin.activeAlert = alert;
+	}
+
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
 			agency_dispatcher: Javelin.activeAgencyUser.url,
@@ -157,6 +161,15 @@
 		request.done(function(data) {
 			callback(data);
 		});
+	}
+
+	Javelin.markAlertAsCompleted = function(alertID, callback) {
+		var request = Javelin.client.alerts.patch(alertID, {
+			status: 'D'
+		});
+		request.done(function(data) {
+			callback(data);
+		})
 	}
 
 	Javelin.loadInitialAlerts = function(callback) {
