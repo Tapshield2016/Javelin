@@ -60,7 +60,7 @@
                                 <!-- My Alerts -->
                                 <ul class="alerts-list">
 
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'}">
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'}" ng-click="alertClicked(alert.url)">
                                         <div class="alert-type emergency">
                                             <i class="icon-emergency_type"></i>
                                         </div>
@@ -90,7 +90,7 @@
                           <!-- New Alerts -->
 
                                 <ul class="alerts-list">
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}">
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-click="alertClicked(alert.url)">
                                         <div class="alert-type emergency">
                                             <i class="icon-emergency_type"></i>
                                         </div>
@@ -101,7 +101,7 @@
                                             </div>
                                         </div>
                                         <div class="alert-option chat new-chat" ng-class="">
-                                            <i class="icon-chat_bubble" ng-click=""></i>
+                                            <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url)"></i>
                                         </div>
                                     </li>
                                 </ul>
@@ -120,7 +120,7 @@
                           <!-- Pending Alerts -->
 
                             <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}">
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-click="alertClicked(alert.url)">
                                     <div class="alert-type emergency">
                                         <i class="icon-emergency_type"></i>
                                     </div>
@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="alert-option chat new-chat" ng-class="">
-                                        <i class="icon-chat_bubble" ng-click=""></i>
+                                        <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url)"></i>
                                     </div>
                                 </li>
                             </ul>
@@ -149,7 +149,7 @@
                           <div class="panel-body">  
                           <!-- Completed Alerts -->
                               <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}">
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-click="alertClicked(alert.url)">
                                     <div class="alert-type emergency">
                                         <i class="icon-emergency_type"></i>
                                     </div>
@@ -173,13 +173,13 @@
                 <!-- map -->
                 <div class="col-md-9 no-gutter">
                     <div class="full-width">
-                        <div id="map-canvas" class="col-md-12"></div>
+                        <div id="map-canvas" class="col-md-9"></div>
 
                         <!-- profile -->
-                        <div id="profile" class="col-md-3 hidden">
+                        <div id="profile" class="col-md-3">
                             <p class="profile-title">Profile</p>
                             <div class="profile-content">
-                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="{{ STATIC_URL }}shieldcommand/img/dev/branden.jpg" class="img-rounded profile-image" /></a>
+                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="/media/static/shieldcommand/img/dev/branden.jpg" class="img-rounded profile-image" /></a>
                                 <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
                                     <div class="modal-dialog" style="width: 365px;">
                                         <div class="modal-content">
@@ -188,7 +188,7 @@
                                                 <h4 class="modal-title" id="profileImageLabel">Branden Anderson</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <img src="{{ STATIC_URL }}shieldcommand/img/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
+                                                <img src="/media/static/shieldcommand/img/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->

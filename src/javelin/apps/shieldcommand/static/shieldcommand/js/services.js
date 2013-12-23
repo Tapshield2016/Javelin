@@ -10,17 +10,38 @@ angular.module('shieldCommand.services', [])
 .value('version', '1.0')
 
 .factory('alertService', [function () {
-	var alerts = [];
 
 	this.loadInitialAlerts = function (callback) {
 		Javelin.loadInitialAlerts(function(initialAlerts) {
-			alerts = initialAlerts;
 			callback(initialAlerts);
 		});
 	};
 
+	this.getUpdatedAlerts = function (existingAlerts, callback) {
+		Javelin.updateAlerts(function(updatedAlerts) {
+
+			for (var i = 0; i < updatedAlerts.length; i++) {
+				var foundAlert = false;
+				for (var j = 0; j < existingAlerts.length; j++) {
+					if (existingAlerts[j].url === updatedAlerts[i].url) {
+						foundAlert = true;
+						for (var key in updatedAlerts[i]) {
+							existingAlerts[j][key] = updatedAlerts[i][key];
+						}
+						break;
+					}
+				}
+				if (!foundAlert) {
+					existingAlerts.push(updatedAlerts[i]);
+				};
+			};
+
+			callback(existingAlerts);
+		});
+	}
+
 	return {
-		alerts: alerts,
 		loadInitialAlerts: this.loadInitialAlerts,
+		getUpdatedAlerts: this.getUpdatedAlerts,
 	}
 }]);

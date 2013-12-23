@@ -106,12 +106,6 @@
 		Javelin.client.alerts.add('messages_since');
 
 		Javelin.client.add('alert-locations');
-
-		// Javelin.loadInitialAlerts(function(alerts) {
-		// 	Javelin.alerts = alerts;
-		// 	console.log(Javelin.alerts.length);
-		// 	setTimeout(Javelin.updateAlerts, 3000);
-		// });
 	};
 
 	Javelin.loadInitialAlerts = function(callback) {
@@ -119,28 +113,13 @@
 		var then = Number(new Date(now - (24 * 60 * 60)));
 		Javelin.getAlerts({
 			modified_since: then,
-			page_size: 5,
+			page_size: 10,
 		}, callback);		
 	};
 
-	Javelin.updateAlerts = function() {
+	Javelin.updateAlerts = function(callback) {
 		Javelin.getAlertsModifiedSinceLastCheck(function(updatedAlerts) {
-			if (updatedAlerts.length == 0) {
-				console.log("No updates");
-			}
-			else {
-				for (var i = 0; i < updatedAlerts.length; i++) {
-					for (var j = 0; j < Javelin.alerts.length; j++) {
-						if (Javelin.alerts[j].url === updatedAlerts[i].url) {
-							for (var key in updatedAlerts[i]) {
-								Javelin.alerts[j][key] = updatedAlerts[i][key];
-								console.log("Replaced value for " + key + " with " + updatedAlerts[i][key]);
-							}
-						}
-					};
-				};
-			}
-			setTimeout(Javelin.updateAlerts, 3000);
+			callback(updatedAlerts);
 		});
 	}
 
