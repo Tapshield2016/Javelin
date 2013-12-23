@@ -4,7 +4,7 @@
 
 angular.module('shieldCommand.controllers', [])
 
-.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertServce) {
+.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertService) {
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
@@ -20,9 +20,21 @@ angular.module('shieldCommand.controllers', [])
 		$scope.isProfileVisible = true;
 	});
 
+	$scope.markActiveAlertAsCompleted = function() {
+		alertService.markActiveAlertAsCompleted(function(data) {
+			console.log("mark complete: " + data);
+			$scope.dismiss();
+			$rootScope.$broadcast('alertMarkedComplete');
+		});
+	}
+
 }])
 
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
+
+	$scope.$on('alertMarkedComplete', function() {
+		updateDisplay();
+	});
 
   	function updateAlerts(alerts) {
 		$scope.alerts = alerts;

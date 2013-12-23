@@ -66,8 +66,8 @@
                                         </div>
                                         <div class="alert-contact">
                                             <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                             </div>
                                         </div>
                                         <div class="alert-option chat new-chat" ng-class="">
@@ -96,8 +96,8 @@
                                         </div>
                                         <div class="alert-contact">
                                             <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                             </div>
                                         </div>
                                         <div class="alert-option chat new-chat" ng-class="">
@@ -126,8 +126,8 @@
                                     </div>
                                     <div class="alert-contact">
                                         <div class="alert-contact-info">
-                                            <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
-                                            <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                         </div>
                                     </div>
                                     <div class="alert-option chat new-chat" ng-class="">
@@ -155,8 +155,8 @@
                                     </div>
                                     <div class="alert-contact">
                                         <div class="alert-contact-info">
-                                            <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
-                                            <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                         </div>
                                     </div>
                                     <div class="alert-option chat new-chat" ng-class="">
@@ -173,6 +173,26 @@
                 <!-- map -->
                 <div class="col-md-9 no-gutter">
                     <div class="full-width" ng-controller="UserProfileController" ng-cloak>
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true" mark-complete-modal>
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="markAlertCompleteLabel">Complete Alert</h4>
+                              </div>
+                              <div class="modal-body">
+                                  <p>Are you sure you would like to set status as complete?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" ng-click="markActiveAlertAsCompleted()">Mark Completed</button>
+                              </div>
+                            </div><!-- /.modal-content -->
+                          </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
                         <div id="map-canvas" ng-class="(isProfileVisible) ? 'col-md-9' : 'col-md-12'"></div>
 
                         <!-- profile -->
@@ -330,25 +350,6 @@
                 <p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary">Send Message</button>
-              </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
-
-        <!-- Modal -->
-        <div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="markAlertCompleteLabel">Complete Alert</h4>
-              </div>
-              <div class="modal-body">
-                  <p>Are you sure you would like to set status as complete?</p>
-              </div>
-              <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Mark Completed</button>
               </div>
             </div><!-- /.modal-content -->
           </div><!-- /.modal-dialog -->

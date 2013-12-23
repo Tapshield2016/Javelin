@@ -52,8 +52,8 @@ angular.module('shieldCommand.services', [])
 		});
 	}
 
-	this.markAlertAsCompleted = function(alert, callback) {
-		Javelin.markAlertAsCompleted(alert.object_id, function(data) {
+	this.markActiveAlertAsCompleted = function(callback) {
+		Javelin.markAlertAsCompleted(this.activeAlert.object_id, function(data) {
 			callback(data);
 		});
 	}	
@@ -63,7 +63,7 @@ angular.module('shieldCommand.services', [])
 		loadInitialAlerts: this.loadInitialAlerts,
 		getUpdatedAlerts: this.getUpdatedAlerts,
 		claimAlertForActiveUser: this.claimAlertForActiveUser,
-		markAlertAsCompleted: this.markAlertAsCompleted,
+		markActiveAlertAsCompleted: this.markActiveAlertAsCompleted,
 		setActiveAlert: this.setActiveAlert,
 	}
 }]);

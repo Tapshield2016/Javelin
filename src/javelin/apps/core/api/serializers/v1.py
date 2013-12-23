@@ -50,6 +50,13 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Alert
 
+    def to_native(self, obj):
+        ret = super(AlertSerializer, self).to_native(obj)
+        if obj:
+            agency_user_meta = UserSerializer(instance=obj.agency_user)
+            ret['agency_user_meta'] = agency_user_meta.data
+        return ret
+
 
 class ChatMessageSerializer(serializers.HyperlinkedModelSerializer):
 

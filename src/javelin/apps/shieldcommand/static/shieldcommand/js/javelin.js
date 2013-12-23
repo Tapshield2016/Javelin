@@ -76,6 +76,7 @@
 	function Alert(attributes) {
 		APITimeStampedObject.call(this, attributes);
 		this.agencyUser = attributes.agency_user;
+		this.agencyUserMeta = null;
 		this.agencyDispatcher = attributes.agency_dispatcher;
 		this.acceptedTime = attributes.accepted_time;
 		this.completedTime = attributes.completed_time;
@@ -83,6 +84,11 @@
 		this.pendingTime = attributes.pending_time;
 		this.status = attributes.status;
 		this.initiatedBy = attributes.initiated_by;
+
+		if (attributes.agency_user_meta) {
+			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
+		};
+
 		return this;
 	}
 
@@ -165,7 +171,7 @@
 
 	Javelin.markAlertAsCompleted = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
-			status: 'D'
+			status: 'C'
 		});
 		request.done(function(data) {
 			callback(data);
