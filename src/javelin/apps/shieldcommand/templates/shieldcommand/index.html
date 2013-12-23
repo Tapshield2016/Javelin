@@ -1,13 +1,9 @@
 <!doctype html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en" ng-app="shieldCommand">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>JavelinJS</title>
-        <meta name="description" content="">
+        <title>Shield Command</title>
         <meta name="viewport" content="width=device-width">
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <!-- build:css styles/vendor.css -->
@@ -15,7 +11,7 @@
         <!-- endbower -->
         <!-- endbuild -->
         <!-- build:css(.tmp) styles/main.css -->
-        <link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/styles/main.css">
+        <link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">
         <!-- endbuild -->
         <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -30,7 +26,7 @@
                         <span class="sr-only">Toggle navigation</span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a id="logo" href="#"><img src="{{ STATIC_URL }}shieldcommand/images/logo.png" /></a>
+                    <a id="logo" href="#"><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a>
                 </div>
                 <div class="collapse navbar-collapse">
                     <ul class="nav navbar-nav pull-right">
@@ -47,7 +43,7 @@
                 </div><!--/.nav-collapse -->
             </div>
         </div>
-
+        {% verbatim %}
         <div class="container-full">
             <div class="row full-height">
                 <!-- sidebar -->
@@ -405,7 +401,7 @@
                         <div id="profile" class="col-md-3 hidden">
                             <p class="profile-title">Profile</p>
                             <div class="profile-content">
-                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="{{ STATIC_URL }}shieldcommand/images/dev/branden.jpg" class="img-rounded profile-image" /></a>
+                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="{{ STATIC_URL }}shieldcommand/img/dev/branden.jpg" class="img-rounded profile-image" /></a>
                                 <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
                                     <div class="modal-dialog" style="width: 365px;">
                                         <div class="modal-content">
@@ -414,7 +410,7 @@
                                                 <h4 class="modal-title" id="profileImageLabel">Branden Anderson</h4>
                                             </div>
                                             <div class="modal-body">
-                                                <img src="{{ STATIC_URL }}shieldcommand/images/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
+                                                <img src="{{ STATIC_URL }}shieldcommand/img/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
                                             </div>
                                         </div><!-- /.modal-content -->
                                     </div><!-- /.modal-dialog -->
@@ -553,7 +549,7 @@
                 <textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
               </div>
               <div class="modal-footer">
-                <p class="pull-left">0 / 140 characters remaining</p>
+                <p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 <button type="button" class="btn btn-primary">Send Message</button>
               </div>
@@ -561,6 +557,7 @@
           </div><!-- /.modal-dialog -->
         </div><!-- /.modal -->
 
+        {% endverbatim %}
 
         <!-- build:js scripts/vendor.js -->
         <!-- bower:js -->
@@ -579,17 +576,17 @@
         </script>
 
         <!-- build:js scripts/main.js -->
-        <script src="{{ STATIC_URL }}shieldcommand/scripts/jquery.rest.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/scripts/javelin.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/scripts/main.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
         <script>
             var googleMap;
-            var googleMapMarker = new google.maps.Marker()
-	        var googleMapAccuracyCircle = new google.maps.Circle()
-	        var googleMapGeocoder = new google.maps.Geocoder()
+            var googleMapMarker = new google.maps.Marker();
+	        var googleMapAccuracyCircle = new google.maps.Circle();
+	        var googleMapGeocoder = new google.maps.Geocoder();
 
             {% if agency_boundaries %}
-            var googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}]
+            var googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
             {% endif %}
             function initializeMap() {
                 var map_canvas = document.getElementById('map-canvas');
@@ -649,5 +646,13 @@
         <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
         <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
         <!-- endbuild -->
+
+        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
 </body>
 </html>
