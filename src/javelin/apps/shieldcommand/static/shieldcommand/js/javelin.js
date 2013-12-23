@@ -107,11 +107,11 @@
 
 		Javelin.client.add('alert-locations');
 
-		Javelin.loadInitialAlerts(function(alerts) {
-			Javelin.alerts = alerts;
-			console.log(Javelin.alerts.length);
-			setTimeout(Javelin.updateAlerts, 3000);
-		});
+		// Javelin.loadInitialAlerts(function(alerts) {
+		// 	Javelin.alerts = alerts;
+		// 	console.log(Javelin.alerts.length);
+		// 	setTimeout(Javelin.updateAlerts, 3000);
+		// });
 	};
 
 	Javelin.loadInitialAlerts = function(callback) {

@@ -47,12 +47,12 @@
         <div class="container-full">
             <div class="row full-height">
                 <!-- sidebar -->
-                <div class="col-md-3 sidebar">
+                <div class="col-md-3 sidebar" ng-controller="AlertsListController" ng-cloak>
                     <div class="panel-group" id="accordion">
                       <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                           <h4 class="panel-title">
-                            My Alerts (4)
+                            My Alerts ({{ myAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseOne" class="panel-collapse collapse in">
@@ -60,63 +60,18 @@
                                 <!-- My Alerts -->
                                 <ul class="alerts-list">
 
-                                    <li class="alert">
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'}">
                                         <div class="alert-type emergency">
                                             <i class="icon-emergency_type"></i>
                                         </div>
                                         <div class="alert-contact">
                                             <div class="alert-contact-info">
                                                 <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                             </div>
                                         </div>
-                                        <div class="alert-option chat new-chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat new-chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-chat_bubble" ng-click="openChat({{alert}})"></i>
+                                        <div class="alert-option chat new-chat" ng-class="">
+                                            <i class="icon-chat_bubble" ng-click=""></i>
                                         </div>
                                     </li>
 
@@ -127,7 +82,7 @@
                       <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
                           <h4 class="panel-title">
-                            New Alerts (2)
+                            New Alerts ({{ newAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
@@ -135,231 +90,20 @@
                           <!-- New Alerts -->
 
                                 <ul class="alerts-list">
-
-                                    <li class="alert new">
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}">
                                         <div class="alert-type emergency">
                                             <i class="icon-emergency_type"></i>
                                         </div>
                                         <div class="alert-contact">
                                             <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
+                                                <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
+                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
                                             </div>
                                         </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
+                                        <div class="alert-option chat new-chat" ng-class="">
+                                            <i class="icon-chat_bubble" ng-click=""></i>
                                         </div>
                                     </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>                                    
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type emergency">
-                                            <i class="icon-emergency_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Ben Boyd <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">706.224.4238 &nbsp; - &nbsp; 12/27 10:34</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>
-
-                                    <li class="alert">
-                                        <div class="alert-type chat">
-                                            <i class="icon-chat_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">Mark Wahlberg <!--<span ng-show="alert.disarmedAt" class="badge-disarm">disarmed</span>--></div>
-                                                <div class="contact-number">352-724-4033 &nbsp; - &nbsp; 12/26 13:01</div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option chat" ng-class="{newChat: alert.newChat}">
-                                            <i class="icon-accept_bubble" ng-click="openChat({{alert}})"></i>
-                                        </div>
-                                    </li>  
                                 </ul>
 
                           </div>
@@ -368,24 +112,58 @@
                       <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
                           <h4 class="panel-title">
-                            Pending Alerts (0)
+                            Pending Alerts ({{ pendingAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseThree" class="panel-collapse collapse">
                           <div class="panel-body">
-                          <!-- Alerts -->
+                          <!-- Pending Alerts -->
+
+                            <ul class="alerts-list">
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}">
+                                    <div class="alert-type emergency">
+                                        <i class="icon-emergency_type"></i>
+                                    </div>
+                                    <div class="alert-contact">
+                                        <div class="alert-contact-info">
+                                            <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
+                                            <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="alert-option chat new-chat" ng-class="">
+                                        <i class="icon-chat_bubble" ng-click=""></i>
+                                    </div>
+                                </li>
+                            </ul>
+
                           </div>
                         </div>
                       </div>
                        <div class="panel panel-default">
                         <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
                           <h4 class="panel-title">
-                            Past Alerts (0)
+                            Past Alerts ({{ completedAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseFour" class="panel-collapse collapse">
                           <div class="panel-body">  
-                          <!-- Alerts -->
+                          <!-- Completed Alerts -->
+                              <ul class="alerts-list">
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}">
+                                    <div class="alert-type emergency">
+                                        <i class="icon-emergency_type"></i>
+                                    </div>
+                                    <div class="alert-contact">
+                                        <div class="alert-contact-info">
+                                            <div class="contact-name">Ben Boyd <span ng-show="alert.disarmedAt" class="badge-disarmed">disarmed</span></div>
+                                            <div class="contact-number">706.224.4238 &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="alert-option chat new-chat" ng-class="">
+                                        <i class="icon-chat_bubble" ng-click=""></i>
+                                    </div>
+                                </li>
+                            </ul>
                           </div>
                         </div>
                       </div>
