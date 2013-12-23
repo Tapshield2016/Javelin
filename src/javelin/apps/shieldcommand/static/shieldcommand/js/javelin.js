@@ -10,6 +10,7 @@
     var Javelin = root.Javelin;
     Javelin.alerts = [];
     Javelin.activeAgency = null;
+    Javelin.activeAgencyUser = null;    
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
     Javelin.lastCheckedAlertsTimestamp = getTimestamp();
@@ -21,14 +22,42 @@
 	}
 
 	function APIResponseObject(attributes) {
+		this.parseIDFromURL = function(url) {
+			var tokens = url.split('/')
+			return tokens[tokens.length - 2];
+		}
+
 		this.url = attributes.url;
-		this.creationDate = attributes.creation_date;
-		this.lastModified = attributes.last_modified;
+		this.object_id = this.parseIDFromURL(attributes.url);
+
 		return this;
 	}
 
-	function Agency(attributes) {
+	function APITimeStampedObject(attributes) {
 		APIResponseObject.call(this, attributes);
+		this.creationDate = attributes.creation_date;
+		this.lastModified = attributes.last_modified;		
+		return this;
+	}
+
+	function AgencyUser(attributes) {
+		APIResponseObject.call(this, attributes);
+		this.url = attributes.url;
+		this.username = attributes.username;
+		this.email = attributes.email;
+		this.agencyURL = attributes.agency;
+		this.phoneNumber = attributes.phone_number;
+		this.disarmCode = attributes.disarm_code;
+		this.firstName = attributes.first_name;
+		this.lastName = attributes.last_name;
+
+		this.getFullName = function() {
+			return this.firstName + " " + this.lastName;
+		};
+	}
+
+	function Agency(attributes) {
+		APITimeStampedObject.call(this, attributes);
 		this.name = attributes.name;
 		this.domain = attributes.domain;
 		this.agencyPointOfContact = attributes.agency_point_of_contact;
@@ -45,7 +74,7 @@
 	}
 
 	function Alert(attributes) {
-		APIResponseObject.call(this, attributes);
+		APITimeStampedObject.call(this, attributes);
 		this.agencyUser = attributes.agency_user;
 		this.agencyDispatcher = attributes.agency_dispatcher;
 		this.acceptedTime = attributes.accepted_time;
@@ -58,7 +87,7 @@
 	}
 
 	function AlertLocation(attributes) {
-		APIResponseObject.call(this, attributes);
+		APITimeStampedObject.call(this, attributes);
 		this.accuracy = attributes.accuracy;
 		this.altitude = attributes.altitude;
 		this.latitude = attributes.latitude;
@@ -95,6 +124,13 @@
 
 		Javelin.client = new Javelin.$.RestClient(Javelin.serverURL, {
 			ajax: {headers: {'Authorization': "Token " + Javelin.apiToken}},
+			verbs: {
+				'create': 'POST',
+				'read': 'GET',
+				'update': 'PUT',
+				'patch': 'PATCH',
+				'destroy': 'DELETE'
+			}
 		});
 
 		Javelin.client.add('agencies');
@@ -106,14 +142,29 @@
 		Javelin.client.alerts.add('messages_since');
 
 		Javelin.client.add('alert-locations');
+		Javelin.client.add('users');
 	};
+
+	Javelin.setActiveAgencyUserAttributes = function(attributes) {
+		Javelin.activeAgencyUser = new AgencyUser(attributes);
+	}
+
+	Javelin.claimAlertForActiveUser = function(alertID, callback) {
+		var request = Javelin.client.alerts.patch(alertID, {
+			agency_dispatcher: Javelin.activeAgencyUser.url,
+			status: 'A'
+		});
+		request.done(function(data) {
+			callback(data);
+		});
+	}
 
 	Javelin.loadInitialAlerts = function(callback) {
 		var now = getTimestamp(milliseconds=true);
 		var then = Number(new Date(now - (24 * 60 * 60)));
 		Javelin.getAlerts({
 			modified_since: then,
-			page_size: 10,
+			page_size: 15,
 		}, callback);		
 	};
 

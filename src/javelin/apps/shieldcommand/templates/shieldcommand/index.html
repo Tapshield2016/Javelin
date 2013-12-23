@@ -131,7 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="alert-option chat new-chat" ng-class="">
-                                        <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url)"></i>
+                                        <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url )"></i>
                                     </div>
                                 </li>
                             </ul>
@@ -407,6 +407,16 @@
             }
             google.maps.event.addDomListener(window, 'load', initializeMap);
             Javelin.initialize("/api/{{ api_version }}/", {{ agency.id }}, '{{ auth_token }}');
+            Javelin.setActiveAgencyUserAttributes({
+                url: "{{ user.url }}",
+                username: "{{ user.username }}",
+                email: "{{ user.email }}",
+                agency_url: "{{ user.agency }}",
+                phone_number: "{{ user.phone_number }}",
+                disarm_code: "{{ user.disarm_code }}",
+                first_name: "{{ user.first_name }}",
+                last_name: "{{ user.last_name }}",
+            });
         </script>
         <!-- endbuild -->
 

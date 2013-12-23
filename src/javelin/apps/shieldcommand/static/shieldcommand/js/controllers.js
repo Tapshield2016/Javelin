@@ -15,7 +15,10 @@ angular.module('shieldCommand.controllers', []).
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
-		$scope.$apply();
+		/* Don't call apply if we're already in the middle of a digest... */
+		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
+			$scope.$apply();
+		}
   	};
 
   	$scope.loadInitialAlerts = function() {
@@ -41,11 +44,13 @@ angular.module('shieldCommand.controllers', []).
   			if ($scope.alerts[i].url === url) {
 		  		$scope.alerts[i].status = 'A';
 		  		updateDisplay();
+		  		alertService.claimAlertForActiveUser($scope.alerts[i], function(data) {
+		  			// Anything to do here?
+		  		});
 		  		break;
   			}
   		};
   	};
 
   	$scope.loadInitialAlerts();
-
 }]);

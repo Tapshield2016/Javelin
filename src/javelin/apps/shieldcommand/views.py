@@ -5,12 +5,15 @@ from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from core.api.serializers.v1 import UserSerializer
+
 
 @login_required(login_url='shieldcommand-login')
 def index(request):
     site = get_current_site(request)
     agency = request.user.agency
     agency_boundaries_coords = []
+    user = UserSerializer(request.user)
     if agency.agency_boundaries:
         agency_boundaries_list = eval(agency.agency_boundaries)
         for coord in agency_boundaries_list:
@@ -22,5 +25,6 @@ def index(request):
                                "agency_boundaries": agency_boundaries_coords,
                                "auth_token": auth_token,
                                "api_version":\
-                                   settings.SHIELD_COMMAND_API_VERSION},
+                                   settings.SHIELD_COMMAND_API_VERSION,
+                               "user": user.data},
                               context_instance=RequestContext(request))

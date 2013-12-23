@@ -40,8 +40,15 @@ angular.module('shieldCommand.services', [])
 		});
 	}
 
+	this.claimAlertForActiveUser = function(alert, callback) {
+		Javelin.claimAlertForActiveUser(alert.object_id, function(data) {
+			callback(data);
+		})
+	}
+
 	return {
 		loadInitialAlerts: this.loadInitialAlerts,
 		getUpdatedAlerts: this.getUpdatedAlerts,
+		claimAlertForActiveUser: this.claimAlertForActiveUser,
 	}
 }]);
