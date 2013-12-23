@@ -42,9 +42,31 @@
                     </ul>
                 </div><!--/.nav-collapse -->
             </div>
+
         </div>
         {% verbatim %}
         <div class="container-full">
+
+            <!-- Modal -->
+            <div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true" command-alert-modal ng-controller="CommandAlertController" ng-cloak>
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="commandAlertLabel">Command Alert</h4>
+                  </div>
+                  <div class="modal-body">
+                    <textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
+                  </div>
+                  <div class="modal-footer">
+                    <p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" ng-click="sendCommandAlertMessage()">Send Message</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
             <div class="row full-height">
                 <!-- sidebar -->
                 <div class="col-md-3 sidebar" ng-controller="AlertsListController" ng-cloak>
@@ -334,26 +356,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Modal -->
-        <div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="commandAlertLabel">Command Alert</h4>
-              </div>
-              <div class="modal-body">
-                <textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
-              </div>
-              <div class="modal-footer">
-                <p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">Send Message</button>
-              </div>
-            </div><!-- /.modal-content -->
-          </div><!-- /.modal-dialog -->
-        </div><!-- /.modal -->
 
         {% endverbatim %}
 

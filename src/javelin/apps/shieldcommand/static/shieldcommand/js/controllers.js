@@ -4,6 +4,14 @@
 
 angular.module('shieldCommand.controllers', [])
 
+.controller('CommandAlertController', ['$scope', function($scope) {
+
+	$scope.sendCommandAlertMessage = function() {
+		$scope.dismiss();
+	}
+
+}])
+
 .controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertService) {
 
 	$scope.toggle = function() {
