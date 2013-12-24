@@ -14,6 +14,9 @@ angular.module('shieldCommand.controllers', [])
 
 .controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertService) {
 
+	$scope.currentProfile = null;
+	$scope.activeAlert = null;
+
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
 	}
@@ -25,7 +28,11 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
-		$scope.isProfileVisible = true;
+		$scope.activeAlert = alertService.activeAlert;
+		alertService.getUserProfileForActiveAlert(function(profile) {
+			$scope.currentProfile = profile;
+			$scope.isProfileVisible = true;
+		});
 	});
 
 	$scope.markActiveAlertAsCompleted = function() {
@@ -36,9 +43,23 @@ angular.module('shieldCommand.controllers', [])
 		});
 	}
 
+	$scope.getAge = function(dateString) {
+	    var today = new Date();
+	    var birthDate = new Date(dateString);
+	    var age = today.getFullYear() - birthDate.getFullYear();
+	    var m = today.getMonth() - birthDate.getMonth();
+	    if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+	        age--;
+	    }
+	    return age;
+	}
+
 }])
 
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
+
+	$scope.alerts = [];
+	$scope.currentProfile = null;
 
 	$scope.$on('alertMarkedComplete', function() {
 		updateDisplay();

@@ -21,6 +21,44 @@
 		Javelin.$ = $;
 	}
 
+	Javelin.GENDER_CHOICES = {
+    'M': 'Male',
+    'F': 'Female',
+	}
+
+	Javelin.HAIR_COLOR_CHOICES = {
+	    'Y': 'Blonde',
+	    'BR': 'Brown',
+	    'BL': 'Black',
+	    'R': 'Red',
+	    'BA': 'Bald',
+	    'GR': 'Gray',
+	}
+
+	Javelin.RACE_CHOICES = {
+	    'BA': 'Black/African Descent',
+	    'WC': 'White/Caucasian',
+	    'EI': 'East Indian',
+	    'AS': 'Asian',
+	    'LH': 'Latino/Hispanic',
+	    'ME': 'Middle Eastern',
+	    'PI': 'Pacific Islander',
+	    'NA': 'Native American',
+	}
+
+	Javelin.RELATIONSHIP_CHOICES = {
+	    'F': 'Father',
+	    'M': 'Mother',
+	    'S': 'Spouse',
+	    'BF': 'Boyfriend',
+	    'GF': 'Girlfriend',
+	    'B': 'Brother',
+	    'SI': 'Sister',
+	    'FR': 'Friend',
+	    'O': 'Other',
+	}
+
+
 	function APIResponseObject(attributes) {
 		this.parseIDFromURL = function(url) {
 			var tokens = url.split('/')
@@ -56,6 +94,25 @@
 		};
 	}
 
+	function AgencyUserProfile(attributes) {
+		APIResponseObject.call(this, attributes);
+		this.birthday = attributes.birthday;
+		this.address = attributes.address;
+		this.hairColor = Javelin.HAIR_COLOR_CHOICES[attributes.hair_color];
+		this.gender = Javelin.GENDER_CHOICES[attributes.gender];
+		this.race = Javelin.RACE_CHOICES[attributes.race];
+		this.height = attributes.height;
+		this.weight = attributes.weight;
+		this.knownAllergies = attributes.known_allergies;
+		this.medications = attributes.medications;
+		this.emergencyContactFirstName = attributes.emergency_contact_first_name;
+		this.emergencyContactLastName = attributes.emergency_contact_last_name;
+		this.emergencyContactPhoneNumber = attributes.emergency_contact_phone_number;
+		this.emergencyContactRelationship = Javelin.RELATIONSHIP_CHOICES[attributes.emergency_contact_relationship];
+		this.profileImageURL = attributes.profile_image_url;
+		return this;
+	}
+
 	function Agency(attributes) {
 		APITimeStampedObject.call(this, attributes);
 		this.name = attributes.name;
@@ -88,7 +145,7 @@
 		if (attributes.agency_user_meta) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
 		};
-
+		console.log(this);
 		return this;
 	}
 
@@ -147,12 +204,14 @@
 		Javelin.client.alerts.add('messages');
 		Javelin.client.alerts.add('messages_since');
 
-		Javelin.client.add('alert-locations');
+		Javelin.client.add('alertlocations', {url: 'alert-locations'});
 		Javelin.client.add('users');
+		Javelin.client.add('userprofiles', {url: 'user-profiles'});
 	};
 
 	Javelin.setActiveAgencyUserAttributes = function(attributes) {
 		Javelin.activeAgencyUser = new AgencyUser(attributes);
+		console.log("Dispatch: " + Javelin.activeAgencyUser);
 	}
 
 	Javelin.setActiveAlert = function(alert) {
@@ -198,6 +257,18 @@
 		request.done(function(data) {
 			var retrievedAgency = new Agency(data);
 			callback(retrievedAgency);
+		});
+	};
+
+	Javelin.getUserProfileForUser = function(userID, callback) {
+		var request = Javelin.client.userprofiles.read({user: userID});
+		request.done(function(data) {
+			if (data['results'].length > 0) {
+				callback(new AgencyUserProfile(data['results'][0]));
+			}
+			else {
+				callback(null);
+			}
 		});
 	};
 

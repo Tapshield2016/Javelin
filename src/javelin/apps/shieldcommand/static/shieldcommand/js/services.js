@@ -56,7 +56,13 @@ angular.module('shieldCommand.services', [])
 		Javelin.markAlertAsCompleted(this.activeAlert.object_id, function(data) {
 			callback(data);
 		});
-	}	
+	}
+
+	this.getUserProfileForActiveAlert = function(callback) {
+		Javelin.getUserProfileForUser(this.activeAlert.agencyUserMeta.object_id, function(profile) {
+			callback(profile);
+		});
+	}
 
 	return {
 		activeAlert: this.activeAlert,
@@ -65,5 +71,6 @@ angular.module('shieldCommand.services', [])
 		claimAlertForActiveUser: this.claimAlertForActiveUser,
 		markActiveAlertAsCompleted: this.markActiveAlertAsCompleted,
 		setActiveAlert: this.setActiveAlert,
+		getUserProfileForActiveAlert: this.getUserProfileForActiveAlert,
 	}
 }]);

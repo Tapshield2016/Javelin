@@ -270,7 +270,7 @@ class UserProfile(models.Model):
         ('BF', 'Boyfriend'),
         ('GF', 'Girlfriend'),
         ('B', 'Brother'),
-        ('S', 'Sister'),
+        ('SI', 'Sister'),
         ('FR', 'Friend'),
         ('O', 'Other'),
     )

@@ -221,48 +221,51 @@
                         <div id="profile" ng-class="(isProfileVisible) ? 'col-md-3' : 'hidden'">
                             <p class="profile-title">Profile</p>
                             <div class="profile-content">
-                                <a href="#" data-toggle="modal" data-target="#profileImage"><img src="/media/static/shieldcommand/img/dev/branden.jpg" class="img-rounded profile-image" /></a>
-                                <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
-                                    <div class="modal-dialog" style="width: 365px;">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                <h4 class="modal-title" id="profileImageLabel">Branden Anderson</h4>
-                                            </div>
-                                            <div class="modal-body">
-                                                <img src="/media/static/shieldcommand/img/dev/branden.jpg" style="width: 300px; height: 300px; padding-bottom: 20px;" />
-                                            </div>
-                                        </div><!-- /.modal-content -->
-                                    </div><!-- /.modal-dialog -->
-                                </div><!-- /.modal -->
-                                <div class="disarm-code">
-                                    <div class="title">Disarm Code</div>
-                                        <div class="code">1234</div>
-                                    </div><!-- /.title -->
-                                </div><!-- /.disarm-code -->
-
-                                <div class="profile-information">
+                                <div class="profile-top-content" style="overflow: hidden;">
+                                    <div class="profile-image-container" style="height: 100px; width: 100px; float: left;">
+                                        <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ currentProfile.profileImageURL }}" class="img-rounded profile-image" /></a>
+                                    </div>
+                                    <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
+                                        <div class="modal-dialog" style="width: 365px;">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="profileImageLabel">{{ activeAlert.agencyUserMeta.getFullName() }}</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <img ng-src="{{ currentProfile.profileImageURL }}" style="width: 300px; height: 300px; padding-bottom: 20px;" />
+                                                </div>
+                                            </div><!-- /.modal-content -->
+                                        </div><!-- /.modal-dialog -->
+                                    </div><!-- /.modal -->
+                                    <div class="disarm-code">
+                                        <div class="title">Disarm Code</div>
+                                            <div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
+                                        </div><!-- /.title -->
+                                    </div><!-- /.disarm-code -->
+                                </div>
+                                <div class="profile-information" style="clear: both;">
 
                                     <table class="table table-condensed">
                                         <tr class="first">
                                             <td>Name</td>
-                                            <td>Branden Anderson</td>
+                                            <td>{{ activeAlert.agencyUserMeta.getFullName() }}</td>
                                         </tr>
                                         <tr>
                                             <td>Phone</td>
-                                            <td>(704) 724-6335</td>
+                                            <td>{{ activeAlert.agencyUserMeta.phoneNumber }}</td>
                                         </tr>
                                         <tr>
                                             <td>Email</td>
-                                            <td>branden.anderson@tapshield.com</td>
+                                            <td>{{ activeAlert.agencyUserMeta.email }}</td>
                                         </tr>        
                                         <tr>
                                             <td>DOB</td>
-                                            <td>07/11/1974</td>
+                                            <td>{{ currentProfile.birthday }}</td>
                                         </tr>
                                         <tr>
                                             <td>Address</td>
-                                            <td>5057 NW 44th Ln, Gainesville, FL 32606</td>
+                                            <td>{{ currentProfile.address }}</td>
                                         </tr>                                   
                                     </table>
 
@@ -270,27 +273,27 @@
                                         <caption>Characteristics</caption>
                                         <tr>
                                             <td>Sex</td>
-                                            <td>Male</td>
+                                            <td>{{ currentProfile.gender }}</td>
                                         </tr>
                                         <tr>
                                             <td>Age</td>
-                                            <td>07/11/1974</td>
+                                            <td>{{ getAge(currentProfile.birthday) }}</td>
                                         </tr>
                                         <tr>
                                             <td>Race</td>
-                                            <td>White/Caucasian</td>
+                                            <td>{{ currentProfile.race }}</td>
                                         </tr>        
                                         <tr>
                                             <td>Height</td>
-                                            <td>6'-4"</td>
+                                            <td>{{ currentProfile.height }}</td>
                                         </tr>
                                         <tr>
                                             <td>Weight</td>
-                                            <td>220 lbs</td>
+                                            <td>{{ currentProfile.weight }} lbs</td>
                                         </tr>                                     
                                         <tr>
                                             <td>Hair</td>
-                                            <td>Blonde</td>
+                                            <td>{{ currentProfile.hairColor }}</td>
                                         </tr>                                                                             
                                     </table>
 
@@ -298,11 +301,11 @@
                                         <caption>Medical</caption>
                                         <tr>
                                             <td>Allergies</td>
-                                            <td>Mushrooms</td>
+                                            <td>{{ currentProfile.knownAllergies }}</td>
                                         </tr>
                                         <tr>
                                             <td>Medication</td>
-                                            <td>Penicillin</td>
+                                            <td>{{ currentProfile.medications }}</td>
                                         </tr>
                                     </table>
 
@@ -310,15 +313,15 @@
                                         <caption>Emergency Contact</caption>
                                         <tr>
                                             <td>Name</td>
-                                            <td>Tito Jackson</td>
+                                            <td>{{ currentProfile.emergencyContactFirstName }} {{ currentProfile.emergencyContactLastName }}</td>
                                         </tr>
                                         <tr>
                                             <td>Phone</td>
-                                            <td>(704) 724-6335</td>
+                                            <td>{{ currentProfile.emergencyContactPhoneNumber }}</td>
                                         </tr>
                                         <tr>
                                             <td>Relation</td>
-                                            <td>Friend</td>
+                                            <td>{{ currentProfile.emergencyContactRelationship }}</td>
                                         </tr>        
                                     </table>
 
