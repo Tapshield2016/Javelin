@@ -158,6 +158,18 @@ class AlertViewSet(viewsets.ModelViewSet):
     filter_class = AlertsModifiedSinceFilterBackend
 
     @action()
+    def disarm(self, request, pk=None):
+        """
+        Set a disarmed time on the alert. This indicates that the user wishes
+        to cancel the alert.
+        """
+        alert = self.get_object()
+        alert.disarm()
+        serialized = AlertSerializer(alert)
+        return Response(serialized.data)
+        
+
+    @action()
     def send_message(self, request, pk=None):
         """
         Sends a chat message to DynamoDB, tied to the specified alert's PK.

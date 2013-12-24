@@ -37,9 +37,9 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.markActiveAlertAsCompleted = function() {
 		alertService.markActiveAlertAsCompleted(function(data) {
-			console.log("mark complete: " + data);
 			$scope.dismiss();
 			$rootScope.$broadcast('alertMarkedComplete');
+			$scope.toggle();
 		});
 	}
 

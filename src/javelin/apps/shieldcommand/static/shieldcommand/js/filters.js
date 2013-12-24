@@ -10,8 +10,14 @@ angular.module('shieldCommand.filters', [])
     }
   }])
 
-.filter('myAlerts', function() {
-	return function(input, filterKey, filterVal) {
-		
+.filter('byStatus', function() {
+	return function(alerts, status) {
+		var filtered = [];
+		var statuses = [status, 'D'];
+		for (var i = 0; i < alerts.length; i++) {
+			if (statuses.indexOf(alerts[i].status !== -1)) {
+				filtered.push(alerts[i]);
+			}
+		};
 	}
 });

@@ -70,7 +70,6 @@ class Alert(TimeStampedModel):
     STATUS_CHOICES = (
         ('A', 'Accepted'),
         ('C', 'Completed'),
-        ('D', 'Disarmed'),
         ('N', 'New'),
         ('P', 'Pending'),
     )
@@ -140,14 +139,16 @@ class Alert(TimeStampedModel):
             if self.status == 'A':
                 if not self.accepted_time:
                     self.accepted_time = datetime.now()
-            elif self.status == 'D':
-                if not self.disarmed_time:
-                    self.disarmed_time = datetime.now()
             elif self.status == 'P':
                 if not self.pending_time:
                     self.pending_time = datetime.now()
             super(Alert, self).save(*args, **kwargs)
                 
+    def disarm(self):
+        if not self.disarmed_time:
+            self.disarmed_time = datetime.now()
+            self.save()
+
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
         db = DynamoDBManager()
