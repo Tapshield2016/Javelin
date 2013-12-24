@@ -19,20 +19,20 @@ INSTALLED_APPS += (
     #'corsheaders',
     'devserver',
     #'rest_framework_swagger',
-    #'debug_toolbar',
+    'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES += (
     #'corsheaders.middleware.CorsMiddleware',
-    #'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-DEVSERVER_MODULES = (
-    'devserver.modules.sql.SQLRealTimeModule',
-    'devserver.modules.sql.SQLSummaryModule',
-    'devserver.modules.profile.ProfileSummaryModule',
-    'devserver.modules.profile.LineProfilerModule',
-)
+#DEVSERVER_MODULES = (
+#    'devserver.modules.sql.SQLRealTimeModule',
+#    'devserver.modules.sql.SQLSummaryModule',
+#    'devserver.modules.profile.ProfileSummaryModule',
+#    'devserver.modules.profile.LineProfilerModule',
+#)
 
 INTERNAL_IPS = ('127.0.0.1',)
 

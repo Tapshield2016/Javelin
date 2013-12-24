@@ -38,14 +38,7 @@ class AlertLocationSerializer(serializers.HyperlinkedModelSerializer):
         model = AlertLocation
 
 
-class LatestAlertLocationSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = AlertLocation
-
-
 class AlertSerializer(serializers.HyperlinkedModelSerializer):
-    locations = LatestAlertLocationSerializer(many=False, required=False)
 
     class Meta:
         model = Alert
@@ -55,6 +48,11 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             agency_user_meta = UserSerializer(instance=obj.agency_user)
             ret['agency_user_meta'] = agency_user_meta.data
+            ret['latest_location'] = {}
+            latest_location = obj.locations.first()
+            if latest_location:
+                ret['latest_location'] =\
+                    AlertLocationSerializer(instance=latest_location).data 
         return ret
 
 
