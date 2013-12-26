@@ -243,6 +243,15 @@
 		})
 	}
 
+	Javelin.markAlertAsPending = function(alertID, callback) {
+		var request = Javelin.client.alerts.patch(alertID, {
+			status: 'P',
+		});
+		request.done(function(data) {
+			callback(data);
+		})
+	}
+
 	Javelin.loadInitialAlerts = function(callback) {
 		var now = getTimestamp(milliseconds=true);
 		var then = Number(new Date(now - (24 * 60 * 60)));

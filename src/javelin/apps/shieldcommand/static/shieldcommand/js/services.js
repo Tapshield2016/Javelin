@@ -58,6 +58,12 @@ angular.module('shieldCommand.services', [])
 		});
 	}
 
+	this.markActiveAlertAsPending = function(callback) {
+		Javelin.markAlertAsPending(this.activeAlert.object_id, function(data) {
+			callback(data);
+		});
+	}
+
 	this.getUserProfileForActiveAlert = function(callback) {
 		Javelin.getUserProfileForUser(this.activeAlert.agencyUserMeta.object_id, function(profile) {
 			callback(profile);
@@ -70,6 +76,7 @@ angular.module('shieldCommand.services', [])
 		getUpdatedAlerts: this.getUpdatedAlerts,
 		claimAlertForActiveUser: this.claimAlertForActiveUser,
 		markActiveAlertAsCompleted: this.markActiveAlertAsCompleted,
+		markActiveAlertAsPending: this.markActiveAlertAsPending,		
 		setActiveAlert: this.setActiveAlert,
 		getUserProfileForActiveAlert: this.getUserProfileForActiveAlert,
 	}

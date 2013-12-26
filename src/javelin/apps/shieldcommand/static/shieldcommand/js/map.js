@@ -42,6 +42,9 @@ function initializeMap() {
 }
 
 function setMarker(location) {
+    if (!location) {
+        return;
+    };
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');

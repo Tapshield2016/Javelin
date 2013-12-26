@@ -11,12 +11,25 @@ angular.module('shieldCommand.directives', [])
     };
  }])
 
-.directive('markCompleteModal', function() {
+.directive('dismissMarkCompletedModal', function() {
    return {
      restrict: 'A',
      link: function(scope, element, attr) {
-       scope.dismiss = function() {
+       scope.dismissMarkCompletedModal = function() {
            element.modal('hide');
+          console.log(element);
+       };
+     }
+   } 
+})
+
+.directive('dismissMarkPendingModal', function() {
+   return {
+     restrict: 'A',
+     link: function(scope, element, attr) {
+       scope.dismissMarkPendingModal = function() {
+           element.modal('hide');
+        console.log(element);
        };
      }
    } 

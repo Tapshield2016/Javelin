@@ -37,8 +37,16 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.markActiveAlertAsCompleted = function() {
 		alertService.markActiveAlertAsCompleted(function(data) {
-			$scope.dismiss();
-			$rootScope.$broadcast('alertMarkedComplete');
+			$scope.dismissMarkCompletedModal();
+			$rootScope.$broadcast('alertMarkedChange');
+			$scope.toggle();
+		});
+	}
+
+	$scope.markActiveAlertAsPending = function() {
+		alertService.markActiveAlertAsPending(function(data) {
+			$scope.dismissMarkPendingModal();
+			$rootScope.$broadcast('alertMarkedChange');
 			$scope.toggle();
 		});
 	}
@@ -61,7 +69,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.alerts = [];
 	$scope.currentProfile = null;
 
-	$scope.$on('alertMarkedComplete', function() {
+	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
 	});
 
@@ -103,7 +111,6 @@ angular.module('shieldCommand.controllers', [])
   	$scope.alertClicked = function(alert) {
   		if (alert === alertService.activeAlert) {
   			$rootScope.$broadcast('toggleProfile');
-  			alertService.activeAlert = null;
   		}
   		else {
 	  		alertService.setActiveAlert(alert);

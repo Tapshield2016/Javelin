@@ -197,7 +197,7 @@
                     <div class="full-width" ng-controller="UserProfileController" ng-cloak>
 
                         <!-- Modal -->
-                        <div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true" mark-complete-modal>
+                        <div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true" dismiss-mark-completed-modal>
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
@@ -210,6 +210,25 @@
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                 <button type="button" class="btn btn-primary" ng-click="markActiveAlertAsCompleted()">Mark Completed</button>
+                              </div>
+                            </div><!-- /.modal-content -->
+                          </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+
+                        <!-- Modal -->
+                        <div class="modal fade" id="markAlertPending" tabindex="-1" role="dialog" aria-labelledby="markAlertPendingLabel" aria-hidden="true" dismiss-mark-pending-modal>
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title" id="markAlertPendingLabel">Mark Alert as Pending</h4>
+                              </div>
+                              <div class="modal-body">
+                                  <p>Are you sure you would like to set the status of this alert to Pending?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                <button type="button" class="btn btn-primary" ng-click="markActiveAlertAsPending()">Mark Pending</button>
                               </div>
                             </div><!-- /.modal-content -->
                           </div><!-- /.modal-dialog -->
@@ -347,7 +366,7 @@
                                     <h5>Mark Alert As</h5>
                                     <div class="btn-group btn-group-justified">
                                         <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a>
-                                        <a href="#" type="button" class="btn btn-warning">Pending</a>
+                                        <a href="#" type="button" class="btn btn-warning" data-toggle="modal" data-target="#markAlertPending">Pending</a>
                                     </div>
                                 </div>
 

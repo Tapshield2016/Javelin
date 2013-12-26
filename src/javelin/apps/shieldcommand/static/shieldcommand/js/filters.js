@@ -14,7 +14,7 @@ angular.module('shieldCommand.filters', [])
 	return function(alerts) {
 		var filtered = [];
 		for (var i = 0; i < alerts.length; i++) {
-			if (alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
+			if (alerts[i].agencyDispatcher && alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
 				filtered.push(alerts[i]);
 			}
 		};
