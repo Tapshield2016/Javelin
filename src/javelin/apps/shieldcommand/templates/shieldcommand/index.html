@@ -430,6 +430,17 @@
 				bermudaTriangle.setMap(googleMap);
 				{% endif %}
             }
+
+            function setMarker(location) {
+                alert_location = new google.maps.LatLng(location.latitude, location.longitude);
+                googleMapMarker.setPosition(alert_location);
+                googleMapMarker.setIcon('{{ STATIC_URL }}shieldcommand/img/NewUserPin.png');
+                googleMapAccuracyCircle.setCenter(alert_location);
+                googleMapAccuracyCircle.setRadius(location.accuracy);
+                googleMap.setZoom(18)
+                googleMap.setCenter(googleMapMarker.getPosition())
+            }
+
             google.maps.event.addDomListener(window, 'load', initializeMap);
             Javelin.initialize("/api/{{ api_version }}/", {{ agency.id }}, '{{ auth_token }}');
             Javelin.setActiveAgencyUserAttributes({

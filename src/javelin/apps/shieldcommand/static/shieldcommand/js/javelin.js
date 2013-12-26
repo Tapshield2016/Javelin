@@ -141,10 +141,16 @@
 		this.pendingTime = attributes.pending_time;
 		this.status = attributes.status;
 		this.initiatedBy = attributes.initiated_by;
+		this.location = null;
 
 		if (attributes.agency_user_meta) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
 		};
+
+		if (attributes.latest_location) {
+			this.location = new AlertLocation(attributes.latest_location);
+		};
+		
 		console.log(this);
 		return this;
 	}
