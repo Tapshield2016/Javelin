@@ -351,6 +351,7 @@ def delete_profile_image(sender, instance, **kwargs):
 
 @receiver(pre_save, sender=AgencyUser)
 def send_phone_number_verification_code(sender, instance, **kwargs):
+    return
     perform_check_anyway = False
     try:
         obj = AgencyUser.objects.get(pk=instance.pk)
