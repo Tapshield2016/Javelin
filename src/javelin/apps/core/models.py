@@ -194,6 +194,11 @@ class AlertLocation(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def save(self, *args, **kwargs):
+        super(AlertLocation, self).save(*args, **kwargs)
+        self.alert.save()
+
+
 class MassAlert(TimeStampedModel):
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
