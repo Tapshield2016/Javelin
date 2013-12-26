@@ -75,7 +75,11 @@ angular.module('shieldCommand.controllers', [])
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
-
+	
+		if (alertService.activeAlert) {
+			setMarker(alertService.activeAlert.location);
+		}
+			
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
 			$scope.$apply();
@@ -104,10 +108,7 @@ angular.module('shieldCommand.controllers', [])
   		else {
 	  		alertService.setActiveAlert(alert);
   			$rootScope.$broadcast('activeAlertUpdated');
-			$rootScope.$broadcast('toggleProfileOpen');		
-			if (alertService.activeAlert) {
-				setMarker(alertService.activeAlert.location);
-			}
+			$rootScope.$broadcast('toggleProfileOpen');	
   		}
   	};
 

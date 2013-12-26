@@ -44,7 +44,7 @@ function initializeMap() {
 function setMarker(location) {
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
-    googleMapMarker.setIcon('{{ STATIC_URL }}shieldcommand/img/NewUserPin.png');
+    googleMapMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
     googleMap.setZoom(18)
