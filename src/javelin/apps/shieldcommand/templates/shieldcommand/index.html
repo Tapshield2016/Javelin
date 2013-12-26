@@ -236,6 +236,29 @@
 
                         <div id="map-canvas" ng-class="(isProfileVisible) ? 'col-md-9' : 'col-md-12'"></div>
 
+                        <div class="map-controls">
+                            <nav class="alerts-nav">
+                                    <ul>
+                                            <li ng-click="toggleMyAlerts()" id="myAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> My Alerts </li>
+                                            <li ng-click="toggleNewAlerts()" id="newAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> New Alerts </li>
+                                            <li ng-click="togglePendingAlerts()" id="pendingAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> Pending Alerts </li>
+                                            <li ng-click="togglePastAlerts()" id="pastAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> Past Alerts </li>
+                                            <li ng-click="toggleAllAlerts()" id="allAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> All Alerts </li>
+                                            <li class="view_alert" ng-click="toggleControls()"><i class="icon-view"></i> View </li>
+                                    </ul>
+                            </nav>
+                            <nav class="controls-nav">
+                                    <ul class="inline">
+                                            <li ng-click="returnToGeofenceCenter()">
+                                                    <i class="icon-geofence"></i>
+                                            </li>
+                                            <li ng-click="zoomToActiveAlertMarker()">
+                                                    <i class="icon-userzoom"></i>
+                                            </li>
+                                    </ul>
+                            </nav>
+                        </div>
+
                         <!-- profile -->
                         <div id="profile" ng-class="(isProfileVisible) ? 'col-md-3' : 'hidden'">
                             <p class="profile-title">Profile</p>

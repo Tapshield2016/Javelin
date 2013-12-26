@@ -62,12 +62,23 @@ angular.module('shieldCommand.controllers', [])
 	    return age;
 	}
 
+	$scope.returnToGeofenceCenter = function () {
+		setMapCenterToDefault();
+	}
+
+	$scope.zoomToActiveAlertMarker = function () {
+		if ($scope.activeAlert) {
+			setMarker($scope.activeAlert.location);
+		};
+	}
+
 }])
 
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
 
 	$scope.alerts = [];
 	$scope.currentProfile = null;
+	$scope.markerSetForActiveAlert = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -84,8 +95,9 @@ angular.module('shieldCommand.controllers', [])
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
 	
-		if (alertService.activeAlert) {
+		if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
 			setMarker(alertService.activeAlert.location);
+			$scope.markerSetForActiveAlert = true;
 		}
 
 		/* Don't call apply if we're already in the middle of a digest... */
@@ -114,6 +126,7 @@ angular.module('shieldCommand.controllers', [])
   		}
   		else {
 	  		alertService.setActiveAlert(alert);
+	  		$scope.markerSetForActiveAlert = false;
   			$rootScope.$broadcast('activeAlertUpdated');
 			$rootScope.$broadcast('toggleProfileOpen');	
   		}

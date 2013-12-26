@@ -41,6 +41,11 @@ function initializeMap() {
     };
 }
 
+function setMapCenterToDefault() {
+    googleMap.setCenter(googleMapOptions.center);
+    googleMap.setZoom(googleMapOptions.zoom);
+}
+
 function setMarker(location) {
     if (!location) {
         return;
