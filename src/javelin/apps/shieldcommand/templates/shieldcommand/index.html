@@ -82,7 +82,7 @@
                                 <!-- My Alerts -->
                                 <ul class="alerts-list">
 
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'}" ng-click="alertClicked(alert)" ng-class="selectedClass(alert)">
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-click="alertClicked(alert)" ng-class="selectedClass(alert)">
                                         <div class="alert-type emergency">
                                             <i class="icon-emergency_type"></i>
                                         </div>

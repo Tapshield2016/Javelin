@@ -217,7 +217,7 @@
 
 	Javelin.setActiveAgencyUserAttributes = function(attributes) {
 		Javelin.activeAgencyUser = new AgencyUser(attributes);
-		console.log("Dispatch: " + Javelin.activeAgencyUser);
+		console.log(Javelin.activeAgencyUser);
 	}
 
 	Javelin.setActiveAlert = function(alert) {

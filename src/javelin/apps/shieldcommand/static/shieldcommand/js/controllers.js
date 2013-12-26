@@ -71,7 +71,7 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	function updateDisplay() {
-		$scope.myAlertsLength = $filter("filter")($scope.alerts, {status: 'A'}).length;
+		$scope.myAlertsLength = $filter("byAgencyDispatcher")($($filter("filter")($scope.alerts, {status: 'A'}))).length;
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
@@ -79,7 +79,7 @@ angular.module('shieldCommand.controllers', [])
 		if (alertService.activeAlert) {
 			setMarker(alertService.activeAlert.location);
 		}
-			
+
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
 			$scope.$apply();

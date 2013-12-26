@@ -10,14 +10,14 @@ angular.module('shieldCommand.filters', [])
     }
   }])
 
-.filter('byStatus', function() {
-	return function(alerts, status) {
+.filter('byAgencyDispatcher', [function() {
+	return function(alerts) {
 		var filtered = [];
-		var statuses = [status, 'D'];
 		for (var i = 0; i < alerts.length; i++) {
-			if (statuses.indexOf(alerts[i].status !== -1)) {
+			if (alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
 				filtered.push(alerts[i]);
 			}
 		};
+		return filtered;
 	}
-});
+}]);
