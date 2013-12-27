@@ -26,6 +26,12 @@
 	    'F': 'Female',
 	}
 
+	Javelin.ALERT_TYPE_CHOICES = {
+	    'E': 'emergency',
+	    'C': 'chat',
+	    'T': 'timer',
+	}
+
 	Javelin.HAIR_COLOR_CHOICES = {
 	    'Y': 'Blonde',
 	    'BR': 'Brown',
@@ -140,7 +146,7 @@
 		this.disarmedTime = attributes.disarmed_time;
 		this.pendingTime = attributes.pending_time;
 		this.status = attributes.status;
-		this.initiatedBy = attributes.initiated_by;
+		this.initiatedBy = Javelin.ALERT_TYPE_CHOICES[attributes.initiated_by];
 		this.location = null;
 
 		if (!$.isEmptyObject(attributes.agency_user_meta)) {
