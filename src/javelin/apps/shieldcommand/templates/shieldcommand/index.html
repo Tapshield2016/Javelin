@@ -236,18 +236,18 @@
 
                         <div id="map-canvas" ng-class="(isProfileVisible) ? 'col-md-9' : 'col-md-12'"></div>
 
-                        <div class="map-controls">
-                            <nav class="alerts-nav">
-                                    <ul>
-                                            <li ng-click="toggleMyAlerts()" id="myAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> My Alerts </li>
-                                            <li ng-click="toggleNewAlerts()" id="newAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> New Alerts </li>
-                                            <li ng-click="togglePendingAlerts()" id="pendingAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> Pending Alerts </li>
-                                            <li ng-click="togglePastAlerts()" id="pastAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> Past Alerts </li>
-                                            <li ng-click="toggleAllAlerts()" id="allAlerts_toggle" class="alert hide"><i class="icon-checkmark"></i> All Alerts </li>
+                        <div id="map-controls" map-controls>
+                            <nav id="alerts-nav">
+                                    <ul class="minimized">
+                                            <li ng-click="toggleMyAlerts()" id="myAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> My Alerts </li>
+                                            <li ng-click="toggleNewAlerts()" id="newAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> New Alerts </li>
+                                            <li ng-click="togglePendingAlerts()" id="pendingAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Pending Alerts </li>
+                                            <li ng-click="togglePastAlerts()" id="pastAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Past Alerts </li>
+                                            <li ng-click="toggleAllAlerts()" id="allAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> All Alerts </li>
                                             <li class="view_alert" ng-click="toggleControls()"><i class="icon-view"></i> View </li>
                                     </ul>
                             </nav>
-                            <nav class="controls-nav">
+                            <nav id="controls-nav">
                                     <ul class="inline">
                                             <li ng-click="returnToGeofenceCenter()">
                                                     <i class="icon-geofence"></i>

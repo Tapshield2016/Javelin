@@ -10,7 +10,7 @@ angular.module('shieldCommand.services', [])
 .value('version', '1.0')
 
 .factory('alertService', [function () {
-	this.activeAlert = null;
+	var activeAlert = null;
 
 	this.loadInitialAlerts = function (callback) {
 		Javelin.loadInitialAlerts(function(initialAlerts) {
@@ -36,7 +36,6 @@ angular.module('shieldCommand.services', [])
 					existingAlerts.push(updatedAlerts[i]);
 				};
 			};
-
 			callback(existingAlerts);
 		});
 	}

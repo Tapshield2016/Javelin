@@ -86,6 +86,7 @@ angular.module('shieldCommand.controllers', [])
 
   	function updateAlerts(alerts) {
 		$scope.alerts = alerts;
+		$rootScope.alerts = $scope.alerts;
 		updateDisplay();
   	};
 
@@ -94,11 +95,6 @@ angular.module('shieldCommand.controllers', [])
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
-	
-		if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
-			setMarker(alertService.activeAlert.location);
-			$scope.markerSetForActiveAlert = true;
-		}
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -126,9 +122,15 @@ angular.module('shieldCommand.controllers', [])
   		}
   		else {
 	  		alertService.setActiveAlert(alert);
-	  		$scope.markerSetForActiveAlert = false;
+	  		$scope.markerSetForActiveAlert = false;	
+
+			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
+				setMarker(alertService.activeAlert.location);
+				$scope.markerSetForActiveAlert = true;
+			}
+
   			$rootScope.$broadcast('activeAlertUpdated');
-			$rootScope.$broadcast('toggleProfileOpen');	
+			$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
 

@@ -20,4 +20,23 @@ angular.module('shieldCommand.filters', [])
 		};
 		return filtered;
 	}
+}])
+
+.filter('locationsByStatusAndAgencyDispatcher', [function() {
+	return function(alerts, statuses) {
+		var filtered = [];
+		for (var i = 0; i < alerts.length; i++) {
+			if (statuses.indexOf(alerts[i].status) > -1) {
+				if (alerts[i].status == 'A') {
+					if (alerts[i].agencyDispatcher && alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
+						filtered.push(alerts[i].location);
+					}
+				}
+				else {
+					filtered.push(alerts[i].location);
+				}
+			}
+		};
+		return filtered;
+	}
 }]);
