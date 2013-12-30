@@ -133,6 +133,8 @@
 		this.agencyCenterLongitude = attributes.agency_center_longitude;
 		this.defaultMapZoomLevel = attributes.default_map_zoom_level;
 		this.alertCompletedMessage = attributes.alert_completed_message;
+		this.requireDomainEmails = attributes.require_domain_emails;
+		this.displayCommandAlert = attributes.display_command_alert;
 		return this;
 	}
 
