@@ -50,6 +50,8 @@ class Agency(TimeStampedModel):
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
     sns_primary_topic_arn = models.CharField(max_length=255,
                                              null=True, blank=True)
+    require_domain_emails = models.BooleanField(default=False)
+    display_command_alert = models.BooleanField(default=False)
 
     objects = models.Manager()
 
