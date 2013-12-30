@@ -13,8 +13,8 @@
     Javelin.activeAgencyUser = null;    
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
-    Javelin.lastCheckedAlertsTimestamp = getTimestamp();
-    Javelin.lastCheckedMessagesTimestamp = getTimestamp();
+    Javelin.lastCheckedAlertsTimestamp = null;
+    Javelin.lastCheckedMessagesTimestamp = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -190,6 +190,15 @@
 		return timestamp;
 	}
 
+	function createTimestampFromDate(dateObj, seconds) {
+		seconds = seconds || true;
+		timestamp = Number(dateObj);
+		if (seconds) {
+			timestamp /= 1000;
+		}
+		return timestamp;		
+	}
+
 	Javelin.initialize = function(serverURL, agencyID, apiToken) {
 		Javelin._initialize(serverURL, agencyID, apiToken);
 	};
@@ -310,12 +319,23 @@
 		var defaultOptions = { agency: Javelin.agencyID };
 		var request = Javelin.client.alerts.read(params=Javelin.$.extend(defaultOptions, options));
 		request.done(function(data) {
-			Javelin.lastCheckedAlertsTimestamp = getTimestamp();
 			var retrievedAlerts = [];
+			var latestDate = Javelin.lastCheckedAlertsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+			console.log("latestDate: " + latestDate);
 			for (var i = data.results.length - 1; i >= 0; i--) {
 				newAlert = new Alert(data.results[i]);
 				retrievedAlerts.push(newAlert);
+				newAlertDate = createTimestampFromDate(new Date(newAlert.lastModified));
+				if (newAlertDate > latestDate) {
+					console.log("Found sooner date...");
+					console.log("new: " + newAlertDate);
+					console.log("old latest: " + latestDate);
+					latestDate = newAlertDate;
+				}
 			}
+			if (latestDate > Javelin.lastCheckedAlertsTimestamp) {
+				Javelin.lastCheckedAlertsTimestamp = latestDate;
+			};
 			callback(retrievedAlerts);
 		})
 	}
@@ -367,7 +387,7 @@
 	Javelin.getAllChatMessagesForAlert = function(alert, callback) {
 		var request = Javelin.client.alerts.messages.read(alert.object_id);
 		request.done(function(data) {
-			Javelin.lastCheckedMessagesTimestamp = getTimestamp() - 10;
+			Javelin.lastCheckedMessagesTimestamp = getTimestamp();
 			var chatMessages = [];
 			for (var i = 0; i < data.length; i++) {
 				newChatMessage = new ChatMessage(data[i]);
