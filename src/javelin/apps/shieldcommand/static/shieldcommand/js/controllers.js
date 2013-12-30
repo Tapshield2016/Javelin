@@ -40,6 +40,8 @@ angular.module('shieldCommand.controllers', [])
 			$scope.dismissMarkCompletedModal();
 			$rootScope.$broadcast('alertMarkedChange');
 			$scope.toggle();
+			clearActiveAlertMarker();
+			$scope.returnToGeofenceCenter();
 		});
 	}
 
@@ -77,6 +79,10 @@ angular.module('shieldCommand.controllers', [])
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
 
 	$scope.alerts = [];
+	$scope.myAlertsLength = 0;
+	$scope.newAlertsLength = 0;
+	$scope.pendingAlertsLength = 0;
+	$scope.completedAlertsLength = 0;
 	$scope.currentProfile = null;
 	$scope.markerSetForActiveAlert = false;
 	$scope.chatUpdateTimeout = null;

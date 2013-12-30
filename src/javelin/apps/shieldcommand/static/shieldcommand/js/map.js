@@ -1,5 +1,7 @@
 var googleMap;
 var googleMapOptions = {};
+var googleMarkerOptions = {};
+var googleAccuracyCircleOptions = {};
 var googleMapMarker = new google.maps.Marker();
 var googleMapAccuracyCircle = new google.maps.Circle();
 var googleMapGeocoder = new google.maps.Geocoder();
@@ -24,9 +26,6 @@ function initializeMap() {
 		map: googleMap
 	};
 
-	googleMapMarker.setOptions(markerOptions);
-	googleMapAccuracyCircle.setOptions(circleOptions);
-
     if (googleMapAgencyBoundaries.length > 0) {
         bermudaTriangle = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
@@ -46,10 +45,17 @@ function setMapCenterToDefault() {
     googleMap.setZoom(googleMapOptions.zoom);
 }
 
+function clearActiveAlertMarker() {
+    googleMapMarker.setMap(null);
+    googleMapAccuracyCircle.setMap(null);
+}
+
 function setMarker(location) {
     if (!location) {
         return;
     };
+    googleMapMarker.setOptions(markerOptions);
+    googleMapAccuracyCircle.setOptions(circleOptions);
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
