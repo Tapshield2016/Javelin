@@ -37,7 +37,8 @@ class IsoDateTimeField(forms.DateTimeField):
             parsed = parse_datetime(value)
             if parsed is None:  # Continue with other formats if doesn't match
                 try:
-                    parsed = datetime.datetime.fromtimestamp(float(value))
+                    parsed =\
+                        datetime.datetime.fromtimestamp(float(value) + .001)
                 except ValueError:
                     raise ValueError
                 finally:
