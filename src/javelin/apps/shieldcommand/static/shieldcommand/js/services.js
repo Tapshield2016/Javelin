@@ -69,6 +69,24 @@ angular.module('shieldCommand.services', [])
 		});
 	}
 
+	this.sendChatMessageForActiveAlert = function(message, callback) {
+		Javelin.sendChatMessageForAlert(this.activeAlert, message, function(success) {
+			callback(success);
+		});
+	}
+
+	this.getAllChatMessagesForActiveAlert = function(callback) {
+		Javelin.getAllChatMessagesForAlert(this.activeAlert, function(messages) {
+			callback(messages);
+		})
+	}
+
+	this.getNewChatMessagesForActiveAlert = function(callback) {
+		Javelin.getAllChatMessagesForAlertSinceLastChecked(this.activeAlert, function(messages) {
+			callback(messages);
+		})
+	}
+
 	return {
 		activeAlert: this.activeAlert,
 		loadInitialAlerts: this.loadInitialAlerts,
@@ -78,5 +96,8 @@ angular.module('shieldCommand.services', [])
 		markActiveAlertAsPending: this.markActiveAlertAsPending,		
 		setActiveAlert: this.setActiveAlert,
 		getUserProfileForActiveAlert: this.getUserProfileForActiveAlert,
+		sendChatMessageForActiveAlert: this.sendChatMessageForActiveAlert,
+		getAllChatMessagesForActiveAlert: this.getAllChatMessagesForActiveAlert,
+		getNewChatMessagesForActiveAlert: this.getNewChatMessagesForActiveAlert,
 	}
 }]);

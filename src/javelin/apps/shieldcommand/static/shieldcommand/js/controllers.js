@@ -79,6 +79,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.alerts = [];
 	$scope.currentProfile = null;
 	$scope.markerSetForActiveAlert = false;
+	$scope.chatUpdateTimeout = null;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -121,7 +122,14 @@ angular.module('shieldCommand.controllers', [])
   			$rootScope.$broadcast('toggleProfile');
   		}
   		else {
+  			clearTimeout($scope.chatUpdateTimeout);
 	  		alertService.setActiveAlert(alert);
+	  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
+	  			if (messages.length > 0) {
+	  				updateDisplay();
+	  			};
+	  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+	  		});
 	  		$scope.markerSetForActiveAlert = false;	
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
@@ -133,6 +141,15 @@ angular.module('shieldCommand.controllers', [])
 			$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
+
+  	$scope.updateChatMessages = function () {
+  		alertService.getNewChatMessagesForActiveAlert(function(messages) {
+			if (messages.length > 0) {
+				updateDisplay();
+			}
+			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+		});
+  	}
 
     $scope.selectedClass = function(alert) {
         return alert === alertService.activeAlert ? 'selected' : undefined;

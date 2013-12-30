@@ -17,7 +17,6 @@ angular.module('shieldCommand.directives', [])
      link: function(scope, element, attr) {
        scope.dismissMarkCompletedModal = function() {
            element.modal('hide');
-          console.log(element);
        };
      }
    } 
@@ -29,7 +28,6 @@ angular.module('shieldCommand.directives', [])
      link: function(scope, element, attr) {
        scope.dismissMarkPendingModal = function() {
            element.modal('hide');
-        console.log(element);
        };
      }
    } 
@@ -144,4 +142,40 @@ angular.module('shieldCommand.directives', [])
       }
     },
   }
+}])
+
+.directive('alertChatWindow', ['alertService', function(alertService) {
+   return {
+      restrict: 'A',
+      template: "<div class=\"alert-option chat\">\n    <i class=\"icon-chat_bubble\" ng-click=\"toggleChat()\"></i>\n    <div class=\"chat-panel panel panel-default hide\">\n        <div class=\"panel-heading\">Chat <span class=\"glyphicon glyphicon-remove pull-right\" ng-click=\"toggleChat()\"></span></div>\n        <div class=\"panel-body\">\n            <div class=\"chat-messages\">\n                <div class=\"message-container\" ng-repeat=\"message in alert.chatMessages | orderBy:'timestamp'\">\n                        <div class=\"message-content\"><span class=\"message-sender\">{{ senderName(message.senderID) }}:</span> {{ message.message }}</div>\n                        <div class=\"message-timestamp\">{{ message.timestamp * 1000 | date:'MM-dd HH:mm:ss' }}</div>\n                </div>\n            </div>\n            <div class=\"message-box\">\n                <textarea ng-model=\"newChatMessage\" placeholder=\"Enter message here...\"></textarea>\n            </div> \n        </div> \n    </div>\n</div>",
+      scope: {
+        alert: "=",
+      },
+      link: function(scope, element, attr) {
+        element.find('.message-box').keypress(function (e) {
+          if (e.which == 13) {
+            alertService.sendChatMessageForActiveAlert(scope.newChatMessage, function(success) {
+              if (success) {
+                scope.newChatMessage = '';
+                var messages = element.find('.chat-messages');
+                if (messages.length > 0) {
+                  messages.animate({ scrollTop: element.find('.chat-messages')[0].scrollHeight }, 0);
+                };
+              };
+            });
+          };
+        });
+
+        scope.senderName = function (senderID) {
+          return (senderID == Javelin.activeAgencyUser.object_id) ? Javelin.activeAgencyUser.firstName : scope.alert.agencyUserMeta.firstName;
+        }
+
+        scope.toggleChat = function() {
+          element.find('.chat-panel').toggleClass('hide');
+          if (scope.alert.hasNewChatMessage) {
+            scope.alert.hasNewChatMessage = false;
+          };
+        }
+      }
+   } 
 }]);
