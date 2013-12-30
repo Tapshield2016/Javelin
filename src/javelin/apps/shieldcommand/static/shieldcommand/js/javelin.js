@@ -387,24 +387,29 @@
 	}
 
 	Javelin.getAllChatMessagesForAlert = function(alert, callback) {
-		var request = Javelin.client.alerts.messages.read(alert.object_id);
-		request.done(function(data) {
-			Javelin.lastCheckedMessagesTimestamp = getTimestamp();
-			var chatMessages = [];
-			for (var i = 0; i < data.length; i++) {
-				newChatMessage = new ChatMessage(data[i]);
-				chatMessages.push(newChatMessage);
-			};
-			if (chatMessages.length > 0) {
-				alert.hasNewChatMessage = true;
-				alert.chatMessages = chatMessages;
-			}
-			else {
-				alert.hasNewChatMessage = false;
-			}
+		if (!alert) {
+			callback(null);
+		}
+		else {
+			var request = Javelin.client.alerts.messages.read(alert.object_id);
+			request.done(function(data) {
+				Javelin.lastCheckedMessagesTimestamp = getTimestamp();
+				var chatMessages = [];
+				for (var i = 0; i < data.length; i++) {
+					newChatMessage = new ChatMessage(data[i]);
+					chatMessages.push(newChatMessage);
+				};
+				if (chatMessages.length > 0) {
+					alert.hasNewChatMessage = true;
+					alert.chatMessages = chatMessages;
+				}
+				else {
+					alert.hasNewChatMessage = false;
+				}
 
-			callback(chatMessages);
-		});
+				callback(chatMessages);
+			});
+		}
 	}
 
 	Javelin.objectInArrayByKeyValue = function(array, key, value) {
@@ -416,25 +421,30 @@
 	}
 
 	Javelin.getAllChatMessagesForAlertSinceLastChecked = function(alert, callback) {
-		var request = Javelin.client.alerts.messages_since.read(alert.object_id, params={timestamp: Javelin.lastCheckedMessagesTimestamp});
-		request.done(function(data) {
-			Javelin.lastCheckedMessagesTimestamp = getTimestamp() - 10;			
-			var chatMessages = [];
-			for (var i = 0; i < data.length; i++) {
-				newChatMessage = new ChatMessage(data[i]);
-				if (!Javelin.objectInArrayByKeyValue(alert.chatMessages, "messageID", newChatMessage.messageID)) {
-					chatMessages.push(newChatMessage);
+		if (!alert) {
+			callback(null);
+		}
+		else {
+			var request = Javelin.client.alerts.messages_since.read(alert.object_id, params={timestamp: Javelin.lastCheckedMessagesTimestamp});
+			request.done(function(data) {
+				Javelin.lastCheckedMessagesTimestamp = getTimestamp() - 10;			
+				var chatMessages = [];
+				for (var i = 0; i < data.length; i++) {
+					newChatMessage = new ChatMessage(data[i]);
+					if (!Javelin.objectInArrayByKeyValue(alert.chatMessages, "messageID", newChatMessage.messageID)) {
+						chatMessages.push(newChatMessage);
+					};
 				};
-			};
-			if (chatMessages.length > 0) {
-				alert.hasNewChatMessage = true;
-				alert.chatMessages = alert.chatMessages.concat(chatMessages);
-			}
-			else {
-				alert.hasNewChatMessage = false;
-			}
-			callback(chatMessages);
-		});
+				if (chatMessages.length > 0) {
+					alert.hasNewChatMessage = true;
+					alert.chatMessages = alert.chatMessages.concat(chatMessages);
+				}
+				else {
+					alert.hasNewChatMessage = false;
+				}
+				callback(chatMessages);
+			});
+		}
 	}
 
 	Javelin.sendChatMessageForAlert = function(alert, message, callback) {

@@ -36,20 +36,25 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.markActiveAlertAsCompleted = function() {
+		$scope.activeAlert.status = 'C';		
+		$scope.toggle();
+		clearActiveAlertMarker();
+		$scope.returnToGeofenceCenter();
+		$scope.dismissMarkCompletedModal();
 		alertService.markActiveAlertAsCompleted(function(data) {
-			$scope.dismissMarkCompletedModal();
+
+			$scope.activeAlert = null;
+			alertService.activeAlert = null;
 			$rootScope.$broadcast('alertMarkedChange');
-			$scope.toggle();
-			clearActiveAlertMarker();
-			$scope.returnToGeofenceCenter();
 		});
 	}
 
 	$scope.markActiveAlertAsPending = function() {
+		$scope.activeAlert.status = 'P';
+		$scope.toggle();
+		$scope.dismissMarkPendingModal();
 		alertService.markActiveAlertAsPending(function(data) {
-			$scope.dismissMarkPendingModal();
 			$rootScope.$broadcast('alertMarkedChange');
-			$scope.toggle();
 		});
 	}
 
@@ -161,17 +166,12 @@ angular.module('shieldCommand.controllers', [])
         return alert === alertService.activeAlert ? 'selected' : undefined;
     };
 
-  	$scope.acceptClicked = function(url) {
-  		for (var i = 0; i < $scope.alerts.length; i++) {
-  			if ($scope.alerts[i].url === url) {
-		  		$scope.alerts[i].status = 'A';
-		  		updateDisplay();
-		  		alertService.claimAlertForActiveUser($scope.alerts[i], function(data) {
-		  			// Anything to do here?
-		  		});
-		  		break;
-  			}
-  		};
+  	$scope.acceptClicked = function(alert) {
+  		alert.status = 'A';
+  		updateDisplay();
+		alertService.claimAlertForActiveUser(alert, function(data) {
+			// Anything to do here?
+		});
   	};
 
   	$scope.loadInitialAlerts();

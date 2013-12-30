@@ -113,18 +113,20 @@
                           <!-- New Alerts -->
 
                                 <ul class="alerts-list">
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-click="alertClicked(alert.url)">
-                                        <div class="alert-type {{ alert.initiatedBy }}">
-                                            <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}">
+                                        <div class="alert-container" ng-click="alertClicked(alert)">
+                                            <div class="alert-type {{ alert.initiatedBy }}">
+                                                <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                             </div>
-                                        </div>
-                                        <div class="alert-option chat new-chat" ng-class="">
-                                            <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url)"></i>
+                                            <div class="alert-contact">
+                                                <div class="alert-contact-info">
+                                                    <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                    <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                                </div>
+                                            </div>
+                                            <div class="alert-option chat new-chat" ng-class="">
+                                                <i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i>
+                                            </div>
                                         </div>
                                     </li>
                                 </ul>
@@ -143,18 +145,20 @@
                           <!-- Pending Alerts -->
 
                             <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-click="alertClicked(alert.url)">
-                                    <div class="alert-type {{ alert.initiatedBy }}">
-                                        <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                    </div>
-                                    <div class="alert-contact">
-                                        <div class="alert-contact-info">
-                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}">
+                                    <div class="alert-container" ng-click="alertClicked(alert)">
+                                        <div class="alert-type {{ alert.initiatedBy }}">
+                                            <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                         </div>
-                                    </div>
-                                    <div class="alert-option chat new-chat" ng-class="">
-                                        <i class="icon-accept_bubble" ng-click="acceptClicked(alert.url )"></i>
+                                        <div class="alert-contact">
+                                            <div class="alert-contact-info">
+                                                    <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+                                                    <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'M/dd hh:mm a' }}</div>
+                                            </div>
+                                        </div>
+                                        <div class="alert-option chat new-chat" ng-class="">
+                                            <i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i>
+                                        </div>
                                     </div>
                                 </li>
                             </ul>

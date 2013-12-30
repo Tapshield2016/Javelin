@@ -300,7 +300,6 @@ body {
     background-color: #2f302f;
     border-radius: 0px;
     color: #fff;
-    cursor: pointer;
     height: 60px;
     vertical-align: middle;
     width: 100%;
@@ -309,6 +308,12 @@ body {
     -o-transition: all .3s linear;
     -ms-transition: all .3s linear;
     transition: all .3s linear;
+}
+
+.alert-container {
+    cursor: pointer;
+    width: 100%;
+    background-color: blue;    
 }
 
 .alert.new {
