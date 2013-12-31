@@ -51,6 +51,7 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeAlert = null;
 			alertService.activeAlert = null;
 			$rootScope.$broadcast('alertMarkedChange');
+			$rootScope.$broadcast('alertMarkedCompleted');
 		});
 	}
 
@@ -63,6 +64,7 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeAlert = null;
 			alertService.activeAlert = null;
 			$rootScope.$broadcast('alertMarkedChange');
+			$rootScope.$broadcast('alertMarkedPending');
 		});
 	}
 
@@ -92,6 +94,7 @@ angular.module('shieldCommand.controllers', [])
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
 
 	$scope.alerts = [];
+	$scope.chats = {};
 	$scope.myAlertsLength = 0;
 	$scope.newAlertsLength = 0;
 	$scope.pendingAlertsLength = 0;
@@ -105,9 +108,12 @@ angular.module('shieldCommand.controllers', [])
 		updateDisplay();
 	});
 
+	$scope.$on('alertMarkedPending', function() {
+		clearTimeout($scope.chatUpdateTimeout);
+	});
+
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > oldLength) {
-			console.log(alertService.activeAgency());
 			if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
 				newAlertSound.play();
 				$scope.newAlertSoundInterval = setInterval(function () {
@@ -163,18 +169,16 @@ angular.module('shieldCommand.controllers', [])
   		else {
   			clearTimeout($scope.chatUpdateTimeout);
 	  		alertService.setActiveAlert(alert);
-	  		if (alert.chatMessages.length > 0) {
-	  			$scope.updateChatMessages();
-	  		}
-	  		else {
+
+	  		if (alert.status == 'A') {
 		  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
 		  			if (messages && messages.length > 0) {
 		  				updateDisplay();
 		  				newChatSound.play();
 		  			};
 		  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-		  		});	  			
-	  		}
+		  		});
+	  		}	  			
 
 	  		$scope.markerSetForActiveAlert = false;	
 

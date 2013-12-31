@@ -328,15 +328,11 @@
 		request.done(function(data) {
 			var retrievedAlerts = [];
 			var latestDate = Javelin.lastCheckedAlertsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
-			console.log("latestDate: " + latestDate);
 			for (var i = data.results.length - 1; i >= 0; i--) {
 				newAlert = new Alert(data.results[i]);
 				retrievedAlerts.push(newAlert);
 				newAlertDate = createTimestampFromDate(new Date(newAlert.lastModified));
 				if (newAlertDate > latestDate) {
-					console.log("Found sooner date...");
-					console.log("new: " + newAlertDate);
-					console.log("old latest: " + latestDate);
 					latestDate = newAlertDate;
 				}
 			}
