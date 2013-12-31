@@ -7,10 +7,11 @@ angular.module('shieldCommand.controllers', [])
 .controller('CommandAlertController', ['$scope', 'alertService', function($scope, alertService) {
 
 	$scope.sendCommandAlertMessage = function() {
-		$scope.dismiss();
 		alertService.sendMassAlert($scope.message, function(success) {
 			if (success) {
 				console.log("Message sent!");
+				$scope.dismiss();
+				$scope.message = '';
 			}
 			else {
 				console.log("Message failed...");
@@ -179,14 +180,7 @@ angular.module('shieldCommand.controllers', [])
 	  		alertService.setActiveAlert(alert);
 
 	  		if (alert.status == 'A') {
-		  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
-		  			console.log("getting all chats for " + alertService.activeAlert.object_id);
-		  			if (messages && messages.length > 0) {
-		  				updateDisplay();
-		  				newChatSound.play();
-		  			};
-		  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-		  		});
+	  			$scope.initChatMessagesForActiveAlert();
 	  		}	  			
 
 	  		$scope.markerSetForActiveAlert = false;	
@@ -201,9 +195,18 @@ angular.module('shieldCommand.controllers', [])
   		}
   	};
 
+  	$scope.initChatMessagesForActiveAlert = function() {
+		alertService.getAllChatMessagesForActiveAlert(function(messages) {
+			if (messages && messages.length > 0) {
+				updateDisplay();
+				newChatSound.play();
+			};
+			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+		});
+  	}
+
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
-	  			console.log("getting updated chats for " + alertService.activeAlert.object_id);
 			if (messages && messages.length > 0) {
 				updateDisplay();
   				newChatSound.play();
@@ -224,14 +227,7 @@ angular.module('shieldCommand.controllers', [])
 		});
 
 		if (alert == alertService.activeAlert) {
-			alertService.getAllChatMessagesForActiveAlert(function(messages) {
-				console.log("getting all chats for " + alertService.activeAlert.object_id);
-				if (messages && messages.length > 0) {
-					updateDisplay();
-					newChatSound.play();
-				};
-				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-			});
+			$scope.initChatMessagesForActiveAlert();
 		};
   	};
 
