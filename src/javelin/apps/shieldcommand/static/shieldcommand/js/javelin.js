@@ -408,9 +408,6 @@
 					alert.hasNewChatMessage = true;
 					alert.chatMessages = chatMessages;
 				}
-				else {
-					alert.hasNewChatMessage = false;
-				}
 
 				callback(chatMessages);
 			});
@@ -443,9 +440,6 @@
 				if (chatMessages.length > 0) {
 					alert.hasNewChatMessage = true;
 					alert.chatMessages = alert.chatMessages.concat(chatMessages);
-				}
-				else {
-					alert.hasNewChatMessage = false;
 				}
 				callback(chatMessages);
 			});
