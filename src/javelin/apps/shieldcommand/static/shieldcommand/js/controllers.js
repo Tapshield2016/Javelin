@@ -155,13 +155,19 @@ angular.module('shieldCommand.controllers', [])
   		else {
   			clearTimeout($scope.chatUpdateTimeout);
 	  		alertService.setActiveAlert(alert);
-	  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
-	  			if (messages.length > 0) {
-	  				updateDisplay();
-	  				newChatSound.play();
-	  			};
-	  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-	  		});
+	  		if (alert.chatMessages.length > 0) {
+	  			$scope.updateChatMessages();
+	  		}
+	  		else {
+		  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
+		  			if (messages.length > 0) {
+		  				updateDisplay();
+		  				newChatSound.play();
+		  			};
+		  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+		  		});	  			
+	  		}
+
 	  		$scope.markerSetForActiveAlert = false;	
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
