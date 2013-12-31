@@ -4,10 +4,18 @@
 
 angular.module('shieldCommand.controllers', [])
 
-.controller('CommandAlertController', ['$scope', function($scope) {
+.controller('CommandAlertController', ['$scope', 'alertService', function($scope, alertService) {
 
 	$scope.sendCommandAlertMessage = function() {
 		$scope.dismiss();
+		alertService.sendMassAlert($scope.message, function(success) {
+			if (success) {
+				console.log("Message sent!");
+			}
+			else {
+				console.log("Message failed...");
+			}
+		});
 	}
 
 }])
@@ -172,6 +180,7 @@ angular.module('shieldCommand.controllers', [])
 
 	  		if (alert.status == 'A') {
 		  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
+		  			console.log("getting all chats for " + alertService.activeAlert.object_id);
 		  			if (messages && messages.length > 0) {
 		  				updateDisplay();
 		  				newChatSound.play();
@@ -194,6 +203,7 @@ angular.module('shieldCommand.controllers', [])
 
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
+	  			console.log("getting updated chats for " + alertService.activeAlert.object_id);
 			if (messages && messages.length > 0) {
 				updateDisplay();
   				newChatSound.play();
@@ -212,6 +222,17 @@ angular.module('shieldCommand.controllers', [])
 		alertService.claimAlertForActiveUser(alert, function(data) {
 			// Anything to do here?
 		});
+
+		if (alert == alertService.activeAlert) {
+			alertService.getAllChatMessagesForActiveAlert(function(messages) {
+				console.log("getting all chats for " + alertService.activeAlert.object_id);
+				if (messages && messages.length > 0) {
+					updateDisplay();
+					newChatSound.play();
+				};
+				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+			});
+		};
   	};
 
   	$scope.loadInitialAlerts();
