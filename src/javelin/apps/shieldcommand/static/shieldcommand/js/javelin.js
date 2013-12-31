@@ -135,6 +135,7 @@
 		this.alertCompletedMessage = attributes.alert_completed_message;
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
+		this.loopAlertSound = attributes.loop_alert_sound;
 		return this;
 	}
 
@@ -232,6 +233,10 @@
 		Javelin.client.add('alertlocations', {url: 'alert-locations'});
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
+
+		Javelin.getAgency(agencyID, function(agency) {
+			Javelin.activeAgency = agency;
+		});
 	};
 
 	Javelin.setActiveAgencyUserAttributes = function(attributes) {

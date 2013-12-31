@@ -91,9 +91,29 @@ angular.module('shieldCommand.controllers', [])
 	$scope.currentProfile = null;
 	$scope.markerSetForActiveAlert = false;
 	$scope.chatUpdateTimeout = null;
+	$scope.newAlertSoundInterval = null;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
+	});
+
+	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
+		if (newLength > oldLength) {
+			console.log(alertService.activeAgency());
+			if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
+				newAlertSound.play();
+				$scope.newAlertSoundInterval = setInterval(function () {
+					newAlertSound.play();
+				}, 2000);
+			}
+			else {
+				newAlertSound.play();
+			}
+		}
+		else if (newLength == 0) {
+			newAlertSound.stop();
+			clearInterval($scope.newAlertSoundInterval);
+		}
 	});
 
   	function updateAlerts(alerts) {
@@ -122,7 +142,7 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.getUpdatedAlerts = function() {
-  		alertService.getUpdatedAlerts($scope.alerts, function(updatedAlerts, changed) {
+  		alertService.getUpdatedAlerts($scope.alerts, function(updatedAlerts) {
   			updateAlerts(updatedAlerts);
 			setTimeout($scope.getUpdatedAlerts, 3000);
   		});

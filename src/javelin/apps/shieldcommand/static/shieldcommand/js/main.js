@@ -78,46 +78,13 @@ $.ajaxSetup({
     }
 });
 
-// setTimeout(function() {
-//     Javelin.getAgency(Javelin.agencyID, function(agency) {
-//         console.log(agency.url);
-//     });
-// }, 5000);
+var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
+    formats: ["mp3", "wav",],
+    preload: true,
+});
 
-// Javelin.getDisarmedAlerts(function(results) {
-// 	console.log(results.length);
-// });
 
-// Javelin.getLatestLocationForAlert("305", function(location) {
-// 	if (location) {
-// 		console.log("Latest location (" + location.lastModified +"): (" + location.latitude + ", " + location.longitude + ")");
-// 	}
-// 	else {
-// 		console.log("No latest location found for alert with ID: " + "308");
-// 	}
-// });
-
-// Javelin.sendMassAlert("TEST MASS ALERT", function(success) {
-// 	if (success) {
-// 		console.log("Mass alert was sent");
-// 	}
-// 	else {
-// 		console.log("Mass alert failed to send");
-// 	}
-// });
-
-// Javelin.getAllChatMessagesForAlertSinceTime("256", "1386273919", function(messages) {
-// 	for (var i = 0; i < messages.length; i++) {
-// 		console.log("message: " + messages[i].message + ", " + messages[i].timestamp);
-// 	};
-// });
-
-// Javelin.sendChatMessageForAlert("256", "This is the message again", function(success) {
-
-// });
-
-// Javelin.getAlertsModifiedSinceLastCheck(function(alerts) {
-// 	for (var i = 0; i < alerts.length; i++) {
-// 		console.log(alerts[i].url);
-// 	};
-// });
+var newChatSound = new buzz.sound("/media/static/shieldcommand/sounds/new_chat", {
+    formats: ["mp3", "wav",],
+    preload: true,
+});

@@ -87,6 +87,10 @@ angular.module('shieldCommand.services', [])
 		})
 	}
 
+	this.activeAgency = function() {
+		return Javelin.activeAgency;
+	}
+
 	return {
 		activeAlert: this.activeAlert,
 		loadInitialAlerts: this.loadInitialAlerts,
@@ -99,5 +103,6 @@ angular.module('shieldCommand.services', [])
 		sendChatMessageForActiveAlert: this.sendChatMessageForActiveAlert,
 		getAllChatMessagesForActiveAlert: this.getAllChatMessagesForActiveAlert,
 		getNewChatMessagesForActiveAlert: this.getNewChatMessagesForActiveAlert,
+		activeAgency: this.activeAgency,
 	}
 }]);

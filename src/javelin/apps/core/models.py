@@ -52,6 +52,7 @@ class Agency(TimeStampedModel):
                                              null=True, blank=True)
     require_domain_emails = models.BooleanField(default=False)
     display_command_alert = models.BooleanField(default=False)
+    loop_alert_sound = models.BooleanField(default=False)
 
     objects = models.Manager()
 
