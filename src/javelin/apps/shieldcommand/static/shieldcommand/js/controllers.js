@@ -35,7 +35,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.shouldDisplayProfileButtons = function() {
-		if ($scope.activeAlert.status == 'A') {
+		if ($scope.activeAlert && $scope.activeAlert.status == 'A') {
 			return true;
 		}
 		return false;
@@ -48,7 +48,6 @@ angular.module('shieldCommand.controllers', [])
 		$scope.returnToGeofenceCenter();
 		$scope.dismissMarkCompletedModal();
 		alertService.markActiveAlertAsCompleted(function(data) {
-
 			$scope.activeAlert = null;
 			alertService.activeAlert = null;
 			$rootScope.$broadcast('alertMarkedChange');
@@ -59,7 +58,10 @@ angular.module('shieldCommand.controllers', [])
 		$scope.activeAlert.status = 'P';
 		$scope.toggle();
 		$scope.dismissMarkPendingModal();
+		clearActiveAlertMarker();
 		alertService.markActiveAlertAsPending(function(data) {
+			$scope.activeAlert = null;
+			alertService.activeAlert = null;
 			$rootScope.$broadcast('alertMarkedChange');
 		});
 	}
@@ -166,7 +168,7 @@ angular.module('shieldCommand.controllers', [])
 	  		}
 	  		else {
 		  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
-		  			if (messages.length > 0) {
+		  			if (messages && messages.length > 0) {
 		  				updateDisplay();
 		  				newChatSound.play();
 		  			};
@@ -188,7 +190,7 @@ angular.module('shieldCommand.controllers', [])
 
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
-			if (messages.length > 0) {
+			if (messages && messages.length > 0) {
 				updateDisplay();
   				newChatSound.play();
 			}
