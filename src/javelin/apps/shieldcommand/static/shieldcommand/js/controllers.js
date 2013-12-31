@@ -16,12 +16,11 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.currentProfile = null;
 	$scope.activeAlert = null;
+	$scope.isProfileVisible = false;
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
 	}
-
-	$scope.isProfileVisible = false;
 
 	$scope.$on('toggleProfile', function() {
 		$scope.toggle();
@@ -34,6 +33,13 @@ angular.module('shieldCommand.controllers', [])
 			$scope.isProfileVisible = true;
 		});
 	});
+
+	$scope.shouldDisplayProfileButtons = function() {
+		if ($scope.activeAlert.status == 'A') {
+			return true;
+		}
+		return false;
+	}
 
 	$scope.markActiveAlertAsCompleted = function() {
 		$scope.activeAlert.status = 'C';		

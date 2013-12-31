@@ -390,7 +390,7 @@
 
                                 </div><!-- /.profile-information -->
 
-                                <div class="profile-buttons">
+                                <div class="profile-buttons" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
                                     <h5>Mark Alert As</h5>
                                     <div class="btn-group btn-group-justified">
                                         <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a>
