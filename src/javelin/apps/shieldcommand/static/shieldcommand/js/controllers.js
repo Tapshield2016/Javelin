@@ -158,6 +158,7 @@ angular.module('shieldCommand.controllers', [])
 	  		alertService.getAllChatMessagesForActiveAlert(function(messages) {
 	  			if (messages.length > 0) {
 	  				updateDisplay();
+	  				newChatSound.play();
 	  			};
 	  			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 	  		});
@@ -177,6 +178,7 @@ angular.module('shieldCommand.controllers', [])
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
 			if (messages.length > 0) {
 				updateDisplay();
+  				newChatSound.play();
 			}
 			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 		});
