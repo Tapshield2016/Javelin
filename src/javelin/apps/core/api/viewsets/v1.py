@@ -36,6 +36,26 @@ class UserViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
+    @action(methods=['post',])
+    def update_required_info(self, request, pk=None):
+        user = self.get_object()
+        valid_keys = ['agency', 'phone_number', 'disarm_code',
+                      'first_name', 'last_name']
+        for k, v in request.POST.items():
+            if not k in valid_keys:
+                continue
+            print k, v
+            if hasattr(user, k):
+                setattr(user, k, v)
+        user.save()
+        serializer = UserSerializer(user)
+        if serializer.data:
+            return Response(serializer.data)
+        else:
+            return Response(\
+                {'message': 'There was an error with the values provided.'},
+                status=status.HTTP_400_BAD_REQUEST)            
+
     @action()
     def update_device_token(self, request, pk=None):
         """
