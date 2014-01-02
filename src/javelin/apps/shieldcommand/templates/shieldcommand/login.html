@@ -17,9 +17,6 @@
         <![endif]-->
     </head>
     <body>
-        {%if form.errors %}
-        <p class="error"> Invalid username/password combination, please try again </p>
-        {% endif %}
 
         <div class="main">
              <div class="l-header">
@@ -30,7 +27,11 @@
             <div class="alert-container">
                 <h1>Welcome</h1>
                 <div class="alert-body-container">
+                    {% if form.errors %}
+                    <h2 class="error">Invalid username/password combination, please try again </h2>
+                    {% else %}
                     <h2>Please enter your log in information</h2>
+                    {% endif %}
                     <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
                         {% csrf_token %}
                         <div class="inner" id="firstOfType">
@@ -40,10 +41,10 @@
                         <div class="inner">
                             <h3>Password</h3>
                             <input id="id_password" name="password" type="password" /><br>
-                            <a>Forgot your password?</a>
+                            <a href="{% url 'password_reset' %}">Forgot your password?</a>
                         </div>
-                         <input type="hidden" name="next" value="{% url 'shieldcommand-index' %}" />
-                        <input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Sign in" />
+                        <input type="hidden" name="next" value="{% url 'shieldcommand-index' %}" />
+                        <input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Log in" />
                     </form>
                 </div>
             </div>

@@ -88,6 +88,7 @@ a{
 }
 .btn.submit {
 	float: right;
+	width: 96px;
 }
 .btn--primary {
 	color: #fff;
@@ -196,6 +197,6 @@ a{
 	width: 298px;
 	padding-left: 10px;
 }
-p.error {
-	padding: 0px 15px;
+.error {
+	color: red;
 }
