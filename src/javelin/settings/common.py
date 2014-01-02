@@ -67,6 +67,7 @@ STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 #    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    'compressor.finders.CompressorFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -117,6 +118,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
 
+    'compressor',
     'django_twilio',
     'djcelery',
     'registration',
@@ -185,3 +187,10 @@ ACCOUNT_ACTIVATION_DAYS = 30
 # celery
 BROKER_TRANSPORT_OPTIONS = {'polling_interval': 1.0}
 CELERY_SEND_EVENTS = False
+
+# compressor
+COMPRESS_ENABLED = True
+COMPRESS_CSS_FILTERS = (
+    'compressor.filters.css_default.CssAbsoluteFilter',
+    'compressor.filters.cssmin.CSSMinFilter',
+)
