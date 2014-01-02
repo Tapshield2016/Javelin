@@ -5201,7 +5201,8 @@ body {
   height: 100%;
   max-height: 100%;
   min-height: 100%;
-  padding: 0px; }
+  padding: 0px;
+  overflow-x: hidden; }
 
 .container-full {
   height: 100%;
@@ -5223,6 +5224,7 @@ body {
   list-style-type: none;
   margin: 0px;
   padding: 0px 0px 0px 0px;
+  overflow-x: hidden;
   overflow-y: auto;
   background: #f7f6f6; }
 
@@ -5479,7 +5481,7 @@ body {
   padding: 5px 0px; }
 
 .chat {
-  position: absolute;
+  position: relative;
   right: 1px; }
 
 .chat div.panel {
