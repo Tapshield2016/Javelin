@@ -169,7 +169,7 @@
                           <div class="panel-body">  
                           <!-- Completed Alerts -->
                               <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-click="alertClicked(alert.url)">
+                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-click="alertClicked(alert)">
                                     <div class="alert-type {{ alert.initiatedBy }}-alert-type">
                                         <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                     </div>
