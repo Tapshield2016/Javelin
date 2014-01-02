@@ -135,8 +135,8 @@ angular.module('shieldCommand.directives', [])
         for (var i = 0; i < locations.length; i++) {
           if (locations[i]) {
             var tempMarker = new google.maps.Marker();
-            tempMarker.setPosition(new google.maps.LatLng(locations[i].latitude, locations[i].longitude));
-            tempMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
+            tempMarker.setPosition(new google.maps.LatLng(locations[i].location.latitude, locations[i].location.longitude));
+            tempMarker.setIcon("/media/static/shieldcommand/img/" + locations[i].alertType.charAt(0).toUpperCase() + locations[i].alertType.substr(1).toLowerCase() + "UserPin.png");
             tempMarker.setMap(googleMap);
             scope.tempMapMarkers.push(tempMarker);
           };

@@ -27,13 +27,18 @@ angular.module('shieldCommand.filters', [])
 		var filtered = [];
 		for (var i = 0; i < alerts.length; i++) {
 			if (statuses.indexOf(alerts[i].status) > -1) {
+				var alert_type = alerts[i].initiatedBy;
+				var location_info = { alertType: alerts[i].initiatedBy,
+									  location: null }
 				if (alerts[i].status == 'A') {
 					if (alerts[i].agencyDispatcher && alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
-						filtered.push(alerts[i].location);
+						location_info.location = alerts[i].location;
+						filtered.push(location_info);
 					}
 				}
 				else {
-					filtered.push(alerts[i].location);
+					location_info.location = alerts[i].location;
+					filtered.push(location_info);
 				}
 			}
 		};
