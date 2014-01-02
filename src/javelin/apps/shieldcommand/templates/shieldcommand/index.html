@@ -27,7 +27,7 @@
                         <li class="dropdown">
                             <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ request.user.first_name }} <b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="http://twitter.com/fat">Agency Settings</a></li>
+                                <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agency Settings</a></li>
                                 <li role="presentation" class="divider"></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
                             </ul>
@@ -266,8 +266,8 @@
                         <div id="profile" ng-class="(isProfileVisible) ? 'col-md-3' : 'hidden'">
                             <p class="profile-title">Profile</p>
                             <div class="profile-content">
-                                <div class="profile-top-content" style="overflow: hidden;">
-                                    <div class="profile-image-container" style="height: 100px; width: 100px; float: left;">
+                                <div class="profile-top-content">
+                                    <div class="profile-image-container">
                                         <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ currentProfile.profileImageURL }}" class="img-rounded profile-image" /></a>
                                     </div>
                                     <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
@@ -278,7 +278,7 @@
                                                     <h4 class="modal-title" id="profileImageLabel">{{ activeAlert.agencyUserMeta.getFullName() }}</h4>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img ng-src="{{ currentProfile.profileImageURL }}" style="width: 300px; height: 300px; padding-bottom: 20px;" />
+                                                    <img ng-src="{{ currentProfile.profileImageURL }}" />
                                                 </div>
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->

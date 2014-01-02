@@ -5109,6 +5109,14 @@ body {
   height: 100px;
   width: 100px; }
 
+.profile-image-container {
+  float: left;
+  height: 100px;
+  width: 100px; }
+
+.profile-top-content {
+  overflow: hidden; }
+
 .profile-content .disarm-code {
   width: 100px;
   height: 100px;
@@ -5374,6 +5382,11 @@ body {
 .modal-body {
   margin-bottom: 0px;
   padding-bottom: 0px; }
+
+.modal-body img {
+  height: 300px;
+  padding-bottom: 20px;
+  width: 300px; }
 
 .modal-header {
   background-color: #00c4f6;

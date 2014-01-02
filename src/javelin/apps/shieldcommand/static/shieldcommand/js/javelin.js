@@ -115,7 +115,12 @@
 		this.emergencyContactLastName = attributes.emergency_contact_last_name;
 		this.emergencyContactPhoneNumber = attributes.emergency_contact_phone_number;
 		this.emergencyContactRelationship = Javelin.RELATIONSHIP_CHOICES[attributes.emergency_contact_relationship];
-		this.profileImageURL = attributes.profile_image_url;
+		if (attributes.profile_image_url) {
+			this.profileImageURL = attributes.profile_image_url;
+		}
+		else {
+			this.profileImageURL = "/media/static/shieldcommand/img/default-avatar.png"
+		}
 		return this;
 	}
 
