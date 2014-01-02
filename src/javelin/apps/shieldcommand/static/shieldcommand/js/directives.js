@@ -133,11 +133,13 @@ angular.module('shieldCommand.directives', [])
 
         locations = $filter("locationsByStatusAndAgencyDispatcher")($rootScope.alerts, statuses);
         for (var i = 0; i < locations.length; i++) {
-          var tempMarker = new google.maps.Marker();
-          tempMarker.setPosition(new google.maps.LatLng(locations[i].latitude, locations[i].longitude));
-          tempMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
-          tempMarker.setMap(googleMap);
-          scope.tempMapMarkers.push(tempMarker);
+          if (locations[i]) {
+            var tempMarker = new google.maps.Marker();
+            tempMarker.setPosition(new google.maps.LatLng(locations[i].latitude, locations[i].longitude));
+            tempMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
+            tempMarker.setMap(googleMap);
+            scope.tempMapMarkers.push(tempMarker);
+          };
         };
       }
     },
