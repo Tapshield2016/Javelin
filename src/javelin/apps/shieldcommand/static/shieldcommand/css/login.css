@@ -1,0 +1,201 @@
+html {
+	font-family: 'Source Sans Pro',"Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 16px;
+	line-height: 22px;
+	height: 100%;
+}
+body{
+	font-family: 'Source Sans Pro', sans-serif;
+	font-weight: 400;
+	top: 0;
+	left: 0;
+	margin: 0;
+	height: 100%;
+	//background-image: url(mapBlurred.png);
+	overflow: hidden;
+}
+div{
+	display: block;
+}
+a{
+	text-decoration: none;
+}
+
+/*Stuff from real shield command header*/
+.l-header {
+	position: relative;
+	height: 60px;
+	background: #2f302f;
+	-webkit-box-shadow: 0 0 10px -3px #000;
+	box-shadow: 0 0 10px -3px #000;
+}
+.l-header__inner .header--logo {
+	//background: url(logo.png) no-repeat;
+	//background-position: center center;
+	width: 272px;
+	height: 60px;
+	float: left;
+	margin: 5px 0px 0px 20px;
+}
+.l-header__inner .header--links {
+	float: right;
+	position: relative;
+	text-align: center;
+	font-weight: 300;
+}
+.l-header__inner .header--links a:first-child {
+	color: #f05045;
+	padding-right: 0;
+}
+.l-header__inner .header--links a {
+	line-height: 60px;
+	font-size: 14px;
+	font-weight: 400;
+	padding: 0 36px;
+	color: #a3a5a8;
+	-webkit-transition: color .3s linear;
+	-moz-transition: color .3s linear;
+	-o-transition: color .3s linear;
+	-ms-transition: color .3s linear;
+	transition: color .3s linear;
+}
+.btn {
+	display: inline-block;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	padding: 4px 0;
+	margin-bottom: 0;
+	font-size: 12px;
+	font-weight: 500;
+	width: 96px;
+	line-height: 23px;
+	text-align: center;
+	vertical-align: middle;
+	cursor: pointer;
+	text-transform: uppercase;
+	border: 0;
+	-webkit-border-radius: 3px;
+	border-radius: 3px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,.3),0 2px 2px rgba(0,0,0,.15);
+	box-shadow: inset 0 1px 0 rgba(255,255,255,.3),0 2px 2px rgba(0,0,0,.15);
+}
+.btn, .btn:hover {
+	text-decoration: none;
+}
+.btn:active,.btn:focus{
+	outline:0
+}
+.btn.submit {
+	float: right;
+}
+.btn--primary {
+	color: #fff;
+	background: #70d3f5;
+	border: 1px solid #41c4f2;
+}
+.btn--primary:hover,.btn--primary:focus,.btn--primary:active,.btn--primary.active,.btn--primary.disabled{
+	background-color:#41c4f2
+}
+.btn--primary:hover,.btn--primary:focus{
+	text-decoration:none;
+	background:#41c4f2;
+	-webkit-box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 2px rgba(0,0,0,.25);
+	box-shadow:inset 0 1px 0 rgba(255,255,255,.3),0 2px 2px rgba(0,0,0,.25)
+}
+.btn--primary:active{
+	-webkit-box-shadow:inset 0 1px 0 rgba(0,0,0,.05),0 2px 2px rgba(0,0,0,.25);
+	box-shadow:inset 0 1px 0 rgba(0,0,0,.05),0 2px 2px rgba(0,0,0,.25)
+}
+
+/*Stuff for the Login alert box*/
+.inner{
+	float: left;
+	width: 45%;
+	height: 96px;
+}
+#firstOfType{
+	margin-right: 60px;
+}
+.inner a{
+	color: #a3a5a8;
+	font-size: .7em;
+	margin: 11px 0px;
+	text-decoration: underline;
+}
+.main{
+	background-color: rgba(0, 0, 0, .5); /*is this compatible for IE and stuff?*/
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+.alert-container{
+	width: 750px;
+	height: 276px;
+	background-color: white;
+	/*So it's positioned in the center of the screen*/
+	top: 50%;
+	left: 50%;
+	margin-top: -138px;
+	margin-left: -375px;
+	position: absolute;
+
+	/*May need to be changed based on what is in the actual application*/
+	z-index: 999; 
+
+	border-radius:10px;
+	-moz-border-radius:10px;
+
+	/*offset for the header's border radius*/
+	border-top-left-radius:20px;
+	-moz-border-top-left-radius:20px;
+	border-top-right-radius:20px;
+	-moz-border-top-right-radius:20px;
+
+	/*Shadow, thought it would look nice*/
+	-webkit-box-shadow: 0 8px 6px -6px black;
+	-moz-box-shadow: 0 8px 6px -6px black;
+	box-shadow: 0 8px 6px -6px black;
+}
+.alert-container h1{
+	background-color: #41c4f2;
+	text-transform: uppercase;
+	color: white;
+	font-weight: 600;
+	text-align: center;
+	line-height: 36px;
+	font-size: 1.4em;
+	height: 36px;
+	border-top-left-radius:10px;
+	-moz-border-top-left-radius:10px;
+	border-top-right-radius:10px;
+	-moz-border-top-right-radius:10px;
+	margin-top: 0px;
+}
+.alert-container  h2{
+	font-size: 1.1em;
+	margin: 0;
+	/*changed margin bottom from 36 -> 24, looked better visually (less spread out)*/
+	margin-bottom: 24px;
+}
+.alert-container  h3{
+	font-size: 1em;
+	font-weight: 400;
+	margin: 0;
+	margin-bottom: 4px;
+}
+.alert-container  p{
+	font-size: 1em;
+}
+.alert-body-container{
+	margin: 36px 36px 24px 36px;
+}
+.alert-container  input{
+	height: 36px;
+	font-size: .9em;
+	width: 298px;
+	padding-left: 10px;
+}
+p.error {
+	padding: 0px 15px;
+}
