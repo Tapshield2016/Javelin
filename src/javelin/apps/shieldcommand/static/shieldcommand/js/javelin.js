@@ -151,6 +151,7 @@
 		this.status = attributes.status;
 		this.initiatedBy = Javelin.ALERT_TYPE_CHOICES[attributes.initiated_by];
 		this.location = null;
+		this.geocodedAddress = '';
 
 		if (!$.isEmptyObject(attributes.agency_user_meta)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);

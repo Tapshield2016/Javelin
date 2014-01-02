@@ -50,6 +50,19 @@ function clearActiveAlertMarker() {
     googleMapAccuracyCircle.setMap(null);
 }
 
+function addressForLocation(location, callback) {
+    if (!location) {
+        callback(null);
+        return;
+    };
+    var latLong = new google.maps.LatLng(location.latitude, location.longitude);
+    googleMapGeocoder.geocode({'location': latLong}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+            callback(results[0].formatted_address);
+        }
+    });
+}
+
 function setMarker(location) {
     if (!location) {
         return;

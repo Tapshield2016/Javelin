@@ -44,7 +44,7 @@ angular.module('shieldCommand.directives', [])
    } 
 })
 
-.directive('mapControls', ['$filter', '$rootScope', function($filter, $rootScope) {
+.directive('mapControls', ['$filter', '$rootScope', 'alertService', function($filter, $rootScope, alertService) {
   return {
     restrict: 'A',
     link: function(scope, element, attr) {

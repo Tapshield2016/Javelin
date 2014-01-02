@@ -444,6 +444,11 @@ body {
     vertical-align: middle;
 }
 
+#map-container {
+    margin: 0px;
+    padding: 0px;
+}
+
 #map-controls {
     position: absolute;
     bottom: 25px;
@@ -629,4 +634,15 @@ body {
     height: 100%;
     font-size: 14px;
     width: 100%;
+}
+
+#alert-address {
+    width: 100%; 
+    text-align: center; 
+    text-transform: uppercase; 
+    background-color: #ddd; 
+    height: 28px; 
+    border-bottom: 1px solid #999; 
+    padding-top: 3px;
+    font-size: 16px;
 }

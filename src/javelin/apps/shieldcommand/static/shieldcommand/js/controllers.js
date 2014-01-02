@@ -9,12 +9,11 @@ angular.module('shieldCommand.controllers', [])
 	$scope.sendCommandAlertMessage = function() {
 		alertService.sendMassAlert($scope.message, function(success) {
 			if (success) {
-				console.log("Message sent!");
 				$scope.dismiss();
 				$scope.message = '';
 			}
 			else {
-				console.log("Message failed...");
+
 			}
 		});
 	}
@@ -179,14 +178,23 @@ angular.module('shieldCommand.controllers', [])
   			clearTimeout($scope.chatUpdateTimeout);
 	  		alertService.setActiveAlert(alert);
 
-	  		if (alert.status == 'A') {
-	  			$scope.initChatMessagesForActiveAlert();
-	  		}	  			
+	  		
+  			$scope.initChatMessagesForActiveAlert();
 
 	  		$scope.markerSetForActiveAlert = false;	
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
 				setMarker(alertService.activeAlert.location);
+				addressForLocation(alertService.activeAlert.location, function(address) {
+					if (address) {
+						alertService.activeAlert.geocodedAddress = address;
+						$("#alert-address  p").text(address);
+						$("#alert-address").removeClass('hide');
+					}
+					else {
+						$("#alert-address").addClass('hide');
+					}
+				});
 				$scope.markerSetForActiveAlert = true;
 			}
 
@@ -201,7 +209,9 @@ angular.module('shieldCommand.controllers', [])
 				updateDisplay();
 				newChatSound.play();
 			};
-			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+			if (alert.status == 'A') {
+				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+			}
 		});
   	}
 
