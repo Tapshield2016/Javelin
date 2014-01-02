@@ -4,6 +4,13 @@ from kombu import Exchange, Queue
 import djcelery
 djcelery.setup_loader()
 
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': 'localhost:11211',
+    }
+}
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',

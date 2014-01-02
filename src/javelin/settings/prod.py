@@ -4,12 +4,12 @@ from common import *
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
-#CACHES = {
-#    'default': {
-#        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-#        'LOCATION': '',
-#    }
-#}
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
+        'LOCATION': 'localhost:11211',
+    }
+}
 
 DATABASES = {
     'default': {
