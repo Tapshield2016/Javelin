@@ -1,42 +1,65 @@
 from common import *
+from kombu import Exchange, Queue
+
+import djcelery
+djcelery.setup_loader()
 
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+WSGI_APPLICATION = 'javelin.wsgi.prod.application'
+
+ALLOWED_HOSTS = ['.tapshield.com', '.amazonaws.com',]
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': 'localhost:11211',
+        'LOCATION': 'prodapicache.jgh2zp.cfg.use1.cache.amazonaws.com:11211',
     }
 }
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': '',
-        'USER': '',
-        'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
+        'NAME': 'javelin',
+        'USER': 'javelin_user',
+        'PASSWORD': '26947&83764w',
+        'HOST': 'productionapi.cktvftiv8rvh.us-east-1.rds.amazonaws.com',
+        'PORT': '5432',
     }
 }
+
+INSTALLED_APPS += (
+    'gunicorn',
+)
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'noreply@tapshield.com'
+EMAIL_HOST_PASSWORD = 'D8dg%%Ce'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
 
 # django-storages
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
 AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'media.tapshield.com'
+AWS_STORAGE_BUCKET_NAME = 'static.tapshield.com'
 AWS_HEADERS = {
     'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
     'Cache-Control': 'max-age=86400',
 }
+AWS_S3_SECURE_URLS = False
+STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+#MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
 
 # AWS
 DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJ34SY3EAOK6STBBA'
 DYNAMO_DB_SECRET_ACCESS_KEY = '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'
 DYNAMO_DB_CHAT_MESSAGES_TABLE ='chat_messages_prod'
+
+S3_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
+S3_SECRET_ACCESS_KEY = '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'
 
 SQS_ALERT_QUEUE = 'alert_queue_prod'
 SQS_ACCESS_KEY_ID = 'AKIAJDLBPGLRJA4MOMVQ'
@@ -50,7 +73,25 @@ SNS_ANDROID_ARN = ''
 SNS_ENDPOINT_QUEUE = 'endpoint_creation_queue_prod'
 SNS_ANDROID_PLATFORM = ''
 
+SNS_APP_ENDPOINTS = {
+    "I": "APNS",
+    "A": "GCM",
+}
+
 # celery
 BROKER_URL = "sqs://%s:%s@sqs.us-east-1.amazonaws.com/175861827001/"\
     % (SQS_ACCESS_KEY_ID, SQS_SECRET_ACCESS_KEY)
 CELERY_DEFAULT_QUEUE = SQS_ALERT_QUEUE
+
+# compressor
+COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+COMPRESS_URL = STATIC_URL
+
+# twilio
+TWILIO_ACCOUNT_SID = 'AC16b20300998d261efefb490dbc4a6302'
+TWILIO_AUTH_TOKEN = '560b03d57aa563661444e63f0f7527e8'
+TWILIO_APP_SID = 'AP299c4eeef7fb59999a8258140fc3d8a2'
+TWILIO_SMS_FROM_NUMBER = '+17066807385'
+
+# Shield Command
+SHIELD_COMMAND_API_VERSION = "v1"
