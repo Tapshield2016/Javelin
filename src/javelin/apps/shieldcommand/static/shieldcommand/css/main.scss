@@ -432,44 +432,27 @@ body {
     transition: background .3s linear;
 }
 
-/*
-
-
-.chat {
-    position: relative;
-    right: 1px;
-}
-
-.chat div.panel {
-    position: fixed; 
-    width: 250px; 
-    height: 350px; 
-    z-index: 1000; 
-    left: 330px; 
-    top: 85px;
+.chat-panel {
+    position: fixed;
+    bottom: 0px;
+    right: 15px;
+    z-index: 999;
+    width: 225px;
     -webkit-box-shadow:0 0 10px -3px #000;
     box-shadow:0 0 10px -3px #000;
     padding-bottom: 10px;
+
 }
 
-.chat .arrow-left {
-    width: 0; 
-    height: 0; 
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent; 
-    border-right:10px solid #dddddd; 
-    position: absolute;
-    top: 6px;
-    left: 27px;
-}
-
-.chat div.panel-heading {
+.chat-panel div.panel-heading {
+    background-color: #00c4f6;
+    color: #fff;
     font-size: 14px;
     padding: 6px 7px 0px 7px;
     line-height: 14px;
 }
 
-.chat div.panel-body {
+.chat-panel div.panel-body {
     color: #000;
     box-shadow: none;
     -moz-box-shadow: none;
@@ -478,7 +461,7 @@ body {
     padding: 0px;
 }
 
-.chat .chat-messages {
+.chat-panel .chat-messages {
     font-size: 12px;
     line-height: 14px;
     overflow: auto;
@@ -486,27 +469,27 @@ body {
     padding-top: 15px;
 }
 
-.chat .chat-messages .message-container {
+.chat-panel .chat-messages .message-container {
     margin-bottom: 10px;
     padding: 0px 15px;
     text-align: left;
     width: 100%;
 }
 
-.chat .chat-messages .message-container .message-sender {
+.chat-panel .chat-messages .message-container .message-sender {
     font-weight: 800;
 }
 
-.chat .chat-messages .message-container .message-timestamp {
+.chat-panel .chat-messages .message-container .message-timestamp {
     font-size: 11px;
     color: #999;
 }
 
-.chat .chat-messages .message-container.dispatcher {
+.chat-panel .chat-messages .message-container.dispatcher {
     text-align: right;
 }
 
-.chat .message-box {
+.chat-panel .message-box {
     background-color: #f5f5f5;
     border-top: 1px solid #a3a5a8;
     width: 100%;    
@@ -517,7 +500,7 @@ body {
     padding: 7px 10px;
 }
 
-.chat .message-box textarea {
+.chat-panel .message-box textarea {
     padding: 5px;
     font-size: 12px;
     line-height: 14px;
@@ -525,7 +508,7 @@ body {
     font-size: 14px;
     width: 100%;
 }
-*/
+
 
 // Command Alert modal
 

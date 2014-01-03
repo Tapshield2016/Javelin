@@ -28,6 +28,12 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
+		if ($scope.isProfileVisible) {
+			$rootScope.$broadcast('profileWasOpened');
+		}
+		else {
+			$rootScope.$broadcast('profileWasClosed');
+		}
 	}
 
 	$scope.$on('toggleProfile', function() {
@@ -39,6 +45,7 @@ angular.module('shieldCommand.controllers', [])
 		alertService.getUserProfileForActiveAlert(function(profile) {
 			$scope.currentProfile = profile;
 			$scope.isProfileVisible = true;
+			$rootScope.$broadcast('profileWasOpened');
 		});
 	});
 
@@ -120,6 +127,13 @@ angular.module('shieldCommand.controllers', [])
 		clearTimeout($scope.chatUpdateTimeout);
 	});
 
+	$scope.$on('chatWindowOpened', function(event, alert) {
+		console.log('seems like something happened');
+		if ((!alertService.activeAlert) || !(alert.object_id === alertService.activeAlert.object_id)) {
+			$scope.alertClicked(alert);
+		};
+	});
+
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > oldLength) {
 			if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
@@ -176,9 +190,11 @@ angular.module('shieldCommand.controllers', [])
   		}
   		else {
   			clearTimeout($scope.chatUpdateTimeout);
+  			if (alertService.activeAlert) {
+	  			$rootScope.$broadcast('closeChatWindowForAlert', alertService.activeAlert);
+  			}
 	  		alertService.setActiveAlert(alert);
 
-	  		
   			$scope.initChatMessagesForActiveAlert();
 
 	  		$scope.markerSetForActiveAlert = false;	

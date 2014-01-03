@@ -146,7 +146,7 @@ angular.module('shieldCommand.directives', [])
   }
 }])
 
-.directive('alertChatWindow', ['alertService', function(alertService) {
+.directive('alertChatWindow', ['$rootScope', 'alertService', function($rootScope, alertService) {
    return {
       restrict: 'A',
       template: "<div class=\"alert-option chat\">\n    <i class=\"icon-chat_bubble\" ng-click=\"toggleChat()\"></i>\n   <div class=\"arrow-left hide\"></div> <div class=\"chat-panel panel panel-default hide\">\n        <div class=\"panel-heading\">Chat with {{ alert.agencyUserMeta.getFullName() }}<span class=\"glyphicon glyphicon-remove pull-right\" ng-click=\"closeChat()\"></span></div>\n        <div class=\"panel-body\">\n            <div class=\"chat-messages\">\n                <div class=\"message-container {{ isDispatcherClass(message.senderID) }}\" ng-repeat=\"message in alert.chatMessages | orderBy:'timestamp'\">\n                        <div class=\"message-content\"><span class=\"message-sender\">{{ senderName(message.senderID) }}:</span> {{ message.message }}</div>\n                        <div class=\"message-timestamp\">{{ message.timestamp * 1000 | date:'MM-dd HH:mm:ss' }}</div>\n                </div>\n            </div>\n            <div class=\"message-box\">\n                <textarea ng-model=\"newChatMessage\" placeholder=\"Enter message here...\"></textarea>\n            </div> \n        </div> \n    </div>\n</div>",
@@ -154,6 +154,8 @@ angular.module('shieldCommand.directives', [])
         alert: "=",
       },
       link: function(scope, element, attr) {
+        scope.adjustForProfile = false;
+        scope.chatIsVisible = false;
         element.find('.message-box').keypress(function (e) {
           if (e.which == 13) {
             alertService.sendChatMessageForActiveAlert(scope.newChatMessage, function(success) {
@@ -168,6 +170,38 @@ angular.module('shieldCommand.directives', [])
           };
         });
 
+        scope.$on('chatWindowOpened', function(event, alert) {
+          if (!(alert.object_id === scope.alert.object_id)) {
+            scope.closeChat();
+          };
+        });
+
+        scope.$on('closeChatWindowForAlert', function(event, alert) {
+          if ((alert.object_id === scope.alert.object_id)) {
+            scope.closeChat();
+          };
+        });
+
+        scope.$on('profileWasOpened', function () {
+          scope.adjustForProfile = true;
+          console.log("scope saw profile open");
+          if (scope.chatIsVisible) {
+            element.find('.chat-panel').animate({
+              right: 250,
+            }, 300);
+          };
+        });
+
+        scope.$on('profileWasClosed', function () {
+          scope.adjustForProfile = false;
+          console.log("scope saw profile close");
+          if (scope.chatIsVisible) {
+            element.find('.chat-panel').animate({
+              right: 15,
+            }, 300);
+          };          
+        });
+
         scope.senderName = function(senderID) {
           return (senderID == Javelin.activeAgencyUser.object_id) ? Javelin.activeAgencyUser.firstName : scope.alert.agencyUserMeta.firstName;
         }
@@ -177,18 +211,31 @@ angular.module('shieldCommand.directives', [])
         }
 
         scope.closeChat = function() {
-          element.find('.chat-panel').addClass('hide');
-          element.find('.arrow-left').addClass('hide');          
+          element.find('.chat-panel').addClass('hide');         
         }
 
         scope.toggleChat = function() {
-          $('#alerts-list div.chat').each(function() {
-            $(this).find('.chat-panel').addClass('hide');
-            $(this).find('.arrow-left').addClass('hide');
-          });
+          var panel = element.find('.chat-panel');
+          if (panel.hasClass('hide')) {
+            panel.removeClass('hide');
+            scope.chatIsVisible = true;
+            $rootScope.$broadcast('chatWindowOpened', scope.alert);
+          }
+          else {
+            panel.addClass('hide');
+            scope.chatIsVisible = false;
+          }
 
-          element.find('.chat-panel').toggleClass('hide');
-          element.find('.arrow-left').toggleClass('hide');
+          if (scope.adjustForProfile) {
+            element.find('.chat-panel').css({
+              right: 250,
+            })
+          }
+          else {
+            element.find('.chat-panel').css({
+              right: 15,
+            })            
+          }
           if (scope.alert.hasNewChatMessage) {
             scope.alert.hasNewChatMessage = false;
           };
