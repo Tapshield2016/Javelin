@@ -225,7 +225,7 @@ angular.module('shieldCommand.controllers', [])
 				updateDisplay();
 				newChatSound.play();
 			};
-			if (alert.status == 'A') {
+			if (alertService.activeAlert.status == 'A') {
 				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 			}
 		});
