@@ -188,7 +188,7 @@ angular.module('shieldCommand.controllers', [])
 				addressForLocation(alertService.activeAlert.location, function(address) {
 					if (address) {
 						alertService.activeAlert.geocodedAddress = address;
-						$("#alert-address  p").text("Location: " + address);
+						$("#alert-address  p").html("<strong>Location:</strong> " + address);
 						$("#alert-address").removeClass('hide');
 					}
 					else {
