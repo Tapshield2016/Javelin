@@ -5283,7 +5283,9 @@ body {
   background-color: #2f302f;
   border-radius: 0px;
   color: #fff;
+  cursor: pointer;
   height: 60px;
+  overflow: hidden;
   vertical-align: middle;
   width: 100%;
   -webkit-transition: all .3s linear;
@@ -5295,7 +5297,7 @@ body {
 .alert-container {
   cursor: pointer;
   width: 100%;
-  background-color: blue; }
+  height: 60px; }
 
 .alert.new {
   color: #41c4f2; }
@@ -5357,12 +5359,10 @@ body {
 
 .alert-option {
   width: 24px;
-  height: 60px;
-  float: right;
-  line-height: 60px;
-  text-align: center;
   font-size: 24px;
-  margin-right: 6px; }
+  position: relative;
+  top: -24px;
+  left: 140px; }
 
 .alert-option i {
   -webkit-transition: all .5s linear;
@@ -5519,8 +5519,8 @@ body {
   border-bottom: 10px solid transparent;
   border-right: 10px solid #dddddd;
   position: absolute;
-  top: 18px;
-  left: 30px; }
+  top: 6px;
+  left: 27px; }
 
 .chat div.panel-heading {
   font-size: 14px;
