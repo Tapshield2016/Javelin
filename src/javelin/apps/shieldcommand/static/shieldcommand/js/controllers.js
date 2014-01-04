@@ -98,6 +98,14 @@ angular.module('shieldCommand.controllers', [])
 	    return age;
 	}
 
+	$scope.getProfileImage = function() {
+		if ($scope.currentProfile && $scope.currentProfile.profileImageURL) {
+			return $scope.currentProfile.profileImageURL;
+		}
+
+		return '/media/static/shieldcommand/img/NoPicture_Image.png';
+	}
+
 	$scope.returnToGeofenceCenter = function () {
 		setMapCenterToDefault();
 	}

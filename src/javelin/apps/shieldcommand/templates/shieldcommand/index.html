@@ -268,7 +268,7 @@
                             <div class="profile-content">
                                 <div class="profile-top-content">
                                     <div class="profile-image-container">
-                                        <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ currentProfile.profileImageURL }}" class="img-rounded profile-image" /></a>
+                                        <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a>
                                     </div>
                                     <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
                                         <div class="modal-dialog" style="width: 365px;">
@@ -278,7 +278,7 @@
                                                     <h4 class="modal-title" id="profileImageLabel">{{ activeAlert.agencyUserMeta.getFullName() }}</h4>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <img ng-src="{{ currentProfile.profileImageURL }}" />
+                                                    <img ng-src="{{ getProfileImage() }}" />
                                                 </div>
                                             </div><!-- /.modal-content -->
                                         </div><!-- /.modal-dialog -->
