@@ -11,8 +11,9 @@ from core.api.serializers.v1 import UserSerializer
 
 @login_required(login_url='shieldcommand-login')
 def index(request):
-    if request.user.groups.filter(name='Dispatchers').count() == 0:
-        raise Http404
+    if not request.user.is_superuser:
+        if request.user.groups.filter(name='Dispatchers').count() == 0:
+            raise Http404
     site = get_current_site(request)
     agency = request.user.agency
     agency_boundaries_coords = []
