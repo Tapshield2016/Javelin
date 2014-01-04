@@ -314,6 +314,7 @@ angular.module('shieldCommand.controllers', [])
   		for (var i = 0; i < $scope.alerts.length; i++) {
   			if ($scope.alerts[i].object_id == alert.object_id) {
   				$scope.alerts[i].status = 'A';
+  				$scope.alerts[i].agencyDispatcher = Javelin.activeAgencyUser.url;
   			}
   		};
   		updateDisplay();
