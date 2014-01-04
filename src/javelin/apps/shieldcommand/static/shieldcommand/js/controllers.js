@@ -270,27 +270,31 @@ angular.module('shieldCommand.controllers', [])
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert($scope.chats[alertService.activeAlert.object_id].lastChecked, function(messages, latestTimestamp) {
 			if (messages && messages.length > 0) {
+				var messageAdded = false;
 				if (alertService.activeAlert.object_id in $scope.chats) {
 					for (var i = 0; i < messages.length; i++) {
 						var matchFound = false;
 						for (var j = 0; j < $scope.chats[alertService.activeAlert.object_id].messages.length; j++) {
-							console.log($scope.chats[alertService.activeAlert.object_id].messages[j].messageID);
 							if (messages[i].messageID == $scope.chats[alertService.activeAlert.object_id].messages[j].messageID) {
 								matchFound = true;
 							}
 						}
 						if (!matchFound) {
 							$scope.chats[alertService.activeAlert.object_id].messages.push(messages[i]);
+							messageAdded = true;
 						}
 					}
 				}
 				else {
 					$scope.chats[alertService.activeAlert.object_id].messages = messages;
+					messageAdded = true;
 				}
 				$scope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
 				alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id].messages;
 				updateDisplay();
-  				newChatSound.play();
+				if (messageAdded) {
+	  				newChatSound.play();
+				}
 			}
 			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 		});
