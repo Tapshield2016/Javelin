@@ -35,7 +35,7 @@ INSTALLED_APPS += (
 
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'noreply@tapshield.com'
-EMAIL_HOST_PASSWORD = 'D8dg%%Ce'
+EMAIL_HOST_PASSWORD = '249)7386463c'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -84,6 +84,7 @@ BROKER_URL = "sqs://%s:%s@sqs.us-east-1.amazonaws.com/175861827001/"\
 CELERY_DEFAULT_QUEUE = SQS_ALERT_QUEUE
 
 # compressor
+COMPRESS_ENABLED = True
 COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 COMPRESS_URL = STATIC_URL
 

@@ -189,7 +189,6 @@ BROKER_TRANSPORT_OPTIONS = {'polling_interval': 1.0}
 CELERY_SEND_EVENTS = False
 
 # compressor
-COMPRESS_ENABLED = True
 COMPRESS_CSS_FILTERS = (
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor.filters.cssmin.CSSMinFilter',

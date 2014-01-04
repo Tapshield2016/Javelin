@@ -26,12 +26,12 @@ INSTALLED_APPS += (
     #'corsheaders',
     'devserver',
     #'rest_framework_swagger',
-    'debug_toolbar',
+    #'debug_toolbar',
 )
 
 MIDDLEWARE_CLASSES += (
     #'corsheaders.middleware.CorsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 #DEVSERVER_MODULES = (
@@ -44,8 +44,8 @@ MIDDLEWARE_CLASSES += (
 INTERNAL_IPS = ('127.0.0.1',)
 
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'beathan@gmail.com'
-EMAIL_HOST_PASSWORD = 'blryunthuimaefkw'
+EMAIL_HOST_USER = 'noreply@tapshield.com'
+EMAIL_HOST_PASSWORD = '249)7386463c'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
@@ -107,3 +107,6 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 # Shield Command
 SHIELD_COMMAND_API_VERSION = "v1"
+
+# compressor
+COMPRESS_ENABLED = False
