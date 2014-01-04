@@ -128,7 +128,6 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('chatWindowOpened', function(event, alert) {
-		console.log('seems like something happened');
 		if ((!alertService.activeAlert) || !(alert.object_id === alertService.activeAlert.object_id)) {
 			$scope.alertClicked(alert);
 		};
@@ -220,20 +219,31 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.initChatMessagesForActiveAlert = function() {
-		alertService.getAllChatMessagesForActiveAlert(function(messages) {
-			if (messages && messages.length > 0) {
-				updateDisplay();
-				newChatSound.play();
-			};
-			if (alertService.activeAlert.status == 'A') {
-				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-			}
-		});
+  		console.log(alertService.activeAlert.object_id);
+  		if (alertService.activeAlert.object_id in $scope.chats) {
+			alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id];
+  		}
+  		else {		
+			alertService.getAllChatMessagesForActiveAlert(function(messages) {
+				if (messages && messages.length > 0) {
+					$scope.chats[alertService.activeAlert.object_id] = messages;
+					alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id];
+					updateDisplay();
+					newChatSound.play();
+				}
+			});
+  		}
+
+		if (alertService.activeAlert.status == 'A') {
+			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+		}
   	}
 
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
 			if (messages && messages.length > 0) {
+				$scope.chats[alertService.activeAlert.object_id] = $scope.chats[alertService.activeAlert.object_id].concat(messages);
+				alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id];
 				updateDisplay();
   				newChatSound.play();
 			}

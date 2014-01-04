@@ -184,7 +184,6 @@ angular.module('shieldCommand.directives', [])
 
         scope.$on('profileWasOpened', function () {
           scope.adjustForProfile = true;
-          console.log("scope saw profile open");
           if (scope.chatIsVisible) {
             element.find('.chat-panel').animate({
               right: 250,
@@ -194,7 +193,6 @@ angular.module('shieldCommand.directives', [])
 
         scope.$on('profileWasClosed', function () {
           scope.adjustForProfile = false;
-          console.log("scope saw profile close");
           if (scope.chatIsVisible) {
             element.find('.chat-panel').animate({
               right: 15,
