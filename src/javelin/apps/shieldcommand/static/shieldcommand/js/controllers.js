@@ -45,14 +45,23 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$on('toggleProfileOpen', function() {
 		$scope.activeAlert = alertService.activeAlert;
-		alertService.getUserProfileForActiveAlert(function(profile) {
-			$scope.currentProfile = profile;
+		$scope.updateProfile(function(profile) {
 			$scope.isProfileVisible = true;
 			$rootScope.profileIsOpen = true;
 			$rootScope.$broadcast('profileWasOpened');
 			$rootScope.$broadcast('profileWasUpdated');
+			setTimeout($scope.updateProfile, 10000);
 		});
 	});
+
+	$scope.updateProfile = function(callback) {
+		alertService.getUserProfileForActiveAlert(function(profile) {
+			$scope.currentProfile = profile;
+			if (callback) {
+				callback(profile);
+			}
+		});
+	}
 
 	$scope.shouldDisplayProfileButtons = function() {
 		if ($scope.activeAlert && $scope.activeAlert.status == 'A') {
