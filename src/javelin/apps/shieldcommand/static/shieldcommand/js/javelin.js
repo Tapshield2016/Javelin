@@ -263,12 +263,15 @@
 		});
 	}
 
-	Javelin.markAlertAsCompleted = function(alertID, callback) {
-		var request = Javelin.client.alerts.patch(alertID, {
+	Javelin.markAlertAsCompleted = function(alert, callback) {
+		var request = Javelin.client.alerts.patch(alertID.object_id, {
 			status: 'C'
 		});
 		request.done(function(data) {
 			callback(data);
+			Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
+				console.log(success);
+			})
 		})
 	}
 
@@ -424,12 +427,12 @@
 	}
 
 	Javelin.objectInArrayByKeyValue = function(array, key, value) {
-	    for(var i = 0; i < array.length; i++) {
-	        if( array[i][key] === value )
-	            return true;
-	    }
-	    return false;
-	}
+           for(var i = 0; i < array.length; i++) {
+               if( array[i][key] === value )
+                   return true;
+           }
+           return false;
+   }
 
 	Javelin.getAllChatMessagesForAlertSinceLastChecked = function(alert, callback) {
 		if (!alert) {

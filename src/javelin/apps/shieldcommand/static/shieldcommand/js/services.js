@@ -52,7 +52,7 @@ angular.module('shieldCommand.services', [])
 	}
 
 	this.markActiveAlertAsCompleted = function(callback) {
-		Javelin.markAlertAsCompleted(this.activeAlert.object_id, function(data) {
+		Javelin.markAlertAsCompleted(this.activeAlert, function(data) {
 			callback(data);
 		});
 	}

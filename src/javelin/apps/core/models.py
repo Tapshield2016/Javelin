@@ -130,10 +130,6 @@ class Alert(TimeStampedModel):
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
         if self.status == 'C':
-            from tasks import notify_alert_completed
-            notify_alert_completed.delay(self.agency.alert_completed_message,
-                                         self.agency_user.device_type,
-                                         self.agency_user.device_endpoint_arn)
             if not self.completed_time:
                 self.completed_time = datetime.now()
             try:
