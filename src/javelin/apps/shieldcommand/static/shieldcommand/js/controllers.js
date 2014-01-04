@@ -286,7 +286,7 @@ angular.module('shieldCommand.controllers', [])
 			// Anything to do here?
 		});
 
-		if (alert.object_id == alertService.activeAlert.object_id) {
+		if (alertService.activeAlert && (alert.object_id == alertService.activeAlert.object_id)) {
 			$scope.initChatMessagesForActiveAlert();
 		};
   	};

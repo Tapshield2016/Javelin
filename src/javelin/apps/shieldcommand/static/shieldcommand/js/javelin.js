@@ -264,7 +264,7 @@
 	}
 
 	Javelin.markAlertAsCompleted = function(alert, callback) {
-		var request = Javelin.client.alerts.patch(alertID.object_id, {
+		var request = Javelin.client.alerts.patch(alert.object_id, {
 			status: 'C'
 		});
 		request.done(function(data) {
