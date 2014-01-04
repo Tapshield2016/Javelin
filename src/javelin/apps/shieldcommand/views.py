@@ -2,6 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
+from django.http import Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -10,6 +11,8 @@ from core.api.serializers.v1 import UserSerializer
 
 @login_required(login_url='shieldcommand-login')
 def index(request):
+    if request.user.groups.filter(name='Dispatchers').count() == 0:
+        raise Http404
     site = get_current_site(request)
     agency = request.user.agency
     agency_boundaries_coords = []
