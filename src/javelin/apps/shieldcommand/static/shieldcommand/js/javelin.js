@@ -14,7 +14,6 @@
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
     Javelin.lastCheckedAlertsTimestamp = null;
-    Javelin.lastCheckedMessagesTimestamp = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -404,62 +403,38 @@
 			var request = Javelin.client.alerts.messages.read(alert.object_id);
 			request.done(function(data) {
 				var chatMessages = [];
-				var latestDate = Javelin.lastCheckedMessagesTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+				var latestTimestamp = createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 				for (var i = 0; i < data.length; i++) {
 					newChatMessage = new ChatMessage(data[i]);
 					chatMessages.push(newChatMessage);
-					if (newChatMessage.timestamp > latestDate) {
-						latestDate = newChatMessage.timestamp;
+					if (newChatMessage.timestamp > latestTimestamp) {
+						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-				if (latestDate > Javelin.lastCheckedMessagesTimestamp) {
-					Javelin.lastCheckedMessagesTimestamp = latestDate;
-				}
 
-				if (chatMessages.length > 0) {
-					alert.hasNewChatMessage = true;
-					alert.chatMessages = chatMessages;
-				}
-
-				callback(chatMessages);
+				callback(chatMessages, latestTimestamp);
 			});
 		}
 	}
 
-	Javelin.objectInArrayByKeyValue = function(array, key, value) {
-           for(var i = 0; i < array.length; i++) {
-               if( array[i][key] === value )
-                   return true;
-           }
-           return false;
-   }
-
-	Javelin.getAllChatMessagesForAlertSinceLastChecked = function(alert, callback) {
+	Javelin.getAllChatMessagesForAlertSinceLastChecked = function(alert, since_timestamp, callback) {
 		if (!alert) {
 			callback(null);
 		}
 		else {
-			var request = Javelin.client.alerts.messages_since.read(alert.object_id, params={timestamp: Javelin.lastCheckedMessagesTimestamp});
+			var request = Javelin.client.alerts.messages_since.read(alert.object_id, params={timestamp: since_timestamp});
 			request.done(function(data) {
-				var latestDate = Javelin.lastCheckedMessagesTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));		
 				var chatMessages = [];
+				var latestTimestamp = createTimestampFromDate(new Date("March 25, 1981 11:33:00"));		
 				for (var i = 0; i < data.length; i++) {
 					newChatMessage = new ChatMessage(data[i]);
-					if (!Javelin.objectInArrayByKeyValue(alert.chatMessages, "messageID", newChatMessage.messageID)) {
-						chatMessages.push(newChatMessage);
-					}
-					if (newChatMessage.timestamp > latestDate) {
-						latestDate = newChatMessage.timestamp;
+					chatMessages.push(newChatMessage);
+					if (newChatMessage.timestamp > latestTimestamp) {
+						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-				if (latestDate > Javelin.lastCheckedMessagesTimestamp) {
-					Javelin.lastCheckedMessagesTimestamp = latestDate;
-				}
-				if (chatMessages.length > 0) {
-					alert.hasNewChatMessage = true;
-					alert.chatMessages = alert.chatMessages.concat(chatMessages);
-				}
-				callback(chatMessages);
+
+				callback(chatMessages, latestTimestamp);
 			});
 		}
 	}

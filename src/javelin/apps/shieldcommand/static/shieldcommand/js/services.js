@@ -76,14 +76,14 @@ angular.module('shieldCommand.services', [])
 	}
 
 	this.getAllChatMessagesForActiveAlert = function(callback) {
-		Javelin.getAllChatMessagesForAlert(this.activeAlert, function(messages) {
-			callback(messages);
+		Javelin.getAllChatMessagesForAlert(this.activeAlert, function(messages, latestTimestamp) {
+			callback(messages, latestTimestamp);
 		})
 	}
 
-	this.getNewChatMessagesForActiveAlert = function(callback) {
-		Javelin.getAllChatMessagesForAlertSinceLastChecked(this.activeAlert, function(messages) {
-			callback(messages);
+	this.getNewChatMessagesForActiveAlert = function(since_timestamp, callback) {
+		Javelin.getAllChatMessagesForAlertSinceLastChecked(this.activeAlert, since_timestamp, function(messages, latestTimestamp) {
+			callback(messages, latestTimestamp);
 		})
 	}
 
