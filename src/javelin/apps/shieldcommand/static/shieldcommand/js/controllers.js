@@ -121,7 +121,7 @@ angular.module('shieldCommand.controllers', [])
 .controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
 
 	$scope.alerts = [];
-	$scope.chats = {};
+	$rootScope.chats = {};
 	$scope.myAlertsLength = 0;
 	$scope.newAlertsLength = 0;
 	$scope.pendingAlertsLength = 0;
@@ -244,18 +244,18 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.initChatMessagesForActiveAlert = function() {
-  		if (alertService.activeAlert.object_id in $scope.chats) {
-			alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id].messages;
+  		if (alertService.activeAlert.object_id in $rootScope.chats) {
+			alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
   		}
   		else {		
 			alertService.getAllChatMessagesForActiveAlert(function(messages, latestTimestamp) {
-				if (!(alertService.activeAlert.object_id in $scope.chats)) {
-					$scope.chats[alertService.activeAlert.object_id] = {lastChecked: latestTimestamp, messages: []}
+				if (!(alertService.activeAlert.object_id in $rootScope.chats)) {
+					$rootScope.chats[alertService.activeAlert.object_id] = {lastChecked: latestTimestamp, messages: []}
 				}
-				$scope.chats[alertService.activeAlert.object_id].messages = messages;
-				$scope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
+				$rootScope.chats[alertService.activeAlert.object_id].messages = messages;
+				$rootScope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
 				if (messages && messages.length > 0) {
-					alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id].messages;
+					alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
 					updateDisplay();
 					newChatSound.play();
 				}
@@ -268,29 +268,29 @@ angular.module('shieldCommand.controllers', [])
   	}
 
   	$scope.updateChatMessages = function () {
-  		alertService.getNewChatMessagesForActiveAlert($scope.chats[alertService.activeAlert.object_id].lastChecked, function(messages, latestTimestamp) {
+  		alertService.getNewChatMessagesForActiveAlert($rootScope.chats[alertService.activeAlert.object_id].lastChecked, function(messages, latestTimestamp) {
 			if (messages && messages.length > 0) {
 				var messageAdded = false;
-				if (alertService.activeAlert.object_id in $scope.chats) {
+				if (alertService.activeAlert.object_id in $rootScope.chats) {
 					for (var i = 0; i < messages.length; i++) {
 						var matchFound = false;
-						for (var j = 0; j < $scope.chats[alertService.activeAlert.object_id].messages.length; j++) {
-							if (messages[i].messageID == $scope.chats[alertService.activeAlert.object_id].messages[j].messageID) {
+						for (var j = 0; j < $rootScope.chats[alertService.activeAlert.object_id].messages.length; j++) {
+							if (messages[i].messageID == $rootScope.chats[alertService.activeAlert.object_id].messages[j].messageID) {
 								matchFound = true;
 							}
 						}
 						if (!matchFound) {
-							$scope.chats[alertService.activeAlert.object_id].messages.push(messages[i]);
+							$rootScope.chats[alertService.activeAlert.object_id].messages.push(messages[i]);
 							messageAdded = true;
 						}
 					}
 				}
 				else {
-					$scope.chats[alertService.activeAlert.object_id].messages = messages;
+					$rootScope.chats[alertService.activeAlert.object_id].messages = messages;
 					messageAdded = true;
 				}
-				$scope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
-				alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id].messages;
+				$rootScope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
+				alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
 				updateDisplay();
 				if (messageAdded) {
 	  				newChatSound.play();

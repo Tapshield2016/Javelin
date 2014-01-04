@@ -149,7 +149,7 @@ angular.module('shieldCommand.directives', [])
 .directive('alertChatWindow', ['$rootScope', 'alertService', function($rootScope, alertService) {
    return {
       restrict: 'A',
-      template: "<div class=\"alert-option chat\">\n    <i class=\"icon-chat_bubble\" ng-click=\"toggleChat()\"></i>\n   <div class=\"arrow-left hide\"></div> <div class=\"chat-panel panel panel-default hide\">\n        <div class=\"panel-heading\">Chat with {{ alert.agencyUserMeta.getFullName() }}<span class=\"glyphicon glyphicon-remove pull-right\" ng-click=\"closeChat()\"></span></div>\n        <div class=\"panel-body\">\n            <div class=\"chat-messages\">\n                <div class=\"message-container {{ isDispatcherClass(message.senderID) }}\" ng-repeat=\"message in alert.chatMessages | orderBy:'timestamp'\">\n                        <div class=\"message-content\"><span class=\"message-sender\">{{ senderName(message.senderID) }}:</span> {{ message.message }}</div>\n                        <div class=\"message-timestamp\">{{ message.timestamp * 1000 | date:'MM-dd HH:mm:ss' }}</div>\n                </div>\n            </div>\n            <div class=\"message-box\">\n                <textarea ng-model=\"newChatMessage\" placeholder=\"Enter message here...\"></textarea>\n            </div> \n        </div> \n    </div>\n</div>",
+      template: "<div class=\"alert-option chat\">\n    <i class=\"icon-chat_bubble\" ng-click=\"toggleChat()\"></i>\n   <div class=\"arrow-left hide\"></div> <div class=\"chat-panel panel panel-default hide\">\n        <div class=\"panel-heading\">Chat with {{ alert.agencyUserMeta.getFullName() }}<span class=\"glyphicon glyphicon-remove pull-right\" ng-click=\"closeChat()\"></span></div>\n        <div class=\"panel-body\">\n            <div class=\"chat-messages\">\n                <div class=\"message-container {{ isDispatcherClass(message.senderID) }}\" ng-repeat=\"message in chatMessages() | orderBy:'timestamp'\">\n                        <div class=\"message-content\"><span class=\"message-sender\">{{ senderName(message.senderID) }}:</span> {{ message.message }}</div>\n                        <div class=\"message-timestamp\">{{ message.timestamp * 1000 | date:'MM-dd HH:mm:ss' }}</div>\n                </div>\n            </div>\n            <div class=\"message-box\">\n                <textarea ng-model=\"newChatMessage\" placeholder=\"Enter message here...\"></textarea>\n            </div> \n        </div> \n    </div>\n</div>",
       scope: {
         alert: "=",
       },
@@ -199,6 +199,15 @@ angular.module('shieldCommand.directives', [])
             }, 300);
           };          
         });
+
+        scope.chatMessages = function() {
+          if (scope.alert && (scope.alert.object_id in $rootScope.chats)) {
+            return $rootScope.chats[scope.alert.object_id].messages;
+          }
+          else {
+            return []
+          }
+        }
 
         scope.senderName = function(senderID) {
           return (senderID == Javelin.activeAgencyUser.object_id) ? Javelin.activeAgencyUser.firstName : scope.alert.agencyUserMeta.firstName;
