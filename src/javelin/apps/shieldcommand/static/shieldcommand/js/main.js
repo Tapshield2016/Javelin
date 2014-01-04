@@ -14,9 +14,9 @@ $(window).resize(function () {
 
     $('#map-canvas').css('height', (h - offsetTop));
     $('#profile').css('height', (h - offsetTop));
-	var tabsHeight = $('.panel-heading').outerHeight() * $('.panel-heading').length;
+	var tabsHeight = $('.accordion-panel-heading').outerHeight() * $('.accordion-panel-heading').length;
 	var height = $('#accordion').innerHeight() - tabsHeight;
-	$('.panel-body').height(height);
+	$('#accordion div.accordion-panel-body').height(height);
 }).resize();
 
 $('li.alert').click(function(e) {

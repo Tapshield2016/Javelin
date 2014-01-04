@@ -66,14 +66,14 @@
                 <div id="alerts-list" class="col-md-3 sidebar" ng-controller="AlertsListController" ng-cloak>
                     <div class="panel-group" id="accordion">
                       <div class="panel panel-default">
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+                        <div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
                           <h4 class="panel-title">
                             My Alerts ({{ myAlertsLength }})
                           </h4>
                         </div>
 
                         <div id="collapseOne" class="panel-collapse collapse in">
-                            <div class="panel-body">
+                            <div class="panel-body accordion-panel-body">
                                 <!-- My Alerts -->
                                 <ul class="alerts-list">
 
@@ -97,13 +97,13 @@
                         </div>
                       </div>
                       <div class="panel panel-default">
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+                        <div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
                           <h4 class="panel-title">
                             New Alerts ({{ newAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseTwo" class="panel-collapse collapse">
-                          <div class="panel-body">
+                          <div class="panel-body accordion-panel-body">
                           <!-- New Alerts -->
 
                                 <ul class="alerts-list">
@@ -127,13 +127,13 @@
                         </div>
                       </div>
                       <div class="panel panel-default">
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
+                        <div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
                           <h4 class="panel-title">
                             Pending Alerts ({{ pendingAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseThree" class="panel-collapse collapse">
-                          <div class="panel-body">
+                          <div class="panel-body accordion-panel-body">
                           <!-- Pending Alerts -->
 
                             <ul class="alerts-list">
@@ -157,13 +157,13 @@
                         </div>
                       </div>
                        <div class="panel panel-default">
-                        <div class="panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
+                        <div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
                           <h4 class="panel-title">
                             Past Alerts ({{ completedAlertsLength }})
                           </h4>
                         </div>
                         <div id="collapseFour" class="panel-collapse collapse">
-                          <div class="panel-body">  
+                          <div class="panel-body accordion-panel-body">  
                           <!-- Completed Alerts -->
                               <ul class="alerts-list">
                                 <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
