@@ -5063,6 +5063,10 @@ html {
   border-color: #00c4f6;
   color: #FFFFFF; }
 
+.btn-default {
+  background-color: #edeeed;
+  border: 1px solid #babbbe; }
+
 /* Space out content a bit */
 body {
   height: 100%;
