@@ -5159,6 +5159,9 @@ body {
   -moz-box-shadow: 0px -10px 10px -10px #666;
   -webkit-box-shadow: 0px -10px 10px -10px #666; }
 
+.profile-buttons h5 {
+  font-weight: 800; }
+
 .profile-information {
   overflow-y: auto;
   height: 100%; }
