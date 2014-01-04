@@ -161,10 +161,10 @@ angular.module('shieldCommand.directives', [])
             alertService.sendChatMessageForActiveAlert(scope.newChatMessage, function(success) {
               if (success) {
                 scope.newChatMessage = '';
-                var messages = element.find('.chat-messages');
-                if (messages.length > 0) {
-                  messages.animate({ scrollTop: element.find('.chat-messages')[0].scrollHeight }, 0);
-                };
+                // var messages = element.find('.chat-messages');
+                // if (messages.length > 0) {
+                //   messages.animate({ scrollTop: element.find('.chat-messages')[0].scrollHeight }, 0);
+                // };
               };
             });
           };
@@ -180,6 +180,15 @@ angular.module('shieldCommand.directives', [])
           if ((alert.object_id === scope.alert.object_id)) {
             scope.closeChat();
           };
+        });
+
+        scope.$on('newChatMessageReceived', function(event, alert) {
+          if ((alert.object_id === scope.alert.object_id)) {
+            var messages = element.find('.chat-messages');
+            if (messages.length > 0) {
+                messages.animate({ scrollTop: element.find('.chat-messages')[0].scrollHeight }, 0);
+            };
+          }
         });
 
         scope.$on('profileWasOpened', function () {

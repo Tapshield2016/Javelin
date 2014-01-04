@@ -78,6 +78,12 @@ $.ajaxSetup({
     }
 });
 
+// $('#accordion').on('hidden.bs.collapse', function () {
+//     if ( !$('.collapse.in').length ) {
+//         $('.collapse.default').collapse('show');
+//     }
+// });
+
 var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
     formats: ["mp3", "wav",],
     preload: true,

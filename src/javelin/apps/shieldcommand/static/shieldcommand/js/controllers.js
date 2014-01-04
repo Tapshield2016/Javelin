@@ -312,6 +312,7 @@ angular.module('shieldCommand.controllers', [])
 				updateDisplay();
 				if (messageAdded) {
 	  				newChatSound.play();
+	  				$rootScope.$broadcast('newChatMessageReceived', alertService.activeAlert);
 				}
 			}
 			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
