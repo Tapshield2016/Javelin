@@ -50,6 +50,7 @@ angular.module('shieldCommand.controllers', [])
 			$scope.isProfileVisible = true;
 			$rootScope.profileIsOpen = true;
 			$rootScope.$broadcast('profileWasOpened');
+			$rootScope.$broadcast('profileWasUpdated');
 		});
 	});
 
@@ -133,6 +134,10 @@ angular.module('shieldCommand.controllers', [])
 	$scope.currentActiveLocation = null;
 
 	$scope.$on('alertMarkedChange', function() {
+		updateDisplay();
+	});
+
+	$scope.$on('profileWasUpdated', function() {
 		updateDisplay();
 	});
 
@@ -306,6 +311,11 @@ angular.module('shieldCommand.controllers', [])
 
   	$scope.acceptClicked = function(alert) {
   		alert.status = 'A';
+  		for (var i = 0; i < $scope.alerts.length; i++) {
+  			if ($scope.alerts[i].object_id == alert.object_id) {
+  				$scope.alerts[i].status = 'A';
+  			}
+  		};
   		updateDisplay();
 		alertService.claimAlertForActiveUser(alert, function(data) {
 			// Anything to do here?
