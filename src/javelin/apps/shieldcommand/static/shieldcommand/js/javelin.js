@@ -400,12 +400,19 @@
 		else {
 			var request = Javelin.client.alerts.messages.read(alert.object_id);
 			request.done(function(data) {
-				Javelin.lastCheckedMessagesTimestamp = getTimestamp();
 				var chatMessages = [];
+				var latestDate = Javelin.lastCheckedMessagesTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 				for (var i = 0; i < data.length; i++) {
 					newChatMessage = new ChatMessage(data[i]);
 					chatMessages.push(newChatMessage);
-				};
+					if (newChatMessage.timestamp > latestDate) {
+						latestDate = newChatMessage.timestamp;
+					}
+				}
+				if (latestDate > Javelin.lastCheckedMessagesTimestamp) {
+					Javelin.lastCheckedMessagesTimestamp = latestDate;
+				}
+
 				if (chatMessages.length > 0) {
 					alert.hasNewChatMessage = true;
 					alert.chatMessages = chatMessages;
@@ -431,14 +438,20 @@
 		else {
 			var request = Javelin.client.alerts.messages_since.read(alert.object_id, params={timestamp: Javelin.lastCheckedMessagesTimestamp});
 			request.done(function(data) {
-				Javelin.lastCheckedMessagesTimestamp = getTimestamp() - 10;			
+				var latestDate = Javelin.lastCheckedMessagesTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));		
 				var chatMessages = [];
 				for (var i = 0; i < data.length; i++) {
 					newChatMessage = new ChatMessage(data[i]);
 					if (!Javelin.objectInArrayByKeyValue(alert.chatMessages, "messageID", newChatMessage.messageID)) {
 						chatMessages.push(newChatMessage);
-					};
-				};
+					}
+					if (newChatMessage.timestamp > latestDate) {
+						latestDate = newChatMessage.timestamp;
+					}
+				}
+				if (latestDate > Javelin.lastCheckedMessagesTimestamp) {
+					Javelin.lastCheckedMessagesTimestamp = latestDate;
+				}
 				if (chatMessages.length > 0) {
 					alert.hasNewChatMessage = true;
 					alert.chatMessages = alert.chatMessages.concat(chatMessages);
