@@ -154,6 +154,10 @@ angular.module('shieldCommand.controllers', [])
 		clearTimeout($scope.chatUpdateTimeout);
 	});
 
+	$scope.$on('alertMarkedCompleted', function() {
+		clearTimeout($scope.chatUpdateTimeout);
+	});
+
 	$scope.$on('chatWindowOpened', function(event, alert) {
 		if ((!alertService.activeAlert) || !(alert.object_id === alertService.activeAlert.object_id)) {
 			$scope.alertClicked(alert);
