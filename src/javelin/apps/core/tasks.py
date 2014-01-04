@@ -132,14 +132,21 @@ def create_agency_topic(agency_id, topic_name=None):
 def publish_to_agency_topic(agency_topic_arn, message):
     sns = SNSManager()
     msg = sns.get_topic_message_json(message, "mass-alert", "heyyyy")
-    print msg
-    print sns.publish_to_topic(msg, agency_topic_arn)
+    sns.publish_to_topic(msg, agency_topic_arn)
 
 
 @task
 def publish_to_device(device_endpoint_arn, message):
     sns = SNSManager()
     return sns.publish_to_device(message, device_endpoint_arn)
+
+@task
+def notify_alert_completed(message, device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "chat-message-available", "alert-completed")
+    sns.publish_to_device(msg, device_endpoint_arn)
 
 
 @task
