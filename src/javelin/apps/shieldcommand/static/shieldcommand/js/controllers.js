@@ -266,7 +266,12 @@ angular.module('shieldCommand.controllers', [])
   	$scope.updateChatMessages = function () {
   		alertService.getNewChatMessagesForActiveAlert(function(messages) {
 			if (messages && messages.length > 0) {
-				$scope.chats[alertService.activeAlert.object_id] = $scope.chats[alertService.activeAlert.object_id].concat(messages);
+				if (alertService.activeAlert.object_id in $scope.chats) {
+					$scope.chats[alertService.activeAlert.object_id] = $scope.chats[alertService.activeAlert.object_id].concat(messages);
+				}
+				else {
+					$scope.chats[alertService.activeAlert.object_id] = messages;
+				}
 				alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id];
 				updateDisplay();
   				newChatSound.play();
