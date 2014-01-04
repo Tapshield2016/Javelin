@@ -118,6 +118,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.markerSetForActiveAlert = false;
 	$scope.chatUpdateTimeout = null;
 	$scope.newAlertSoundInterval = null;
+	$scope.currentActiveLocation = null;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -132,6 +133,21 @@ angular.module('shieldCommand.controllers', [])
 			$scope.alertClicked(alert);
 		};
 	});
+
+	$scope.$watch('currentActiveLocation', function() {
+		updateMarker($scope.currentActiveLocation);
+		addressForLocation($scope.currentActiveLocation, function(address) {
+			if (address) {
+				alertService.activeAlert.geocodedAddress = address;
+				$("#alert-address  p").html("<strong>Location:</strong> " + address);
+				$("#alert-address").removeClass('hide');
+			}
+			else {
+				$("#alert-address").addClass('hide');
+			}
+		});
+		$scope.markerSetForActiveAlert = true;
+	})
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > oldLength) {
@@ -180,6 +196,13 @@ angular.module('shieldCommand.controllers', [])
   		alertService.getUpdatedAlerts($scope.alerts, function(updatedAlerts) {
   			updateAlerts(updatedAlerts);
 			setTimeout($scope.getUpdatedAlerts, 3000);
+			if (alertService.activeAlert) {
+				for (var i = 0; i < updatedAlerts.length; i++) {
+					if (updatedAlerts[i].object_id == alertService.activeAlert.object_id) {
+						$scope.currentActiveLocation = updatedAlerts[i].location;
+					}
+				}
+			}
   		});
   	}
 
@@ -200,17 +223,7 @@ angular.module('shieldCommand.controllers', [])
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
 				setMarker(alertService.activeAlert.location);
-				addressForLocation(alertService.activeAlert.location, function(address) {
-					if (address) {
-						alertService.activeAlert.geocodedAddress = address;
-						$("#alert-address  p").html("<strong>Location:</strong> " + address);
-						$("#alert-address").removeClass('hide');
-					}
-					else {
-						$("#alert-address").addClass('hide');
-					}
-				});
-				$scope.markerSetForActiveAlert = true;
+				$scope.currentActiveLocation = alertService.activeAlert.location;
 			}
 
   			$rootScope.$broadcast('activeAlertUpdated');

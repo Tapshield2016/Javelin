@@ -63,6 +63,16 @@ function addressForLocation(location, callback) {
     });
 }
 
+function updateMarker(location) {
+    if (!location) {
+        return;
+    }
+    alert_location = new google.maps.LatLng(location.latitude, location.longitude);
+    googleMapMarker.setPosition(alert_location);
+    googleMapAccuracyCircle.setCenter(alert_location);
+    googleMapAccuracyCircle.setRadius(location.accuracy);
+}
+
 function setMarker(location) {
     if (!location) {
         return;
@@ -74,6 +84,6 @@ function setMarker(location) {
     googleMapMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
-    googleMap.setZoom(18)
-    googleMap.setCenter(googleMapMarker.getPosition())
+    googleMap.setZoom(18);
+    googleMap.setCenter(googleMapMarker.getPosition());
 }
