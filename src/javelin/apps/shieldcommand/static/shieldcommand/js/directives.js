@@ -215,6 +215,16 @@ angular.module('shieldCommand.directives', [])
         scope.toggleChat = function() {
           var panel = element.find('.chat-panel');
           if (panel.hasClass('hide')) {
+            if (scope.adjustForProfile || $rootScope.profileIsOpen) {
+              panel.css({
+                right: 250,
+              })
+            }
+            else {
+              panel.css({
+                right: 15,
+              })            
+            }
             panel.removeClass('hide');
             scope.chatIsVisible = true;
             $rootScope.$broadcast('chatWindowOpened', scope.alert);
@@ -224,16 +234,6 @@ angular.module('shieldCommand.directives', [])
             scope.chatIsVisible = false;
           }
 
-          if (scope.adjustForProfile) {
-            element.find('.chat-panel').css({
-              right: 250,
-            })
-          }
-          else {
-            element.find('.chat-panel').css({
-              right: 15,
-            })            
-          }
           if (scope.alert.hasNewChatMessage) {
             scope.alert.hasNewChatMessage = false;
           };

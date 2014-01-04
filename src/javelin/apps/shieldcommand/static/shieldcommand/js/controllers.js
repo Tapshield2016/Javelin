@@ -25,14 +25,17 @@ angular.module('shieldCommand.controllers', [])
 	$scope.currentProfile = null;
 	$scope.activeAlert = null;
 	$scope.isProfileVisible = false;
+	$rootScope.profileIsOpen = false;
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
 		if ($scope.isProfileVisible) {
 			$rootScope.$broadcast('profileWasOpened');
+			$rootScope.profileIsOpen = true;
 		}
 		else {
 			$rootScope.$broadcast('profileWasClosed');
+			$rootScope.profileIsOpen = false;
 		}
 	}
 
@@ -45,6 +48,7 @@ angular.module('shieldCommand.controllers', [])
 		alertService.getUserProfileForActiveAlert(function(profile) {
 			$scope.currentProfile = profile;
 			$scope.isProfileVisible = true;
+			$rootScope.profileIsOpen = true;
 			$rootScope.$broadcast('profileWasOpened');
 		});
 	});
@@ -232,7 +236,6 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.initChatMessagesForActiveAlert = function() {
-  		console.log(alertService.activeAlert.object_id);
   		if (alertService.activeAlert.object_id in $scope.chats) {
 			alertService.activeAlert.chatMessages = $scope.chats[alertService.activeAlert.object_id];
   		}
@@ -275,7 +278,7 @@ angular.module('shieldCommand.controllers', [])
 			// Anything to do here?
 		});
 
-		if (alert == alertService.activeAlert) {
+		if (alert.object_id == alertService.activeAlert.object_id) {
 			$scope.initChatMessagesForActiveAlert();
 		};
   	};
