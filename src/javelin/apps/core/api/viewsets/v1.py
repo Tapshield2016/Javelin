@@ -41,10 +41,17 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
         valid_keys = ['agency', 'phone_number', 'disarm_code',
                       'first_name', 'last_name']
-        for k, v in request.POST.items():
+        info_dict = request.POST.copy()
+        if 'agency' in info_dict:
+            try:
+                info_dict['agency'] =\
+                    Agency.objects.get(pk=info_dict['agency'])
+            except Agency.DoesNotExist:
+                return Response({'message': 'No matching agency found.'},
+                                 status=status.HTTP_400_BAD_REQUEST)
+        for k, v in info_dict.items():
             if not k in valid_keys:
                 continue
-            print k, v
             if hasattr(user, k):
                 setattr(user, k, v)
         user.save()
