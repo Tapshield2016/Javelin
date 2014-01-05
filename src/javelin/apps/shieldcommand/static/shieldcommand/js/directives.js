@@ -160,6 +160,7 @@ angular.module('shieldCommand.directives', [])
           if (e.which == 13) {
             alertService.sendChatMessageForActiveAlert(scope.newChatMessage, function(success) {
               if (success) {
+                $rootScope.$broadcast('chatWasSent');
                 scope.newChatMessage = '';
                 // var messages = element.find('.chat-messages');
                 // if (messages.length > 0) {

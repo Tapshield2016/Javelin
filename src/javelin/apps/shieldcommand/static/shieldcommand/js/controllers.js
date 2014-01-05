@@ -150,6 +150,10 @@ angular.module('shieldCommand.controllers', [])
 		updateDisplay();
 	});
 
+	$scope.$on('chatWasSent', function() {
+		updateDisplay();
+	});
+
 	$scope.$on('alertMarkedPending', function() {
 		clearTimeout($scope.chatUpdateTimeout);
 	});
