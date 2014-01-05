@@ -413,7 +413,9 @@
 						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-
+				if (chatMessages.length > 0) {
+					alert.hasNewChatMessage = true;
+				}
 				callback(chatMessages, latestTimestamp);
 			});
 		}
@@ -435,7 +437,9 @@
 						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-
+				if (chatMessages.length > 0) {
+					alert.hasNewChatMessage = true;
+				}
 				callback(chatMessages, latestTimestamp);
 			});
 		}

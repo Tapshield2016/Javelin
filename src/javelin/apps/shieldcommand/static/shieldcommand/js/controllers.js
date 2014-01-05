@@ -315,15 +315,8 @@ angular.module('shieldCommand.controllers', [])
 			console.log(error);
 		}
 		finally {
-			if (alertService.activeAlert) {
-				if (alertService.activeAlert.status == 'A') {
-					if ($rootScope.chats[alertService.activeAlert.object_id].messages.length == 0) {
-						$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-					}
-					else {
-						$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-					}
-				}
+			if (alertService.activeAlert.status == 'A') {
+				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 			}
 		};
   	}

@@ -162,10 +162,6 @@ angular.module('shieldCommand.directives', [])
               if (success) {
                 $rootScope.$broadcast('chatWasSent');
                 scope.newChatMessage = '';
-                // var messages = element.find('.chat-messages');
-                // if (messages.length > 0) {
-                //   messages.animate({ scrollTop: element.find('.chat-messages')[0].scrollHeight }, 0);
-                // };
               };
             });
           };
