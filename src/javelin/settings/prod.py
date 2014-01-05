@@ -9,7 +9,7 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 WSGI_APPLICATION = 'javelin.wsgi.prod.application'
 
-ALLOWED_HOSTS = ['.tapshield.com', '.amazonaws.com',]
+ALLOWED_HOSTS = ['*',]
 
 CACHES = {
     'default': {
@@ -40,17 +40,17 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 
 # django-storages
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
 AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'static.tapshield.com'
-AWS_HEADERS = {
-    'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
-    'Cache-Control': 'max-age=86400',
-}
-AWS_S3_SECURE_URLS = False
-STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+#AWS_STORAGE_BUCKET_NAME = 'static.tapshield.com'
+#AWS_HEADERS = {
+#    'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
+#    'Cache-Control': 'max-age=86400',
+#}
+#AWS_S3_SECURE_URLS = False
+#STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 #MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
 
 # AWS
@@ -67,11 +67,11 @@ SQS_SECRET_ACCESS_KEY = '3pAYnXCE9S2vwRqL7IWl8gC2Gia6azK1iTgkIAPb'
 
 SNS_ACCESS_KEY_ID = 'AKIAI4LHPYPSGUMWIBLA'
 SNS_SECRET_ACCESS_KEY = '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'
-SNS_IOS_ARN = ''
-SNS_IOS_PLATFORM = ''
-SNS_ANDROID_ARN = ''
-SNS_ENDPOINT_QUEUE = 'endpoint_creation_queue_prod'
+SNS_IOS_PLATFORM = 'APNS'
+SNS_IOS_ARN = 'arn:aws:sns:us-east-1:175861827001:app/APNS/TapShield-iOS-Prod'
+SNS_ANDROID_ARN = 'GCM'
 SNS_ANDROID_PLATFORM = ''
+SNS_ENDPOINT_QUEUE = 'endpoint_creation_queue_prod'
 
 SNS_APP_ENDPOINTS = {
     "I": "APNS",
@@ -85,8 +85,8 @@ CELERY_DEFAULT_QUEUE = SQS_ALERT_QUEUE
 
 # compressor
 COMPRESS_ENABLED = True
-COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-COMPRESS_URL = STATIC_URL
+#COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+#COMPRESS_URL = STATIC_URL
 
 # twilio
 TWILIO_ACCOUNT_SID = 'AC16b20300998d261efefb490dbc4a6302'
