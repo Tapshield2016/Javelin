@@ -268,9 +268,11 @@
 		});
 		request.done(function(data) {
 			callback(data);
-			Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
-				console.log(success);
-			})
+			if (!alert.disarmedTime) {
+				Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
+					console.log(success);
+				})
+			}
 		})
 	}
 

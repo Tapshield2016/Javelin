@@ -64,9 +64,16 @@ angular.module('shieldCommand.services', [])
 	}
 
 	this.getUserProfileForActiveAlert = function(callback) {
-		Javelin.getUserProfileForUser(this.activeAlert.agencyUserMeta.object_id, function(profile) {
-			callback(profile);
-		});
+		if (this.activeAlert) {
+			Javelin.getUserProfileForUser(this.activeAlert.agencyUserMeta.object_id, function(profile) {
+				callback(profile);
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
 	}
 
 	this.sendChatMessageForActiveAlert = function(message, callback) {

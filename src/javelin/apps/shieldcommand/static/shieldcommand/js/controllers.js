@@ -171,6 +171,9 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('currentActiveLocation', function() {
 		updateMarker($scope.currentActiveLocation);
 		addressForLocation($scope.currentActiveLocation, function(address) {
+			if (!alertService.activeAlert) {
+				return;
+			}
 			if (address) {
 				alertService.activeAlert.geocodedAddress = address;
 				$("#alert-address  p").html("<strong>Location:</strong> " + address);
@@ -317,36 +320,36 @@ angular.module('shieldCommand.controllers', [])
 
   	$scope.updateChatMessages = function () {
   		try {
-	  		alertService.getNewChatMessagesForActiveAlert($rootScope.chats[alertService.activeAlert.object_id].lastChecked, function(messages, latestTimestamp) {
+  			var alertID = alertService.activeAlert.object_id
+	  		alertService.getNewChatMessagesForActiveAlert($rootScope.chats[alertID].lastChecked, function(messages, latestTimestamp) {
 				if (messages && messages.length > 0) {
 					var messageAdded = false;
-					if (alertService.activeAlert && alertService.activeAlert.object_id in $rootScope.chats) {
+					if (alertID in $rootScope.chats) {
 						for (var i = 0; i < messages.length; i++) {
 							var matchFound = false;
-							for (var j = 0; j < $rootScope.chats[alertService.activeAlert.object_id].messages.length; j++) {
-								if (messages[i].messageID == $rootScope.chats[alertService.activeAlert.object_id].messages[j].messageID) {
+							for (var j = 0; j < $rootScope.chats[alertID].messages.length; j++) {
+								if (messages[i].messageID == $rootScope.chats[alertID].messages[j].messageID) {
 									matchFound = true;
 								}
 							}
 							if (!matchFound) {
-								$rootScope.chats[alertService.activeAlert.object_id].messages.push(messages[i]);
+								$rootScope.chats[alertID].messages.push(messages[i]);
 								messageAdded = true;
 							}
 						}
 					}
 					else {
-						$rootScope.chats[alertService.activeAlert.object_id].messages = messages;
+						$rootScope.chats[alertID].messages = messages;
 						messageAdded = true;
 					}
-					$rootScope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
-					alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
+					$rootScope.chats[alertID].lastChecked = latestTimestamp;
+					alertService.activeAlert.chatMessages = $rootScope.chats[alertID].messages;
 					updateDisplay();
 					if (messageAdded) {
 		  				newChatSound.play();
 		  				$rootScope.$broadcast('newChatMessageReceived', alertService.activeAlert);
 					}
 				}
-				// $scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
 			});
 		}
 		catch (error) {
