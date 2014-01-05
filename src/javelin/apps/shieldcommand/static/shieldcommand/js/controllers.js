@@ -98,6 +98,9 @@ angular.module('shieldCommand.controllers', [])
 	}
 
 	$scope.getAge = function(dateString) {
+		if (!dateString) {
+			return '';
+		}
 	    var today = new Date();
 	    var birthDate = new Date(dateString);
 	    var age = today.getFullYear() - birthDate.getFullYear();
@@ -312,8 +315,15 @@ angular.module('shieldCommand.controllers', [])
 			console.log(error);
 		}
 		finally {
-			if (alertService.activeAlert.status == 'A') {
-				$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+			if (alertService.activeAlert) {
+				if (alertService.activeAlert.status == 'A') {
+					if ($rootScope.chats[alertService.activeAlert.object_id].messages.length == 0) {
+						$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+					}
+					else {
+						$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
+					}
+				}
 			}
 		};
   	}
