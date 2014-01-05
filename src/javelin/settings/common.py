@@ -120,7 +120,6 @@ INSTALLED_APPS = (
 
     'compressor',
     'django_twilio',
-    'djcelery',
     'registration',
     'rest_framework',
     'rest_framework.authtoken',

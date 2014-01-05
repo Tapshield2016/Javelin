@@ -1,8 +1,4 @@
 from common import *
-from kombu import Exchange, Queue
-
-import djcelery
-djcelery.setup_loader()
 
 
 DEBUG = False
