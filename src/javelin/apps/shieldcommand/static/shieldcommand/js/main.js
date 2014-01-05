@@ -78,6 +78,10 @@ $.ajaxSetup({
     }
 });
 
+$(document).ajaxError(function(event, jqxhr, settings, exception) {
+    console.log("Error: " + exception);
+});
+
 // $('#accordion').on('hidden.bs.collapse', function () {
 //     if ( !$('.collapse.in').length ) {
 //         $('.collapse.default').collapse('show');
