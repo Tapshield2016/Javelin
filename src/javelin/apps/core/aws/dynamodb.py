@@ -59,8 +59,7 @@ class DynamoDBManager(object):
         timestamp = float(timestamp)
         table = self.get_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE)
         results = table.query(alert_id__eq=int(alert_id),
-                              timestamp__gt=timestamp,
-                              index='MessageTimeIndex')
+                              timestamp__gt=timestamp)
         for res in results:
             messages.append(dict([(key, val) for key, val in res.items()]))
         return messages

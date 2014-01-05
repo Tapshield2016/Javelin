@@ -1,7 +1,13 @@
 {% load i18n %}
 
-Please click the link below to activate your TapShield account:
+Hello,
 
-http://{{ site.domain }}{% url 'registration_activate' activation_key %}
+Thank you for downloading TapShield. Please verify your email address by clicking on the link below: 
 
-This link will be valid for {{ expiration_days }} days.
+https://{{ site.domain }}{% url 'registration_activate' activation_key %}
+
+Remember to always keep TapShield on your Home screen so help is just a tap away. 
+
+Thank you!
+
+TapShield Team

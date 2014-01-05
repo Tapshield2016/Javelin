@@ -117,7 +117,12 @@ def create_agency_topic(agency_id, topic_name=None):
     if not topic_name:
         topic_name = agency.name
     sns = SNSManager()
-    response = sns.create_topic(topic_name)
+    topic_suffix = ''
+    if settings.DEBUG:
+        topic_suffix = '-dev'
+    else:
+        topic_suffix = '-prod'
+    response = sns.create_topic(topic_name + topic_suffix)
     if 'CreateTopicResponse' in response:
         response = response['CreateTopicResponse']
         if 'CreateTopicResult' in response:
