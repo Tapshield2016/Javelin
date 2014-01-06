@@ -82,11 +82,13 @@ $(document).ajaxError(function(event, jqxhr, settings, exception) {
     console.log("Error: " + exception);
 });
 
-// $('#accordion').on('hidden.bs.collapse', function () {
-//     if ( !$('.collapse.in').length ) {
-//         $('.collapse.default').collapse('show');
-//     }
-// });
+$('#accordion').on('hidden.bs.collapse', function (event) {
+    setTimeout(function() {
+        if ($('.panel-collapse.in').length == 0) {
+            $('.accordion-default').click();
+        }
+    }, 400);
+});
 
 var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
     formats: ["mp3", "wav",],
