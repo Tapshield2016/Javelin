@@ -174,12 +174,13 @@ class Alert(TimeStampedModel):
             try:
                 timestamp = float(message['timestamp'])
                 timestamp = datetime.fromtimestamp(timestamp)
+                sender_id = int(message['sender_id'])
             except ValueError:
                 timestamp = datetime.now()
             ChatMessage.objects.bulk_create(
                 [
                     ChatMessage(alert=self,
-                                sender=senders[message['sender_id']],
+                                sender=senders[sender_id],
                                 message=message['message'],
                                 message_id=message['message_id'],
                                 message_sent_time=timestamp)
