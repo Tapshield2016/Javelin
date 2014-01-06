@@ -118,7 +118,7 @@
 			this.profileImageURL = attributes.profile_image_url;
 		}
 		else {
-			this.profileImageURL = "/media/static/shieldcommand/img/default-avatar.png"
+			this.profileImageURL = "/media/static/shieldcommand/img/NoPicture_Image.png"
 		}
 		return this;
 	}
@@ -413,9 +413,7 @@
 						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-				if (chatMessages.length > 0) {
-					alert.hasNewChatMessage = true;
-				}
+
 				callback(chatMessages, latestTimestamp);
 			});
 		}
@@ -437,9 +435,7 @@
 						latestTimestamp = newChatMessage.timestamp;
 					}
 				}
-				if (chatMessages.length > 0) {
-					alert.hasNewChatMessage = true;
-				}
+
 				callback(chatMessages, latestTimestamp);
 			});
 		}
