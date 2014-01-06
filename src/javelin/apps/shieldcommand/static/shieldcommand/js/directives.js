@@ -158,10 +158,11 @@ angular.module('shieldCommand.directives', [])
         scope.chatIsVisible = false;
         element.find('.message-box').keypress(function (e) {
           if (e.which == 13) {
-            alertService.sendChatMessageForActiveAlert(scope.newChatMessage, function(success) {
+            var chatMessageText = scope.newChatMessage;
+            scope.newChatMessage = '';
+            alertService.sendChatMessageForActiveAlert(chatMessageText, function(success) {
               if (success) {
                 $rootScope.$broadcast('chatWasSent');
-                scope.newChatMessage = '';
               };
             });
           };
