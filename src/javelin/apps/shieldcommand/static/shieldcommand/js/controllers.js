@@ -307,6 +307,7 @@ angular.module('shieldCommand.controllers', [])
 					$rootScope.chats[alertService.activeAlert.object_id].lastChecked = latestTimestamp;
 					if (messages && messages.length > 0) {
 						alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
+						$rootScope.$broadcast('newChatMessageReceived', alertService.activeAlert);
 						updateDisplay();
 						newChatSound.play();
 					}
