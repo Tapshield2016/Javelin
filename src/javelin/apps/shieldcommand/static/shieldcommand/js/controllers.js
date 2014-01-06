@@ -214,6 +214,12 @@ angular.module('shieldCommand.controllers', [])
 			newAlertSound.stop();
 			clearInterval($scope.newAlertSoundInterval);
 		}
+
+		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
+			if ($('#collapseTwo.in').length == 0) {
+				$('.panel-new-alerts').click();
+			}
+		}
 	});
 
   	function updateAlerts(alerts) {
@@ -232,6 +238,17 @@ angular.module('shieldCommand.controllers', [])
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
 			$scope.$apply();
 		}
+
+		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
+			if ($('#collapseTwo.in').length == 0) {
+				$('.panel-new-alerts').click();
+			}
+		}
+		// else if ($scope.myAlertsLength == 0 && $scope.pendingAlertsLength > 0) {
+		// 	if ($('#collapseThree.in').length == 0) {
+		// 		$('.panel-pending-alerts').click();
+		// 	}
+		// }
   	};
 
   	$scope.loadInitialAlerts = function() {
@@ -256,10 +273,12 @@ angular.module('shieldCommand.controllers', [])
 				if (alertService.activeAlert) {
 					for (var i = 0; i < updatedAlerts.length; i++) {
 						if (updatedAlerts[i].object_id == alertService.activeAlert.object_id) {
-							updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
-							updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
-							$scope.currentActiveLocation = updatedAlerts[i].location;
-							updateDisplay();
+							if (updatedAlerts[i].location) {
+								updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
+								updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
+								$scope.currentActiveLocation = updatedAlerts[i].location;
+								updateDisplay();
+							}
 						}
 					}
 				}
@@ -289,10 +308,12 @@ angular.module('shieldCommand.controllers', [])
 	  		$scope.markerSetForActiveAlert = false;	
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
-				alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
-				alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
-				setMarker(alertService.activeAlert.location);
-				$scope.currentActiveLocation = alertService.activeAlert.location;
+				if (alertService.activeAlert.location) {
+					alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
+					alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
+					setMarker(alertService.activeAlert.location);
+					$scope.currentActiveLocation = alertService.activeAlert.location;
+				}
 			}
 
   			$rootScope.$broadcast('activeAlertUpdated');
@@ -382,6 +403,8 @@ angular.module('shieldCommand.controllers', [])
     };
 
   	$scope.acceptClicked = function(alert) {
+  		var acceptedFromNew = (alert.status == 'N');
+  		var acceptedFromPending = (alert.status == 'P');
   		alert.status = 'A';
   		for (var i = 0; i < $scope.alerts.length; i++) {
   			if ($scope.alerts[i].object_id == alert.object_id) {
@@ -400,6 +423,13 @@ angular.module('shieldCommand.controllers', [])
 			alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
 			$scope.currentActiveLocation = alertService.activeAlert.location;
 		};
+
+		if (acceptedFromNew && $scope.newAlertsLength == 0) {
+			$('.accordion-default').click();
+		}
+		else if (acceptedFromPending && $scope.pendingAlertsLength == 0) {
+			$('.accordion-default').click();
+		}
   	};
 
   	$scope.loadInitialAlerts();
