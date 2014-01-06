@@ -356,7 +356,6 @@ angular.module('shieldCommand.controllers', [])
 					updateDisplay();
 					if (messageAdded) {
 		  				newChatSound.play();
-		  				alertService.activeAlert.hasNewChatMessage = true;
 		  				$rootScope.$broadcast('newChatMessageReceived', alertService.activeAlert);
 					}
 				}
