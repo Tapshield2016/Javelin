@@ -125,6 +125,8 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.zoomToActiveAlertMarker = function () {
 		if ($scope.activeAlert) {
+			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
+			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
 			setMarker($scope.activeAlert.location);
 		};
 	}
@@ -244,11 +246,13 @@ angular.module('shieldCommand.controllers', [])
   		try {
 	  		alertService.getUpdatedAlerts($scope.alerts, function(updatedAlerts) {
 	  			updateAlerts(updatedAlerts);
-				// setTimeout($scope.getUpdatedAlerts, 3000);
 				if (alertService.activeAlert) {
 					for (var i = 0; i < updatedAlerts.length; i++) {
 						if (updatedAlerts[i].object_id == alertService.activeAlert.object_id) {
+							updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
+							updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
 							$scope.currentActiveLocation = updatedAlerts[i].location;
+							updateDisplay();
 						}
 					}
 				}
@@ -278,6 +282,8 @@ angular.module('shieldCommand.controllers', [])
 	  		$scope.markerSetForActiveAlert = false;	
 
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
+				alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
+				alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
 				setMarker(alertService.activeAlert.location);
 				$scope.currentActiveLocation = alertService.activeAlert.location;
 			}
@@ -350,6 +356,7 @@ angular.module('shieldCommand.controllers', [])
 					updateDisplay();
 					if (messageAdded) {
 		  				newChatSound.play();
+		  				alertService.activeAlert.hasNewChatMessage = true;
 		  				$rootScope.$broadcast('newChatMessageReceived', alertService.activeAlert);
 					}
 				}
@@ -382,6 +389,9 @@ angular.module('shieldCommand.controllers', [])
 
 		if (alertService.activeAlert && (alert.object_id == alertService.activeAlert.object_id)) {
 			$scope.initChatMessagesForActiveAlert();
+			alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
+			alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
+			$scope.currentActiveLocation = alertService.activeAlert.location;
 		};
   	};
 

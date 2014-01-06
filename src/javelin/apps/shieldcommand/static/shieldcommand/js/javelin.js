@@ -177,6 +177,8 @@
 		this.altitude = attributes.altitude;
 		this.latitude = attributes.latitude;
 		this.longitude = attributes.longitude;
+		this.alertType = null;
+		this.alertStatus = null;
 		return this;
 	}
 

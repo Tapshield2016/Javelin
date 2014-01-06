@@ -69,8 +69,19 @@ function updateMarker(location) {
     }
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
+    googleMapMarker.setIcon(getIconForLocation(location));
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
+}
+
+function getIconForLocation(location) {
+    var pinIcon = "/media/static/shieldcommand/img/NewUserPin.png";
+    if (location) {
+        if (location.alertStatus != 'N' && location.alertType) {
+            pinIcon = "/media/static/shieldcommand/img/" + location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + "UserPin.png"
+        } 
+    }
+    return pinIcon;
 }
 
 function setMarker(location) {
@@ -81,7 +92,7 @@ function setMarker(location) {
     googleMapAccuracyCircle.setOptions(circleOptions);
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
-    googleMapMarker.setIcon('/media/static/shieldcommand/img/NewUserPin.png');
+    googleMapMarker.setIcon(getIconForLocation(location));
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
     googleMap.setZoom(18);
