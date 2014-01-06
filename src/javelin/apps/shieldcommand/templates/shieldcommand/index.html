@@ -28,8 +28,11 @@
                         <li class="dropdown">
                             <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ request.user.first_name }} <b class="caret"></b></a>
                             <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agency Settings</a></li>
-                                <li role="presentation" class="divider"></li> -->
+                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agency Settings</a></li>-->
+                                <li role="presentation" class="dropdown-header">Support</li>
+                                <li role="presentation"><a href="">(877) 553-9049 x2</a></li>
+                                <li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
+                                <li role="presentation" class="divider"></li> 
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
                             </ul>
                         </li>
