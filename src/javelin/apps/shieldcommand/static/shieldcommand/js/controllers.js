@@ -161,11 +161,18 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$on('alertMarkedPending', function() {
 		clearTimeout($scope.chatUpdateTimeout);
+		$scope.clearAddressBar();
 	});
 
 	$scope.$on('alertMarkedCompleted', function() {
 		clearTimeout($scope.chatUpdateTimeout);
+		$scope.clearAddressBar();
 	});
+
+	$scope.clearAddressBar = function() {
+		$("#alert-address").addClass('hide');
+		$("#alert-address  p").html("");
+	}
 
 	$scope.$on('chatWindowOpened', function(event, alert) {
 		if ((!alertService.activeAlert) || !(alert.object_id === alertService.activeAlert.object_id)) {
@@ -185,7 +192,7 @@ angular.module('shieldCommand.controllers', [])
 				$("#alert-address").removeClass('hide');
 			}
 			else {
-				$("#alert-address").addClass('hide');
+				$scope.clearAddressBar();
 			}
 		});
 		$scope.markerSetForActiveAlert = true;
