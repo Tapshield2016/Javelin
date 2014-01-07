@@ -399,6 +399,11 @@
                                     </div>
                                 </div>
 
+                                <div class="profile-buttons" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
+                                    <h5>Completed By: </h5>
+                                    <p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
+                                </div>
+
                            </div><!-- /.profile-content -->
                         </div><!-- /.profile -->
 

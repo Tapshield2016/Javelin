@@ -48,6 +48,10 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             agency_user_meta = UserSerializer(instance=obj.agency_user)
             ret['agency_user_meta'] = agency_user_meta.data
+            ret['agency_dispatcher_name'] = None
+            if obj.agency_dispatcher:
+                ret['agency_dispatcher_name'] =\
+                    obj.agency_dispatcher.get_full_name()
             ret['latest_location'] = {}
             latest_location = obj.locations.first()
             if latest_location:

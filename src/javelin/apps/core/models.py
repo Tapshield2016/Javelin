@@ -145,7 +145,7 @@ class Alert(TimeStampedModel):
             elif self.status == 'P':
                 if not self.pending_time:
                     self.pending_time = datetime.now()
-            super(Alert, self).save(*args, **kwargs)
+        super(Alert, self).save(*args, **kwargs)
                 
     def disarm(self):
         if not self.disarmed_time:

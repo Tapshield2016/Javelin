@@ -70,6 +70,13 @@ angular.module('shieldCommand.controllers', [])
 		return false;
 	}
 
+	$scope.shouldDisplayCompletedBy = function() {
+		if ($scope.activeAlert && $scope.activeAlert.status == 'C') {
+			return true;
+		}
+		return false;
+	}
+
 	$scope.markActiveAlertAsCompleted = function() {
 		$scope.activeAlert.status = 'C';		
 		$scope.toggle();

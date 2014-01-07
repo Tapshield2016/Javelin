@@ -148,6 +148,7 @@
 		this.agencyUser = attributes.agency_user;
 		this.agencyUserMeta = null;
 		this.agencyDispatcher = attributes.agency_dispatcher;
+		this.agencyDispatcherName = attributes.agency_dispatcher_name;
 		this.acceptedTime = attributes.accepted_time;
 		this.completedTime = attributes.completed_time;
 		this.disarmedTime = attributes.disarmed_time;

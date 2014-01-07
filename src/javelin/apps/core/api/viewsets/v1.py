@@ -177,7 +177,9 @@ class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
 
 
 class AlertViewSet(viewsets.ModelViewSet):
-    queryset = Alert.objects.select_related('agency', 'agency_user')\
+    queryset =\
+        Alert.objects.select_related('agency', 'agency_user',
+                                     'agency_dispatcher')\
         .prefetch_related('locations').all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',

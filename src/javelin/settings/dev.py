@@ -31,13 +31,6 @@ MIDDLEWARE_CLASSES += (
     #'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
-#DEVSERVER_MODULES = (
-#    'devserver.modules.sql.SQLRealTimeModule',
-#    'devserver.modules.sql.SQLSummaryModule',
-#    'devserver.modules.profile.ProfileSummaryModule',
-#    'devserver.modules.profile.LineProfilerModule',
-#)
-
 INTERNAL_IPS = ('127.0.0.1',)
 
 EMAIL_HOST = 'smtp.gmail.com'

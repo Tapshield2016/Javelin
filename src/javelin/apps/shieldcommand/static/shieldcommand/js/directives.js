@@ -113,6 +113,9 @@ angular.module('shieldCommand.directives', [])
         console.log(marker.latLng);
         googleMap.setZoom(18);
         googleMap.setCenter(new google.maps.LatLng(marker.latLng.lat(), marker.latLng.lng()));
+        // for (var i = 0; i < scope.tempMapMarkers.length; i++) {
+        //   console.log(marker.latLng.equals(scope.tempMapMarkers[i]));
+        // };
       }
 
       scope.setTempMarkers = function() {
