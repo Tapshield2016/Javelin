@@ -69,6 +69,7 @@ function updateMarker(location) {
     }
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
+    googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
@@ -93,6 +94,7 @@ function setMarker(location) {
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon(getIconForLocation(location));
+    googleMapMarker.setTitle(location.title);
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
     googleMap.setZoom(18);

@@ -127,6 +127,7 @@ angular.module('shieldCommand.controllers', [])
 		if ($scope.activeAlert) {
 			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
+			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
 		};
 	}
@@ -276,6 +277,7 @@ angular.module('shieldCommand.controllers', [])
 							if (updatedAlerts[i].location) {
 								updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
 								updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
+								updatedAlerts[i].location.title = updatedAlerts[i].agencyUserMeta.getFullName();
 								$scope.currentActiveLocation = updatedAlerts[i].location;
 								updateDisplay();
 							}
@@ -311,6 +313,7 @@ angular.module('shieldCommand.controllers', [])
 				if (alertService.activeAlert.location) {
 					alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
 					alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
+					alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
 					setMarker(alertService.activeAlert.location);
 					$scope.currentActiveLocation = alertService.activeAlert.location;
 				}
@@ -421,6 +424,7 @@ angular.module('shieldCommand.controllers', [])
 			$scope.initChatMessagesForActiveAlert();
 			alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
 			alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
+			alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
 			$scope.currentActiveLocation = alertService.activeAlert.location;
 		};
 

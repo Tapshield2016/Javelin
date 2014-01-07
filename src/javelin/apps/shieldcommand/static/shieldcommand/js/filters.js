@@ -29,6 +29,7 @@ angular.module('shieldCommand.filters', [])
 			if (statuses.indexOf(alerts[i].status) > -1) {
 				var alert_type = alerts[i].initiatedBy;
 				var location_info = { alertType: alerts[i].initiatedBy,
+									  title: alerts[i].agencyUserMeta.getFullName(),
 									  location: null }
 				if (alerts[i].status == 'A') {
 					if (alerts[i].agencyDispatcher && alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {

@@ -179,6 +179,7 @@
 		this.longitude = attributes.longitude;
 		this.alertType = null;
 		this.alertStatus = null;
+		this.title = null;
 		return this;
 	}
 
