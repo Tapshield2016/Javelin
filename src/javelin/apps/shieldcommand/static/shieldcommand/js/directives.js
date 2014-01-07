@@ -109,6 +109,12 @@ angular.module('shieldCommand.directives', [])
         scope.tempMapMarkers = [];
       }
 
+      scope.zoomToMarker = function(marker) {
+        console.log(marker.latLng);
+        googleMap.setZoom(18);
+        googleMap.setCenter(new google.maps.LatLng(marker.latLng.lat(), marker.latLng.lng()));
+      }
+
       scope.setTempMarkers = function() {
         scope.clearMarkers();
         var statuses = [];
@@ -140,6 +146,7 @@ angular.module('shieldCommand.directives', [])
             tempMarker.setTitle(locations[i].title);
             tempMarker.setMap(googleMap);
             scope.tempMapMarkers.push(tempMarker);
+            google.maps.event.addListener(tempMarker, 'click', scope.zoomToMarker)
           };
         };
       }
