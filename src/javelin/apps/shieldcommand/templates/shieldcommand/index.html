@@ -81,7 +81,7 @@
                                 <ul class="alerts-list">
 
                                     <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
-                                        <div class="alert-container" ng-click="alertClicked(alert)">
+                                        <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
                                             <div class="alert-type {{ alert.initiatedBy }}-alert-type">
                                                 <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                             </div>
@@ -111,7 +111,7 @@
 
                                 <ul class="alerts-list">
                                     <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-class="selectedClass(alert)">
-                                        <div class="alert-container" ng-click="alertClicked(alert)">
+                                        <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
                                             <div class="alert-type {{ alert.initiatedBy }}-alert-type">
                                                 <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                             </div>
@@ -141,7 +141,7 @@
 
                             <ul class="alerts-list">
                                 <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-class="selectedClass(alert)">
-                                    <div class="alert-container" ng-click="alertClicked(alert)">
+                                    <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
                                         <div class="alert-type {{ alert.initiatedBy }}-alert-type">
                                             <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                         </div>
@@ -170,7 +170,7 @@
                           <!-- Completed Alerts -->
                               <ul class="alerts-list">
                                 <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
-                                    <div class="alert-container" ng-click="alertClicked(alert)">
+                                    <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
                                         <div class="alert-type {{ alert.initiatedBy }}-alert-type">
                                             <i class="icon-{{ alert.initiatedBy }}_type"></i>
                                         </div>

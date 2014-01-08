@@ -110,12 +110,13 @@ angular.module('shieldCommand.directives', [])
       }
 
       scope.zoomToMarker = function(marker) {
-        console.log(marker.latLng);
         googleMap.setZoom(18);
         googleMap.setCenter(new google.maps.LatLng(marker.latLng.lat(), marker.latLng.lng()));
-        // for (var i = 0; i < scope.tempMapMarkers.length; i++) {
-        //   console.log(marker.latLng.equals(scope.tempMapMarkers[i]));
-        // };
+        for (var i = 0; i < scope.tempMapMarkers.length; i++) {
+           if(scope.tempMapMarkers[i].position.equals(marker.latLng)) {
+            $rootScope.$broadcast('alertPinClicked', scope.tempMapMarkers[i].alertID);
+           }
+        };
       }
 
       scope.setTempMarkers = function() {
@@ -144,6 +145,7 @@ angular.module('shieldCommand.directives', [])
         for (var i = 0; i < locations.length; i++) {
           if (locations[i]) {
             var tempMarker = new google.maps.Marker();
+            tempMarker.alertID = locations[i].alertID;
             tempMarker.setPosition(new google.maps.LatLng(locations[i].location.latitude, locations[i].location.longitude));
             tempMarker.setIcon("/media/static/shieldcommand/img/" + locations[i].alertType.charAt(0).toUpperCase() + locations[i].alertType.substr(1).toLowerCase() + "UserPin.png");
             tempMarker.setTitle(locations[i].title);

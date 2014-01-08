@@ -64,7 +64,8 @@ angular.module('shieldCommand.controllers', [])
 	}
 
 	$scope.shouldDisplayProfileButtons = function() {
-		if ($scope.activeAlert && $scope.activeAlert.status == 'A') {
+		if ($scope.activeAlert && $scope.activeAlert.status == 'A') { // need to check for agency dispatcher == active agency user
+
 			return true;
 		}
 		return false;
@@ -300,6 +301,27 @@ angular.module('shieldCommand.controllers', [])
 			setTimeout($scope.getUpdatedAlerts, 3000);
 		}
   	}
+
+    $scope.$on('alertPinClicked', function(event, alertID) {
+		for (var i = 0; i < $scope.alerts.length; i++) {
+			if ($scope.alerts[i].object_id == alertID) {
+				$scope.alertClicked($scope.alerts[i]);
+				var container = null;
+				if ($scope.alerts[i].status == 'A') {
+					
+				}
+				else if ($scope.alerts[i].status == 'N') {
+
+				}
+				else if ($scope.alerts[i].status == 'P') {
+
+				}
+				else { // status == 'C'
+
+				}
+			}
+		};    	
+    });
 
   	$scope.alertClicked = function(alert) {
   		if (alert === alertService.activeAlert) {

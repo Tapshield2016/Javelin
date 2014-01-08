@@ -29,6 +29,7 @@ angular.module('shieldCommand.filters', [])
 			if (statuses.indexOf(alerts[i].status) > -1) {
 				var alert_type = alerts[i].initiatedBy;
 				var location_info = { alertType: alerts[i].initiatedBy,
+									  alertID: alerts[i].object_id,
 									  title: alerts[i].agencyUserMeta.getFullName(),
 									  location: null }
 				if (alerts[i].status == 'A') {
