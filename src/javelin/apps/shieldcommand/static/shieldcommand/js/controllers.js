@@ -65,8 +65,10 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.shouldDisplayProfileButtons = function() {
 		if ($scope.activeAlert && $scope.activeAlert.status == 'A') { // need to check for agency dispatcher == active agency user
-
-			return true;
+			if ($scope.activeAlert.agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) > -1) {
+				console.log($scope.activeAlert.agencyDispatcher.indexOf(Javelin.activeAgencyUser.url));
+				return true;
+			}
 		}
 		return false;
 	}
@@ -253,11 +255,6 @@ angular.module('shieldCommand.controllers', [])
 				$('.panel-new-alerts').click();
 			}
 		}
-		// else if ($scope.myAlertsLength == 0 && $scope.pendingAlertsLength > 0) {
-		// 	if ($('#collapseThree.in').length == 0) {
-		// 		$('.panel-pending-alerts').click();
-		// 	}
-		// }
   	};
 
   	$scope.loadInitialAlerts = function() {
@@ -323,9 +320,13 @@ angular.module('shieldCommand.controllers', [])
 		};    	
     });
 
-  	$scope.alertClicked = function(alert) {
+  	$scope.alertClicked = function(alert, shouldToggleProfile) {
+  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
   		if (alert === alertService.activeAlert) {
-  			$rootScope.$broadcast('toggleProfile');
+  			if (shouldToggleProfile) {
+	  			$rootScope.$broadcast('toggleProfile');
+  			}
+  			$scope.initChatMessagesForActiveAlert();
   		}
   		else {
   			clearTimeout($scope.chatUpdateTimeout);
@@ -373,10 +374,6 @@ angular.module('shieldCommand.controllers', [])
 					}
 				});
 	  		}
-
-			// if (alertService.activeAlert.status == 'A') {
-			// 	$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
-			// }
 		}
 		catch (error) {
 			console.log(error);
@@ -449,7 +446,12 @@ angular.module('shieldCommand.controllers', [])
 			// Anything to do here?
 		});
 
-		$scope.alertClicked(alert);
+		if (alert === alertService.activeAlert) {
+			$scope.alertClicked(alert, false);
+		}
+		else {
+			$scope.alertClicked(alert);
+		}
 		$('.accordion-default').click();
   	};
 

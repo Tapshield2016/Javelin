@@ -86,7 +86,7 @@ $('#accordion').on('hidden.bs.collapse', function (event) {
         if ($('.panel-collapse.in').length == 0) {
             $('.accordion-default').click();
         }
-    }, 400);
+    }, 500);
 });
 
 var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
