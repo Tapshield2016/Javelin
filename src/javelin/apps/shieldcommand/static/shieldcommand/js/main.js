@@ -91,7 +91,7 @@ $('#accordion').on('hidden.bs.collapse', function (event) {
 });
 
 var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
-    formats: ["mp3", "wav",],
+    formats: ["mp3", "ogg",],
     preload: true,
 });
 
