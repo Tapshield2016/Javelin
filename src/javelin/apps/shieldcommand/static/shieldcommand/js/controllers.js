@@ -449,20 +449,8 @@ angular.module('shieldCommand.controllers', [])
 			// Anything to do here?
 		});
 
-		if (alertService.activeAlert && (alert.object_id == alertService.activeAlert.object_id)) {
-			$scope.initChatMessagesForActiveAlert();
-			alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
-			alertService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
-			alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
-			$scope.currentActiveLocation = alertService.activeAlert.location;
-		};
-
-		if (acceptedFromNew && $scope.newAlertsLength == 0) {
-			$('.accordion-default').click();
-		}
-		else if (acceptedFromPending && $scope.pendingAlertsLength == 0) {
-			$('.accordion-default').click();
-		}
+		$scope.alertClicked(alert);
+		$('.accordion-default').click();
   	};
 
   	$scope.loadInitialAlerts();
