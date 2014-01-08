@@ -211,7 +211,7 @@ angular.module('shieldCommand.directives', [])
           if (scope.chatIsVisible) {
             element.find('.chat-panel').animate({
               right: 250,
-            }, 300);
+            }, 333);
           };
         });
 
@@ -220,7 +220,7 @@ angular.module('shieldCommand.directives', [])
           if (scope.chatIsVisible) {
             element.find('.chat-panel').animate({
               right: 15,
-            }, 300);
+            }, 333);
           };          
         });
 

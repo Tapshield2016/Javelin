@@ -102,12 +102,17 @@ body {
     max-width: none;
 }
 
+.map-profile-open {
+    margin-right: 240px;
+}
+
 #profile {
     background-color: #f7f6f6;
     padding: 0px;
-    width: 25%;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    width: 240px;
+    max-width: 240px;
+    overflow: hidden;
+    height: 100%;
     -webkit-transition: all .3s linear;
     -moz-transition: all .3s linear;
     -o-transition: all .3s linear;
@@ -116,6 +121,28 @@ body {
     -moz-box-shadow: -5px 0px 7px -5px #666;
     -webkit-box-shadow: -5px 0px 7px -5px #666;
     box-shadow: -5px 0px 7px -5px #666;
+}
+
+.profile-closed {
+    position: absolute;
+    top: 50px;
+    right: -240px;
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    -o-transition: all .3s linear;
+    -ms-transition: all .3s linear;
+    transition: all .3s linear;
+}
+
+.profile-open {
+    position: absolute;
+    top: 50px;
+    right: 0px;    
+    -webkit-transition: all .3s linear;
+    -moz-transition: all .3s linear;
+    -o-transition: all .3s linear;
+    -ms-transition: all .3s linear;
+    transition: all .3s linear;
 }
 
 .profile-title {
@@ -187,7 +214,7 @@ body {
     position: absolute;
     bottom: 0px;
     left: 0px;
-    width: 100%;
+    width: 240px;
     box-shadow: 0px -10px 10px -10px #666;
     -moz-box-shadow: 0px -10px 10px -10px #666;
     -webkit-box-shadow: 0px -10px 10px -10px #666;
@@ -260,6 +287,11 @@ body {
     min-height: 100%;
     padding: 0px;
     overflow-x: hidden;
+    width: 318px;
+}
+
+.sidebar-offset {
+    margin-left: 318px;
 }
 
 .container-full {
@@ -581,7 +613,7 @@ body {
 #map-controls {
     position: absolute;
     bottom: 25px;
-    left: 20px;
+    left: 338px;
     cursor: pointer;
 }
 
@@ -683,4 +715,18 @@ body {
     border-bottom: 1px solid #999; 
     padding-top: 3px;
     font-size: 16px;
+    -webkit-transition:all .3s linear;
+    -moz-transition:all .3s linear;
+    -o-transition:all .3s linear;
+    -ms-transition:all .3s linear;
+    transition:all .3s linear;
+}
+
+.alert-address-profile-open {
+    padding-right: 240px;    
+    -webkit-transition:all .3s linear;
+    -moz-transition:all .3s linear;
+    -o-transition:all .3s linear;
+    -ms-transition:all .3s linear;
+    transition:all .3s linear;
 }

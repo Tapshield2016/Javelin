@@ -33,13 +33,12 @@ $('li.alert').click(function(e) {
     classes = classList(map);
     for (var i = 0; i < classes.length; i++) {
     	if(classes[i] == 'col-md-12') {
-    		map.removeClass('col-md-12').addClass('col-md-9');
-    		profile.removeClass('hidden').addClass('col-md-3');
-    		break;
+    		profile.removeClass('profile-closed').addClass('profile-open');
+            window.dispatchEvent(new Event('resize'));
     	}
     	else if (classes[i] == 'col-md-9') {
-    		map.removeClass('col-md-9').addClass('col-md-12');
-    		profile.removeClass('col-md-3').addClass('hidden');
+    		profile.removeClass('profile-open').addClass('profile-closed');
+            window.dispatchEvent(new Event('resize'));
     		break;
     	}
     };
