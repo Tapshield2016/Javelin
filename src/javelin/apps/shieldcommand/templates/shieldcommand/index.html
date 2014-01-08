@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Shield Command</title>
-        <meta name="viewport" content="width=device-width">
+
         {% compress css %}<link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">{% endcompress %}
         <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
         <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
@@ -197,8 +197,8 @@
                 </div>
 
                 <!-- map -->
-                <div class="col-md-9 no-gutter">
-                    <div class="full-width" ng-controller="UserProfileController" ng-cloak>
+                <div class="" >
+                    <div class="full-width sidebar-offset" ng-controller="UserProfileController" ng-cloak>
 
                         <!-- Modal -->
                         <div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true" dismiss-mark-completed-modal>
@@ -238,12 +238,12 @@
                           </div><!-- /.modal-dialog -->
                         </div><!-- /.modal -->
 
-                        <div id="map-container" ng-class="(isProfileVisible) ? 'col-md-9' : 'col-md-12'">
-                          <div id="alert-address" class="hide">
+                        <div id="map-container" class="col-md-12">
+                          <div id="alert-address" class="hide" ng-class="(isProfileVisible) ? 'alert-address-profile-open' : ''">
                               <p></p>
                           </div>
 
-                          <div id="map-canvas"></div>
+                          <div id="map-canvas" ng-class="(isProfileVisible) ? 'map-profile-open' : ''"></div>
 
                         </div>
 
@@ -271,7 +271,7 @@
                         </div>
 
                         <!-- profile -->
-                        <div id="profile" ng-class="(isProfileVisible) ? 'col-md-3' : 'hidden'">
+                        <div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
                             <p class="profile-title">Profile</p>
                             <div class="profile-content">
                                 <div class="profile-top-content">
