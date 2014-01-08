@@ -13,6 +13,11 @@
     </head>
     <body>
 
+        <!-- Preloader -->
+        <div id="preloader">
+          <div id="status">&nbsp;</div>
+        </div>
+
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container-full">
                 <div class="navbar-header">
@@ -474,6 +479,17 @@
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
         </script>
+
+        <!-- Preloader -->
+        <script type="text/javascript">
+          //<![CDATA[
+            $(window).load(function() { // makes sure the whole site is loaded
+              $('#status').fadeOut(); // will first fade out the loading animation
+              $('#preloader').delay(350).fadeOut('slow'); // will fade out the white DIV that covers the website.
+              $('body').delay(350).css({'overflow':'visible'});
+            })
+          //]]>
+        </script> 
 
 </body>
 </html>
