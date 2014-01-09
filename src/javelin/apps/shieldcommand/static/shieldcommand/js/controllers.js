@@ -302,19 +302,31 @@ angular.module('shieldCommand.controllers', [])
 		for (var i = 0; i < $scope.alerts.length; i++) {
 			if ($scope.alerts[i].object_id == alertID) {
 				$scope.alertClicked($scope.alerts[i]);
+
 				var container = null;
+				var currentlyOpen = $('.panel-collapse.in');
 				if ($scope.alerts[i].status == 'A') {
-					
+					container = $("#collapseOne");
 				}
 				else if ($scope.alerts[i].status == 'N') {
-
+					container = $("#collapseTwo");
 				}
 				else if ($scope.alerts[i].status == 'P') {
-
+					container = $("#collapseThree");
 				}
 				else { // status == 'C'
-
+					container = $("#collapseFour");
 				}
+
+				if (!(container[0] == currentlyOpen[0])) {
+					container.prevAll('.panel-heading').click();
+				}
+
+				var scrollTo = $("#" + alertID);
+				var scrollContainer = container.find('.panel-body');
+				scrollContainer.animate({
+				    scrollTop: scrollTo.offset().top - scrollContainer.offset().top + scrollContainer.scrollTop()
+				});
 			}
 		};    	
     });
