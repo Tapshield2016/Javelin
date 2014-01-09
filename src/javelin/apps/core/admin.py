@@ -9,12 +9,12 @@ class AgencyAdmin(admin.ModelAdmin):
 
 
 class AgencyUserAdmin(admin.ModelAdmin):
-    pass
+    list_filter = ('agency',)
 
 
 class AlertAdmin(admin.ModelAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
-    list_filter = ('agency_user', 'status')
+    list_filter = ('agency', 'status')
 
 
 class MassAlertAdmin(admin.ModelAdmin):
