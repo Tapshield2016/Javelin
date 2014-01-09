@@ -234,11 +234,20 @@ angular.module('shieldCommand.directives', [])
         }
 
         scope.senderName = function(senderID) {
-          return (senderID == Javelin.activeAgencyUser.object_id) ? Javelin.activeAgencyUser.firstName : scope.alert.agencyUserMeta.firstName;
+          if (senderID == scope.alert.agencyUserMeta.object_id) {
+            return scope.alert.agencyUserMeta.firstName;
+          }
+          else {
+            var nameTokens = scope.alert.agencyDispatcherName.split(" ");
+            if (nameTokens.length > 0) {
+              return nameTokens[0];
+            }
+          }
+          return "Dispatcher";
         }
 
         scope.isDispatcherClass = function(senderID) {
-          return (senderID == Javelin.activeAgencyUser.object_id) ? 'dispatcher' : '';
+          return (senderID == scope.alert.agencyUserMeta.object_id) ? '' : 'dispatcher';
         }
 
         scope.closeChat = function() {

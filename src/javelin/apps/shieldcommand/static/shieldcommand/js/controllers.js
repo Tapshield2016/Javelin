@@ -66,7 +66,6 @@ angular.module('shieldCommand.controllers', [])
 	$scope.shouldDisplayProfileButtons = function() {
 		if ($scope.activeAlert && $scope.activeAlert.status == 'A') { // need to check for agency dispatcher == active agency user
 			if ($scope.activeAlert.agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) > -1) {
-				console.log($scope.activeAlert.agencyDispatcher.indexOf(Javelin.activeAgencyUser.url));
 				return true;
 			}
 		}
