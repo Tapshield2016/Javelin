@@ -455,6 +455,9 @@
 				callback(false);
 			}
 		});
+		request.fail(function(data) {
+			callback(false);
+		});
 	}
 
 	Javelin.sendMassAlert = function(message, callback) {
@@ -466,6 +469,9 @@
 			else {
 				callback(false);
 			}
+		});
+		request.fail(function(data) {
+			callback(false);
 		});
 	}
 

@@ -173,13 +173,25 @@ angular.module('shieldCommand.directives', [])
           if (e.which == 13) {
             var chatMessageText = scope.newChatMessage;
             scope.newChatMessage = '';
-            alertService.sendChatMessageForActiveAlert(chatMessageText, function(success) {
-              if (success) {
-                $rootScope.$broadcast('chatWasSent');
-              };
-            });
+            scope.sendMessage(chatMessageText);
           };
         });
+
+        scope.sendMessage = function(message) {
+          alertService.sendChatMessageForActiveAlert(message, function(success) {
+            if (success) {
+              $rootScope.$broadcast('chatWasSent');
+            }
+            else {
+              if (confirm("Your chat message failed to send. Try again?")) {
+                scope.sendMessage(message);
+              }
+              else {
+                scope.newChatMessage = message;
+              }
+            }
+          });
+        }
 
         scope.$on('chatWindowOpened', function(event, alert) {
           if (!(alert.object_id === scope.alert.object_id)) {
