@@ -13,10 +13,41 @@ angular.module('shieldCommand.directives', [])
 
 .directive('dismissMarkCompletedModal', function() {
    return {
-     restrict: 'A',
+     restrict: 'E',
+     transclude: true,
+     replace: true,
+     template: '<div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true">'
+            + '    <div class="modal-dialog">'
+            + '        <div class="modal-content">'
+            + '            <div class="modal-header">'
+            + '                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+            + '                <h4 class="modal-title" id="markAlertCompleteLabel">Complete Alert</h4>'
+            + '            </div>'
+            + '         <div ng-if="alert.disarmedTime">'
+            + '            <div class="modal-body">'
+            + '                <p>Are you sure you would like to set status as complete?</p>'
+            + '            </div>'
+            + '            <div class="modal-footer">'
+            + '                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>'
+            + '                <button type="button" class="btn btn-primary" ng-click="markComplete()">Mark Completed</button>'
+            + '            </div>'
+            + '         </div>'
+            + '        </div><!-- /.modal-content -->'
+            + '    </div><!-- /.modal-dialog -->'
+            + '</div>',
+     scope: {
+      alert: '=',
+      markComplete: '&',
+     },
      link: function(scope, element, attr) {
        scope.dismissMarkCompletedModal = function() {
-           element.modal('hide');
+          console.log('here');
+          element.modal('hide');
+       };
+
+       scope.markActiveAlertAsCompleted = function() {
+          scope.$parent.markActiveAlertAsCompleted();
+          scope.dismissMarkCompletedModal();
        };
      }
    } 

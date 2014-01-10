@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from models import (Agency, AgencyUser, Alert, MassAlert,
+from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile)
 
 
@@ -12,9 +12,17 @@ class AgencyUserAdmin(admin.ModelAdmin):
     list_filter = ('agency',)
 
 
+class AlertLocationInline(admin.StackedInline):
+    model = AlertLocation
+    extra = 0
+
+
 class AlertAdmin(admin.ModelAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
     list_filter = ('agency', 'status')
+    inlines = [
+        AlertLocationInline,
+    ]
 
 
 class MassAlertAdmin(admin.ModelAdmin):
