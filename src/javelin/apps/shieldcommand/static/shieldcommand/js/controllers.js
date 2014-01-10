@@ -84,7 +84,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 		clearActiveAlertMarker();
 		$scope.returnToGeofenceCenter();
-		$scope.dismissMarkCompletedModal();
+		$('#markAlertComplete').modal('hide');
 		alertService.markActiveAlertAsCompleted(function(data) {
 			$scope.activeAlert = null;
 			alertService.activeAlert = null;

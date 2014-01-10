@@ -5525,6 +5525,9 @@ body {
   border-top-right-radius: 6px;
   color: #FFF; }
 
+.modal-header-warning {
+  background-color: #d2322d; }
+
 .modal-title {
   color: white !important; }
 
