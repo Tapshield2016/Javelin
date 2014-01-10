@@ -19,11 +19,11 @@ angular.module('shieldCommand.directives', [])
      template: '<div class="modal fade" id="markAlertComplete" tabindex="-1" role="dialog" aria-labelledby="markAlertCompleteLabel" aria-hidden="true">'
             + '    <div class="modal-dialog">'
             + '        <div class="modal-content">'
+            + '         <div ng-if="alert.disarmedTime != undefined">'
             + '            <div class="modal-header">'
             + '                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
             + '                <h4 class="modal-title" id="markAlertCompleteLabel">Complete Alert</h4>'
             + '            </div>'
-            + '         <div ng-if="alert.disarmedTime">'
             + '            <div class="modal-body">'
             + '                <p>Are you sure you would like to set status as complete?</p>'
             + '            </div>'
@@ -32,6 +32,25 @@ angular.module('shieldCommand.directives', [])
             + '                <button type="button" class="btn btn-primary" ng-click="markComplete()">Mark Completed</button>'
             + '            </div>'
             + '         </div>'
+            + '         <div ng-if="alert.disarmedTime == undefined">'
+            + '            <div class="modal-header modal-header-warning">'
+            + '                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+            + '                <h4 class="modal-title" id="markAlertCompleteLabel"><span class="glyphicon glyphicon-warning-sign"></span> Warning!</h4>'
+            + '            </div>'            
+            + '            <div class="modal-body">'
+            + '                <p><strong>{{ alert.agencyUserMeta.getFullName() }} has not yet disarmed the alert and may not be safe.</strong></p>'
+            + '                <p>Are you sure you would like to complete this alert? If so, check the override box below to enable to completion button.</p>'
+            + '            </div>'          
+            + '            <div class="modal-footer">'
+            + '                <div class="checkbox pull-left">'
+            + '                    <label>'
+            + '                      <input ng-model="override" ng-init="override=false" type="checkbox"> Override'
+            + '                    </label>'
+            + '                </div>'              
+            + '                <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="override=false">Cancel</button>'
+            + '                <button type="button" class="btn btn-danger" ng-class="{disabled: !override}" ng-click="markComplete();override=false;">I understand, mark complete</button>'
+            + '            </div>'
+            + '         </div>'            
             + '        </div><!-- /.modal-content -->'
             + '    </div><!-- /.modal-dialog -->'
             + '</div>',
@@ -39,17 +58,6 @@ angular.module('shieldCommand.directives', [])
       alert: '=',
       markComplete: '&',
      },
-     link: function(scope, element, attr) {
-       scope.dismissMarkCompletedModal = function() {
-          console.log('here');
-          element.modal('hide');
-       };
-
-       scope.markActiveAlertAsCompleted = function() {
-          scope.$parent.markActiveAlertAsCompleted();
-          scope.dismissMarkCompletedModal();
-       };
-     }
    } 
 })
 
@@ -280,7 +288,7 @@ angular.module('shieldCommand.directives', [])
           if (senderID == scope.alert.agencyUserMeta.object_id) {
             return scope.alert.agencyUserMeta.firstName;
           }
-          else {
+          else if (scope.alert && scope.alert.agencyDispatcherName){
             var nameTokens = scope.alert.agencyDispatcherName.split(" ");
             if (nameTokens.length > 0) {
               return nameTokens[0];
