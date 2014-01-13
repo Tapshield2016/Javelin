@@ -38,6 +38,7 @@
 	    'R': 'Red',
 	    'BA': 'Bald',
 	    'GR': 'Gray',
+	    'O': 'Other',
 	}
 
 	Javelin.RACE_CHOICES = {
