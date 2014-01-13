@@ -18,6 +18,14 @@
           <div id="status">&nbsp;</div>
         </div>
 
+        <div id="network-error" class="hide">
+          <div id="ugh">
+            <div id="network-error-message">
+              <p><span class="glyphicon glyphicon-exclamation-sign"></span> There was an issue connecting to Shield Command. Check network connection or try reloading...</p>
+            </div>
+          </div>
+        </div>    
+
         <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
             <div class="container-full">
                 <div class="navbar-header">
@@ -40,6 +48,10 @@
                                 <li role="presentation" class="divider"></li> 
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
                             </ul>
+                        </li>
+                        <li class="status-indicator">
+                          <a href="" id="status-indicator-ok" title="Connected to Shield Command"><span class="glyphicon glyphicon-ok-circle"></span></a>
+                          <a href="" id="status-indicator-disconnected" class="hide" title="Connection Problems Detected"><span class="glyphicon glyphicon-remove-circle"></span></a>                        
                         </li>
                     </ul>
                 </div><!--/.nav-collapse -->
