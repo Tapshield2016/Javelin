@@ -260,6 +260,7 @@ class UserProfile(models.Model):
         ('R', 'Red'),
         ('BA', 'Bald'),
         ('GR', 'Gray'),
+        ('O', 'Other'),
     )
 
     RACE_CHOICES = (
