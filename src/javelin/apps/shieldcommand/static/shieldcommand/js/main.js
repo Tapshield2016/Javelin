@@ -74,11 +74,17 @@ $.ajaxSetup({
         if (!csrfSafeMethod(settings.type)) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
-    }
-});
-
-$(document).ajaxError(function(event, jqxhr, settings, exception) {
-    console.log("Error: " + exception);
+    },
+    success: function(data, textStatus, jqXHR) {
+        $('#network-error').addClass('hide');
+        $('#status-indicator-ok').removeClass('hide');
+        $('#status-indicator-disconnected').addClass('hide');
+    },
+    error: function(jqXHR, textStatus, errorThrown) {
+        $('#network-error').removeClass('hide');
+        $('#status-indicator-ok').addClass('hide');
+        $('#status-indicator-disconnected').removeClass('hide');
+    },
 });
 
 $('#accordion').on('hidden.bs.collapse', function (event) {
