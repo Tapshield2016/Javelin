@@ -5102,8 +5102,7 @@ body {
   padding-bottom: 0px; }
 
 .navbar {
-  max-height: 50px;
-  overflow: hidden; }
+  max-height: 51px; }
 
 .status-indicator {
   border-left: 1px solid #555;
