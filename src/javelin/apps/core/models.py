@@ -272,6 +272,7 @@ class UserProfile(models.Model):
         ('ME', 'Middle Eastern'),
         ('PI', 'Pacific Islander'),
         ('NA', 'Native American'),
+        ('O', 'Other'),
     )
 
     RELATIONSHIP_CHOICES = (

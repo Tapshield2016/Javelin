@@ -50,6 +50,7 @@
 	    'ME': 'Middle Eastern',
 	    'PI': 'Pacific Islander',
 	    'NA': 'Native American',
+	    'O': 'Other',	    
 	}
 
 	Javelin.RELATIONSHIP_CHOICES = {
