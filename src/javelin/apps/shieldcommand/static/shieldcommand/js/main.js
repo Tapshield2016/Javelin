@@ -87,12 +87,20 @@ $.ajaxSetup({
     },
 });
 
+function openDefaultAccordionPanel() {
+    if (($('.panel-collapse.in').length == 0) && ($('.panel-collapse.collapsing').length == 0)) {
+        $('.accordion-default').click();
+        return true;
+    }
+    else{ 
+        setTimeout(function() {
+            openDefaultAccordionPanel();
+        }, 350);
+    }
+}
+
 $('#accordion').on('hidden.bs.collapse', function (event) {
-    setTimeout(function() {
-        if ($('.panel-collapse.in').length == 0) {
-            $('.accordion-default').click();
-        }
-    }, 500);
+    openDefaultAccordionPanel();
 });
 
 var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert", {
