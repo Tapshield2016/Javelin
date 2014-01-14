@@ -225,11 +225,11 @@ angular.module('shieldCommand.directives', [])
         scope.adjustForProfile = false;
         scope.chatIsVisible = false;
         element.find('.message-box').keypress(function (e) {
-          if (e.which == 13) {
+          if (e.which == 13 && scope.newChatMessage) {
             var chatMessageText = scope.newChatMessage;
             scope.newChatMessage = '';
             scope.sendMessage(chatMessageText);
-          };
+          }
         });
 
         scope.sendMessage = function(message) {
