@@ -230,6 +230,10 @@ angular.module('shieldCommand.directives', [])
             scope.newChatMessage = '';
             scope.sendMessage(chatMessageText);
           }
+          else if (e.which == 13 && !scope.newChatMessage) {
+            $(this).find("textarea").val("");
+            return false;
+          }
         });
 
         scope.sendMessage = function(message) {
