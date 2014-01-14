@@ -29,11 +29,8 @@ INSTALLED_APPS += (
     'gunicorn',
 )
 
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'noreply@tapshield.com'
-EMAIL_HOST_PASSWORD = '249)7386463c'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+EMAIL_BACKEND = 'django_ses.SESBackend'
+DEFAULT_FROM_EMAIL = 'TapShield <noreply@tapshield.com>'
 
 # django-storages
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
@@ -56,6 +53,10 @@ DYNAMO_DB_CHAT_MESSAGES_TABLE ='chat_messages_prod'
 
 S3_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
 S3_SECRET_ACCESS_KEY = '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'
+
+AWS_SES_ACCESS_KEY_ID = 'AKIAIO6P7N3P5KQFJIEQ'
+AWS_SES_SECRET_ACCESS_KEY = '4IB6fssw4srhK7bWYrQZSVlqgMtHpb4NEh9QA0TJ'
+AWS_SES_AUTO_THROTTLE = 1 # limiting factor on email sending, e.g. this will send the allowed number of emails per second as specified by SES, currently 5 emails per second. Setting to 0.5 would mean no more than 2.5 emails per second.
 
 SQS_ALERT_QUEUE = 'alert_queue_prod'
 SQS_ACCESS_KEY_ID = 'AKIAJDLBPGLRJA4MOMVQ'
