@@ -5284,7 +5284,8 @@ body {
   min-height: 100%;
   padding: 0px;
   overflow-x: hidden;
-  width: 318px; }
+  width: 318px;
+  float: left; }
 
 .sidebar-offset {
   margin-left: 318px; }
