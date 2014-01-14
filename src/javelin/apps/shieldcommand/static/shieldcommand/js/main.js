@@ -70,6 +70,7 @@ var csrftoken = getCookie('csrftoken');
 
 $.ajaxSetup({
     crossDomain: false, // obviates need for sameOrigin test
+    timeout: 3000,
     beforeSend: function(xhr, settings) {
         if (!csrfSafeMethod(settings.type)) {
             xhr.setRequestHeader("X-CSRFToken", csrftoken);
