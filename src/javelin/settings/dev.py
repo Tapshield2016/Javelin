@@ -24,6 +24,7 @@ INSTALLED_APPS += (
     'devserver',
     #'rest_framework_swagger',
     #'debug_toolbar',
+    'gunicorn',
 )
 
 MIDDLEWARE_CLASSES += (
@@ -53,7 +54,7 @@ SQS_SECRET_ACCESS_KEY = 'pMslACdKYyMMgrtDL8SaLoAfJYNcoNwZchWXKuWB'
 
 SNS_ACCESS_KEY_ID = 'AKIAITQVGREAX47VJCYQ'
 SNS_SECRET_ACCESS_KEY = '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'
-SNS_IOS_ARN = 'arn:aws:sns:us-east-1:175861827001:app/APNS_SANDBOX/Javelin-iOS-Dev'
+SNS_IOS_ARN = 'arn:aws:sns:us-east-1:175861827001:app/APNS_SANDBOX/TapShield-iOS-Dev'
 SNS_IOS_PLATFORM = 'APNS_SANDBOX'
 SNS_ANDROID_ARN = 'arn:aws:sns:us-east-1:175861827001:app/GCM/Javelin-Android-Dev'
 SNS_ANDROID_PLATFORM = 'GCM'
