@@ -121,6 +121,7 @@ INSTALLED_APPS = (
     'compressor',
     'django_twilio',
     'registration',
+    'reversion',
     'rest_framework',
     'rest_framework.authtoken',
     'south',

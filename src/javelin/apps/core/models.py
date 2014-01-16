@@ -1,4 +1,5 @@
 import random
+import reversion
 
 from datetime import datetime
 
@@ -127,6 +128,7 @@ class Alert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    @reversion.create_revision()
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
         if self.status == 'C':

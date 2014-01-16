@@ -1,10 +1,12 @@
+import reversion
+
 from django.contrib import admin
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile)
 
 
-class AgencyAdmin(admin.ModelAdmin):
+class AgencyAdmin(reversion.VersionAdmin):
     pass
 
 
@@ -17,7 +19,7 @@ class AlertLocationInline(admin.StackedInline):
     extra = 0
 
 
-class AlertAdmin(admin.ModelAdmin):
+class AlertAdmin(reversion.VersionAdmin):
     list_display = ('agency_user', 'creation_date', 'last_modified')
     list_filter = ('agency', 'status')
     inlines = [
