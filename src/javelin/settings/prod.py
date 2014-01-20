@@ -66,7 +66,7 @@ SNS_ACCESS_KEY_ID = 'AKIAI4LHPYPSGUMWIBLA'
 SNS_SECRET_ACCESS_KEY = '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'
 SNS_IOS_PLATFORM = 'APNS'
 SNS_IOS_ARN = 'arn:aws:sns:us-east-1:175861827001:app/APNS/TapShield-iOS-Prod'
-SNS_ANDROID_ARN = 'arn:aws:sns:us-east-1:175861827001:app/GCM/Javelin-Android-Dev'
+SNS_ANDROID_ARN = 'arn:aws:sns:us-east-1:175861827001:app/GCM/TapShield-Android-Prod'
 SNS_ANDROID_PLATFORM = 'GCM'
 SNS_ENDPOINT_QUEUE = 'endpoint_creation_queue_prod'
 
