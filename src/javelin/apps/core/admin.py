@@ -11,7 +11,12 @@ class AgencyAdmin(reversion.VersionAdmin):
 
 
 class AgencyUserAdmin(admin.ModelAdmin):
-    list_filter = ('agency',)
+    date_hierarchy = 'date_joined'
+    list_display = ('email', 'agency', 'date_joined', 'device_type',
+                    'email_verified', 'phone_number_verified')
+    list_filter = ('agency', 'device_type')
+    list_select_related = ('agency',)
+    search_fields = ['email', 'first_name', 'last_name']
 
 
 class AlertLocationInline(admin.StackedInline):
