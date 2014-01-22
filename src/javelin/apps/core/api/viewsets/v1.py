@@ -1,7 +1,9 @@
+import re
 import time
 import uuid
 
 import django_filters
+from django_twilio.client import twilio_client
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -95,6 +97,28 @@ class UserViewSet(viewsets.ModelViewSet):
                 except User.DoesNotExist:
                     return Response({'message': 'user not found'},
                                     status=status.HTTP_400_BAD_REQUEST)
+        return Response({'message': 'Not found.'},
+                         status=status.HTTP_404_NOT_FOUND)
+
+    @action()
+    def send_sms_verification_code(self, request, pk=None):
+        if request.user.is_superuser or request.user.pk == int(pk):
+            user = self.get_object()
+            phone_number = request.DATA.get('phone_number', None)
+            if not phone_number:
+                return Response(\
+                    {'message': 'phone_number is a required parameter'},
+                    status=status.HTTP_400_BAD_REQUEST)
+            resp = twilio_client.messages.create(\
+                to=phone_number,
+                from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
+                body="Your TapShield verification code is: %s"\
+                    % user.phone_number_verification_code)
+            if not resp.status == 'failed':
+                return Response({'message': 'Success'})
+            else:
+                return Response({'message': 'Error sending SMS Verification'},
+                                status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 

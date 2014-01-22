@@ -240,7 +240,7 @@ class AgencyUser(AbstractUser):
     def save(self, *args, **kwargs):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
-                random.randrange(10001, 700000)
+                random.randrange(1001, 9999)
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
