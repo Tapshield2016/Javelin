@@ -1,4 +1,4 @@
-from boto.ec2 import elb
+from boto.ec2.elb import ELBConnection
 
 from ..conf import settings
 from service import BaseService
@@ -7,8 +7,12 @@ from service import BaseService
 class ELBService(BaseService):
     def __init__(self, settings):
         super(ELBService, self).__init__(settings)
+        aws_access_key_id = settings.get('EC2', 'aws_access_key_id', None)
+        aws_secret_access_key =\
+            settings.get('EC2', 'aws_secret_access_key', None)
         region_name = settings.get('ELB', 'REGION_NAME', 'us-east-1')
-        self.conn = elb.connect_to_region(region_name=region_name)
+        self.conn = ELBConnection(aws_access_key_id=aws_access_key_id,
+                                  aws_secret_access_key=aws_secret_access_key)
         assert self.conn is not None
 
     def regions(self, *args, **kwargs):
