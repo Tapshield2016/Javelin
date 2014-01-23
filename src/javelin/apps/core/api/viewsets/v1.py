@@ -145,6 +145,7 @@ class UserViewSet(viewsets.ModelViewSet):
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
+                user.phone_number_verification_code = None
                 user.save()
                 return Response(\
                     {'message': 'OK'},
