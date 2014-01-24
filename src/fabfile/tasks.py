@@ -11,10 +11,6 @@ from conf import settings
 
 
 @task
-def host_type():
-    run('uname -s')
-
-@task
 def list_production_elb_instances():
     elb_name = settings.get('Environment', 'PRODUCTION_LOAD_BALANCER', None)
     hostnames = list_elb_instances_by_hostname(elb_name)
@@ -25,6 +21,7 @@ def list_elbs():
     service = ELBService(settings)
     print service.list()
 
+@task
 def list_elb_instances_by_hostname(name):
     service = EC2Service(settings)
     reservations = service.list_in_elb(name)
@@ -60,7 +57,6 @@ def stop_staging_instance():
     instance_id = settings.get('Environment', 'STAGING_EC2_INSTANCE_ID', None)
     print service.stop([instance_id])
 
-
 @task
 def get_staging_instance_status():
     instance_id = settings.get('Environment', 'STAGING_EC2_INSTANCE_ID', None)
@@ -68,12 +64,10 @@ def get_staging_instance_status():
     if resp:
         print "%s status: '%s'" % (instance_id, resp[0].instances[0].state)
 
-
 @task
 def get_instance_status(instance_id):
     service = EC2Service(settings)
     return service.instance_status([instance_id])
-
 
 @task
 def create_production_image_from_staging_instance():
@@ -81,7 +75,6 @@ def create_production_image_from_staging_instance():
     service = EC2Service(settings)
     image_name = get_image_name("Production")
     print service.create_image(instance_id, image_name, no_reboot=True)
-
 
 def get_image_name(environment):
     return "Javelin %s Image %s"\
