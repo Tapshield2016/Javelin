@@ -19,6 +19,9 @@ class EC2Service(BaseService):
                                   aws_secret_access_key=aws_secret_access_key)
         assert self.conn is not None
 
+    def instance_status(self, instance_ids):
+        return self.conn.get_all_instances(instance_ids)
+
     def list(self, elb=None, *args, **kwargs):
         if elb is not None:
             return self.list_in_elb(elb)
