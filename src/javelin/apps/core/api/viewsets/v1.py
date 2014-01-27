@@ -4,6 +4,7 @@ import uuid
 
 import django_filters
 from django_twilio.client import twilio_client
+from twilio import TwilioRestException
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -109,16 +110,22 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response(\
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
-            resp = twilio_client.messages.create(\
-                to=phone_number,
-                from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
-                body="Your TapShield verification code is: %s"\
-                    % user.phone_number_verification_code)
-            if not resp.status == 'failed':
-                return Response({'message': 'Success'})
-            else:
-                return Response({'message': 'Error sending SMS Verification'},
-                                status=status.HTTP_400_BAD_REQUEST)
+            try:
+                resp = twilio_client.messages.create(\
+                    to=phone_number,
+                    from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
+                    body="Your TapShield verification code is: %s"\
+                        % user.phone_number_verification_code)
+                if not resp.status == 'failed':
+                    return Response({'message': 'Success'})
+                else:
+                    return Response(\
+                        {'message': 'Error sending SMS Verification'},
+                        status=status.HTTP_400_BAD_REQUEST)
+            except TwilioRestException, e:
+                if e.code and e.code == 21211:
+                    return Response({'message': 'Invalid phone number'},
+                                    status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
