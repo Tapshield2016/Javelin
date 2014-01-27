@@ -9,8 +9,6 @@ from elb import ELBService
 class EC2Service(BaseService):
     def __init__(self, settings):
         super(EC2Service, self).__init__(settings)
-        #region_name = settings.get('EC2', 'REGION_NAME', 'us-west-1')
-        #self.conn = ec2.connect_to_region(region_name=region_name)
         aws_access_key_id = settings.get('EC2', 'aws_access_key_id', None)
         aws_secret_access_key =\
             settings.get('EC2', 'aws_secret_access_key', None)
@@ -58,11 +56,17 @@ class EC2Service(BaseService):
     def stop(self, instance_ids, force=False):
         return self.conn.stop_instances(instance_ids, force)
 
-    def terminate(self, instance_ids):
-        return self.conn.terminate_instances(instance_ids)
-
-    def create_image(self, instance_id, name, description=None, no_reboot=False):
-        return self.conn.create_image(instance_id, name, description, no_reboot)
+    def create_image(self, instance_id, name,
+                     description=None, no_reboot=False):
+        return self.conn.create_image(instance_id, name,
+                                      description, no_reboot)
 
     def images(self, image_ids=None, *args, **kwargs):
         return self.conn.get_all_images(image_ids, *args, **kwargs)
+
+#######################################
+## Probably best not to use these... ##
+#######################################
+
+    #def terminate(self, instance_ids):
+    #    return self.conn.terminate_instances(instance_ids)

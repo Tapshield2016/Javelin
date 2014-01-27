@@ -18,20 +18,25 @@ class ELBService(BaseService):
     def regions(self, *args, **kwargs):
         return elb.regions(*args, **kwargs)
 
-    #def delete(self, name):
-    #    return self.conn.delete_load_balancer(name)
-
     def list(self, names=[], *args, **kwargs):
         return self.conn.get_all_load_balancers(load_balancer_names=names,
                                                 *args, **kwargs)
+
+    def zones(self, balancer, zone_names, add=True):
+        if add:
+            return self.conn.enable_availability_zones(balancer, zone_names)
+        return self.conn.disable_availability_zones(balancer, zone_names)
+
+
+#######################################
+## Probably best not to use these... ##
+#######################################
+
+    #def delete(self, name):
+    #    return self.conn.delete_load_balancer(name)
 
     #def register(self, balancer, instance_ids):
     #    return self.conn.register_instances(balancer, instance_ids)
 
     #def deregister(self, balancer, instance_ids):
     #    return self.conn.deregister_instances(balancer, instance_ids)
-
-    def zones(self, balancer, zone_names, add=True):
-        if add:
-            return self.conn.enable_availability_zones(balancer, zone_names)
-        return self.conn.disable_availability_zones(balancer, zone_names)
