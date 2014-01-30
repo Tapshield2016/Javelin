@@ -5165,14 +5165,14 @@ body {
   transition: all .3s linear; }
 
 .profile-title {
-  height: 24px;
+  height: 28px;
   text-align: center;
   text-transform: uppercase;
   font-weight: 600;
   color: #2f302f;
   background: #e7e8e7;
   border-bottom: 1px solid #a3a5a8;
-  padding-top: 2px; }
+  padding-top: 4px; }
 
 .profile-image {
   border: 1px solid #a3a5a8;
