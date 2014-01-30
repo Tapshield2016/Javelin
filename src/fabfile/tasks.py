@@ -5,12 +5,34 @@ from fabric.api import run
 from fabric.context_managers import cd, prefix
 from fabric.decorators import roles, task
 
+from aws.autoscale import AutoScaleService
 from aws.elb import ELBService
 from aws.ec2 import EC2Service
 from conf import settings
 
 
 @task
+def list_autoscale_groups():
+    ats = AutoScaleService(settings)
+    print ats.list()
+
+@task
+def create_production_launch_config():
+    ats = AutoScaleService(settings)
+    ats.create_launch_configuration("test LC 145445", "ami-3f1c2356")
+
+@task
+def list_autoscale_regions():
+    ats = AutoScaleService(settings)
+    print ats.regions()
+
+def get_production_autoscale_group():
+    group_name =\
+        settings.get('Environment', 'PRODUCTION_AUTOSCALE_GROUP', None)
+    ats = AutoScaleService(settings)
+    group = ats.get_group(group_name)
+    return group
+
 def list_production_elb_instances():
     elb_name = settings.get('Environment', 'PRODUCTION_LOAD_BALANCER', None)
     hostnames = list_elb_instances_by_hostname(elb_name)
@@ -74,7 +96,8 @@ def create_production_image_from_staging_instance():
     instance_id = settings.get('Environment', 'STAGING_EC2_INSTANCE_ID', None)
     service = EC2Service(settings)
     image_name = get_image_name("Production")
-    print service.create_image(instance_id, image_name, no_reboot=True)
+    ami_id = service.create_image(instance_id, image_name, no_reboot=True)
+    return service.get_image(ami_id)
 
 def get_image_name(environment):
     return "Javelin %s Image %s"\

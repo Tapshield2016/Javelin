@@ -7,6 +7,7 @@ from elb import ELBService
 
 
 class EC2Service(BaseService):
+
     def __init__(self, settings):
         super(EC2Service, self).__init__(settings)
         aws_access_key_id = settings.get('EC2', 'aws_access_key_id', None)
@@ -63,6 +64,9 @@ class EC2Service(BaseService):
 
     def images(self, image_ids=None, *args, **kwargs):
         return self.conn.get_all_images(image_ids, *args, **kwargs)
+
+    def get_image(self, image_id):
+        return self.conn.get_image(image_id)
 
 #######################################
 ## Probably best not to use these... ##

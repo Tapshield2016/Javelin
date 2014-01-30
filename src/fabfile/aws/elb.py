@@ -5,6 +5,7 @@ from service import BaseService
 
 
 class ELBService(BaseService):
+
     def __init__(self, settings):
         super(ELBService, self).__init__(settings)
         aws_access_key_id = settings.get('EC2', 'aws_access_key_id', None)
