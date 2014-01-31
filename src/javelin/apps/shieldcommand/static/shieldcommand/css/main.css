@@ -5477,7 +5477,9 @@ body {
   color: #fff;
   font-size: 14px;
   padding: 6px 7px 0px 7px;
-  line-height: 14px; }
+  line-height: 14px;
+  width: 225px;
+  overflow: hidden; }
 
 .chat-panel div.panel-body {
   color: #000;

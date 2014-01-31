@@ -204,7 +204,7 @@ angular.module('shieldCommand.directives', [])
       template: '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">'
                 + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-click="toggleChat()"></i>'
                 + '   <div class="arrow-left hide"></div> <div class="chat-panel panel panel-default hide">'
-                + '        <div class="panel-heading">Chat with {{ alert.agencyUserMeta.getFullName() }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
+                + '        <div class="panel-heading">{{ truncateAgencyUserName(alert.agencyUserMeta.getFullName()) }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
                 + '        <div class="panel-body">'
                 + '            <div class="chat-messages">'
                 + '                <div class="message-container {{ isDispatcherClass(message.senderID) }}" ng-repeat="message in chatMessages() | orderBy:\'timestamp\'">'
@@ -235,6 +235,14 @@ angular.module('shieldCommand.directives', [])
             return false;
           }
         });
+
+        scope.truncateAgencyUserName = function(fullName) {
+          var nameString = "Chat with " + fullName;
+          if (nameString.length >= 27) {
+            nameString = nameString.substr(0, 24) + "...";
+          }
+          return nameString;
+        }
 
         scope.sendMessage = function(message) {
           alertService.sendChatMessageForActiveAlert(message, function(success) {
