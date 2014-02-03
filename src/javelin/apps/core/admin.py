@@ -14,7 +14,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
     list_display = ('email', 'agency', 'date_joined', 'device_type',
                     'email_verified', 'phone_number_verified')
-    list_filter = ('agency', 'device_type')
+    list_filter = ('agency', 'groups', 'device_type',)
     list_select_related = ('agency',)
     search_fields = ['email', 'first_name', 'last_name']
 
