@@ -4,4 +4,6 @@
 media/
 TODO.txt
 .sass-cache
-#*
+*#*
+.#
+local_settings.py

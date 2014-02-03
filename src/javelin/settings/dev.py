@@ -102,3 +102,9 @@ SHIELD_COMMAND_API_VERSION = "v1"
 
 # compressor
 COMPRESS_ENABLED = False
+
+# Import local dev settings if file exists
+try:
+    from local_settings import *
+except:
+    pass
