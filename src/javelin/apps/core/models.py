@@ -234,6 +234,7 @@ class AgencyUser(AbstractUser):
                                            null=True, blank=True)
     device_type = models.CharField(max_length=2, null=True, blank=True,
                                    choices=DEVICE_TYPE_CHOICES)
+    user_declined_push_notifications = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
