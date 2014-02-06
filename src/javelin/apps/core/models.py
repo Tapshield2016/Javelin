@@ -55,6 +55,7 @@ class Agency(TimeStampedModel):
     display_command_alert = models.BooleanField(default=False)
     loop_alert_sound = models.BooleanField(default=False)
     launch_call_to_dispatcher_on_alert = models.BooleanField(default=False, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
+    show_agency_name_in_app_navbar = models.BooleanField(default=False)
 
     objects = models.Manager()
 
