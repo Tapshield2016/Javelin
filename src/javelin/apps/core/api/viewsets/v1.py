@@ -9,6 +9,8 @@ from twilio import TwilioRestException
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
@@ -169,8 +171,25 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.select_related('agency_point_of_contact').all()
+    model = Agency
     serializer_class = AgencySerializer
+
+    def get_queryset(self):
+        qs = Agency.objects.select_related('agency_point_of_contact').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = Agency.geo.select_related('agency_point_of_contact')\
+                .filter(agency_center_point__dwithin=(point,
+                                                      D(mi=dwithin)))
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = Agency.objects.none()
+        return qs
 
     @action()
     def send_mass_alert(self, request, pk=None):
