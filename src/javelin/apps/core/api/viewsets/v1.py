@@ -22,13 +22,15 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AlertLocationSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
-                                     UserProfileSerializer)
+                                     UserProfileSerializer,
+                                     SocialCrimeReportSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile)
+                         ChatMessage, MassAlert, UserProfile,
+                         SocialCrimeReport)
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
@@ -171,6 +173,30 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+class SocialCrimeReportViewSet(viewsets.ModelViewSet):
+    queryset = SocialCrimeReport.objects.select_related('reporter').all()
+    model = SocialCrimeReport
+    serializer_class = SocialCrimeReportSerializer
+
+    def get_queryset(self):
+        qs = SocialCrimeReport.objects.select_related('reporter').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = SocialCrimeReport.objects\
+                .select_related('reporter')\
+                .filter(report_point__dwithin=(point, D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = SocialCrimeReport.objects.none()
+        return qs
+
+
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
     serializer_class = AgencySerializer
@@ -186,7 +212,8 @@ class AgencyViewSet(viewsets.ModelViewSet):
             dwithin = float(distance_within)
             qs = Agency.geo.select_related('agency_point_of_contact')\
                 .filter(agency_center_point__dwithin=(point,
-                                                      D(mi=dwithin)))
+                                                      D(mi=dwithin)))\
+                .distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
