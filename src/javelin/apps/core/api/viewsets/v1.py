@@ -106,13 +106,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action()
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
-            user = self.get_object()
             phone_number = request.DATA.get('phone_number', None)
             if not phone_number:
                 return Response(\
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
+                user = self.get_object()
+                user.phone_number_verification_code = None
+                user.save()
                 resp = twilio_client.messages.create(\
                     to=phone_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
@@ -154,7 +156,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
-                user.phone_number_verification_code = None
                 user.save()
                 return Response(\
                     {'message': 'OK'},
