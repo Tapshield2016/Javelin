@@ -255,6 +255,13 @@ angular.module('shieldCommand.controllers', [])
 				$('.panel-new-alerts').click();
 			}
 		}
+
+		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0) {
+			document.title = "(" + ($scope.newAlertsLength + $scope.pendingAlertsLength) + ") - Shield Command";
+		}
+		else {
+			document.title = "Shield Command";
+		}
   	};
 
   	$scope.loadInitialAlerts = function() {
