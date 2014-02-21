@@ -34,7 +34,9 @@ class AlertAdmin(reversion.VersionAdmin):
 
 
 class MassAlertAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('__unicode__', 'agency', 'agency_dispatcher',
+                    'creation_date')
+    list_filter = ('agency',)
 
 
 class ChatMessageAdmin(admin.ModelAdmin):
