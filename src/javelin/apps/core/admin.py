@@ -4,7 +4,7 @@ from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
-                    ChatMessage, UserProfile)
+                    ChatMessage, UserProfile, SocialCrimeReport)
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
@@ -47,9 +47,14 @@ class UserProfileAdmin(admin.ModelAdmin):
     pass
 
 
+class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
+    pass
+
+
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
 admin.site.register(Alert, AlertAdmin)
 admin.site.register(MassAlert, MassAlertAdmin)
 admin.site.register(ChatMessage, ChatMessageAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)

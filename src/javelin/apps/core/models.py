@@ -345,6 +345,39 @@ class ChatMessage(TimeStampedModel):
         return u"%s - %s..." % (self.sender.first_name, self.message[:50])
 
 
+class SocialCrimeReport(TimeStampedModel):
+
+    CRIME_TYPE_CHOICES = (
+        ('A', 'Arrest'),
+        ('AR', 'Arson'),
+        ('AS', 'Assault'),
+        ('B', 'Burglary'),
+        ('O', 'Other'),
+        ('R', 'Robbery'),
+        ('S', 'Shooting'),
+        ('T', 'Theft'),
+        ('V', 'Vandalism'),
+    )
+
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
+    body = models.TextField()
+    report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
+    report_image_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
+    report_latitude = models.FloatField()
+    report_longitude = models.FloatField()
+    report_point = db_models.PointField(geography=True,
+                                        null=True, blank=True)
+
+    objects = db_models.GeoManager()
+
+    def save(self, *args, **kwargs):
+        if self.report_latitude and self.report_longitude:
+            self.report_point = Point(self.report_longitude,
+                                      self.report_latitude)
+        super(SocialCrimeReport, self).save(*args, **kwargs)
+
+
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
