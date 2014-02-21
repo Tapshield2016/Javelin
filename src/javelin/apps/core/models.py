@@ -56,6 +56,10 @@ class Agency(TimeStampedModel):
     loop_alert_sound = models.BooleanField(default=False)
     launch_call_to_dispatcher_on_alert = models.BooleanField(default=False, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
     show_agency_name_in_app_navbar = models.BooleanField(default=False)
+    enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.")
+    chat_autoresponder_message = models.TextField(null=True, blank=True,
+                                                  default="Due to high volume, we are currently experiencing delays in responding to incoming messages. If you are in immediate need of emergency assistance, please dial 911.")
+
 
     objects = models.Manager()
 
