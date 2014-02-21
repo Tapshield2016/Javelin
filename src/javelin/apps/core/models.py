@@ -84,6 +84,7 @@ class Alert(TimeStampedModel):
         ('C', 'Chat'),
         ('E', 'Emergency'),
         ('T', 'Timer'),
+        ('Y', 'Yank'),
     )
 
     ALERT_CATEGORY = (
