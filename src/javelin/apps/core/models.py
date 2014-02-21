@@ -223,6 +223,9 @@ class MassAlert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        return u"%s" % self.message
+
 
 class AgencyUser(AbstractUser):
     DEVICE_TYPE_CHOICES = (
