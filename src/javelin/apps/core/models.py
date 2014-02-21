@@ -65,6 +65,7 @@ class Agency(TimeStampedModel):
     geo = db_models.GeoManager()
 
     class Meta:
+        ordering = ['name',]
         verbose_name_plural = "Agencies"
 
     def __unicode__(self):
