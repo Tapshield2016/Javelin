@@ -272,7 +272,10 @@ def agency_settings_form(request):
         form = AgencySettingsForm(request.POST, instance=agency)
         if form.is_valid():
             form.save()
-            return HttpResponseRedirect("%s?agency_id=%d" % (reverse('core_agency_settings'), agency_id))
+            if request.is_ajax():
+                return HttpResponse("OK");
+            else:
+                return HttpResponseRedirect("%s?agency_id=%d" % (reverse('core_agency_settings'), agency_id))
     else:
         agency_id = request.GET.get('agency_id', None)
         if agency_id:

@@ -1,3 +1,31 @@
+<script type="text/javascript">
+
+$('#agencySettingsForm').on('submit', function(event) {
+    var $form = $(this);
+    var $target = $($form.attr('data-target'));
+
+    $.ajax({
+        type: $form.attr('method'),
+        url: $form.attr('action'),
+        data: $form.serialize(),
+
+        success: function(data, status) {
+            $target.modal('hide');
+            // Force modal content to refresh
+            $target.removeData('bs.modal');
+        },
+        error: function(data, status) {
+            console.log(data);
+            console.log(status);
+            $target.modal('hide');
+        }
+    });
+
+    event.preventDefault();
+});
+
+</script>
+
 <div class="modal-dialog">
   <div class="modal-content">
     <div class="modal-header">
@@ -5,7 +33,7 @@
       <h4 class="modal-title" id="agencySettingsModalLabel">Organization Settings</h4>
     </div>
     <div class="modal-body">
-	<form action="{% url 'core_agency_settings' %}" method="POST" class="form" role="form">{% csrf_token %}
+	<form action="{% url 'core_agency_settings' %}" method="POST" class="form" role="form" data-form-async data-target="#agencySettingsModal" id="agencySettingsForm">{% csrf_token %}
       <p>
 
 	  {% if form.errors %}
@@ -28,7 +56,6 @@
 		{{ form.enable_chat_autoresponder.label }}
 	      </label>
 	      {% if form.enable_chat_autoresponder.errors %}<span class="help-block">{{ form.enable_chat_autoresponder.errors.as_text }}</span>{% endif %}
-	      <span class="help-block">{{ form.enable_chat_autoresponder.help_text }}</span>
 	    </div>
 	  </div>
 
@@ -45,8 +72,8 @@
       <hr />
 
       <div class="modal-footer">
-        <button type="submit" class="btn btn-default" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Save changes</button>
+	<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+	<button form="agencySettingsForm" class="btn btn-primary" type="submit">Save changes</button>
       </div>
 	</form>
     </div>
