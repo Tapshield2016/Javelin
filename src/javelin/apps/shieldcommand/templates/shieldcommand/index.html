@@ -46,6 +46,8 @@
                                 <li role="presentation"><a href="">(877) 829-6008</a></li>
                                 <li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
                                 <li role="presentation" class="divider"></li> 
+                                <li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">Organization Settings</a></li>
+                                <li role="presentation" class="divider"></li>
                                 <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
                             </ul>
                         </li>
@@ -61,7 +63,10 @@
         {% verbatim %}
         <div class="container-full">
 
-            <!-- Modal -->
+            <!-- Agency Settings Modal -->
+            <div class="modal fade" id="agencySettingsModal" tabindex="-1" role="dialog" aria-labelledby="agencySettingsModalLabel" aria-hidden="true"></div>
+
+            <!-- Command Alert Modal -->
             <div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true" command-alert-modal ng-controller="CommandAlertController" ng-cloak>
               <div class="modal-dialog">
                 <div class="modal-content">
