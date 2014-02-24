@@ -32,6 +32,8 @@ class TimeStampedModel(models.Model):
 
 
 class Agency(TimeStampedModel):
+    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays in responding to incoming messages. If you are in immediate need of emergency assistance, please dial 911."
+
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
     agency_point_of_contact =\
@@ -57,9 +59,9 @@ class Agency(TimeStampedModel):
     launch_call_to_dispatcher_on_alert = models.BooleanField(default=False, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
     show_agency_name_in_app_navbar = models.BooleanField(default=False)
     enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.")
-    chat_autoresponder_message = models.TextField(null=True, blank=True,
-                                                  default="Due to high volume, we are currently experiencing delays in responding to incoming messages. If you are in immediate need of emergency assistance, please dial 911.")
-
+    chat_autoresponder_message =\
+        models.TextField(null=True, blank=True,
+                         default=DEFAULT_AUTORESPONDER_MESSAGE)
 
     objects = models.Manager()
 
@@ -71,6 +73,11 @@ class Agency(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         from tasks import create_agency_topic
+
+        if not self.chat_autoresponder_message:
+            self.chat_autoresponder_message =\
+                Agency.DEFAULT_AUTORESPONDER_MESSAGE
+
         super(Agency, self).save(*args, **kwargs)
         if not self.sns_primary_topic_arn:
             create_agency_topic.delay(self.pk)

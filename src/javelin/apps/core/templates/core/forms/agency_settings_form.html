@@ -1,0 +1,41 @@
+<html>
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">
+  </head>
+
+  <body>
+
+<div class="container">
+<div class="row">
+    <form action="{% url 'core_agency_settings' %}" method="POST" class="form-horizontal" role="form">{% csrf_token %}
+
+      <div class="form-group">
+	<div class="checkbox">
+	  <label for="id_enable_chat_autoresponder">
+	    {{ form.enable_chat_autoresponder }}
+	    {{ form.enable_chat_autoresponder.label }}
+	  </label>
+	  <span class="help-block">{{ form.enable_chat_autoresponder.help_text }}</span>
+	</div>
+      </div>
+
+      <div class="form-group">
+	<textarea cols="40" id="id_chat_autoresponder_message" name="chat_autoresponder_message" rows="10" class="form-control">{{ form.chat_autoresponder_message.value }}</textarea>
+      </div>
+
+      <!-- captures agency ID for use in POSTing form -->
+      <input type="hidden" name="agency_id" value="{{ form.instance.id }}">
+
+      <div class="form-group">
+	<button type="submit" class="btn">Submit</button>
+      </div>
+
+    </form>
+
+</div>
+</div>
+  </body>
+
+</html>

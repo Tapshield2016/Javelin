@@ -10,5 +10,7 @@ urlpatterns = patterns('',
     url(r'^verified/$', 'core.views.verified'),
     url(r'^twilio-call-token/$', 'core.views.twilio_call_token'),
     url(r'^dial/$', 'core.views.dial'),
+    url(r'^agency-settings/$', 'core.views.agency_settings_form',
+        name='core_agency_settings'),
     url(r'^v1/', include(router_v1.urls)),
 )

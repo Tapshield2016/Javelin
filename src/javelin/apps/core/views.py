@@ -7,9 +7,11 @@ from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
 from django.contrib.auth.models import Group
 from django.contrib.sites.models import get_current_site
-from django.http import HttpResponse, HttpResponseForbidden
-from django.shortcuts import render_to_response
+from django.http import (HttpResponse, HttpResponseForbidden,
+                         Http404, HttpResponseRedirect)
+from django.shortcuts import render_to_response, render
 from django.template import RequestContext
+from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from registration.models import RegistrationProfile
@@ -21,6 +23,7 @@ from rest_framework.response import Response
 from twilio.util import TwilioCapability
 
 from models import Agency
+from forms import AgencySettingsForm
 from api.serializers.v1 import AgencySerializer, UserSerializer
 
 User = get_user_model()
@@ -252,3 +255,34 @@ def dial(request):
     <Say>Thank you, goodbye!</Say>
 </Response>""" % (from_number, request.GET.get('To', None))
     return HttpResponse(content, mimetype='text/xml')
+
+
+def agency_settings_form(request):
+    agency_id = None
+    form = None
+    if request.method == 'POST':
+        agency_id = request.POST.get('agency_id', None)
+        if not agency_id:
+            raise Http404
+        try:
+            agency_id = int(agency_id)
+            agency = Agency.objects.get(pk=int(agency_id))
+        except Agency.DoesNotExist:
+            raise Http404
+        form = AgencySettingsForm(request.POST, instance=agency)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect("%s?agency_id=%d" % (reverse('core_agency_settings'), agency_id))
+    else:
+        agency_id = request.GET.get('agency_id', None)
+        if agency_id:
+            agency = Agency.objects.get(pk=int(agency_id))
+        if not agency_id:
+            raise Http404
+        try:
+            agency = Agency.objects.get(pk=int(agency_id))
+        except Agency.DoesNotExist:
+            raise Http404
+        form = AgencySettingsForm(instance=agency)
+    return render(request, 'core/forms/agency_settings_form.html',
+                  {'form': form})
