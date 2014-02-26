@@ -74,7 +74,8 @@ class Agency(TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        from tasks import create_agency_topic
+        from tasks import (create_agency_topic,
+                           notify_waiting_users_of_congestion)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
@@ -83,6 +84,8 @@ class Agency(TimeStampedModel):
         super(Agency, self).save(*args, **kwargs)
         if not self.sns_primary_topic_arn:
             create_agency_topic.delay(self.pk)
+        if self.enable_chat_autoresponder:
+            notify_waiting_users_of_congestion.delay(self.pk)
 
 
 class Alert(TimeStampedModel):
