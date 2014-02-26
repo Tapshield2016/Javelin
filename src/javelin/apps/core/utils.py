@@ -14,7 +14,8 @@ def send_message_to_user_for_alert(alert, message):
         # If no dispatcher assigned to alert, get last logged in dispatcher
         # from agency and use as sender.
         last_logged_in =\
-            AgencyUser.objects.filter(agency=alert.agency)\
+            AgencyUser.objects.filter(agency=alert.agency,
+                                      groups__name='Dispatchers')\
             .order_by('-last_login')
         if last_logged_in:
             sender_id = last_logged_in[0].id
