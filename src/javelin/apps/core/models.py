@@ -20,7 +20,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       DisarmedAlertManager, NewAlertManager,
                       PendingAlertManager, InitiatedByChatAlertManager,
                       InitiatedByEmergencyAlertManager,
-                      InitiatedByTimerAlertManager)
+                      InitiatedByTimerAlertManager,
+                      WaitingForActionAlertManager)
 
 
 class TimeStampedModel(models.Model):
@@ -125,11 +126,13 @@ class Alert(TimeStampedModel):
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
-    user_notified_of_receipt = models.BooleanField(default=False)
+    user_notified_of_receipt = models.BooleanField(default=False, help_text="Indicates if a push notification has been sent to the user to notify the app that the alert has been received.")
+    user_notified_of_dispatcher_congestion = models.BooleanField(default=False, help_text="If an organization has the chat auto-responder functionality enabled, this flag is to indicate if the user has been sent the auto-responder message.")
 
     objects = models.Manager()
     active = ActiveAlertManager()
     inactive = InactiveAlertManager()
+    waiting_for_action = WaitingForActionAlertManager()
     accepted = AcceptedAlertManager()
     completed = CompletedAlertManager()
     disarmed = DisarmedAlertManager()

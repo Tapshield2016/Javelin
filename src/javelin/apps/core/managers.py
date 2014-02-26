@@ -13,6 +13,12 @@ class InactiveAlertManager(models.Manager):
             .get_queryset().filter(status__in=('D', 'C'))
 
 
+class WaitingForActionAlertManager(models.Manager):
+    def get_queryset(self):
+        return super(WaitingForActionAlertManager, self)\
+            .get_queryset().filter(status__in=('N', 'P'))
+
+
 class AcceptedAlertManager(models.Manager):
     def get_queryset(self):
         return super(AcceptedAlertManager, self)\
