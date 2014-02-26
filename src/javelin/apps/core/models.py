@@ -21,7 +21,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       PendingAlertManager, InitiatedByChatAlertManager,
                       InitiatedByEmergencyAlertManager,
                       InitiatedByTimerAlertManager,
-                      WaitingForActionAlertManager)
+                      WaitingForActionAlertManager,
+                      ShouldReceiveAutoResponseAlertManager)
 
 
 class TimeStampedModel(models.Model):
@@ -136,6 +137,7 @@ class Alert(TimeStampedModel):
     active = ActiveAlertManager()
     inactive = InactiveAlertManager()
     waiting_for_action = WaitingForActionAlertManager()
+    should_receive_autoresponse = ShouldReceiveAutoResponseAlertManager()
     accepted = AcceptedAlertManager()
     completed = CompletedAlertManager()
     disarmed = DisarmedAlertManager()

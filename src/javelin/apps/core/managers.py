@@ -19,6 +19,16 @@ class WaitingForActionAlertManager(models.Manager):
             .get_queryset().filter(status__in=('N', 'P'))
 
 
+class ShouldReceiveAutoResponseAlertManager(models.Manager):
+    def get_queryset(self):
+        return super(ShouldReceiveAutoResponseAlertManager, self)\
+            .get_queryset()\
+            .filter(status__in=('N', 'P'),
+                    user_notified_of_dispatcher_congestion=False,
+                    initiated_by='C',
+                    disarmed_time__isnull=True)
+
+
 class AcceptedAlertManager(models.Manager):
     def get_queryset(self):
         return super(AcceptedAlertManager, self)\

@@ -183,13 +183,11 @@ def delete_file_from_s3(url):
 
 
 @task
-def notify_waiting_users_of_congestion(agency_id, alert_ids):
+def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
     from core.utils import send_message_to_user_for_alert
     agency = Agency.objects.get(pk=agency_id)
     waiting_alerts =\
-        Alert.waiting_for_action.filter(\
-        agency=agency,
-        user_notified_of_dispatcher_congestion=False)
+        Alert.should_receive_autoresponse.filter(agency=agency)
     if alert_ids:
         waiting_alerts = waiting_alerts.filter(pk__in=alert_ids)
     for alert in waiting_alerts:
