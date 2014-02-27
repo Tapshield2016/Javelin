@@ -34,7 +34,7 @@ class TimeStampedModel(models.Model):
 
 
 class Agency(TimeStampedModel):
-    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays in responding to incoming messages. If you are in immediate need of emergency assistance, please dial 911."
+    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. Call 911 if you require immediate assistance."
 
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
