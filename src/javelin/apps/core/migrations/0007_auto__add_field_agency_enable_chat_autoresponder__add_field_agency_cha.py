@@ -15,7 +15,7 @@ class Migration(SchemaMigration):
 
         # Adding field 'Agency.chat_autoresponder_message'
         db.add_column(u'core_agency', 'chat_autoresponder_message',
-                      self.gf('django.db.models.fields.TextField')(default='Due to high volume, we are currently experiencing delays in responding to incoming messages. If you are in immediate need of emergency assistance, please dial 911.', null=True, blank=True),
+                      self.gf('django.db.models.fields.TextField')(default='Due to high volume, we are currently experiencing delays. Call 911 if you require immediate assistance.', null=True, blank=True),
                       keep_default=False)
 
 
