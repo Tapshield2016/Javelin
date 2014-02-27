@@ -28,6 +28,9 @@ def send_message_to_user_for_alert(alert, message):
          'message': message, 'timestamp': time.time(),
          'message_id': message_id})
     user = alert.agency_user
+    if len(message) > 112:
+        # truncate to prevent issue with push notification send
+        message = "%s..." % message[:109]
     notify_new_chat_message_available.delay(\
         message, message_id,
         alert.agency_user.device_type,
