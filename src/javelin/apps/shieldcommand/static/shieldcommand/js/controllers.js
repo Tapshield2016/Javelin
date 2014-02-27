@@ -374,6 +374,7 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.initChatMessagesForActiveAlert = function() {
+                $scope.chatUpdateInProgress = false;
   		try {
 	  		if (alertService.activeAlert.object_id in $rootScope.chats) {
 				alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
@@ -396,6 +397,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 		catch (error) {
 			console.log(error);
+		        $scope.chatUpdateInProgress = false;
 		}
 		finally {
 			if (alertService.activeAlert.status == 'A') {
