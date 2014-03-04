@@ -7,6 +7,8 @@ import django.utils.timezone
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.gis.db import models as db_models
+from django.contrib.gis.geos import Point
 from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
@@ -50,6 +52,8 @@ class Agency(TimeStampedModel):
     agency_boundaries = models.TextField(null=True, blank=True)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
+    agency_center_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
@@ -67,6 +71,7 @@ class Agency(TimeStampedModel):
                          verbose_name="chat auto-responder message")
 
     objects = models.Manager()
+    geo = db_models.GeoManager()
 
     class Meta:
         verbose_name_plural = "Agencies"
@@ -77,6 +82,9 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
+        if self.agency_center_latitude and self.agency_center_longitude:
+            self.agency_center_point = Point(self.agency_center_longitude,
+                                             self.agency_center_latitude)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
@@ -352,6 +360,39 @@ class ChatMessage(TimeStampedModel):
 
     def __unicode__(self):
         return u"%s - %s..." % (self.sender.first_name, self.message[:50])
+
+
+class SocialCrimeReport(TimeStampedModel):
+
+    CRIME_TYPE_CHOICES = (
+        ('A', 'Arrest'),
+        ('AR', 'Arson'),
+        ('AS', 'Assault'),
+        ('B', 'Burglary'),
+        ('O', 'Other'),
+        ('R', 'Robbery'),
+        ('S', 'Shooting'),
+        ('T', 'Theft'),
+        ('V', 'Vandalism'),
+    )
+
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
+    body = models.TextField()
+    report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
+    report_image_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
+    report_latitude = models.FloatField()
+    report_longitude = models.FloatField()
+    report_point = db_models.PointField(geography=True,
+                                        null=True, blank=True)
+
+    objects = db_models.GeoManager()
+
+    def save(self, *args, **kwargs):
+        if self.report_latitude and self.report_longitude:
+            self.report_point = Point(self.report_longitude,
+                                      self.report_latitude)
+        super(SocialCrimeReport, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=AgencyUser)

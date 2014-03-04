@@ -4,15 +4,21 @@ from django.contrib.auth.models import Group
 from rest_framework import serializers
 
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile)
+                         ChatMessage, MassAlert, UserProfile,
+                         SocialCrimeReport)
 
 User = get_user_model()
 
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
+    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = Agency
+
+    def distance_if_exists(self, obj):
+        if getattr(obj, 'distance', None):
+            return obj.distance.mi
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -77,3 +83,14 @@ class UserProfileSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserProfile
+
+
+class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
+    distance = serializers.SerializerMethodField('distance_if_exists')
+
+    class Meta:
+        model = SocialCrimeReport
+
+    def distance_if_exists(self, obj):
+        if getattr(obj, 'distance', None):
+            return obj.distance.mi

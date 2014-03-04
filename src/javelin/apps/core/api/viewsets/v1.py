@@ -9,6 +9,8 @@ from twilio import TwilioRestException
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
@@ -20,13 +22,15 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AlertLocationSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
-                                     UserProfileSerializer)
+                                     UserProfileSerializer,
+                                     SocialCrimeReportSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile)
+                         ChatMessage, MassAlert, UserProfile,
+                         SocialCrimeReport)
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
@@ -104,13 +108,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action()
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
-            user = self.get_object()
             phone_number = request.DATA.get('phone_number', None)
             if not phone_number:
                 return Response(\
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
+                user = self.get_object()
+                user.phone_number_verification_code = None
+                user.save()
                 resp = twilio_client.messages.create(\
                     to=phone_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
@@ -152,7 +158,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
-                user.phone_number_verification_code = None
                 user.save()
                 return Response(\
                     {'message': 'OK'},
@@ -168,9 +173,51 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+class SocialCrimeReportViewSet(viewsets.ModelViewSet):
+    queryset = SocialCrimeReport.objects.select_related('reporter').all()
+    model = SocialCrimeReport
+    serializer_class = SocialCrimeReportSerializer
+
+    def get_queryset(self):
+        qs = SocialCrimeReport.objects.select_related('reporter').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = SocialCrimeReport.objects\
+                .select_related('reporter')\
+                .filter(report_point__dwithin=(point, D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = SocialCrimeReport.objects.none()
+        return qs
+
+
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.select_related('agency_point_of_contact').all()
+    model = Agency
     serializer_class = AgencySerializer
+
+    def get_queryset(self):
+        qs = Agency.objects.select_related('agency_point_of_contact').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = Agency.geo.select_related('agency_point_of_contact')\
+                .filter(agency_center_point__dwithin=(point,
+                                                      D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = Agency.objects.none()
+        return qs
 
     @action()
     def send_mass_alert(self, request, pk=None):
