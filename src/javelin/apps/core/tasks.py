@@ -149,6 +149,7 @@ def publish_to_device(device_endpoint_arn, message):
     sns = SNSManager()
     return sns.publish_to_device(message, device_endpoint_arn)
 
+
 @task
 def notify_alert_completed(message, device_type, device_endpoint_arn):
     sns = SNSManager()
