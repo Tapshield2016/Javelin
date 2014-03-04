@@ -58,7 +58,7 @@ class SNSManager(object):
 
     # location reporting
     def get_location_report_topic_message_json(self):
-        msg_json = """{"default": \"%s\", "%s": "{\\"aps\\": {\\"content-available\\": 1}, \\"alert_type\\": \\"location-report\\"}, "%s": "{ \\"data\\": { \\"message\\": \\"location-report\\", \\"alert_type\\": \\"location-report\\"}}}""" % ("content-available", settings.SNS_IOS_PLATFORM, settings.SNS_ANDROID_PLATFORM)
+        msg_json = """{"default": \"location-report\", "%s": "{\\"aps\\": {\\"content-available\\": 1}, \\"alert_type\\": \\"location-report\\"}, "%s": "{ \\"data\\": { \\"message\\": \\"location-report\\", \\"alert_type\\": \\"location-report\\"}}}""" % ("content-available", settings.SNS_IOS_PLATFORM, settings.SNS_ANDROID_PLATFORM)
         return msg_json
 
     def get_location_report_message_json(self, endpoint):
@@ -67,5 +67,5 @@ class SNSManager(object):
         elif endpoint == settings.SNS_APP_ENDPOINTS["A"]:
             msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"location-report\\", \\"alert_type\\": \\"location-report\\"}}"}""" % (endpoint)
         else:
-            msg_json = """{"default": "content-available"}"""
+            msg_json = """{"default": "location-report"}"""
         return msg_json
