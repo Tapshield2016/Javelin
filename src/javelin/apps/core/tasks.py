@@ -145,6 +145,22 @@ def publish_to_agency_topic(agency_topic_arn, message):
 
 
 @task
+def request_location_from_agency_topic_members(agency_topic_arn, message):
+    sns = SNSManager()
+    msg = get_location_report_topic_message_json()
+    return sns.publish_to_topic(msg, agency_topic_arn)
+
+
+@task
+def request_location_from_single_agency_member(device_type,
+                                               device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = get_location_report_topic_message_json(app_endpoint)
+    return sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
 def publish_to_device(device_endpoint_arn, message):
     sns = SNSManager()
     return sns.publish_to_device(message, device_endpoint_arn)
