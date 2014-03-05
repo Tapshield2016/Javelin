@@ -69,6 +69,7 @@ class Agency(TimeStampedModel):
         models.TextField(null=True, blank=True,
                          default=DEFAULT_AUTORESPONDER_MESSAGE,
                          verbose_name="chat auto-responder message")
+    enable_user_location_requests = models.BooleanField(default=False, help_text="If enabled, this allows for Shield Command dispatchers to request the latest location from users belonging to the organization. This is accomplished by sending a push notification to the organization's SNS topic to prompt devices to send a location update in the background. This does not disturb the users.")
 
     objects = models.Manager()
     geo = db_models.GeoManager()
@@ -264,9 +265,17 @@ class AgencyUser(AbstractUser):
     device_type = models.CharField(max_length=2, null=True, blank=True,
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
+    last_reported_latitude = models.FloatField()
+    last_reported_longitude = models.FloatField()
+    last_reported_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
+    last_reported_time = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def save(self, *args, **kwargs):
         if not self.phone_number_verification_code:
