@@ -39,10 +39,10 @@ def new_alert(message):
         active_alerts = Alert.active.filter(agency_user=user)
         if active_alerts:
             incoming_alert = active_alerts[0]
+            incoming_alert.disarmed_time = None
         else:
             incoming_alert = Alert(agency=user.agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
-            incoming_alert.disarmed_time = None
             incoming_alert.save()
 
         incoming_alert_location = AlertLocation(alert=incoming_alert,
