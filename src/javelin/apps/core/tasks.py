@@ -42,6 +42,7 @@ def new_alert(message):
         else:
             incoming_alert = Alert(agency=user.agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
+            incoming_alert.disarmed_time = None
             incoming_alert.save()
 
         incoming_alert_location = AlertLocation(alert=incoming_alert,
