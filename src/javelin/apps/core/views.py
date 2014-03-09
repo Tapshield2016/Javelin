@@ -1,5 +1,7 @@
 import datetime
 import json
+import requests
+
 from time import mktime
 
 from django.conf import settings
@@ -13,6 +15,13 @@ from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+
+from allauth.socialaccount import providers
+from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
+from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
+from allauth.socialaccount.providers.facebook.provider import FacebookProvider
+from allauth.socialaccount.providers.facebook.views import fb_complete_login
+from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
 
@@ -289,3 +298,39 @@ def agency_settings_form(request):
         form = AgencySettingsForm(instance=agency)
     return render(request, 'core/forms/agency_settings_form.html',
                   {'form': form})
+
+
+@api_view(['POST'])
+def create_facebook_user(request):
+    """Allows REST calls to programmatically create new facebook users.     
+    
+    This code is very heavily based on                                      
+    allauth.socialaccount.providers.facebook.views.login_by_token           
+    as of allauth 0.15.0.                                                   
+    """
+    form = FacebookConnectForm(request.DATA)
+    if form.is_valid():
+        try:
+            app = providers.registry.by_id(FacebookProvider.id) \
+                .get_app(request)
+            access_token = form.cleaned_data['access_token']
+            token = SocialToken(app=app,
+                                token=access_token)
+            login = fb_complete_login(request, app, token)
+            login.token = token
+            login.state = SocialLogin.state_from_request(request)
+            complete_social_login(request, login)
+            login.account.user.email_verified = True
+            login.account.user.user_logged_in_via_social = True
+            user_group = Group.objects.get(name='Users')
+            login.account.user.groups.add(user_group)
+            login.account.user.save()
+            return Response(UserSerializer(instance=login.account.user).data,
+                            status=status.HTTP_201_CREATED)
+
+        except requests.RequestException:
+            errors = {'access_token': ['Error accessing FB user profile.']}
+    else:
+        errors = dict(form.errors.items())
+
+    return Response(errors, status=status.HTTP_400_BAD_REQUEST)
