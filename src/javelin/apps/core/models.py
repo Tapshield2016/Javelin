@@ -261,6 +261,12 @@ class AgencyUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
 
+    def __unicode__(self):
+        if self.email:
+            return u"%s" % self.email
+        elif self.username:
+            return u"%s" % self.username
+
     def save(self, *args, **kwargs):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\

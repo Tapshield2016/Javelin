@@ -21,6 +21,10 @@ from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
 from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
+from allauth.socialaccount.providers.twitter.provider import TwitterProvider
+from allauth.socialaccount.providers.twitter.views import (TwitterAPI,
+                                                           TwitterOAuthAdapter)
+
 from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
@@ -334,3 +338,29 @@ def create_facebook_user(request):
         errors = dict(form.errors.items())
 
     return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_twitter_user(request):
+    app = providers.registry.by_id(TwitterProvider.id) \
+        .get_app(request)
+    oauth_token = request.DATA.get('oauth_token')
+    oauth_token_secret = request.DATA.get('oauth_token_secret')
+    token = SocialToken(app=app,
+                        token=oauth_token,
+                        token_secret=oauth_token_secret)
+    request.session['oauth_api.twitter.com_access_token'] =\
+        {"oauth_token": oauth_token,
+         "oauth_token_secret": oauth_token_secret}
+    adapter = TwitterOAuthAdapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    login.account.user.email_verified = True
+    login.account.user.user_logged_in_via_social = True
+    user_group = Group.objects.get(name='Users')
+    login.account.user.groups.add(user_group)
+    login.account.user.save()
+    return Response(UserSerializer(instance=login.account.user).data,
+                    status=status.HTTP_201_CREATED)
