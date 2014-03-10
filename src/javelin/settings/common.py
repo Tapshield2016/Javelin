@@ -214,3 +214,10 @@ AUTHENTICATION_BACKENDS = (
     "allauth.account.auth_backends.AuthenticationBackend",
 )
 ACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_PROVIDERS = {
+    'google':
+        {
+        'SCOPE': ['https://www.googleapis.com/auth/userinfo.email'],
+        'AUTH_PARAMS': {'access_type': 'online'}
+         },
+}

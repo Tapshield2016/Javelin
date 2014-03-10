@@ -14,5 +14,6 @@ urlpatterns = patterns('',
         name='core_agency_settings'),
     url(r'^create-facebook-user/$', 'core.views.create_facebook_user',),
     url(r'^create-twitter-user/$', 'core.views.create_twitter_user',),
+    url(r'^create-google-user/$', 'core.views.create_google_user',),
     url(r'^v1/', include(router_v1.urls)),
 )

@@ -18,6 +18,8 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
+from allauth.socialaccount.providers.google.provider import GoogleProvider
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
 from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
@@ -353,6 +355,28 @@ def create_twitter_user(request):
         {"oauth_token": oauth_token,
          "oauth_token_secret": oauth_token_secret}
     adapter = TwitterOAuthAdapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    login.account.user.email_verified = True
+    login.account.user.user_logged_in_via_social = True
+    user_group = Group.objects.get(name='Users')
+    login.account.user.groups.add(user_group)
+    login.account.user.save()
+    return Response(UserSerializer(instance=login.account.user).data,
+                    status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def create_google_user(request):
+    app = providers.registry.by_id(GoogleProvider.id) \
+        .get_app(request)
+    access_token = request.DATA.get('access_token')
+    refresh_token = request.DATA.get('refresh_token')
+    token = SocialToken(app=app,
+                        token=access_token)
+    adapter = GoogleOAuth2Adapter()
     login = adapter.complete_login(request, app, token)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
