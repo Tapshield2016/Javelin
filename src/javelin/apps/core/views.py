@@ -1,5 +1,7 @@
 import datetime
 import json
+import requests
+
 from time import mktime
 
 from django.conf import settings
@@ -13,6 +15,23 @@ from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+
+from allauth.socialaccount import providers
+from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
+from allauth.socialaccount.providers.google.provider import GoogleProvider
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.linkedin_oauth2.provider\
+    import LinkedInOAuth2Provider
+from allauth.socialaccount.providers.linkedin_oauth2.views\
+    import LinkedInOAuth2Adapter
+from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
+from allauth.socialaccount.providers.facebook.provider import FacebookProvider
+from allauth.socialaccount.providers.facebook.views import fb_complete_login
+from allauth.socialaccount.providers.twitter.provider import TwitterProvider
+from allauth.socialaccount.providers.twitter.views import (TwitterAPI,
+                                                           TwitterOAuthAdapter)
+
+from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
 
@@ -289,3 +308,101 @@ def agency_settings_form(request):
         form = AgencySettingsForm(instance=agency)
     return render(request, 'core/forms/agency_settings_form.html',
                   {'form': form})
+
+
+def set_necessary_fields_on_social_user(user):
+    user.email_verified = True
+    user.user_logged_in_via_social = True
+    user_group = Group.objects.get(name='Users')
+    user.groups.add(user_group)
+    user.save()
+    return user
+
+
+@api_view(['POST'])
+def create_facebook_user(request):
+    """Allows REST calls to programmatically create new facebook users.     
+    
+    This code is very heavily based on                                      
+    allauth.socialaccount.providers.facebook.views.login_by_token           
+    as of allauth 0.15.0.                                                   
+    """
+    form = FacebookConnectForm(request.DATA)
+    if form.is_valid():
+        try:
+            app = providers.registry.by_id(FacebookProvider.id) \
+                .get_app(request)
+            access_token = form.cleaned_data['access_token']
+            token = SocialToken(app=app,
+                                token=access_token)
+            login = fb_complete_login(request, app, token)
+            login.token = token
+            login.state = SocialLogin.state_from_request(request)
+            complete_social_login(request, login)
+            user = set_necessary_fields_on_social_user(login.account.user)
+            return Response(UserSerializer(instance=user).data,
+                            status=status.HTTP_201_CREATED)
+
+        except requests.RequestException:
+            errors = {'access_token': ['Error accessing FB user profile.']}
+    else:
+        errors = dict(form.errors.items())
+
+    return Response(errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def create_twitter_user(request):
+    app = providers.registry.by_id(TwitterProvider.id) \
+        .get_app(request)
+    oauth_token = request.DATA.get('oauth_token')
+    oauth_token_secret = request.DATA.get('oauth_token_secret')
+    token = SocialToken(app=app,
+                        token=oauth_token,
+                        token_secret=oauth_token_secret)
+    request.session['oauth_api.twitter.com_access_token'] =\
+        {"oauth_token": oauth_token,
+         "oauth_token_secret": oauth_token_secret}
+    adapter = TwitterOAuthAdapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
+                    status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def create_google_user(request):
+    app = providers.registry.by_id(GoogleProvider.id) \
+        .get_app(request)
+    access_token = request.DATA.get('access_token')
+    refresh_token = request.DATA.get('refresh_token')
+    token = SocialToken(app=app,
+                        token=access_token)
+    adapter = GoogleOAuth2Adapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
+                    status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def create_linkedin_user(request):
+    app = providers.registry.by_id(LinkedInOAuth2Provider.id) \
+        .get_app(request)
+    access_token = request.DATA.get('access_token')
+    token = SocialToken(app=app,
+                        token=access_token)
+    adapter = LinkedInOAuth2Adapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
+                    status=status.HTTP_201_CREATED)
