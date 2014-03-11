@@ -128,6 +128,7 @@ INSTALLED_APPS = (
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.twitter',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.linkedin_oauth2',
 
     'compressor',
     'django_twilio',
@@ -216,8 +217,20 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_PROVIDERS = {
     'google':
-        {
-        'SCOPE': ['https://www.googleapis.com/auth/userinfo.email'],
-        'AUTH_PARAMS': {'access_type': 'online'}
-         },
+        {'SCOPE': ['https://www.googleapis.com/auth/userinfo.email'],
+         'AUTH_PARAMS': {'access_type': 'online'}},
+    'linkedin': {'SCOPE': ['r_emailaddress'],
+                 'PROFILE_FIELDS': ['id',
+                                    'first-name',
+                                    'last-name',
+                                    'email-address',
+                                    'picture-url',
+                                    'public-profile-url']},
+    'linkedin_oauth2': {'SCOPE': ['r_emailaddress'],
+                        'PROFILE_FIELDS': ['id',
+                                           'first-name',
+                                           'last-name',
+                                           'email-address',
+                                           'picture-url',
+                                           'public-profile-url']},
 }

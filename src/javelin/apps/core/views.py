@@ -20,6 +20,10 @@ from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
 from allauth.socialaccount.providers.google.provider import GoogleProvider
 from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.linkedin_oauth2.provider\
+    import LinkedInOAuth2Provider
+from allauth.socialaccount.providers.linkedin_oauth2.views\
+    import LinkedInOAuth2Adapter
 from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
@@ -377,6 +381,27 @@ def create_google_user(request):
     token = SocialToken(app=app,
                         token=access_token)
     adapter = GoogleOAuth2Adapter()
+    login = adapter.complete_login(request, app, token)
+    login.token = token
+    login.state = SocialLogin.state_from_request(request)
+    complete_social_login(request, login)
+    login.account.user.email_verified = True
+    login.account.user.user_logged_in_via_social = True
+    user_group = Group.objects.get(name='Users')
+    login.account.user.groups.add(user_group)
+    login.account.user.save()
+    return Response(UserSerializer(instance=login.account.user).data,
+                    status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def create_linkedin_user(request):
+    app = providers.registry.by_id(LinkedInOAuth2Provider.id) \
+        .get_app(request)
+    access_token = request.DATA.get('access_token')
+    token = SocialToken(app=app,
+                        token=access_token)
+    adapter = LinkedInOAuth2Adapter()
     login = adapter.complete_login(request, app, token)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
