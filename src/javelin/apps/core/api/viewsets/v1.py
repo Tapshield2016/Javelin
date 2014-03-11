@@ -20,22 +20,29 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AlertLocationSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
-                                     UserProfileSerializer)
+                                     UserProfileSerializer,
+                                     EntourageMemberSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile)
+                         ChatMessage, MassAlert, UserProfile, EntourageMember)
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
 User = get_user_model()
 
 
+class EntourageMemberViewSet(viewsets.ModelViewSet):
+    queryset = EntourageMember.objects.select_related('user').all()
+    serializer_class = EntourageMemberSerializer
+    filter_fields = ('user',)
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups').all()
+        .prefetch_related('groups', 'entourage_members').all()
     serializer_class = UserSerializer
     filter_fields = ('agency',)
 
