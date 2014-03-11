@@ -9,11 +9,17 @@ from core.models import (Agency, Alert, AlertLocation,
 User = get_user_model()
 
 
-class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
+class EntourageMemberGETSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageMember
         fields = ('url', 'user', 'name')
+
+
+class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EntourageMember
 
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
@@ -25,7 +31,7 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  view_name='agency-detail')
-    entourage_members = EntourageMemberSerializer(required=False, many=True)
+    entourage_members = EntourageMemberGETSerializer(required=False, many=True)
 
     class Meta:
         model = User

@@ -3,7 +3,16 @@ import reversion
 from django.contrib import admin
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
-                    ChatMessage, UserProfile)
+                    ChatMessage, UserProfile, EntourageMember)
+
+
+class EntourageMemberAdmin(admin.ModelAdmin):
+    pass
+
+
+class EntourageMemberInline(admin.StackedInline):
+    model = EntourageMember
+    extra = 0
 
 
 class AgencyAdmin(reversion.VersionAdmin):
@@ -18,6 +27,9 @@ class AgencyUserAdmin(admin.ModelAdmin):
     list_filter = ('agency', 'groups', 'device_type',)
     list_select_related = ('agency',)
     search_fields = ['email', 'first_name', 'last_name']
+    inlines = [
+        EntourageMemberInline,
+    ]
 
 
 class AlertLocationInline(admin.StackedInline):
@@ -51,3 +63,4 @@ admin.site.register(Alert, AlertAdmin)
 admin.site.register(MassAlert, MassAlertAdmin)
 admin.site.register(ChatMessage, ChatMessageAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
+admin.site.register(EntourageMember, EntourageMemberAdmin)
