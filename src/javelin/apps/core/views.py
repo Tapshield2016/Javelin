@@ -310,6 +310,15 @@ def agency_settings_form(request):
                   {'form': form})
 
 
+def set_necessary_fields_on_social_user(user):
+    user.email_verified = True
+    user.user_logged_in_via_social = True
+    user_group = Group.objects.get(name='Users')
+    user.groups.add(user_group)
+    user.save()
+    return user
+
+
 @api_view(['POST'])
 def create_facebook_user(request):
     """Allows REST calls to programmatically create new facebook users.     
@@ -330,12 +339,8 @@ def create_facebook_user(request):
             login.token = token
             login.state = SocialLogin.state_from_request(request)
             complete_social_login(request, login)
-            login.account.user.email_verified = True
-            login.account.user.user_logged_in_via_social = True
-            user_group = Group.objects.get(name='Users')
-            login.account.user.groups.add(user_group)
-            login.account.user.save()
-            return Response(UserSerializer(instance=login.account.user).data,
+            user = set_necessary_fields_on_social_user(login.account.user)
+            return Response(UserSerializer(instance=user).data,
                             status=status.HTTP_201_CREATED)
 
         except requests.RequestException:
@@ -363,12 +368,8 @@ def create_twitter_user(request):
     login.token = token
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
-    login.account.user.email_verified = True
-    login.account.user.user_logged_in_via_social = True
-    user_group = Group.objects.get(name='Users')
-    login.account.user.groups.add(user_group)
-    login.account.user.save()
-    return Response(UserSerializer(instance=login.account.user).data,
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
 
 
@@ -385,12 +386,8 @@ def create_google_user(request):
     login.token = token
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
-    login.account.user.email_verified = True
-    login.account.user.user_logged_in_via_social = True
-    user_group = Group.objects.get(name='Users')
-    login.account.user.groups.add(user_group)
-    login.account.user.save()
-    return Response(UserSerializer(instance=login.account.user).data,
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
 
 
@@ -406,10 +403,6 @@ def create_linkedin_user(request):
     login.token = token
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
-    login.account.user.email_verified = True
-    login.account.user.user_logged_in_via_social = True
-    user_group = Group.objects.get(name='Users')
-    login.account.user.groups.add(user_group)
-    login.account.user.save()
-    return Response(UserSerializer(instance=login.account.user).data,
+    user = set_necessary_fields_on_social_user(login.account.user)
+    return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
