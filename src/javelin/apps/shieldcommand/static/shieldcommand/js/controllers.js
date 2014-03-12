@@ -470,6 +470,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 		catch (error) {
 			console.log(error);
+			$scope.chatUpdateInProgress = false;
 		}
 		finally {
 			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
