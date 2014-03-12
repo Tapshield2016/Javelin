@@ -23,7 +23,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer,
-                                     SocialCrimeReportSerializer)
+                                     SocialCrimeReportSerializer,
                                      EntourageMemberGETSerializer,
                                      EntourageMemberUpdateSerializer,)
 

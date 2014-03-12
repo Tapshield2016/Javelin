@@ -6,7 +6,6 @@ from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
                                   EntourageMemberViewSet)
 
-
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)
 router_v1.register(r'groups', GroupViewSet)

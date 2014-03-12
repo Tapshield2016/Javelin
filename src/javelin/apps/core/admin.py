@@ -71,8 +71,5 @@ admin.site.register(Alert, AlertAdmin)
 admin.site.register(MassAlert, MassAlertAdmin)
 admin.site.register(ChatMessage, ChatMessageAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
-<<<<<<< HEAD
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
-=======
 admin.site.register(EntourageMember, EntourageMemberAdmin)
->>>>>>> entourage
