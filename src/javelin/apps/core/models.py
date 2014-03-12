@@ -75,6 +75,7 @@ class Agency(TimeStampedModel):
     geo = db_models.GeoManager()
 
     class Meta:
+        ordering = ['name',]
         verbose_name_plural = "Agencies"
 
     def __unicode__(self):
@@ -244,6 +245,9 @@ class MassAlert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        return u"%s" % self.message
+
 
 class AgencyUser(AbstractUser):
     DEVICE_TYPE_CHOICES = (
@@ -254,10 +258,10 @@ class AgencyUser(AbstractUser):
     )
 
     agency = models.ForeignKey('Agency', null=True, blank=True)
-    phone_number = models.CharField(max_length=24)
+    phone_number = models.CharField(max_length=24, null=True, blank=True)
     phone_number_verification_code = models.PositiveIntegerField()
     phone_number_verified = models.BooleanField(default=False)
-    disarm_code = models.CharField(max_length=10)
+    disarm_code = models.CharField(max_length=10, null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     device_token = models.CharField(max_length=255, null=True, blank=True)
     device_endpoint_arn = models.CharField(max_length=255,
@@ -265,6 +269,7 @@ class AgencyUser(AbstractUser):
     device_type = models.CharField(max_length=2, null=True, blank=True,
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
+    user_logged_in_via_social = models.BooleanField(default=False)
     last_reported_latitude = models.FloatField()
     last_reported_longitude = models.FloatField()
     last_reported_point = db_models.PointField(geography=True,
@@ -276,6 +281,12 @@ class AgencyUser(AbstractUser):
 
     objects = models.Manager()
     geo = db_models.GeoManager()
+
+    def __unicode__(self):
+        if self.email:
+            return u"%s" % self.email
+        elif self.username:
+            return u"%s" % self.username
 
     def save(self, *args, **kwargs):
         if not self.phone_number_verification_code:
