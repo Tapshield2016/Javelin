@@ -156,6 +156,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.chatUpdateTimeout = null;
 	$scope.chatUpdateInProgress = false;
 	$scope.newAlertSoundInterval = null;
+	$scope.newAlertDocumentTitleInterval = null;
 	$scope.currentActiveLocation = null;
 
 	$scope.$on('alertMarkedChange', function() {
@@ -257,12 +258,31 @@ angular.module('shieldCommand.controllers', [])
 		}
 
 		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0) {
-			document.title = "(" + ($scope.newAlertsLength + $scope.pendingAlertsLength) + ") - Shield Command";
+				if (!$scope.newAlertDocumentTitleInterval) {
+					$scope.newAlertDocumentTitleInterval = setInterval(function () {
+						$scope.setDocumentTitle();
+					}, 2000);
+				}
 		}
 		else {
+			if ($scope.newAlertDocumentTitleInterval) {
+				clearInterval($scope.newAlertDocumentTitleInterval);
+				$scope.newAlertDocumentTitleInterval = null;
+			}
 			document.title = "Shield Command";
 		}
   	};
+
+  	$scope.setDocumentTitle = function() {
+  		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0) {
+  			if (document.title === "Shield Command") {
+  				document.title = "(" + ($scope.newAlertsLength + $scope.pendingAlertsLength) + ") - Shield Command";
+  			}
+  			else {
+  				document.title = "Shield Command";
+  			}
+  		}
+  	}
 
   	$scope.loadInitialAlerts = function() {
   		try {
@@ -374,6 +394,7 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.initChatMessagesForActiveAlert = function() {
+		$scope.chatUpdateInProgress = false;
   		try {
 	  		if (alertService.activeAlert.object_id in $rootScope.chats) {
 				alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
@@ -396,6 +417,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 		catch (error) {
 			console.log(error);
+			$scope.chatUpdateInProgress = false;
 		}
 		finally {
 			if (alertService.activeAlert.status == 'A') {
@@ -443,11 +465,13 @@ angular.module('shieldCommand.controllers', [])
   			}
   			else {
   				console.log("Chat update in progress!");
+				$scope.chatUpdateInProgress = false;
   			}
 
 		}
 		catch (error) {
 			console.log(error);
+			$scope.chatUpdateInProgress = false;
 		}
 		finally {
 			$scope.chatUpdateTimeout = setTimeout($scope.updateChatMessages, 3000);
