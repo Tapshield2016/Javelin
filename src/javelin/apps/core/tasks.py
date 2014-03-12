@@ -39,6 +39,7 @@ def new_alert(message):
         active_alerts = Alert.active.filter(agency_user=user)
         if active_alerts:
             incoming_alert = active_alerts[0]
+            incoming_alert.disarmed_time = None
         else:
             incoming_alert = Alert(agency=user.agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
@@ -58,6 +59,10 @@ def new_alert(message):
                                     user.device_endpoint_arn)
         incoming_alert.user_notified_of_receipt = True
         incoming_alert.save()
+
+        if user.agency.enable_chat_autoresponder:
+            notify_waiting_users_of_congestion(user.agency.id,
+                                               [incoming_alert.id,])
     else:
         pass
 
@@ -176,3 +181,18 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
 def delete_file_from_s3(url):
     s3 = S3Manager()
     s3.delete_file(url)
+
+
+@task
+def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
+    from core.utils import send_message_to_user_for_alert
+    agency = Agency.objects.get(pk=agency_id)
+    waiting_alerts =\
+        Alert.should_receive_autoresponse.filter(agency=agency)
+    if alert_ids:
+        waiting_alerts = waiting_alerts.filter(pk__in=alert_ids)
+    for alert in waiting_alerts:
+        send_message_to_user_for_alert(alert,
+                                       agency.chat_autoresponder_message)
+        alert.user_notified_of_dispatcher_congestion = True
+        alert.save()

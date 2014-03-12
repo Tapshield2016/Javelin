@@ -29,7 +29,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         model = User
         fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
-                  'phone_number_verified')
+                  'phone_number_verified', 'user_declined_push_notifications',
+                  'user_logged_in_via_social')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
