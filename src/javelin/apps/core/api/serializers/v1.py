@@ -5,9 +5,22 @@ from rest_framework import serializers
 
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
-                         SocialCrimeReport)
+                         EntourageMember, SocialCrimeReport)
 
 User = get_user_model()
+
+
+class EntourageMemberGETSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EntourageMember
+        fields = ('url', 'user', 'name')
+
+
+class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EntourageMember
 
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
@@ -24,13 +37,35 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  view_name='agency-detail')
+    entourage_members = EntourageMemberGETSerializer(required=False, many=True)
+    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social')
+                  'user_logged_in_via_social', 'entourage_members',
+                  'last_reported_time', 'distance')
+
+    def distance_if_exists(self, obj):
+        if getattr(obj, 'distance', None):
+            return obj.distance.mi
+
+
+
+class UserUpdateSerializer(serializers.HyperlinkedModelSerializer):
+    agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 view_name='agency-detail')
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
+                  'phone_number', 'disarm_code', 'first_name', 'last_name',
+                  'phone_number_verified', 'user_declined_push_notifications',
+                  'user_logged_in_via_social',
+                  'last_reported_time', 'last_reported_latitude',
+                  'last_reported_longitude')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):

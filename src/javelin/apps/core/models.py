@@ -71,6 +71,7 @@ class Agency(TimeStampedModel):
         models.TextField(null=True, blank=True,
                          default=DEFAULT_AUTORESPONDER_MESSAGE,
                          verbose_name="chat auto-responder message")
+    enable_user_location_requests = models.BooleanField(default=False, help_text="If enabled, this allows for Shield Command dispatchers to request the latest location from users belonging to the organization. This is accomplished by sending a push notification to the organization's SNS topic to prompt devices to send a location update in the background. This does not disturb the users.")
     agency_logo = models.URLField(null=True, blank=True,
                                   help_text="Set the location of the standard agency logo.")
     agency_alternate_logo = models.URLField(null=True, blank=True,
@@ -279,9 +280,17 @@ class AgencyUser(AbstractUser):
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
     user_logged_in_via_social = models.BooleanField(default=False)
+    last_reported_latitude = models.FloatField(null=True, blank=True)
+    last_reported_longitude = models.FloatField(null=True, blank=True)
+    last_reported_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
+    last_reported_time = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def __unicode__(self):
         if self.email:
@@ -293,12 +302,24 @@ class AgencyUser(AbstractUser):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
+        if self.last_reported_latitude and self.last_reported_longitude:
+            self.last_reported_point = Point(self.last_reported_longitude,
+                                             self.last_reported_latitude)
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
         return u"sms-verification-topic-%s" % slugify(self.phone_number)
 
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
+
+
+class EntourageMember(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='entourage_members')
+    name = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=24, null=True, blank=True)
+    email_address = models.EmailField(max_length=254, null=True, blank=True)
 
 
 class UserProfile(models.Model):

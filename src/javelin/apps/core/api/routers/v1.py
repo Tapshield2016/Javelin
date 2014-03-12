@@ -3,8 +3,8 @@ from rest_framework import routers
 from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
                                   AlertViewSet, AlertLocationViewSet,
                                   ChatMessageViewSet, MassAlertViewSet,
-                                  UserProfileViewSet, SocialCrimeReportViewSet)
-
+                                  UserProfileViewSet, SocialCrimeReportViewSet,
+                                  EntourageMemberViewSet)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)
@@ -16,3 +16,4 @@ router_v1.register(r'chat-messages', ChatMessageViewSet)
 router_v1.register(r'mass-alerts', MassAlertViewSet)
 router_v1.register(r'user-profiles', UserProfileViewSet)
 router_v1.register(r'social-crime-reports', SocialCrimeReportViewSet)
+router_v1.register(r'entourage-members', EntourageMemberViewSet)
