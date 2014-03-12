@@ -228,7 +228,6 @@ class GroupViewSet(viewsets.ModelViewSet):
 
 
 class SocialCrimeReportViewSet(viewsets.ModelViewSet):
-    queryset = SocialCrimeReport.objects.select_related('reporter').all()
     model = SocialCrimeReport
     serializer_class = SocialCrimeReportSerializer
 
