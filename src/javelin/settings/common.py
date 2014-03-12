@@ -98,6 +98,10 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
     "django.contrib.messages.context_processors.messages",
     "django.core.context_processors.request",
+
+    # allauth specific context processors
+    "allauth.account.context_processors.account",
+    "allauth.socialaccount.context_processors.socialaccount",
 )
 
 ROOT_URLCONF = 'javelin.urls'
@@ -117,6 +121,15 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.admin',
+    'django.contrib.gis',
+
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.facebook',
+    'allauth.socialaccount.providers.twitter',
+    'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.linkedin_oauth2',
 
     'compressor',
     'django_twilio',
@@ -193,3 +206,32 @@ COMPRESS_CSS_FILTERS = (
     'compressor.filters.css_default.CssAbsoluteFilter',
     'compressor.filters.cssmin.CSSMinFilter',
 )
+
+# allauth (social auth)
+AUTHENTICATION_BACKENDS = (
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
+
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
+)
+ACCOUNT_EMAIL_VERIFICATION = "none"
+SOCIALACCOUNT_PROVIDERS = {
+    'google':
+        {'SCOPE': ['https://www.googleapis.com/auth/userinfo.email'],
+         'AUTH_PARAMS': {'access_type': 'online'}},
+    'linkedin': {'SCOPE': ['r_emailaddress'],
+                 'PROFILE_FIELDS': ['id',
+                                    'first-name',
+                                    'last-name',
+                                    'email-address',
+                                    'picture-url',
+                                    'public-profile-url']},
+    'linkedin_oauth2': {'SCOPE': ['r_emailaddress'],
+                        'PROFILE_FIELDS': ['id',
+                                           'first-name',
+                                           'last-name',
+                                           'email-address',
+                                           'picture-url',
+                                           'public-profile-url']},
+}

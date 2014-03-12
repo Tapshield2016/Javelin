@@ -28,6 +28,7 @@ urlpatterns = patterns('',
         'rest_framework.authtoken.views.obtain_auth_token'),
     url(r'^api/', include('core.urls')),
     url(r'^docs/', include('rest_framework_swagger.urls')),
+    (r'^social-accounts/', include('allauth.urls')),
     url(r'^', include('shieldcommand.urls')),
 
 )
