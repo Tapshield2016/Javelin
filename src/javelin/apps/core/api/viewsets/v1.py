@@ -25,7 +25,8 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      UserProfileSerializer,
                                      SocialCrimeReportSerializer,
                                      EntourageMemberGETSerializer,
-                                     EntourageMemberUpdateSerializer,)
+                                     EntourageMemberUpdateSerializer,
+                                     UserUpdateSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -58,8 +59,16 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 
 class UserViewSet(viewsets.ModelViewSet):
     model = User
-    serializer_class = UserSerializer
     filter_fields = ('agency',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UserSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return UserUpdateSerializer
+
+        return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\

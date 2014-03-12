@@ -270,8 +270,8 @@ class AgencyUser(AbstractUser):
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
     user_logged_in_via_social = models.BooleanField(default=False)
-    last_reported_latitude = models.FloatField()
-    last_reported_longitude = models.FloatField()
+    last_reported_latitude = models.FloatField(null=True, blank=True)
+    last_reported_longitude = models.FloatField(null=True, blank=True)
     last_reported_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
     last_reported_time = models.DateTimeField(null=True, blank=True)
