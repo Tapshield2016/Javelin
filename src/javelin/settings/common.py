@@ -235,3 +235,4 @@ SOCIALACCOUNT_PROVIDERS = {
                                            'picture-url',
                                            'public-profile-url']},
 }
+SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'

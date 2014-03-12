@@ -14,7 +14,8 @@ from django.contrib.gis.measure import D
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
-from rest_framework.filters import DjangoFilterBackend, OrderingFilter
+from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
+                                    SearchFilter)
 from rest_framework.response import Response
 
 from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
@@ -280,6 +281,8 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
     serializer_class = AgencySerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('domain',)
 
     def get_queryset(self):
         qs = Agency.objects.select_related('agency_point_of_contact').all()

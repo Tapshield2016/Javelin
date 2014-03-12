@@ -55,6 +55,8 @@ class Agency(TimeStampedModel):
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
+    alert_mode_name = models.CharField(max_length=24, default="Emergency",
+                                       help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
     sns_primary_topic_arn = models.CharField(max_length=255,
@@ -70,6 +72,14 @@ class Agency(TimeStampedModel):
                          default=DEFAULT_AUTORESPONDER_MESSAGE,
                          verbose_name="chat auto-responder message")
     enable_user_location_requests = models.BooleanField(default=False, help_text="If enabled, this allows for Shield Command dispatchers to request the latest location from users belonging to the organization. This is accomplished by sending a push notification to the organization's SNS topic to prompt devices to send a location update in the background. This does not disturb the users.")
+    agency_logo = models.URLField(null=True, blank=True,
+                                  help_text="Set the location of the standard agency logo.")
+    agency_alternate_logo = models.URLField(null=True, blank=True,
+                                            help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+    agency_small_logo = models.URLField(null=True, blank=True,
+                                        help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+    agency_theme = models.TextField(null=True, blank=True, default="{}",
+                                    help_text="Use properly formatted JSON here to provide data as necessary.")
 
     objects = models.Manager()
     geo = db_models.GeoManager()
