@@ -74,6 +74,7 @@ class Agency(TimeStampedModel):
     geo = db_models.GeoManager()
 
     class Meta:
+        ordering = ['name',]
         verbose_name_plural = "Agencies"
 
     def __unicode__(self):
@@ -242,6 +243,9 @@ class MassAlert(TimeStampedModel):
 
     class Meta:
         ordering = ['-creation_date']
+
+    def __unicode__(self):
+        return u"%s" % self.message
 
 
 class AgencyUser(AbstractUser):
