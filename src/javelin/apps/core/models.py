@@ -292,6 +292,10 @@ class AgencyUser(AbstractUser):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
+        if self.last_reported_latitude and self.last_reported_longitude:
+            self.last_reported_point = Point(self.last_reported_longitude,
+                                             self.last_reported_latitude)
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):

@@ -57,10 +57,28 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 
 
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups', 'entourage_members').all()
+    model = User
     serializer_class = UserSerializer
     filter_fields = ('agency',)
+
+    def get_queryset(self):
+        qs = User.objects.select_related('agency')\
+            .prefetch_related('groups', 'entourage_members').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = User.geo.select_related('agency')\
+                .prefetch_related('groups', 'entourage_members')\
+                .filter(last_reported_point__dwithin=(point, D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = User.objects.none()
+        return qs
 
     @action(methods=['POST',])
     def message_entourage(self, request, pk=None):
