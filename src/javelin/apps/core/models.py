@@ -300,6 +300,14 @@ class AgencyUser(AbstractUser):
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
 
 
+class EntourageMember(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='entourage_members')
+    name = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=24, null=True, blank=True)
+    email_address = models.EmailField(max_length=254, null=True, blank=True)
+
+
 class UserProfile(models.Model):
     GENDER_CHOICES = (
         ('M', 'Male'),

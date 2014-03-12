@@ -24,24 +24,78 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer,
                                      SocialCrimeReportSerializer)
+                                     EntourageMemberGETSerializer,
+                                     EntourageMemberUpdateSerializer,)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
+                         ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport)
+
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
 User = get_user_model()
 
 
+class EntourageMemberViewSet(viewsets.ModelViewSet):
+    queryset = EntourageMember.objects.select_related('user').all()
+    model = EntourageMember
+    filter_fields = ('user',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return EntourageMemberGETSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return EntourageMemberUpdateSerializer
+
+        return EntourageMemberGETSerializer
+
+
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups').all()
+        .prefetch_related('groups', 'entourage_members').all()
     serializer_class = UserSerializer
     filter_fields = ('agency',)
+
+    @action(methods=['POST',])
+    def message_entourage(self, request, pk=None):
+        message = request.DATA.get('message', None)
+        if message:
+            user = self.get_object()
+            entourage_members = user.entourage_members.all()
+            errors = []
+            for em in entourage_members:
+                if em.phone_number:
+                    try:
+                        resp = twilio_client.messages.create(\
+                            to=em.phone_number,
+                            from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
+                            body=message)
+                        if resp.status == 'failed':
+                            errors.append(\
+                                {"Entourage Member %d" %\
+                                     em.id: 'Error sending SMS Verification',
+                                 "id": em.id})
+                    except TwilioRestException, e:
+                        if e.code and e.code == 21211:
+                            errors.append(\
+                                {"Entourage Member %d" %\
+                                     em.id: 'Invalid phone number',
+                                 "id": em.id})
+        else:
+            return Response(\
+                {'message': 'message is a required parameter.'},
+                status=status.HTTP_400_BAD_REQUEST)
+        if errors:
+            return Response({'message': 'Partial Success',
+                             'errors': errors})
+        else:
+            return Response({'message': 'Success'})
 
     @action(methods=['post',])
     def update_required_info(self, request, pk=None):
@@ -68,7 +122,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(\
                 {'message': 'There was an error with the values provided.'},
-                status=status.HTTP_400_BAD_REQUEST)            
+                status=status.HTTP_400_BAD_REQUEST)
 
     @action()
     def update_device_token(self, request, pk=None):

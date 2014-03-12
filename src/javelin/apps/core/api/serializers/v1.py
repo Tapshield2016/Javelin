@@ -5,9 +5,22 @@ from rest_framework import serializers
 
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
-                         SocialCrimeReport)
+                         EntourageMember, SocialCrimeReport)
 
 User = get_user_model()
+
+
+class EntourageMemberGETSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EntourageMember
+        fields = ('url', 'user', 'name')
+
+
+class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EntourageMember
 
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
@@ -24,13 +37,14 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  view_name='agency-detail')
+    entourage_members = EntourageMemberGETSerializer(required=False, many=True)
 
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social')
+                  'user_logged_in_via_social', 'entourage_members')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
