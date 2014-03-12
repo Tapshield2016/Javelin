@@ -465,6 +465,7 @@ angular.module('shieldCommand.controllers', [])
   			}
   			else {
   				console.log("Chat update in progress!");
+				$scope.chatUpdateInProgress = false;
   			}
 
 		}
