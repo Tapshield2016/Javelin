@@ -8,26 +8,6 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'SocialCrimeReport'
-        db.create_table(u'core_socialcrimereport', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
-            ('last_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('reporter', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.AgencyUser'])),
-            ('body', self.gf('django.db.models.fields.TextField')()),
-            ('report_type', self.gf('django.db.models.fields.CharField')(max_length=2)),
-            ('report_image_url', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('report_latitude', self.gf('django.db.models.fields.FloatField')()),
-            ('report_longitude', self.gf('django.db.models.fields.FloatField')()),
-            ('report_point', self.gf('django.contrib.gis.db.models.fields.PointField')(blank=True, null=True, geography=True)),
-        ))
-        db.send_create_signal(u'core', ['SocialCrimeReport'])
-
-        # Adding field 'Agency.agency_center_point'
-        db.add_column(u'core_agency', 'agency_center_point',
-                      self.gf('django.contrib.gis.db.models.fields.PointField')(blank=True, null=True, geography=True),
-                      keep_default=False)
-
         # Adding field 'Agency.enable_user_location_requests'
         db.add_column(u'core_agency', 'enable_user_location_requests',
                       self.gf('django.db.models.fields.BooleanField')(default=False),
@@ -55,12 +35,6 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting model 'SocialCrimeReport'
-        db.delete_table(u'core_socialcrimereport')
-
-        # Deleting field 'Agency.agency_center_point'
-        db.delete_column(u'core_agency', 'agency_center_point')
-
         # Deleting field 'Agency.enable_user_location_requests'
         db.delete_column(u'core_agency', 'enable_user_location_requests')
 
