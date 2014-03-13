@@ -287,6 +287,7 @@ class AgencyUser(AbstractUser):
     last_reported_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
     last_reported_time = models.DateTimeField(null=True, blank=True)
+    notify_entourage_on_alert = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
