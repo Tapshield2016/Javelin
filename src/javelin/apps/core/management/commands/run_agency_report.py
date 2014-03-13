@@ -1,4 +1,6 @@
 import csv
+import datetime
+import pytz
 
 from optparse import make_option
 
@@ -19,10 +21,11 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         agency_id = int(options['agency'])
         agency = Agency.objects.get(pk=agency_id)
+        alerts_after = datetime.datetime(2014, 1, 20, 0, 0, 0, 0, pytz.UTC)
         alerts = Alert.completed\
             .select_related('agency_user', 'agency_dispatcher')\
             .prefetch_related('locations')\
-            .filter(agency=agency)
+            .filter(agency=agency, creation_date__gte=alerts_after)
         local_report_path =\
             "/home/ubuntu/%s_report.csv" % slugify(agency.name)
         columns = ["Alerter Email",

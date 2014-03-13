@@ -20,7 +20,9 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       DisarmedAlertManager, NewAlertManager,
                       PendingAlertManager, InitiatedByChatAlertManager,
                       InitiatedByEmergencyAlertManager,
-                      InitiatedByTimerAlertManager)
+                      InitiatedByTimerAlertManager,
+                      WaitingForActionAlertManager,
+                      ShouldReceiveAutoResponseAlertManager)
 
 
 class TimeStampedModel(models.Model):
@@ -32,6 +34,8 @@ class TimeStampedModel(models.Model):
 
 
 class Agency(TimeStampedModel):
+    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. Call 911 if you require immediate assistance."
+
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255)
     agency_point_of_contact =\
@@ -56,6 +60,11 @@ class Agency(TimeStampedModel):
     loop_alert_sound = models.BooleanField(default=False)
     launch_call_to_dispatcher_on_alert = models.BooleanField(default=False, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
     show_agency_name_in_app_navbar = models.BooleanField(default=False)
+    enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.", verbose_name="enable chat auto-responder")
+    chat_autoresponder_message =\
+        models.TextField(null=True, blank=True,
+                         default=DEFAULT_AUTORESPONDER_MESSAGE,
+                         verbose_name="chat auto-responder message")
 
     objects = models.Manager()
 
@@ -66,10 +75,18 @@ class Agency(TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        from tasks import create_agency_topic
+        from tasks import (create_agency_topic,
+                           notify_waiting_users_of_congestion)
+
+        if not self.chat_autoresponder_message:
+            self.chat_autoresponder_message =\
+                Agency.DEFAULT_AUTORESPONDER_MESSAGE
+
         super(Agency, self).save(*args, **kwargs)
         if not self.sns_primary_topic_arn:
             create_agency_topic.delay(self.pk)
+        if self.enable_chat_autoresponder:
+            notify_waiting_users_of_congestion.delay(self.pk)
 
 
 class Alert(TimeStampedModel):
@@ -114,11 +131,14 @@ class Alert(TimeStampedModel):
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
-    user_notified_of_receipt = models.BooleanField(default=False)
+    user_notified_of_receipt = models.BooleanField(default=False, help_text="Indicates if a push notification has been sent to the user to notify the app that the alert has been received.")
+    user_notified_of_dispatcher_congestion = models.BooleanField(default=False, help_text="If an organization has the chat auto-responder functionality enabled, this flag is to indicate if the user has been sent the auto-responder message.")
 
     objects = models.Manager()
     active = ActiveAlertManager()
     inactive = InactiveAlertManager()
+    waiting_for_action = WaitingForActionAlertManager()
+    should_receive_autoresponse = ShouldReceiveAutoResponseAlertManager()
     accepted = AcceptedAlertManager()
     completed = CompletedAlertManager()
     disarmed = DisarmedAlertManager()
@@ -226,10 +246,10 @@ class AgencyUser(AbstractUser):
     )
 
     agency = models.ForeignKey('Agency', null=True, blank=True)
-    phone_number = models.CharField(max_length=24)
+    phone_number = models.CharField(max_length=24, null=True, blank=True)
     phone_number_verification_code = models.PositiveIntegerField()
     phone_number_verified = models.BooleanField(default=False)
-    disarm_code = models.CharField(max_length=10)
+    disarm_code = models.CharField(max_length=10, null=True, blank=True)
     email_verified = models.BooleanField(default=False)
     device_token = models.CharField(max_length=255, null=True, blank=True)
     device_endpoint_arn = models.CharField(max_length=255,
@@ -237,9 +257,16 @@ class AgencyUser(AbstractUser):
     device_type = models.CharField(max_length=2, null=True, blank=True,
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
+    user_logged_in_via_social = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+    def __unicode__(self):
+        if self.email:
+            return u"%s" % self.email
+        elif self.username:
+            return u"%s" % self.username
 
     def save(self, *args, **kwargs):
         if not self.phone_number_verification_code:
