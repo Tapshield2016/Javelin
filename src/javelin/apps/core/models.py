@@ -7,6 +7,8 @@ import django.utils.timezone
 
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.gis.db import models as db_models
+from django.contrib.gis.geos import Point
 from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
@@ -50,7 +52,11 @@ class Agency(TimeStampedModel):
     agency_boundaries = models.TextField(null=True, blank=True)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
+    agency_center_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
+    alert_mode_name = models.CharField(max_length=24, default="Emergency",
+                                       help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
     sns_primary_topic_arn = models.CharField(max_length=255,
@@ -65,10 +71,21 @@ class Agency(TimeStampedModel):
         models.TextField(null=True, blank=True,
                          default=DEFAULT_AUTORESPONDER_MESSAGE,
                          verbose_name="chat auto-responder message")
+    enable_user_location_requests = models.BooleanField(default=False, help_text="If enabled, this allows for Shield Command dispatchers to request the latest location from users belonging to the organization. This is accomplished by sending a push notification to the organization's SNS topic to prompt devices to send a location update in the background. This does not disturb the users.")
+    agency_logo = models.URLField(null=True, blank=True,
+                                  help_text="Set the location of the standard agency logo.")
+    agency_alternate_logo = models.URLField(null=True, blank=True,
+                                            help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+    agency_small_logo = models.URLField(null=True, blank=True,
+                                        help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+    agency_theme = models.TextField(null=True, blank=True, default="{}",
+                                    help_text="Use properly formatted JSON here to provide data as necessary.")
 
     objects = models.Manager()
+    geo = db_models.GeoManager()
 
     class Meta:
+        ordering = ['name',]
         verbose_name_plural = "Agencies"
 
     def __unicode__(self):
@@ -77,6 +94,9 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
+        if self.agency_center_latitude and self.agency_center_longitude:
+            self.agency_center_point = Point(self.agency_center_longitude,
+                                             self.agency_center_latitude)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
@@ -133,6 +153,7 @@ class Alert(TimeStampedModel):
                                     default='E')
     user_notified_of_receipt = models.BooleanField(default=False, help_text="Indicates if a push notification has been sent to the user to notify the app that the alert has been received.")
     user_notified_of_dispatcher_congestion = models.BooleanField(default=False, help_text="If an organization has the chat auto-responder functionality enabled, this flag is to indicate if the user has been sent the auto-responder message.")
+    notes = models.TextField(null=True, blank=True)
 
     objects = models.Manager()
     active = ActiveAlertManager()
@@ -236,6 +257,9 @@ class MassAlert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        return u"%s" % self.message
+
 
 class AgencyUser(AbstractUser):
     DEVICE_TYPE_CHOICES = (
@@ -258,9 +282,17 @@ class AgencyUser(AbstractUser):
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
     user_logged_in_via_social = models.BooleanField(default=False)
+    last_reported_latitude = models.FloatField(null=True, blank=True)
+    last_reported_longitude = models.FloatField(null=True, blank=True)
+    last_reported_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
+    last_reported_time = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
+
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def __unicode__(self):
         if self.email:
@@ -272,12 +304,24 @@ class AgencyUser(AbstractUser):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
+        if self.last_reported_latitude and self.last_reported_longitude:
+            self.last_reported_point = Point(self.last_reported_longitude,
+                                             self.last_reported_latitude)
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
         return u"sms-verification-topic-%s" % slugify(self.phone_number)
 
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
+
+
+class EntourageMember(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='entourage_members')
+    name = models.CharField(max_length=255, null=True, blank=True)
+    phone_number = models.CharField(max_length=24, null=True, blank=True)
+    email_address = models.EmailField(max_length=254, null=True, blank=True)
 
 
 class UserProfile(models.Model):
@@ -360,6 +404,39 @@ class ChatMessage(TimeStampedModel):
 
     def __unicode__(self):
         return u"%s - %s..." % (self.sender.first_name, self.message[:50])
+
+
+class SocialCrimeReport(TimeStampedModel):
+
+    CRIME_TYPE_CHOICES = (
+        ('A', 'Arrest'),
+        ('AR', 'Arson'),
+        ('AS', 'Assault'),
+        ('B', 'Burglary'),
+        ('O', 'Other'),
+        ('R', 'Robbery'),
+        ('S', 'Shooting'),
+        ('T', 'Theft'),
+        ('V', 'Vandalism'),
+    )
+
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
+    body = models.TextField()
+    report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
+    report_image_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
+    report_latitude = models.FloatField()
+    report_longitude = models.FloatField()
+    report_point = db_models.PointField(geography=True,
+                                        null=True, blank=True)
+
+    objects = db_models.GeoManager()
+
+    def save(self, *args, **kwargs):
+        if self.report_latitude and self.report_longitude:
+            self.report_point = Point(self.report_longitude,
+                                      self.report_latitude)
+        super(SocialCrimeReport, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=AgencyUser)

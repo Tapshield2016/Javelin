@@ -9,10 +9,14 @@ from twilio import TwilioRestException
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
+from django.core.mail import send_mail
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
-from rest_framework.filters import DjangoFilterBackend, OrderingFilter
+from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
+                                    SearchFilter)
 from rest_framework.response import Response
 
 from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
@@ -20,24 +24,113 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      AlertLocationSerializer,
                                      ChatMessageSerializer,
                                      MassAlertSerializer,
-                                     UserProfileSerializer)
+                                     UserProfileSerializer,
+                                     SocialCrimeReportSerializer,
+                                     EntourageMemberGETSerializer,
+                                     EntourageMemberUpdateSerializer,
+                                     UserUpdateSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile)
+                         ChatMessage, MassAlert, UserProfile,
+                         ChatMessage, MassAlert, UserProfile, EntourageMember,
+                         SocialCrimeReport)
+
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
 User = get_user_model()
 
 
+class EntourageMemberViewSet(viewsets.ModelViewSet):
+    queryset = EntourageMember.objects.select_related('user').all()
+    model = EntourageMember
+    filter_fields = ('user',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return EntourageMemberGETSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return EntourageMemberUpdateSerializer
+
+        return EntourageMemberGETSerializer
+
+
 class UserViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.select_related('agency')\
-        .prefetch_related('groups').all()
-    serializer_class = UserSerializer
+    model = User
     filter_fields = ('agency',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UserSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return UserUpdateSerializer
+
+        return UserSerializer
+
+    def get_queryset(self):
+        qs = User.objects.select_related('agency')\
+            .prefetch_related('groups', 'entourage_members').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = User.geo.select_related('agency')\
+                .prefetch_related('groups', 'entourage_members')\
+                .filter(last_reported_point__dwithin=(point, D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = User.objects.none()
+        return qs
+
+    @action(methods=['POST',])
+    def message_entourage(self, request, pk=None):
+        message = request.DATA.get('message', None)
+        subject = request.DATA.get('subject', None)
+        if message:
+            user = self.get_object()
+            entourage_members = user.entourage_members.all()
+            errors = []
+            for em in entourage_members:
+                if em.phone_number:
+                    try:
+                        resp = twilio_client.messages.create(\
+                            to=em.phone_number,
+                            from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
+                            body=message)
+                        if resp.status == 'failed':
+                            errors.append(\
+                                {"Entourage Member %d" %\
+                                     em.id: 'Error sending SMS Verification',
+                                 "id": em.id})
+                    except TwilioRestException, e:
+                        if e.code and e.code == 21211:
+                            errors.append(\
+                                {"Entourage Member %d" %\
+                                     em.id: 'Invalid phone number',
+                                 "id": em.id})
+                elif em.email_address:
+                    if not subject:
+                        subject = "A message from TapShield"
+                    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
+                              [em.email_address], fail_silently=True)
+        else:
+            return Response(\
+                {'message': 'message is a required parameter.'},
+                status=status.HTTP_400_BAD_REQUEST)
+        if errors:
+            return Response({'message': 'Partial Success',
+                             'errors': errors})
+        else:
+            return Response({'message': 'Success'})
 
     @action(methods=['post',])
     def update_required_info(self, request, pk=None):
@@ -64,7 +157,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response(\
                 {'message': 'There was an error with the values provided.'},
-                status=status.HTTP_400_BAD_REQUEST)            
+                status=status.HTTP_400_BAD_REQUEST)
 
     @action()
     def update_device_token(self, request, pk=None):
@@ -104,13 +197,15 @@ class UserViewSet(viewsets.ModelViewSet):
     @action()
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
-            user = self.get_object()
             phone_number = request.DATA.get('phone_number', None)
             if not phone_number:
                 return Response(\
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
+                user = self.get_object()
+                user.phone_number_verification_code = None
+                user.save()
                 resp = twilio_client.messages.create(\
                     to=phone_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
@@ -152,7 +247,6 @@ class UserViewSet(viewsets.ModelViewSet):
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
-                user.phone_number_verification_code = None
                 user.save()
                 return Response(\
                     {'message': 'OK'},
@@ -168,9 +262,52 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+class SocialCrimeReportViewSet(viewsets.ModelViewSet):
+    model = SocialCrimeReport
+    serializer_class = SocialCrimeReportSerializer
+
+    def get_queryset(self):
+        qs = SocialCrimeReport.objects.select_related('reporter').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = SocialCrimeReport.objects\
+                .select_related('reporter')\
+                .filter(report_point__dwithin=(point, D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = SocialCrimeReport.objects.none()
+        return qs
+
+
 class AgencyViewSet(viewsets.ModelViewSet):
-    queryset = Agency.objects.select_related('agency_point_of_contact').all()
+    model = Agency
     serializer_class = AgencySerializer
+    filter_backends = (SearchFilter,)
+    search_fields = ('domain',)
+
+    def get_queryset(self):
+        qs = Agency.objects.select_related('agency_point_of_contact').all()
+        latitude = self.request.QUERY_PARAMS.get('latitude', None)
+        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        distance_within =\
+            self.request.QUERY_PARAMS.get('distance_within', None)
+        if (latitude and longitude) and distance_within:
+            point = Point(float(longitude), float(latitude))
+            dwithin = float(distance_within)
+            qs = Agency.geo.select_related('agency_point_of_contact')\
+                .filter(agency_center_point__dwithin=(point,
+                                                      D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+        elif latitude or longitude or distance_within:
+            # We got one or more values but not all we need, so return none
+            qs = Agency.objects.none()
+        return qs
 
     @action()
     def send_mass_alert(self, request, pk=None):
