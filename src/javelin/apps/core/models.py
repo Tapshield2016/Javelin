@@ -57,6 +57,7 @@ class Agency(TimeStampedModel):
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
+    alert_received_message = models.CharField(max_length=255, default="The authorities have been notified.")
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. Please enter disarm code to complete this session.")
     sns_primary_topic_arn = models.CharField(max_length=255,
