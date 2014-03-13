@@ -11,6 +11,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
+from django.core.mail import send_mail
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
@@ -93,6 +94,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(methods=['POST',])
     def message_entourage(self, request, pk=None):
         message = request.DATA.get('message', None)
+        subject = request.DATA.get('subject', None)
         if message:
             user = self.get_object()
             entourage_members = user.entourage_members.all()
@@ -115,6 +117,11 @@ class UserViewSet(viewsets.ModelViewSet):
                                 {"Entourage Member %d" %\
                                      em.id: 'Invalid phone number',
                                  "id": em.id})
+                elif em.email_address:
+                    if not subject:
+                        subject = "A message from TapShield"
+                    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
+                              [em.email_address], fail_silently=True)
         else:
             return Response(\
                 {'message': 'message is a required parameter.'},
