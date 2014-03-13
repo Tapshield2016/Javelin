@@ -6,7 +6,7 @@ from datetime import datetime
 import django.utils.timezone
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models as db_models
 from django.contrib.gis.geos import Point
 from django.db import models
@@ -291,7 +291,7 @@ class AgencyUser(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
 
-    objects = models.Manager()
+    objects = UserManager()
     geo = db_models.GeoManager()
 
     def __unicode__(self):
