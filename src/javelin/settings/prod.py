@@ -16,7 +16,7 @@ CACHES = {
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'javelin',
         'USER': 'javelin_user',
         'PASSWORD': '26947&83764w',
