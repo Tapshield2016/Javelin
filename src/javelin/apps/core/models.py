@@ -411,13 +411,17 @@ class ChatMessage(TimeStampedModel):
 class SocialCrimeReport(TimeStampedModel):
 
     CRIME_TYPE_CHOICES = (
-        ('A', 'Arrest'),
-        ('AR', 'Arson'),
+        ('AB', 'Abuse')
         ('AS', 'Assault'),
-        ('B', 'Burglary'),
+        ('CA', 'Car Accident'),
+        ('DI', 'Disturbance'),
+        ('DR', 'Drugs/Alcohol'),
+        ('H', 'Harassment'),
+        ('MH', 'Mental Health'),
         ('O', 'Other'),
-        ('R', 'Robbery'),
-        ('S', 'Shooting'),
+        ('RN', 'Repair Needed'),
+        ('S', 'Suggestion'),
+        ('SA', 'Suspicious Activity'),
         ('T', 'Theft'),
         ('V', 'Vandalism'),
     )
