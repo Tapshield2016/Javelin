@@ -411,7 +411,7 @@ class ChatMessage(TimeStampedModel):
 class SocialCrimeReport(TimeStampedModel):
 
     CRIME_TYPE_CHOICES = (
-        ('AB', 'Abuse')
+        ('AB', 'Abuse'),
         ('AS', 'Assault'),
         ('CA', 'Car Accident'),
         ('DI', 'Disturbance'),
