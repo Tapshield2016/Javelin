@@ -435,6 +435,8 @@ class SocialCrimeReport(TimeStampedModel):
     report_longitude = models.FloatField()
     report_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
+    report_anonymous = models.BooleanField(default=False)
+                                        
 
     objects = db_models.GeoManager()
 
