@@ -43,6 +43,9 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                 'fields': (['agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
         }),
+        ('Agency Optional Info', {
+                'fields': (['agency_info_url', 'agency_rss_url',]),
+        }),
     )
 
 
