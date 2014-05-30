@@ -36,12 +36,15 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
         ('Agency Location and Boundaries', {
                 'fields': (['agency_boundaries', 'agency_center_latitude',
-                            'agency_center_longitude', 'agency_center_point',
+                            'agency_center_longitude', 'agency_center_point', 'agency_radius',
                             'default_map_zoom_level',]),
         }),
         ('Agency Theme', {
                 'fields': (['agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
+        }),
+        ('Agency Optional Info', {
+                'fields': (['agency_info_url', 'agency_rss_url',]),
         }),
     )
 

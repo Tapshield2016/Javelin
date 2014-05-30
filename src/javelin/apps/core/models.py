@@ -54,6 +54,7 @@ class Agency(TimeStampedModel):
     agency_center_longitude = models.FloatField()
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
+    agency_radius = models.FloatField(default=1)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
@@ -81,6 +82,10 @@ class Agency(TimeStampedModel):
                                         help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
     agency_theme = models.TextField(null=True, blank=True, default="{}",
                                     help_text="Use properly formatted JSON here to provide data as necessary.")
+    agency_info_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="This could be a web page with important info pertaining to emergency situations")
+    agency_rss_url = models.CharField(max_length=255, null=True, blank=True,
+                                       help_text="RSS feed for mass alerts already populated by the system in use")
 
     objects = models.Manager()
     geo = db_models.GeoManager()
@@ -431,10 +436,16 @@ class SocialCrimeReport(TimeStampedModel):
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
     report_image_url = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Location of asset on S3")
+    report_video_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
+    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
     report_latitude = models.FloatField()
     report_longitude = models.FloatField()
     report_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
+    report_anonymous = models.BooleanField(default=False)
+                                        
 
     objects = db_models.GeoManager()
 
