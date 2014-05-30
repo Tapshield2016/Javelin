@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting field 'Agency.agency_radius'
-        db.delete_column(u'core_socialcrimereport', 'agency_radius')
+        db.delete_column(u'core_agency', 'agency_radius')
 
 
     models = {
