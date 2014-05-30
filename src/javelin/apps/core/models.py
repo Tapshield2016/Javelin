@@ -54,7 +54,7 @@ class Agency(TimeStampedModel):
     agency_center_longitude = models.FloatField()
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
-    agency_radius = models.FloatField()
+    agency_radius = models.FloatField(default=1)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
