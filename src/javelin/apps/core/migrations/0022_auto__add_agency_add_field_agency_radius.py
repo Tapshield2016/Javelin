@@ -8,20 +8,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Agency.agency_agency_info_url'
-        db.add_column(u'core_agency', 'agency_info_url',
-                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True))
-        
-        # Adding field 'Agency.agency_agency_rss_url'
-        db.add_column(u'core_agency', 'agency_rss_url',
-                      self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True))
+        # Adding field 'Agency.agency_radius'
+        db.add_column(u'core_agency', 'agency_radius',
+                      self.gf('django.db.models.fields.FloatField')())
 
     def backwards(self, orm):
-        # Deleting field 'Agency.agency_agency_info_url'
-        db.delete_column(u'core_agency', 'agency_info_url')
-    
-        # Deleting field 'Agency.agency_agency_rss_url'
-        db.delete_column(u'core_agency', 'agency_rss_url')
+        # Deleting field 'Agency.agency_radius'
+        db.delete_column(u'core_socialcrimereport', 'agency_radius')
 
 
     models = {
@@ -52,6 +45,7 @@ class Migration(SchemaMigration):
             'agency_center_latitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_longitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+            'agency_radius': ('django.db.models.fields.FloatField', [], {}),
             'agency_info_url': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'agency_logo': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'agency_point_of_contact': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'agency_point_of_contact'", 'null': 'True', 'to': u"orm['core.AgencyUser']"}),
