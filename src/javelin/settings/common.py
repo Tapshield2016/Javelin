@@ -139,7 +139,6 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'south',
     'storages',
-    'emailmgr',
 
     'core',
     'shieldcommand',
