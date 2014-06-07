@@ -237,3 +237,7 @@ SOCIALACCOUNT_PROVIDERS = {
                                            'public-profile-url']},
 }
 SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'
+
+EMAIL_MGR_TEMPLATE_PATH = (
+    os.path.join(PROJECT_DIR, 'templates'),
+)
