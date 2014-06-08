@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="fc34b2f0-d438-48be-ad4c-6affaf7e40aa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/models.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/models.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Javelin.iws" />
     <ignored path=".idea/workspace.xml" />
