@@ -6,7 +6,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.db.models import signals
 
 
-class EmailAddress(settings.AUTH_USER_MODEL):
+class EmailAddress(models.Model):
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)s")
     email = models.EmailField(_("Email Address"))
