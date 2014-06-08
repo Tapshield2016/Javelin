@@ -23,8 +23,8 @@ class EmailAddressForm(ModelForm):
             EmailAddress.objects.get(user=self.user, email=email)
         except EmailAddress.DoesNotExist:
             try:
-                User.objects.get(email=email)
-            except User.DoesNotExist:
+                settings.AUTH_USER_MODEL.objects.get(email=email)
+            except settings.AUTH_USER_MODEL.DoesNotExist:
                 return email
         
         raise ValidationError(u"This email address already in use.")
