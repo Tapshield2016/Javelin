@@ -12,6 +12,8 @@ from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status, serializers
 
 
 @api_view(['POST'])
@@ -20,6 +22,8 @@ def email_add(request):
     User is logged and has a primary email address already
     This will add an aditional email address to this User
     """
+    response_status = status.HTTP_200_OK
+
     if request.method == 'POST':
         form = EmailAddressForm(user=request.user, data=request.POST)
         if form.is_valid():
@@ -27,16 +31,12 @@ def email_add(request):
             user_added_email.send(sender=EmailAddress, email_address=email)
             Msg.add_message (request, Msg.SUCCESS, _('email address added'))
             form = EmailAddressForm(user=request.user)
+        else:
+            response_status = status.HTTP_400_BAD_REQUEST
     else:
         form = EmailAddressForm(user=request.user)
     emails_list = EmailAddress.objects.filter(user=request.user).order_by(*sort_email())
-    return render_to_response(get_template('emailmgr_email_list.html'),
-                              {
-                                'email_list': emails_list,
-                                'email_form': form
-                              },
-                              context_instance=RequestContext(request)
-                              )
+    return Response({"email": email}, status=response_status)
 
 @api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):

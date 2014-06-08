@@ -1,8 +1,13 @@
 {% load i18n %}
-{% blocktrans with this_site.name as site_name %}
 
-To activate the new email address for '{{ user }}' at '{{ site_name }}' click the following link.
+Hello,
+
+Thank you for using TapShield. Please verify your email address by clicking on the link below:
+
 {{ activate_url }}
 
-If you didn't request this email activation, delete this email.
-{% endblocktrans %}
+Remember to always keep TapShield on your Home screen so help is just a tap away.
+
+Thank you!
+
+TapShield Team
