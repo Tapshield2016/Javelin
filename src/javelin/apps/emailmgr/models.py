@@ -57,5 +57,5 @@ def remove_all_emails_for_deleted_user(sender, instance, **kwargs):
         e.delete()
 
 # latch on signals here
-signals.post_save.connect(create_primary_email_for_new_user, sender=settings.AUTH_USER_MODEL)
-signals.post_delete.connect(remove_all_emails_for_deleted_user, sender=settings.AUTH_USER_MODEL)
+signals.post_save.connect(create_primary_email_for_new_user, sender=User)
+signals.post_delete.connect(remove_all_emails_for_deleted_user, sender=User)
