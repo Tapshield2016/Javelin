@@ -14,6 +14,7 @@ from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
 
 
+@api_view(['POST'])
 def email_add(request):
     """
     User is logged and has a primary email address already
@@ -37,6 +38,7 @@ def email_add(request):
                               context_instance=RequestContext(request)
                               )
 
+@api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):
     """
     User is logged in, has a second email that is already activated and 
@@ -65,6 +67,7 @@ def email_make_primary(request, identifier="somekey"):
     return HttpResponseRedirect(reverse('emailmgr_email_list'))
 
 
+@api_view(['POST'])
 def email_send_activation(request, identifier="somekey"):
     """
     The user is logged in, has added a new email address to his/her account.
@@ -85,6 +88,7 @@ def email_send_activation(request, identifier="somekey"):
     return HttpResponseRedirect(reverse('emailmgr_email_list'))
 
 
+@api_view(['POST'])
 def email_activate(request, identifier="somekey"):
     """
     User is already logged in and the activation link will trigger the email address
@@ -127,6 +131,7 @@ def email_delete(request, identifier="somekey"):
     return HttpResponseRedirect(reverse('emailmgr_email_list'))
 
 
+@api_view(['GET', 'POST'])
 def email_list(request):
     """
     All email address associated with User account will be passed into the template as a list
