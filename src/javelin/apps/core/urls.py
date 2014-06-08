@@ -17,4 +17,5 @@ urlpatterns = patterns('',
     url(r'^create-google-user/$', 'core.views.create_google_user',),
     url(r'^create-linkedin-user/$', 'core.views.create_linkedin_user',),
     url(r'^v1/', include(router_v1.urls)),
+    url(r'^', include('emailmgr.urls')),
 )

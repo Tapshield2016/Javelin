@@ -30,7 +30,6 @@ urlpatterns = patterns('',
     url(r'^docs/', include('rest_framework_swagger.urls')),
     (r'^social-accounts/', include('allauth.urls')),
     url(r'^', include('shieldcommand.urls')),
-    url(r'^', include('emailmgr.urls')),
 
 )
 
