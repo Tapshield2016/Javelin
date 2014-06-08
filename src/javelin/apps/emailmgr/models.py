@@ -8,7 +8,7 @@ from django.db.models import signals
 
 class EmailAddress(models.Model):
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="%(class)s")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
     email = models.EmailField(_("Email Address"))
     is_primary = models.BooleanField(default=False)
     is_active = models.BooleanField(default=False)
