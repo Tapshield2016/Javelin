@@ -1,5 +1,6 @@
 from forms import EmailAddressForm
 from models import EmailAddress
+from django.conf import settings
 from utils import send_activation, get_template, sort_email
 from signals import user_added_email, user_sent_activation, user_activated_email
 from django.shortcuts import render_to_response
@@ -22,9 +23,22 @@ def email_add(request):
     User is logged and has a primary email address already
     This will add an additional email address to this User
     """
-    response_status = status.HTTP_200_OK
+    response_status = None
 
     email = request.DATA.get('email', None)
+
+    try:
+        EmailAddress.objects.get(user=request.user, email=email)
+    except EmailAddress.DoesNotExist:
+        try:
+            settings.AUTH_USER_MODEL.objects.get(email=email)
+        except settings.AUTH_USER_MODEL.DoesNotExist:
+            response_status = status.HTTP_200_OK
+
+    if not response_status:
+        return Response({'message': 'Email already in use.'},
+                         status=status.HTTP_404_NOT_FOUND)
+
     email = EmailAddress(**{'user': request.user, 'email': email})
     email.save()
     user_added_email.send(sender=EmailAddress, email_address=email)
@@ -34,27 +48,7 @@ def email_add(request):
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
 
-    # try:
-    #     EmailAddress.objects.get(user=request.user, email=email)
-    # except EmailAddress.DoesNotExist:
-    #     try:
-    #             settings.AUTH_USER_MODEL.objects.get(email=email)
-    #     except settings.AUTH_USER_MODEL.DoesNotExist:
-
-
-    # if request.method == 'POST':
-    #     form = EmailAddressForm(user=request.user, data=request.POST)
-    #     if form.is_valid():
-    #         email = form.save()
-    #         user_added_email.send(sender=EmailAddress, email_address=email)
-    #         Msg.add_message (request, Msg.SUCCESS, _('email address added'))
-    #         form = EmailAddressForm(user=request.user)
-    #     else:
-    #         response_status = status.HTTP_400_BAD_REQUEST
-    # else:
-    #     form = EmailAddressForm(user=request.user)
-    # emails_list = EmailAddress.objects.filter(user=request.user).order_by(*sort_email())
-    return Response({"email": email.identifier}, status=response_status)
+    return Response({"email": email.email, "id": email.identifier}, status=response_status)
 
 @api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):
@@ -114,7 +108,7 @@ def email_activate(request, identifier="somekey"):
     in question to be activated. If the account is already active, then a message is 
     put in the message buffer indicating that the email is already active
     """
-    title = "Verification"
+    title = "Verification complete"
     message_response = None
 
     try:
