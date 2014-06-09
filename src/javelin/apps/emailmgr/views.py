@@ -20,10 +20,27 @@ from rest_framework import status, serializers
 def email_add(request):
     """
     User is logged and has a primary email address already
-    This will add an aditional email address to this User
+    This will add an additional email address to this User
     """
     response_status = status.HTTP_200_OK
+
+    email = request.DATA.get('email', None)
+    email = EmailAddress(**{'user': request.user, 'email': email})
+    email.save()
+    user_added_email.send(sender=EmailAddress, email_address=email)
+
+    send_activation(email, request.is_secure())
+    email.is_activation_sent = True
+    email.save()
+    user_sent_activation.send(sender=EmailAddress, email_address=email)
     
+    # try:
+    #     EmailAddress.objects.get(user=request.user, email=email)
+    # except EmailAddress.DoesNotExist:
+    #     try:
+    #             settings.AUTH_USER_MODEL.objects.get(email=email)
+    #     except settings.AUTH_USER_MODEL.DoesNotExist:
+
 
     # if request.method == 'POST':
     #     form = EmailAddressForm(user=request.user, data=request.POST)
@@ -78,6 +95,7 @@ def email_send_activation(request, identifier="somekey"):
     """
     email = get_object_or_404(EmailAddress, identifier__iexact=identifier.lower())
     if email.is_active:
+
         Msg.add_message (request, Msg.SUCCESS, _('email address already activated'))
     else:
         send_activation(email, request.is_secure())
