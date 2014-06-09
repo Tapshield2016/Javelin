@@ -169,6 +169,33 @@ def email_list(request):
 
 
 
+# class EmailAddressGETSerializer(serializers.HyperlinkedModelSerializer):
+#
+#     class Meta:
+#         model = EmailAddress
+#         fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
+#
+#
+# class EmailAddressUpdateSerializer(serializers.HyperlinkedModelSerializer):
+#
+#     class Meta:
+#         model = EmailAddress
+#
+#
+# class EmailAddressViewSet(viewsets.ModelViewSet):
+#     queryset = EmailAddress.objects.select_related('user').all()
+#     model = EmailAddress
+#     filter_fields = ('user',)
+#
+#     def get_serializer_class(self):
+#         if self.request.method == 'GET' and not hasattr(self, 'response'):
+#             return EmailAddressGETSerializer
+#         elif self.request.method in ('POST', 'PUT', 'PATCH')\
+#                 and not hasattr(self, 'response'):
+#             return EmailAddressUpdateSerializer
+#
+#         return EmailAddressGETSerializer
+#
 
 
 
