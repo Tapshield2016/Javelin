@@ -14,7 +14,7 @@ from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status, serializers
+from rest_framework import status, serializers, viewsets
 
 
 @api_view(['POST'])
@@ -27,17 +27,17 @@ def email_add(request):
 
     email = request.DATA.get('email', None)
 
-    try:
-        EmailAddress.objects.get(user=request.user, email=email)
-    except EmailAddress.DoesNotExist:
-        try:
-            settings.AUTH_USER_MODEL.objects.get(email=email)
-        except settings.AUTH_USER_MODEL.DoesNotExist:
-            response_status = status.HTTP_200_OK
-
-    if not response_status:
-        return Response({'message': 'Email already in use.'},
-                         status=status.HTTP_404_NOT_FOUND)
+    # try:
+    #     EmailAddress.objects.get(user=request.user, email=email)
+    # except EmailAddress.DoesNotExist:
+    #     try:
+    #         settings.AUTH_USER_MODEL.objects.get(email=email)
+    #     except settings.AUTH_USER_MODEL.DoesNotExist:
+    #         response_status = status.HTTP_200_OK
+    #
+    # if not response_status:
+    #     return Response({'message': 'Email already in use.'},
+    #                      status=status.HTTP_404_NOT_FOUND)
 
     email = EmailAddress(**{'user': request.user, 'email': email})
     email.save()
