@@ -238,4 +238,5 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'
 
-EMAIL_MGR_TEMPLATE_PATH = os.path.join(PROJECT_DIR, 'templates')
+TEMPLATE_FIRST = os.path.join(PROJECT_DIR, 'templates')
+EMAIL_MGR_TEMPLATE_PATH = os.path.join(TEMPLATE_FIRST, 'emailmgr')
