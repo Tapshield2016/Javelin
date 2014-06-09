@@ -51,8 +51,8 @@ def send_activation(email, is_secure):
 
     url = u"%s://%s%s" % (proto, unicode(this_site.domain), p)
     context = {"user": email.user, "activate_url": url, "this_site": this_site,"identifier": email.identifier,}
-    return
     subject = "".join(render_to_string(get_template("emailmgr_activation_subject.txt"), context).splitlines())
+    return
     message = render_to_string(get_template("emailmgr_activation_message.txt"), context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email.email])
 
