@@ -23,19 +23,20 @@ def email_add(request):
     This will add an aditional email address to this User
     """
     response_status = status.HTTP_200_OK
+    
 
-    if request.method == 'POST':
-        form = EmailAddressForm(user=request.user, data=request.POST)
-        if form.is_valid():
-            email = form.save()
-            user_added_email.send(sender=EmailAddress, email_address=email)
-            Msg.add_message (request, Msg.SUCCESS, _('email address added'))
-            form = EmailAddressForm(user=request.user)
-        else:
-            response_status = status.HTTP_400_BAD_REQUEST
-    else:
-        form = EmailAddressForm(user=request.user)
-    emails_list = EmailAddress.objects.filter(user=request.user).order_by(*sort_email())
+    # if request.method == 'POST':
+    #     form = EmailAddressForm(user=request.user, data=request.POST)
+    #     if form.is_valid():
+    #         email = form.save()
+    #         user_added_email.send(sender=EmailAddress, email_address=email)
+    #         Msg.add_message (request, Msg.SUCCESS, _('email address added'))
+    #         form = EmailAddressForm(user=request.user)
+    #     else:
+    #         response_status = status.HTTP_400_BAD_REQUEST
+    # else:
+    #     form = EmailAddressForm(user=request.user)
+    # emails_list = EmailAddress.objects.filter(user=request.user).order_by(*sort_email())
     return Response({"email": email}, status=response_status)
 
 @api_view(['POST'])
