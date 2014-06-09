@@ -48,10 +48,7 @@ def email_add(request):
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
 
-    return Response(EmailAddressUpdateSerializer(instance=email).data,
-                            status=status.HTTP_201_CREATED)
-
-    # return Response({"email": email.email, "id": email.identifier}, status=response_status)
+    return Response({"email": email.email, "id": email.identifier}, status=response_status)
 
 @api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):
