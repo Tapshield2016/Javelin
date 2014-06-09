@@ -107,7 +107,7 @@ def email_send_activation(request, identifier="somekey"):
     return HttpResponseRedirect(reverse('emailmgr_email_list'))
 
 
-@api_view(['POST'])
+#@api_view(['POST'])
 def email_activate(request, identifier="somekey"):
     """
     User is already logged in and the activation link will trigger the email address
