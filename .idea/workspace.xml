@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc34b2f0-d438-48be-ad4c-6affaf7e40aa" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/settings/common.py" afterPath="$PROJECT_DIR$/src/javelin/settings/common.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py" />
     </list>
     <ignored path="Javelin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -32,8 +31,8 @@
       <file leaf-file-name="utils.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-5.5" vertical-offset="292" max-vertical-offset="1050">
-              <caret line="29" column="31" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="31" />
+            <state vertical-scroll-proportion="-21.076923" vertical-offset="277" max-vertical-offset="1050">
+              <caret line="55" column="10" selection-start-line="55" selection-start-column="10" selection-end-line="55" selection-end-column="10" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -41,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="defaults.py" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="defaults.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="409">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="32" />
+            <state vertical-scroll-proportion="-1.1538461" vertical-offset="0" max-vertical-offset="210">
+              <caret line="2" column="23" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -54,7 +53,7 @@
       <file leaf-file-name="models.py" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/models.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.7307693" vertical-offset="600" max-vertical-offset="1005">
+            <state vertical-scroll-proportion="-0.88461536" vertical-offset="622" max-vertical-offset="1005">
               <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
@@ -63,11 +62,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="common.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="common.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-11.269231" vertical-offset="3337" max-vertical-offset="3720">
-              <caret line="242" column="0" selection-start-line="242" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.72584856" vertical-offset="3337" max-vertical-offset="3720">
+              <caret line="241" column="23" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -99,6 +98,7 @@
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
         <option value="$PROJECT_DIR$/src/javelin/settings/common.py" />
+        <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py" />
       </list>
     </option>
   </component>
@@ -1116,8 +1116,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.5" vertical-offset="292" max-vertical-offset="1050">
-          <caret line="29" column="31" selection-start-line="29" selection-start-column="24" selection-end-line="29" selection-end-column="31" />
+        <state vertical-scroll-proportion="-21.076923" vertical-offset="277" max-vertical-offset="1050">
+          <caret line="55" column="10" selection-start-line="55" selection-start-column="10" selection-end-line="55" selection-end-column="10" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
           </folding>
@@ -1126,7 +1126,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/models.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.7307693" vertical-offset="600" max-vertical-offset="1005">
+        <state vertical-scroll-proportion="-0.88461536" vertical-offset="622" max-vertical-offset="1005">
           <caret line="43" column="11" selection-start-line="43" selection-start-column="11" selection-end-line="43" selection-end-column="11" />
           <folding>
             <element signature="e#0#35#0" expanded="true" />
@@ -1134,18 +1134,18 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
+    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-11.269231" vertical-offset="3337" max-vertical-offset="3720">
-          <caret line="242" column="0" selection-start-line="242" selection-start-column="0" selection-end-line="242" selection-end-column="0" />
+        <state vertical-scroll-proportion="-1.1538461" vertical-offset="0" max-vertical-offset="210">
+          <caret line="2" column="23" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="23" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py">
+    <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="210">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="32" />
+        <state vertical-scroll-proportion="0.72584856" vertical-offset="3337" max-vertical-offset="3720">
+          <caret line="241" column="23" selection-start-line="241" selection-start-column="0" selection-end-line="241" selection-end-column="23" />
           <folding />
         </state>
       </provider>
