@@ -114,6 +114,9 @@ def email_activate(request, identifier="somekey"):
     in question to be activated. If the account is already active, then a message is 
     put in the message buffer indicating that the email is already active
     """
+    title = "title test"
+    message = "message test"
+
     try:
         email = EmailAddress.objects.get(identifier__iexact=identifier.lower())
     except EmailAddress.DoesNotExist:
@@ -130,8 +133,8 @@ def email_activate(request, identifier="somekey"):
             email.save()
             user_activated_email.send(sender=EmailAddress, email_address=email)
             Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
-            
-    return render_to_response(get_template('verification_complete.html'))
+    context = {"title": title, "message": message,}
+    return render_to_response(get_template('verification_complete.html'), context)
 
 @api_view(['POST'])
 def email_delete(request, identifier="somekey"):
