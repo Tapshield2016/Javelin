@@ -64,11 +64,26 @@
 	    'FR': 'Friend',
 	    'O': 'Other',
 	}
-
+	
+	Javelin.CRIME_TYPE_CHOICES = {
+	    'AB': 'Abuse',
+	    'AS': 'Assault',
+	    'CA': 'Car Accident',
+	    'DI': 'Disturbance',
+	    'DR': 'Drugs/Alcohol',
+	    'H': 'Harassment',
+	    'MH': 'Mental Health',
+	    'O': 'Other',
+		'RN': 'Repair Needed',
+		'S': 'Suggestion',
+		'SA': 'Suspicious Activity',
+		'T': 'Theft',
+		'V': 'Vandalism',
+	}
 
 	function APIResponseObject(attributes) {
 		this.parseIDFromURL = function(url) {
-			var tokens = url.split('/')
+			var tokens = url.split('/');
 			return tokens[tokens.length - 2];
 		}
 
@@ -137,6 +152,7 @@
 		this.agencyBoundaries = attributes.agency_boundaries;
 		this.agencyCenterLatitude = attributes.agency_center_latitude;
 		this.agencyCenterLongitude = attributes.agency_center_longitude;
+		this.radius = attributes.agency_radius;
 		this.defaultMapZoomLevel = attributes.default_map_zoom_level;
 		this.alertCompletedMessage = attributes.alert_completed_message;
 		this.requireDomainEmails = attributes.require_domain_emails;
@@ -183,6 +199,21 @@
 		this.alertType = null;
 		this.alertStatus = null;
 		this.title = null;
+		return this;
+	}
+	
+	function CrimeTip(attributes) {
+		APITimeStampedObject.call(this, attributes);
+		this.distance = attributes.distance;
+		this.reporter = attributes.reporter;
+		this.body = attributes.body;
+		this.reportType = attributes.report_type;
+		this.imageURL = attributes.report_image_url;
+		this.videoURL = attributes.report_video_url;
+		this.audioURL = attributes.report_audio_url;
+		this.latitude = attributes.report_latitude;
+		this.longitude = attributes.report_longitude;
+		this.anonymous = attributes.report_anonymous;
 		return this;
 	}
 
@@ -244,6 +275,7 @@
 		Javelin.client.add('alertlocations', {url: 'alert-locations'});
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
+		Javelin.client.add('crimetips', {url: 'social-crime-reports'});
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
@@ -475,6 +507,28 @@
 		request.fail(function(data) {
 			callback(false);
 		});
+	}
+	
+	Javelin.getCrimeTips = function(options, callback) {
+		var agency = Javelin.activeAgency;
+		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
+		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
+		request.done(function(data) {
+			var retrievedCrimeTips = [];
+			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+			for (var i = data.results.length - 1; i >= 0; i--) {
+				newCrimeTip = new CrimeTip(data.results[i]);
+				retrievedCrimeTips.push(newCrimeTip);
+				newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+				if (newCrimeTipDate > latestDate) {
+					latestDate = newCrimeTipDate;
+				}
+			}
+			if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+				Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+			};
+			callback(retrievedCrimeTips);
+		})
 	}
 
 }(this));

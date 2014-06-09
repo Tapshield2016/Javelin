@@ -76,13 +76,29 @@ function updateMarker(location) {
 }
 
 function getIconForLocation(location) {
-    var pinIcon = "/media/static/shieldcommand/img/NewUserPin.png";
-    if (location) {
-        if (location.alertStatus != 'N' && location.alertType) {
-            pinIcon = "/media/static/shieldcommand/img/" + location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + "UserPin.png"
-        } 
+	var icon = 'NewUserPin.png';
+	
+    if (location)
+	{
+		if (location.type == 'alert')
+		{
+        	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon; 
+		}
+		else if (location.type == 'crimetip' || location.type == 'spotcrime')
+		{
+			var crimeType = location.crimeType ? location.crimeType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
+			
+			icon = location.type + '/' + 'pins_' + crimeType + '_icon.png';
+		}
     }
-    return pinIcon;
+    
+	return '/media/static/shieldcommand/img/' + icon;
+}
+
+function getCrimeIcon(source, type) {
+	var type = type ? type.toLowerCase().replace(/[\s\/]/g, '') : 'other';
+	
+	return '/media/static/shieldcommand/img/' + source + '/' + 'pins_' + type + '_icon.png';
 }
 
 function setMarker(location) {
@@ -99,4 +115,25 @@ function setMarker(location) {
     googleMapAccuracyCircle.setRadius(location.accuracy);
     googleMap.setZoom(18);
     googleMap.setCenter(googleMapMarker.getPosition());
+}
+
+function addCrimeMarkers(source, crimes) {
+    if (! crimes)
+	{
+		return;
+	};
+	
+	var marker;
+	
+	for (var i = 0; i < crimes.length; i++)
+	{
+		var crime = crimes[i];
+		
+		marker = new google.maps.Marker({
+			position: new google.maps.LatLng(crime.latitude, crime.longitude),
+			map: googleMap,
+			title: crime.title,
+			icon: getCrimeIcon(source, crime.type)
+        });
+	}
 }
