@@ -115,7 +115,7 @@ def email_activate(request, identifier="somekey"):
     put in the message buffer indicating that the email is already active
     """
     title = "title test"
-    message = "message test"
+    message_response = "message test"
 
     try:
         email = EmailAddress.objects.get(identifier__iexact=identifier.lower())
@@ -133,7 +133,7 @@ def email_activate(request, identifier="somekey"):
             email.save()
             user_activated_email.send(sender=EmailAddress, email_address=email)
             Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
-    context = {"title": title, "message": message,}
+    context = {"title": title, "message_response": message_response,}
     return render_to_response(get_template('verification_complete.html'), context)
 
 @api_view(['POST'])
