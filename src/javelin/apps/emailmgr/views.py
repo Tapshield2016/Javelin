@@ -131,7 +131,7 @@ def email_activate(request, identifier="somekey"):
             user_activated_email.send(sender=EmailAddress, email_address=email)
             Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
             
-    return HttpResponseRedirect(reverse('emailmgr_email_list'))
+    return render_to_response(get_template('emailmgr_email_list.html'))
 
 @api_view(['POST'])
 def email_delete(request, identifier="somekey"):
