@@ -34,7 +34,7 @@ def get_template(name):
 def send_activation(email, is_secure):
     # import pdb; pdb.set_trace()
     this_site = Site.objects.get_current()
-    
+
     # first try to use our views fuction to construct the activation path (deterministic)
     # if views didn't reverse to a path, then use named url (less deterministic as it is user configurable)
     try:
@@ -51,6 +51,7 @@ def send_activation(email, is_secure):
 
     url = u"%s://%s%s" % (proto, unicode(this_site.domain), p)
     context = {"user": email.user, "activate_url": url, "this_site": this_site,"identifier": email.identifier,}
+    return
     subject = "".join(render_to_string(get_template("emailmgr_activation_subject.txt"), context).splitlines())
     message = render_to_string(get_template("emailmgr_activation_message.txt"), context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email.email])

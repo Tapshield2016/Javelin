@@ -33,7 +33,7 @@ def email_add(request):
     email.is_activation_sent = True
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
-    
+
     # try:
     #     EmailAddress.objects.get(user=request.user, email=email)
     # except EmailAddress.DoesNotExist:
@@ -54,7 +54,7 @@ def email_add(request):
     # else:
     #     form = EmailAddressForm(user=request.user)
     # emails_list = EmailAddress.objects.filter(user=request.user).order_by(*sort_email())
-    return Response({"email": email}, status=response_status)
+    return Response({"email": email.identifier}, status=response_status)
 
 @api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):

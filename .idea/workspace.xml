@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fc34b2f0-d438-48be-ad4c-6affaf7e40aa" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_message.txt" afterPath="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_message.txt" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_subject.txt" afterPath="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_subject.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
     </list>
     <ignored path="Javelin.iws" />
@@ -30,25 +29,25 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="forms.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/forms.py">
+      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="645">
-              <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="27" selection-end-column="28" />
+            <state vertical-scroll-proportion="-10.076923" vertical-offset="398" max-vertical-offset="2745">
+              <caret line="44" column="32" selection-start-line="44" selection-start-column="32" selection-end-line="44" selection-end-column="32" />
               <folding>
-                <element signature="e#0#31#0" expanded="true" />
+                <element signature="e#0#34#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
+      <file leaf-file-name="utils.py" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.6449086" vertical-offset="278" max-vertical-offset="2745">
-              <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.42298287" vertical-offset="547" max-vertical-offset="1050">
+              <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
               <folding>
-                <element signature="e#0#34#0" expanded="true" />
+                <element signature="e#0#9#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -62,16 +61,6 @@
               <folding>
                 <element signature="e#0#35#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="common.py" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-4.6153846" vertical-offset="270" max-vertical-offset="3735">
-              <caret line="26" column="8" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="8" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -98,10 +87,10 @@
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/models.py" />
         <option value="$PROJECT_DIR$/src/javelin/apps/core/views.py" />
         <option value="$PROJECT_DIR$/src/javelin/settings/dev.py" />
-        <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
         <option value="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_subject.txt" />
         <option value="$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_message.txt" />
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
+        <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
       </list>
     </option>
   </component>
@@ -207,58 +196,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="registration" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="Javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="javelin" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="templates" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="emailmgr" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -989,14 +926,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-4.6153846" vertical-offset="270" max-vertical-offset="3735">
-          <caret line="26" column="8" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="8" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/settings/dev.py">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6666667" vertical-offset="435" max-vertical-offset="1740">
@@ -1021,20 +950,26 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-5.5" vertical-offset="397" max-vertical-offset="1035">
-          <caret line="36" column="4" selection-start-line="36" selection-start-column="4" selection-end-line="36" selection-end-column="4" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_subject.txt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19430052" vertical-offset="0" max-vertical-offset="386">
           <caret line="5" column="19" selection-start-line="5" selection-start-column="19" selection-end-line="5" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_message.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="195">
+          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/javelin/settings/common.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31331593" vertical-offset="270" max-vertical-offset="3735">
+          <caret line="26" column="8" selection-start-line="26" selection-start-column="0" selection-end-line="26" selection-end-column="8" />
           <folding />
         </state>
       </provider>
@@ -1049,17 +984,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/templates/emailmgr/emailmgr_activation_message.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="195">
-          <caret line="7" column="19" selection-start-line="7" selection-start-column="19" selection-end-line="7" selection-end-column="19" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/forms.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="135" max-vertical-offset="645">
+        <state vertical-scroll-proportion="0.4400978" vertical-offset="135" max-vertical-offset="645">
           <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="27" selection-end-column="28" />
           <folding>
             <element signature="e#0#31#0" expanded="true" />
@@ -1069,10 +996,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6449086" vertical-offset="278" max-vertical-offset="2745">
-          <caret line="35" column="4" selection-start-line="35" selection-start-column="4" selection-end-line="35" selection-end-column="4" />
+        <state vertical-scroll-proportion="-10.076923" vertical-offset="398" max-vertical-offset="2745">
+          <caret line="44" column="32" selection-start-line="44" selection-start-column="32" selection-end-line="44" selection-end-column="32" />
           <folding>
             <element signature="e#0#34#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.42298287" vertical-offset="547" max-vertical-offset="1050">
+          <caret line="48" column="13" selection-start-line="48" selection-start-column="13" selection-end-line="48" selection-end-column="13" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>
