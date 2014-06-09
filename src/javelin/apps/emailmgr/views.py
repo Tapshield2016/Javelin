@@ -48,7 +48,10 @@ def email_add(request):
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
 
-    return Response({"email": email.email, "id": email.identifier}, status=response_status)
+    return Response(EmailAddressUpdateSerializer(instance=email).data,
+                            status=status.HTTP_201_CREATED)
+
+    # return Response({"email": email.email, "id": email.identifier}, status=response_status)
 
 @api_view(['POST'])
 def email_make_primary(request, identifier="somekey"):
@@ -169,33 +172,33 @@ def email_list(request):
 
 
 
-# class EmailAddressGETSerializer(serializers.HyperlinkedModelSerializer):
-#
-#     class Meta:
-#         model = EmailAddress
-#         fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
-#
-#
-# class EmailAddressUpdateSerializer(serializers.HyperlinkedModelSerializer):
-#
-#     class Meta:
-#         model = EmailAddress
-#
-#
-# class EmailAddressViewSet(viewsets.ModelViewSet):
-#     queryset = EmailAddress.objects.select_related('user').all()
-#     model = EmailAddress
-#     filter_fields = ('user',)
-#
-#     def get_serializer_class(self):
-#         if self.request.method == 'GET' and not hasattr(self, 'response'):
-#             return EmailAddressGETSerializer
-#         elif self.request.method in ('POST', 'PUT', 'PATCH')\
-#                 and not hasattr(self, 'response'):
-#             return EmailAddressUpdateSerializer
-#
-#         return EmailAddressGETSerializer
-#
+class EmailAddressGETSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EmailAddress
+        fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
+
+
+class EmailAddressUpdateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = EmailAddress
+
+
+class EmailAddressViewSet(viewsets.ModelViewSet):
+    queryset = EmailAddress.objects.select_related('user').all()
+    model = EmailAddress
+    filter_fields = ('user',)
+
+    def get_serializer_class(self):
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return EmailAddressGETSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return EmailAddressUpdateSerializer
+
+        return EmailAddressGETSerializer
+
 
 
 
