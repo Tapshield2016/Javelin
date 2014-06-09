@@ -114,16 +114,19 @@ def email_activate(request, identifier="somekey"):
     in question to be activated. If the account is already active, then a message is 
     put in the message buffer indicating that the email is already active
     """
-    title = "title test"
-    message_response = "message test"
+    title = "Verification"
+    message_response = None
 
     try:
         email = EmailAddress.objects.get(identifier__iexact=identifier.lower())
     except EmailAddress.DoesNotExist:
         Msg.add_message (request, Msg.ERROR, _('email address not found'))
+        title = "Error"
+        message_response = "This link is no longer valid"
     else:
         if email.is_active:
             Msg.add_message (request, Msg.SUCCESS, _('email address already active'))
+            message_response = "Email address already verified"
         else:
             email.is_active = True
             if not email.user.email:
@@ -133,6 +136,7 @@ def email_activate(request, identifier="somekey"):
             email.save()
             user_activated_email.send(sender=EmailAddress, email_address=email)
             Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
+            message_response = "Email address verified"
     context = {"title": title, "message_response": message_response,}
     return render_to_response(get_template('verification_complete.html'), context)
 

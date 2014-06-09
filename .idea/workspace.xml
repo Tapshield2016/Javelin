@@ -3,6 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="fc34b2f0-d438-48be-ad4c-6affaf7e40aa" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/templates/emailmgr/verification_complete.html" afterPath="$PROJECT_DIR$/src/javelin/templates/emailmgr/verification_complete.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" afterPath="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
     </list>
     <ignored path="Javelin.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -62,11 +63,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="views.py" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="views.py" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-9.807693" vertical-offset="1785" max-vertical-offset="2790">
-              <caret line="136" column="24" selection-start-line="136" selection-start-column="24" selection-end-line="136" selection-end-column="24" />
+            <state vertical-scroll-proportion="0.5" vertical-offset="1830" max-vertical-offset="2850">
+              <caret line="134" column="33" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
               <folding>
                 <element signature="e#0#34#0" expanded="true" />
               </folding>
@@ -74,61 +75,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="verification_complete.html" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="verification_complete.html" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/javelin/templates/emailmgr/verification_complete.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.22123894" vertical-offset="0" max-vertical-offset="339">
-              <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="password_reset_form.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_form.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="435">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="password_reset_done.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_done.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="270">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="password_reset_complete.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_complete.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.0" vertical-offset="0" max-vertical-offset="285">
-              <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="password_reset_confirm.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_confirm.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="585">
-              <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="5" selection-end-column="19" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="activation_complete.html" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/activation_complete.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="210">
-              <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
+            <state vertical-scroll-proportion="-3.75" vertical-offset="0" max-vertical-offset="225">
+              <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
               <folding />
             </state>
           </provider>
@@ -160,8 +111,8 @@
         <option value="$PROJECT_DIR$/src/javelin/settings/common.py" />
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/defaults.py" />
         <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/utils.py" />
-        <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
         <option value="$PROJECT_DIR$/src/javelin/templates/emailmgr/verification_complete.html" />
+        <option value="$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py" />
       </list>
     </option>
   </component>
@@ -1047,19 +998,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
+    <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_complete.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-9.807693" vertical-offset="1785" max-vertical-offset="2790">
-          <caret line="136" column="24" selection-start-line="136" selection-start-column="24" selection-end-line="136" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#34#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_form.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="610">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="623">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1073,9 +1014,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_complete.html">
+    <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_form.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="623">
+        <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="610">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
@@ -1083,7 +1024,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/password_reset_confirm.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-1.875" vertical-offset="0" max-vertical-offset="585">
+        <state vertical-scroll-proportion="0.12893982" vertical-offset="0" max-vertical-offset="585">
           <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="5" selection-end-column="19" />
           <folding />
         </state>
@@ -1091,7 +1032,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/templates/registration/activation_complete.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-2.5" vertical-offset="0" max-vertical-offset="210">
+        <state vertical-scroll-proportion="0.16574585" vertical-offset="0" max-vertical-offset="362">
           <caret line="4" column="19" selection-start-line="4" selection-start-column="19" selection-end-line="4" selection-end-column="19" />
           <folding />
         </state>
@@ -1099,9 +1040,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/javelin/templates/emailmgr/verification_complete.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.22123894" vertical-offset="0" max-vertical-offset="339">
-          <caret line="5" column="8" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="8" />
+        <state vertical-scroll-proportion="-3.75" vertical-offset="0" max-vertical-offset="225">
+          <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/javelin/apps/emailmgr/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5" vertical-offset="1830" max-vertical-offset="2850">
+          <caret line="134" column="33" selection-start-line="134" selection-start-column="33" selection-end-line="134" selection-end-column="33" />
+          <folding>
+            <element signature="e#0#34#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
