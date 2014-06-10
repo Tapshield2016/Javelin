@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-from emailmgr.views import EmailAddressGETSerializer
 
 from rest_framework import serializers
 
@@ -40,7 +39,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberGETSerializer(required=False, many=True)
     distance = serializers.SerializerMethodField('distance_if_exists')
-    email_addresses = EmailAddressGETSerializer(required=False, many=True)
 
     class Meta:
         model = User
@@ -48,7 +46,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members',
-                  'last_reported_time', 'distance', 'email_addresses')
+                  'last_reported_time', 'distance')
 
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
