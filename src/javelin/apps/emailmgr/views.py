@@ -28,7 +28,7 @@ def email_add(request):
     email = request.DATA.get('email', None)
 
     if EmailAddress.objects.filter(user=request.user, email=email).exists():
-        return Response({'message': 'Email already in use.'},
+        return Response({"message": "Email already in use."},
                         status=status.HTTP_404_NOT_FOUND)
 
     # if settings.AUTH_USER_MODEL.objects.filter(email=email).exists():
