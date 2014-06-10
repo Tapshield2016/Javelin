@@ -30,6 +30,7 @@ def email_add(request):
     # try:
     #     EmailAddress.objects.get(user=request.user, email=email)
     # except EmailAddress.DoesNotExist:
+
     #     try:
     #         settings.AUTH_USER_MODEL.objects.get(email=email)
     #     except settings.AUTH_USER_MODEL.DoesNotExist:
@@ -187,16 +188,8 @@ class EmailAddressUpdateSerializer(serializers.ModelSerializer):
 class EmailAddressViewSet(viewsets.ModelViewSet):
     queryset = EmailAddress.objects.select_related('user').all()
     model = EmailAddress
-    filter_fields = ('user',)
-
-    def get_serializer_class(self):
-        if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return EmailAddressGETSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
-                and not hasattr(self, 'response'):
-            return EmailAddressUpdateSerializer
-
-        return EmailAddressGETSerializer
+    # filter_fields = ('user',)
+    # serializer_class = EmailAddressGETSerializer
 
 
 
