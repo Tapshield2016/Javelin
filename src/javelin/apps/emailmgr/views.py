@@ -23,7 +23,6 @@ def email_add(request):
     User is logged and has a primary email address already
     This will add an additional email address to this User
     """
-    response_status = None
 
     email = request.DATA.get('email', None)
 
@@ -31,18 +30,9 @@ def email_add(request):
         return Response({"message": "Email already in use."},
                         status=status.HTTP_404_NOT_FOUND)
 
-    # if settings.AUTH_USER_MODEL.objects.filter(email=email).exists():
-    #     return Response({'message': 'Email already in use.'},
-    #                     status=status.HTTP_404_NOT_FOUND)
-
-    #     try:
-    #         settings.AUTH_USER_MODEL.objects.get(email=email)
-    #     except settings.AUTH_USER_MODEL.DoesNotExist:
-    #         response_status = status.HTTP_200_OK
-    #
-    # if not response_status:
-    #     return Response({'message': 'Email already in use.'},
-    #                      status=status.HTTP_404_NOT_FOUND)
+    if settings.AUTH_USER_MODEL.objects.filter(email=email).exists():
+        return Response({"message": "Email already in use."},
+                        status=status.HTTP_404_NOT_FOUND)
 
     email = EmailAddress(**{'user': request.user, 'email': email})
     email.save()
