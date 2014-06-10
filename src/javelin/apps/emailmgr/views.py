@@ -30,7 +30,7 @@ def email_add(request):
         return Response({"message": "Email already in use."},
                         status=status.HTTP_404_NOT_FOUND)
 
-    if settings.AUTH_USER_MODEL.objects.filter(email=email).exists():
+    if User.objects.filter(email=email).exists():
         return Response({"message": "Email already in use."},
                         status=status.HTTP_404_NOT_FOUND)
 
