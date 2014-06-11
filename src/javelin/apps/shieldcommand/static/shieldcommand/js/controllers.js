@@ -298,6 +298,21 @@ angular.module('shieldCommand.controllers', [])
 			setTimeout($scope.getUpdatedAlerts, 3000);
 		}
   	};
+	
+	$scope.loadInitialCrimeTips = function() {
+  		try {
+			crimeTipService.loadInitialCrimeTips(function(alerts) {
+				updateAlerts(alerts);
+				// setTimeout($scope.getUpdatedAlerts, 3000);
+			});
+		}
+		catch (error) {
+			console.log(error);
+		}
+		finally {
+			setTimeout($scope.getUpdatedAlerts, 3000);
+		}
+  	};
 
   	$scope.getUpdatedAlerts = function() {
   		try {

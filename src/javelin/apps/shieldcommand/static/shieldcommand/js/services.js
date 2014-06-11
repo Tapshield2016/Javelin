@@ -119,4 +119,48 @@ angular.module('shieldCommand.services', [])
 		activeAgency: this.activeAgency,
 		sendMassAlert: this.sendMassAlert,
 	}
+}])
+
+.factory('crimeTipService', [function () {
+	var activeCrimeTip = null;
+
+	this.loadInitialCrimeTips = function (callback) {
+		Javelin.loadInitialCrimeTips(function(initialCrimeTips) {
+			callback(initialCrimeTips);
+		});
+	};
+
+	this.getUpdatedCrimeTips = function (existingCrimeTips, callback) {
+		Javelin.updateCrimeTips(function(updatedCrimeTips) {
+
+			for (var i = 0; i < updatedCrimeTips.length; i++) {
+				var foundCrimeTip = false;
+				for (var j = 0; j < existingCrimeTips.length; j++) {
+					if (existingCrimeTips[j].url === updatedCrimeTips[i].url) {
+						foundCrimeTip = true;
+						for (var key in updatedCrimeTips[i]) {
+							existingCrimeTips[j][key] = updatedCrimeTips[i][key];
+						}
+						break;
+					}
+				}
+				if (!foundCrimeTip) {
+					existingCrimeTips.push(updatedCrimeTips[i]);
+				};
+			};
+			callback(existingCrimeTips);
+		});
+	}
+
+	this.setActiveCrimeTip = function(crimeTip) {
+		this.activeCrimeTip = crimeTip;
+		Javelin.setActiveCrimeTip(crimeTip);
+	}
+
+	return {
+		activeCrimeTip: this.activeCrimeTip,
+		loadInitialCrimeTips: this.loadInitialCrimeTips,
+		getUpdatedCrimeTips: this.getUpdatedCrimeTips,		
+		setActiveCrimeTip: this.setActiveCrimeTip,
+	}
 }]);

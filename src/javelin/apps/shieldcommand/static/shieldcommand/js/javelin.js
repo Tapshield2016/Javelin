@@ -14,7 +14,9 @@
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
     Javelin.lastCheckedAlertsTimestamp = null;
-	Javelin.activeCrimeUser = null;
+	Javelin.activeCrimeTip = null;
+	Javelin.activeCrimeTipUser = null;
+	Javelin.lastCheckedCrimeTipsTimestamp = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -217,10 +219,10 @@
 		
 		if ( ! attributes.report_anonymous)
 		{
-			Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeUser);
+			Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setactiveCrimeTipUser);
 		}
 		
-		this.user = Javelin.activeCrimeUser;
+		this.user = Javelin.activeCrimeTipUser;
 		
 		return this;
 	}
@@ -298,8 +300,8 @@
 		Javelin.activeAlert = alert;
 	}
 	
-	Javelin.setActiveCrimeUser = function(user) {
-		Javelin.activeCrimeUser = user;
+	Javelin.setactiveCrimeTipUser = function(user) {
+		Javelin.activeCrimeTipUser = user;
 	}
 
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
