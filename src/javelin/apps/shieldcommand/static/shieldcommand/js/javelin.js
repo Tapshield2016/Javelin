@@ -14,6 +14,7 @@
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
     Javelin.lastCheckedAlertsTimestamp = null;
+	Javelin.activeCrimeUser = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -205,7 +206,6 @@
 	function CrimeTip(attributes) {
 		APITimeStampedObject.call(this, attributes);
 		this.distance = attributes.distance;
-		this.reporter = attributes.reporter;
 		this.body = attributes.body;
 		this.reportType = attributes.report_type;
 		this.imageURL = attributes.report_image_url;
@@ -214,6 +214,14 @@
 		this.latitude = attributes.report_latitude;
 		this.longitude = attributes.report_longitude;
 		this.anonymous = attributes.report_anonymous;
+		
+		if ( ! attributes.report_anonymous)
+		{
+			Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeUser);
+		}
+		
+		this.user = Javelin.activeCrimeUser;
+		
 		return this;
 	}
 
@@ -289,6 +297,10 @@
 	Javelin.setActiveAlert = function(alert) {
 		Javelin.activeAlert = alert;
 	}
+	
+	Javelin.setActiveCrimeUser = function(user) {
+		Javelin.activeCrimeUser = user;
+	}
 
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
@@ -346,11 +358,11 @@
 		});
 	};
 
-	Javelin.getUserProfileForUser = function(userID, callback) {
-		var request = Javelin.client.userprofiles.read({user: userID});
+	Javelin.getUser = function(userID, callback) {
+		var request = Javelin.client.user.read({user: userID});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
-				callback(new AgencyUserProfile(data['results'][0]));
+				callback(new AgencyUser(data['results'][0]));
 			}
 			else {
 				callback(null);
