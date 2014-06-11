@@ -184,19 +184,19 @@
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive">
-						<h4 class="panel-title"> Crime Tips ({{ completedAlertsLength }}) </h4>
+						<h4 class="panel-title"> Crime Tips </h4>
 					</div>
 					<div id="collapseFive" class="panel-collapse collapse">
 						<div class="panel-body accordion-panel-body"> 
 							<!-- Crime Tips -->
 							<ul class="alerts-list">
-								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
-									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+								<li class="alert" ng-repeat="crimetip in crimetips" ng-class="selectedClass(crimetip)">
+									<div id="{{ crimetip.object_id }}" class="alert-container" ng-click="crimetipClicked(crimetip)">
+										<div class="alert-type crimetip {{ crimetip.reportType }}-crimetip-type"> <i class="icon-{{ crimetip.reportType }}_type"></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-name">{{ crimetip.reportType }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ crimetip.lastModified | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -208,7 +208,7 @@
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix">
-						<h4 class="panel-title"> Spot Crimes ({{ completedAlertsLength }}) </h4>
+						<h4 class="panel-title"> Spot Crimes </h4>
 					</div>
 					<div id="collapseSix" class="panel-collapse collapse">
 						<div class="panel-body accordion-panel-body"> 
