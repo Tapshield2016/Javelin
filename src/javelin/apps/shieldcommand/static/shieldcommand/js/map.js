@@ -84,7 +84,7 @@ function getIconForLocation(location) {
 		{
         	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon; 
 		}
-		else if (location.type == 'crimetip' || location.type == 'spotcrime')
+		else if (location.type == 'crimeTip' || location.type == 'spotcrime')
 		{
 			var crimeType = location.crimeType ? location.crimeType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
 			

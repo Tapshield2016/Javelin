@@ -198,6 +198,7 @@
 		this.accuracy = attributes.accuracy;
 		this.altitude = attributes.altitude;
 		this.latitude = attributes.latitude;
+		this.type = 'alert';
 		this.longitude = attributes.longitude;
 		this.alertType = null;
 		this.alertStatus = null;
@@ -215,6 +216,7 @@
 		this.audioURL = attributes.report_audio_url;
 		this.latitude = attributes.report_latitude;
 		this.longitude = attributes.report_longitude;
+		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
 		
 		if ( ! attributes.report_anonymous)
@@ -300,7 +302,11 @@
 		Javelin.activeAlert = alert;
 	}
 	
-	Javelin.setactiveCrimeTipUser = function(user) {
+	Javelin.setActiveCrimeTip = function(crimeTip) {
+		Javelin.activeCrimeTip = crimeTip;
+	}
+	
+	Javelin.setActiveCrimeTipUser = function(user) {
 		Javelin.activeCrimeTipUser = user;
 	}
 
@@ -350,7 +356,7 @@
 		Javelin.getAlertsModifiedSinceLastCheck(function(updatedAlerts) {
 			callback(updatedAlerts);
 		});
-	}
+	};
 
 	Javelin.getAgency = function(agencyID, callback) {
 		var request = Javelin.client.agencies.read(agencyID);
@@ -543,6 +549,27 @@
 			};
 			callback(retrievedCrimeTips);
 		})
+	}
+	
+	Javelin.loadInitialCrimeTips = function(callback) {
+		var now = getTimestamp(milliseconds=true);
+		var then = Number(new Date(now - (24 * 60 * 60)));
+		Javelin.getCrimeTips({
+			modified_since: then,
+			//page_size: 15,
+		}, callback);		
+	}
+
+	Javelin.updateCrimeTips = function(callback) {
+		Javelin.getCrimeTipsModifiedSinceLastCheck(function(updatedCrimeTips) {
+			callback(updatedCrimeTips);
+		});
+	}
+	
+	Javelin.getCrimeTipsModifiedSinceLastCheck = function(callback) {
+		Javelin.getCrimeTips({
+			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
+		}, callback);
 	}
 
 }(this));

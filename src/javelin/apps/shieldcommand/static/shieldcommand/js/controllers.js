@@ -20,10 +20,11 @@ angular.module('shieldCommand.controllers', [])
 
 }])
 
-.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertService) {
+.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', 'crimeTipService', function($rootScope, $scope, alertService, crimeTipService) {
 
 	$scope.currentProfile = null;
 	$scope.activeAlert = null;
+	$scope.activeCrimeTip = null;
 	$scope.isProfileVisible = false;
 	$rootScope.profileIsOpen = false;
 
@@ -143,7 +144,7 @@ angular.module('shieldCommand.controllers', [])
 
 }])
 
-.controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
+.controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', 'crimeTipService', function($rootScope, $scope, $filter, alertService, crimeTipService) {
 
 	$scope.alerts = [];
 	$rootScope.chats = {};
@@ -158,6 +159,10 @@ angular.module('shieldCommand.controllers', [])
 	$scope.newAlertSoundInterval = null;
 	$scope.newAlertDocumentTitleInterval = null;
 	$scope.currentActiveLocation = null;
+	$scope.crimeTips = [];
+	$scope.crimeTipsLength = 0;
+	$scope.crimeTipUpdateInterval = 20;
+	$scope.markerSetForActiveCrimeTip = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -239,12 +244,19 @@ angular.module('shieldCommand.controllers', [])
 		$rootScope.alerts = $scope.alerts;
 		updateDisplay();
   	};
+	
+	function updateCrimeTips(crimeTips) {
+		$scope.crimeTips = crimeTips;
+		//$rootScope.alerts = $scope.alerts;
+		updateDisplay();
+  	};
 
   	function updateDisplay() {
 		$scope.myAlertsLength = $filter("byAgencyDispatcher")($($filter("filter")($scope.alerts, {status: 'A'}))).length;
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
+		$scope.crimeTipsLength = $scope.crimeTips.length;
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -301,16 +313,15 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.loadInitialCrimeTips = function() {
   		try {
-			crimeTipService.loadInitialCrimeTips(function(alerts) {
-				updateAlerts(alerts);
-				// setTimeout($scope.getUpdatedAlerts, 3000);
+			crimeTipService.loadInitialCrimeTips(function(crimeTips) {
+				updateCrimeTips(crimeTips);
 			});
 		}
 		catch (error) {
 			console.log(error);
 		}
 		finally {
-			setTimeout($scope.getUpdatedAlerts, 3000);
+			setTimeout($scope.getUpdatedCrimeTips, $scope.crimeTipUpdateInterval * 1000);
 		}
   	};
 
@@ -338,6 +349,31 @@ angular.module('shieldCommand.controllers', [])
 		}
 		finally {
 			setTimeout($scope.getUpdatedAlerts, 3000);
+		}
+  	}
+	
+	$scope.getUpdatedCrimeTips = function() {
+  		try {
+	  		crimeTipService.getUpdatedCrimeTips($scope.crimeTips, function(updatedCrimeTips) {
+	  			updateCrimeTips(updatedCrimeTips);
+				if (crimeTipService.activeCrimeTip) {
+					for (var i = 0; i < updatedCrimeTips.length; i++) {
+						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
+							//updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
+							//updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
+							//updatedAlerts[i].location.title = updatedAlerts[i].agencyUserMeta.getFullName();
+							$scope.currentActiveLocation = updatedCrimeTips[i];
+							updateDisplay();
+						}
+					}
+				}
+	  		});
+		}
+		catch (error) {
+			console.log(error);
+		}
+		finally {
+			setTimeout($scope.getUpdatedCrimeTips, $scope.crimeTipUpdateInterval * 1000);
 		}
   	}
 
@@ -405,6 +441,40 @@ angular.module('shieldCommand.controllers', [])
 
   			$rootScope.$broadcast('activeAlertUpdated');
 			$rootScope.$broadcast('toggleProfileOpen');
+  		}
+  	};
+	
+	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
+  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : false;
+  		if (crimeTip === crimeTipService.activeCrimeTip) {
+  			if (shouldToggleProfile) {
+	  			//$rootScope.$broadcast('toggleProfile');
+  			}
+  			//$scope.initChatMessagesForActiveAlert();
+  		}
+  		else {
+  			//clearTimeout($scope.chatUpdateTimeout);
+  			if (crimeTipService.activeCrimeTip) {
+	  			//$rootScope.$broadcast('closeChatWindowForAlert', alertService.activeAlert);
+  			}
+	  		crimeTipService.setActiveCrimeTip(crimeTip);
+
+  			//$scope.initChatMessagesForActiveAlert();
+
+	  		$scope.markerSetForActiveCrimeTip = false;	
+
+			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
+				if (crimeTipService.activeCrimeTip) {
+					//crimeTipService.activeAlert.location.alertStatus = alertService.activeAlert.status;
+					//crimeTipService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
+					//crimeTipService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
+					setMarker(crimeTipService.activeCrimeTip);
+					$scope.currentActiveLocation = crimeTipService.activeCrimeTip;
+				}
+			}
+
+  			$rootScope.$broadcast('activeCrimeTipUpdated');
+			//$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
 
@@ -525,4 +595,5 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.loadInitialAlerts();
+	$scope.loadInitialCrimeTips();
 }]);
