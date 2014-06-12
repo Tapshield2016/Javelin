@@ -83,6 +83,11 @@
 		'T': 'Theft',
 		'V': 'Vandalism',
 	}
+	
+	function getObjectProperty(obj, key)
+	{
+		return typeof obj[key] !== 'undefined' ? obj[key] : null;
+	}
 
 	function APIResponseObject(attributes) {
 		this.parseIDFromURL = function(url) {
@@ -210,7 +215,7 @@
 		APITimeStampedObject.call(this, attributes);
 		this.distance = attributes.distance;
 		this.body = attributes.body;
-		this.reportType = attributes.report_type;
+		this.reportType = getObjectProperty(Javelin.CRIME_TYPE_CHOICES, attributes.report_type);
 		this.imageURL = attributes.report_image_url;
 		this.videoURL = attributes.report_video_url;
 		this.audioURL = attributes.report_audio_url;

@@ -86,7 +86,7 @@ function getIconForLocation(location) {
 		}
 		else if (location.type == 'crimeTip' || location.type == 'spotcrime')
 		{
-			var crimeType = location.crimeType ? location.crimeType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
+			var crimeType = location.reportType ? location.reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
 			
 			icon = location.type + '/' + 'pins_' + crimeType + '_icon.png';
 		}
