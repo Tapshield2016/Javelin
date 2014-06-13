@@ -290,10 +290,10 @@
 				
 				<!-- profile -->
 				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
-					<p class="profile-title">Profile</p>
+					<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>
 					<div class="profile-content">
-						<div class="profile-top-content">
-							<div class="profile-image-container" ng-if="profileType == 'alert'"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
+						<div class="profile-top-content" ng-if="profileType == 'alert'">
+							<div class="profile-image-container"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
 							<div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
 								<div class="modal-dialog" style="width: 365px;">
 									<div class="modal-content">
@@ -308,7 +308,7 @@
 								<!-- /.modal-dialog --> 
 							</div>
 							<!-- /.modal -->
-							<div class="disarm-code" ng-if="profileType == 'alert'">
+							<div class="disarm-code">
 								<div class="title">Disarm Code</div>
 								<div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
 							</div>
@@ -316,8 +316,24 @@
 						</div>
 						<!-- /.disarm-code --> 
 					</div>
+					<div class="modal fade" ng-if="profileType == 'crimeTip'" id="crimeTipImage" tabindex="-1" role="dialog" aria-labelledby="crimeTipImageLabel" aria-hidden="true">
+						<div class="modal-dialog" style="width: 600px;">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="crimeTipImageLabel">{{ activeCrimeTip.reportType }}</h4>
+								</div>
+								<div class="modal-body">
+									<img ng-src="{{ activeCrimeTip.imageURL }}" />
+								</div>
+							</div>
+							<!-- /.modal-content --> 
+						</div>
+						<!-- /.modal-dialog --> 
+					</div>
+					<!-- /.modal -->
 					<div class="profile-information" style="clear: both;">
-						<table class="table table-condensed" ng-class="(profileType == 'alert') ? 'show' : 'hide'">
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
 							<tr class="first">
 								<td>Name</td>
 								<td>{{ activeAlert.agencyUserMeta.getFullName() }}</td>
@@ -340,6 +356,30 @@
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
+						<caption>Details</caption>
+							<tr class="first">
+								<td>Type</td>
+								<td>{{ activeCrimeTip.reportType }}</td>
+							</tr>
+							<tr>
+								<td>Description</td>
+								<td>{{ activeCrimeTip.body }}</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.imageURL">
+								<td>Image</td>
+								<td><a href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage">{{ activeCrimeTip.imageURL }}</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.videoURL">
+								<td>Video</td>
+								<td><a href="{{ activeCrimeTip.videoURL }}" target="_blank">{{ activeCrimeTip.videoURL }}</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.audioURL">
+								<td>Audio</td>
+								<td><a href="{{ activeCrimeTip.audioURL }}" target="_blank">{{ activeCrimeTip.audioURL }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
+							<caption>Reported by</caption>
 							<tr class="first">
 								<td>Name</td>
 								<td>{{ (currentProfile) ? currentProfile.getFullName() : '(anonymous)' }}</td>
