@@ -200,19 +200,45 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('currentActiveLocation', function() {
 		updateMarker($scope.currentActiveLocation);
 		addressForLocation($scope.currentActiveLocation, function(address) {
-			if (!alertService.activeAlert) {
-				return;
+			if (address)
+			{
+				if ($scope.currentActiveLocation.type == 'alert' && alertService.activeAlert)
+				{
+					alertService.activeAlert.geocodedAddress = address;
+				}
+				else if ($scope.currentActiveLocation.type == 'crimeTip' && crimeTipService.activeCrimeTip)
+				{
+					crimeTipService.activeCrimeTip.geocodedAddress = address;
+				}
+				else
+				{
+					address = null;
+				}
+				
 			}
-			if (address) {
-				alertService.activeAlert.geocodedAddress = address;
+			
+			if (address)
+			{
 				$("#alert-address  p").html("<strong>Location:</strong> " + address);
 				$("#alert-address").removeClass('hide');
 			}
-			else {
+			else
+			{
 				$scope.clearAddressBar();
 			}
 		});
-		$scope.markerSetForActiveAlert = true;
+		if ($scope.currentActiveLocation.type == 'alert')
+		{
+			crimeTipService.activeCrimeTip = null;
+			$scope.markerSetForActiveAlert = true;
+			$scope.markerSetForActiveCrimeTip = false;
+		}
+		else if ($scope.currentActiveLocation.type == 'crimeTip')
+		{
+			alertService.activeAlert = null;
+			$scope.markerSetForActiveCrimeTip = true;
+			$scope.markerSetForActiveAlert = false;
+		}
 	})
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
@@ -247,7 +273,7 @@ angular.module('shieldCommand.controllers', [])
 	
 	function updateCrimeTips(crimeTips) {
 		$scope.crimeTips = crimeTips;
-		//$rootScope.alerts = $scope.alerts;
+		$rootScope.crimeTips = crimeTips;
 		updateDisplay();
   	};
 
@@ -359,9 +385,6 @@ angular.module('shieldCommand.controllers', [])
 				if (crimeTipService.activeCrimeTip) {
 					for (var i = 0; i < updatedCrimeTips.length; i++) {
 						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
-							//updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
-							//updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
-							//updatedAlerts[i].location.title = updatedAlerts[i].agencyUserMeta.getFullName();
 							$scope.currentActiveLocation = updatedCrimeTips[i];
 							updateDisplay();
 						}
@@ -563,8 +586,19 @@ angular.module('shieldCommand.controllers', [])
 		}
   	}
 
-    $scope.selectedClass = function(alert) {
-        return alert === alertService.activeAlert ? 'selected' : undefined;
+    $scope.selectedClass = function(obj) {
+        if (obj.type == 'alert')
+		{
+			return obj === alertService.activeAlert ? 'selected' : undefined;
+		}
+		else if (obj.type == 'crimeTip')
+		{
+			return obj === crimeTipService.activeCrimeTip ? 'selected' : undefined;
+		}
+		else
+		{
+			return undefined;
+		}
     };
 
   	$scope.acceptClicked = function(alert) {
@@ -595,5 +629,5 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.loadInitialAlerts();
-	$scope.loadInitialCrimeTips();
+	setTimeout($scope.loadInitialCrimeTips, 1000);
 }]);

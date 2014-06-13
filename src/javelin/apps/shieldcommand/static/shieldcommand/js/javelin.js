@@ -181,6 +181,7 @@
 		this.pendingTime = attributes.pending_time;
 		this.status = attributes.status;
 		this.initiatedBy = Javelin.ALERT_TYPE_CHOICES[attributes.initiated_by];
+		this.type = 'alert';
 		this.location = null;
 		this.geocodedAddress = '';
 
@@ -208,6 +209,7 @@
 		this.alertType = null;
 		this.alertStatus = null;
 		this.title = null;
+
 		return this;
 	}
 	
@@ -221,6 +223,7 @@
 		this.audioURL = attributes.report_audio_url;
 		this.latitude = attributes.report_latitude;
 		this.longitude = attributes.report_longitude;
+		this.geocodedAddress = null;
 		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
 		
@@ -372,7 +375,7 @@
 	};
 
 	Javelin.getUser = function(userID, callback) {
-		var request = Javelin.client.user.read({user: userID});
+		var request = Javelin.client.users.read({user: userID});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
 				callback(new AgencyUser(data['results'][0]));
@@ -535,6 +538,11 @@
 	}
 	
 	Javelin.getCrimeTips = function(options, callback) {
+		if ( ! Javelin.activeAgency)
+		{
+			callback(null);
+		}
+		
 		var agency = Javelin.activeAgency;
 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
 		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
