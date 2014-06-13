@@ -30,19 +30,10 @@ angular.module('shieldCommand.controllers', [])
 	$rootScope.profileIsOpen = false;
 
 	$scope.toggle = function() {
-		if (alertService.activeAlert)
-		{
-			$scope.profileType = 'alert';
-		}
-		else if (crimeTipService.activeCrimeTip)
-		{
-			$scope.profileType = 'crimeTip';
-		}
 		$scope.isProfileVisible = !$scope.isProfileVisible;
 		if ($scope.isProfileVisible) {
-			//$rootScope.$broadcast('profileWasOpened');
-			//$rootScope.profileIsOpen = true;
-			$rootScope.$broadcast('toggleProfileOpen');
+			$rootScope.$broadcast('profileWasOpened');
+			$rootScope.profileIsOpen = true;
 		}
 		else {
 			$rootScope.$broadcast('profileWasClosed');
@@ -57,11 +48,13 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$on('toggleProfileOpen', function() {
 		if ($scope.profileType == 'alert' && alertService.activeAlert)
 		{
+			$scope.profileType = 'alert';
 			$scope.activeAlert = alertService.activeAlert;
 			$scope.activeCrimeTip = null;
 		}
 		else if ($scope.profileType == 'crimeTip' && crimeTipService.activeCrimeTip)
 		{
+			$scope.profileType = 'crimeTip';
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
 			$scope.activeAlert = null;
 		}
