@@ -46,13 +46,13 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
-		if ($scope.profileType == 'alert' && alertService.activeAlert)
+		if (alertService.activeAlert)
 		{
 			$scope.profileType = 'alert';
 			$scope.activeAlert = alertService.activeAlert;
 			$scope.activeCrimeTip = null;
 		}
-		else if ($scope.profileType == 'crimeTip' && crimeTipService.activeCrimeTip)
+		else if (crimeTipService.activeCrimeTip)
 		{
 			$scope.profileType = 'crimeTip';
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
