@@ -192,7 +192,7 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="crimeTip in crimeTips" ng-class="selectedClass(crimeTip)">
 									<div id="{{ crimeTip.object_id }}" class="alert-container" ng-click="crimeTipClicked(crimeTip)">
-										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="{{ crimeTip.reportType }}" /></i> </div>
+										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ crimeTip.reportType }}</div>
@@ -293,7 +293,7 @@
 					<p class="profile-title">Profile</p>
 					<div class="profile-content">
 						<div class="profile-top-content">
-							<div class="profile-image-container"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
+							<div class="profile-image-container" ng-if="profileType == 'alert'"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
 							<div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
 								<div class="modal-dialog" style="width: 365px;">
 									<div class="modal-content">
@@ -308,7 +308,7 @@
 								<!-- /.modal-dialog --> 
 							</div>
 							<!-- /.modal -->
-							<div class="disarm-code">
+							<div class="disarm-code" ng-if="profileType == 'alert'">
 								<div class="title">Disarm Code</div>
 								<div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
 							</div>
@@ -317,7 +317,7 @@
 						<!-- /.disarm-code --> 
 					</div>
 					<div class="profile-information" style="clear: both;">
-						<table class="table table-condensed">
+						<table class="table table-condensed" ng-class="(profileType == 'alert') ? 'show' : 'hide'">
 							<tr class="first">
 								<td>Name</td>
 								<td>{{ activeAlert.agencyUserMeta.getFullName() }}</td>
@@ -339,7 +339,21 @@
 								<td>{{ currentProfile.address }}</td>
 							</tr>
 						</table>
-						<table class="table table-condensed">
+						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
+							<tr class="first">
+								<td>Name</td>
+								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.getFullName() : '(anonymous)' }}</td>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.phoneNumber : '(anonymous)' }}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.email : '(anonymous)' }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
 							<caption>
 							Characteristics
 							</caption>
@@ -368,7 +382,7 @@
 								<td>{{ currentProfile.hairColor }}</td>
 							</tr>
 						</table>
-						<table class="table table-condensed">
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
 							<caption>
 							Medical
 							</caption>
@@ -381,7 +395,7 @@
 								<td>{{ currentProfile.medications }}</td>
 							</tr>
 						</table>
-						<table class="table table-condensed">
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
 							<caption>
 							Emergency Contact
 							</caption>
@@ -418,11 +432,11 @@
 					</div>
 					<!-- /.profile-information -->
 					
-					<div class="profile-buttons" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
 						<h5>Mark Alert As</h5>
 						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a> <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a> </div>
 					</div>
-					<div class="profile-buttons" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Completed By: </h5>
 						<p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
 					</div>

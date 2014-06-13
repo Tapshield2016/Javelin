@@ -25,10 +25,19 @@ angular.module('shieldCommand.controllers', [])
 	$scope.currentProfile = null;
 	$scope.activeAlert = null;
 	$scope.activeCrimeTip = null;
+	$scope.profileType = null;
 	$scope.isProfileVisible = false;
 	$rootScope.profileIsOpen = false;
 
 	$scope.toggle = function() {
+		if (alertService.activeAlert)
+		{
+			$scope.profileType = 'alert';
+		}
+		else if (crimeTipService.activeCrimeTip)
+		{
+			$scope.profileType = 'crimeTip';
+		}
 		$scope.isProfileVisible = !$scope.isProfileVisible;
 		if ($scope.isProfileVisible) {
 			$rootScope.$broadcast('profileWasOpened');
@@ -45,23 +54,55 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
-		$scope.activeAlert = alertService.activeAlert;
-		$scope.updateProfile(function(profile) {
-			$scope.isProfileVisible = true;
-			$rootScope.profileIsOpen = true;
-			$rootScope.$broadcast('profileWasOpened');
-			$rootScope.$broadcast('profileWasUpdated');
-			setTimeout($scope.updateProfile, 10000);
-		});
+		if ($scope.profileType == 'alert' && alertService.activeAlert)
+		{
+			$scope.activeAlert = alertService.activeAlert;
+			$scope.activeCrimeTip = null;
+		}
+		else if ($scope.profileType == 'crimeTip' && crimeTipService.activeCrimeTip)
+		{
+			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
+			$scope.activeAlert = null;
+		}
+		
+		if ($scope.activeAlert || $scope.activeCrimeTip)
+		{
+			$scope.updateProfile(function(profile) {
+				$scope.isProfileVisible = true;
+				$rootScope.profileIsOpen = true;
+				$rootScope.$broadcast('profileWasOpened');
+				$rootScope.$broadcast('profileWasUpdated');
+				setTimeout($scope.updateProfile, 10000);
+			});
+		}
 	});
 
 	$scope.updateProfile = function(callback) {
-		alertService.getUserProfileForActiveAlert(function(profile) {
-			$scope.currentProfile = profile;
+		if ($scope.activeAlert)
+		{
+			alertService.getUserProfileForActiveAlert(function(profile) {
+				$scope.currentProfile = profile;
+				if (callback) {
+					callback(profile);
+				}
+			});
+		}
+		else if ($scope.activeCrimeTip)
+		{
+			$scope.currentProfile = $scope.activeCrimeTip;
 			if (callback) {
-				callback(profile);
+					callback($scope.currentProfile);
+				}
+		}
+		else
+		{
+			$scope.currentProfile = null;
+			
+			if (callback)
+			{
+				callback(null);
 			}
-		});
+		}
 	}
 
 	$scope.shouldDisplayProfileButtons = function() {
@@ -134,12 +175,16 @@ angular.module('shieldCommand.controllers', [])
 	}
 
 	$scope.zoomToActiveAlertMarker = function () {
-		if ($scope.activeAlert) {
+		if ($scope.profileType == 'alert' && $scope.activeAlert) {
 			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
 			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
-		};
+		}
+		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
+		{
+			setMarker($scope.activeCrimeTip);
+		}
 	}
 
 }])
@@ -472,21 +517,14 @@ angular.module('shieldCommand.controllers', [])
   	};
 	
 	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
-  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' && crimeTip.user ? shouldToggleProfile : false;
+  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
   		if (crimeTip === crimeTipService.activeCrimeTip) {
   			if (shouldToggleProfile) {
-	  			//$rootScope.$broadcast('toggleProfile');
+	  			$rootScope.$broadcast('toggleProfile');
   			}
-  			//$scope.initChatMessagesForActiveAlert();
   		}
   		else {
-  			//clearTimeout($scope.chatUpdateTimeout);
-  			if (crimeTipService.activeCrimeTip) {
-	  			//$rootScope.$broadcast('closeChatWindowForAlert', alertService.activeAlert);
-  			}
 	  		crimeTipService.setActiveCrimeTip(crimeTip);
-
-  			//$scope.initChatMessagesForActiveAlert();
 
 	  		$scope.markerSetForActiveCrimeTip = false;	
 
@@ -498,7 +536,7 @@ angular.module('shieldCommand.controllers', [])
 			}
 
   			$rootScope.$broadcast('activeCrimeTipUpdated');
-			//$rootScope.$broadcast('toggleProfileOpen');
+			$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
 
