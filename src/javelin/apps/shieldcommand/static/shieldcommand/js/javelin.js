@@ -88,6 +88,13 @@
 	{
 		return typeof obj[key] !== 'undefined' ? obj[key] : null;
 	}
+	
+	function getCrimeTipIcon(reportType)
+	{
+		var crimeType = reportType ? reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
+		
+		return '/media/static/shieldcommand/img/crimetip/alert_' + crimeType + '_icon.png';
+	}
 
 	function APIResponseObject(attributes) {
 		this.parseIDFromURL = function(url) {
@@ -218,6 +225,7 @@
 		this.distance = attributes.distance;
 		this.body = attributes.body;
 		this.reportType = getObjectProperty(Javelin.CRIME_TYPE_CHOICES, attributes.report_type);
+		this.reportIcon = getCrimeTipIcon(this.reportType);
 		this.imageURL = attributes.report_image_url;
 		this.videoURL = attributes.report_video_url;
 		this.audioURL = attributes.report_audio_url;
