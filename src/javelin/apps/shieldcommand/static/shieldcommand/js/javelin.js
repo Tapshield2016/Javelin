@@ -385,6 +385,18 @@
 			}
 		});
 	};
+	
+	Javelin.getUserProfileForUser = function(userID, callback) {
+		var request = Javelin.client.userprofiles.read({user: userID});
+		request.done(function(data) {
+			if (data['results'].length > 0) {
+				callback(new AgencyUserProfile(data['results'][0]));
+			}
+			else {
+				callback(null);
+			}
+		});
+	};
 
 	Javelin.getAgencies = function(callback) {
 		var request = Javelin.client.agencies.read();
