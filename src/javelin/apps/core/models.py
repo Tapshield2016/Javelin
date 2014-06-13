@@ -115,6 +115,41 @@ class Agency(TimeStampedModel):
             notify_waiting_users_of_congestion.delay(self.pk)
 
 
+class ScheduleDate(models.Model):
+
+    geofence = models.ForeignKey('Geofence',
+                                 related_name="schedule_date")
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+
+class WeekdayTimes(models.Model):
+
+    geofence = models.ForeignKey('Geofence',
+                                 related_name="weekday_times")
+    start_time = models.TimeField(null=True, blank=True)
+    end_time = models.TimeField(null=True, blank=True)
+    dispatcher_number = models.CharField(max_length=24)
+
+class DispatchCenter(models.Model):
+
+    agency = models.ForeignKey('Agency',
+                               related_name="dispatch_center")
+    name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=24)
+
+
+class Geofence(models.Model):
+
+    agency = models.ForeignKey('Agency',
+                               related_name="geofence")
+    name = models.CharField(max_length=255)
+    boundaries = models.TextField(null=True, blank=True)
+    center_latitude = models.FloatField()
+    center_longitude = models.FloatField()
+    center_point = db_models.PointField(geography=True,
+                                        null=True, blank=True)
+
+
 class Alert(TimeStampedModel):
     STATUS_CHOICES = (
         ('A', 'Accepted'),
