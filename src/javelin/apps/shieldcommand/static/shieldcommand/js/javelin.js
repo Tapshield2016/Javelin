@@ -229,7 +229,7 @@
 		
 		if ( ! attributes.report_anonymous)
 		{
-			Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setactiveCrimeTipUser);
+			Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
 		}
 		
 		this.user = Javelin.activeCrimeTipUser;
