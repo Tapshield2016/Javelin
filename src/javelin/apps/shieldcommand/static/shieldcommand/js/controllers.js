@@ -472,7 +472,7 @@ angular.module('shieldCommand.controllers', [])
   	};
 	
 	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
-  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : false;
+  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' && crimeTip.user ? shouldToggleProfile : false;
   		if (crimeTip === crimeTipService.activeCrimeTip) {
   			if (shouldToggleProfile) {
 	  			//$rootScope.$broadcast('toggleProfile');
@@ -492,9 +492,6 @@ angular.module('shieldCommand.controllers', [])
 
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
 				if (crimeTipService.activeCrimeTip) {
-					//crimeTipService.activeAlert.location.alertStatus = alertService.activeAlert.status;
-					//crimeTipService.activeAlert.location.alertType = alertService.activeAlert.initiatedBy;
-					//crimeTipService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
 					setMarker(crimeTipService.activeCrimeTip);
 					$scope.currentActiveLocation = crimeTipService.activeCrimeTip;
 				}
