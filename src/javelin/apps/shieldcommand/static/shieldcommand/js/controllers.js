@@ -633,5 +633,5 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.loadInitialAlerts();
-	setTimeout($scope.loadInitialCrimeTips, 1000);
+	setTimeout($scope.loadInitialCrimeTips, 1500);
 }]);
