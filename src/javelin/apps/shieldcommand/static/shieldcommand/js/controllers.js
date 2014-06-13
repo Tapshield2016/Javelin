@@ -27,6 +27,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.activeCrimeTip = null;
 	$scope.profileType = null;
 	$scope.isProfileVisible = false;
+	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
 
 	$scope.toggle = function() {
@@ -46,6 +47,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
+		clearTimeout($scope.updateTimeout);
 		if (alertService.activeAlert)
 		{
 			$scope.profileType = 'alert';
@@ -66,7 +68,7 @@ angular.module('shieldCommand.controllers', [])
 				$rootScope.profileIsOpen = true;
 				$rootScope.$broadcast('profileWasOpened');
 				$rootScope.$broadcast('profileWasUpdated');
-				setTimeout($scope.updateProfile, 10000);
+				$scope.updateTimeout = setTimeout($scope.updateProfile, 10000);
 			});
 		}
 	});
@@ -241,6 +243,21 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$watch('currentActiveLocation', function() {
 		updateMarker($scope.currentActiveLocation);
+		if ($scope.currentActiveLocation)
+		{
+			if ($scope.currentActiveLocation.type == 'alert')
+			{
+				crimeTipService.activeCrimeTip = null;
+				$scope.markerSetForActiveAlert = true;
+				$scope.markerSetForActiveCrimeTip = false;
+			}
+			else if ($scope.currentActiveLocation.type == 'crimeTip')
+			{
+				alertService.activeAlert = null;
+				$scope.markerSetForActiveCrimeTip = true;
+				$scope.markerSetForActiveAlert = false;
+			}
+		}
 		addressForLocation($scope.currentActiveLocation, function(address) {
 			if (address)
 			{
@@ -269,22 +286,6 @@ angular.module('shieldCommand.controllers', [])
 				$scope.clearAddressBar();
 			}
 		});
-		
-		if ($scope.currentActiveLocation)
-		{
-			if ($scope.currentActiveLocation.type == 'alert')
-			{
-				crimeTipService.activeCrimeTip = null;
-				$scope.markerSetForActiveAlert = true;
-				$scope.markerSetForActiveCrimeTip = false;
-			}
-			else if ($scope.currentActiveLocation.type == 'crimeTip')
-			{
-				alertService.activeAlert = null;
-				$scope.markerSetForActiveCrimeTip = true;
-				$scope.markerSetForActiveAlert = false;
-			}
-		}
 	})
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {

@@ -367,15 +367,15 @@
 							</tr>
 							<tr ng-if="activeCrimeTip.imageURL">
 								<td>Image</td>
-								<td><a href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage">{{ activeCrimeTip.imageURL }}</td>
+								<td><a href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage">View Image</td>
 							</tr>
 							<tr ng-if="activeCrimeTip.videoURL">
 								<td>Video</td>
-								<td><a href="{{ activeCrimeTip.videoURL }}" target="_blank">{{ activeCrimeTip.videoURL }}</td>
+								<td><a href="{{ activeCrimeTip.videoURL }}" target="_blank">View Video</td>
 							</tr>
 							<tr ng-if="activeCrimeTip.audioURL">
 								<td>Audio</td>
-								<td><a href="{{ activeCrimeTip.audioURL }}" target="_blank">{{ activeCrimeTip.audioURL }}</td>
+								<td><a href="{{ activeCrimeTip.audioURL }}" target="_blank">Listen to Audio</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
