@@ -151,16 +151,33 @@ angular.module('shieldCommand.services', [])
 			callback(existingCrimeTips);
 		});
 	}
-
+	
 	this.setActiveCrimeTip = function(crimeTip) {
 		this.activeCrimeTip = crimeTip;
 		Javelin.setActiveCrimeTip(crimeTip);
+	}
+	
+	this.getUserForActiveCrimeTip = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.reporter), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
 	}
 
 	return {
 		activeCrimeTip: this.activeCrimeTip,
 		loadInitialCrimeTips: this.loadInitialCrimeTips,
-		getUpdatedCrimeTips: this.getUpdatedCrimeTips,		
+		getUpdatedCrimeTips: this.getUpdatedCrimeTips,	
 		setActiveCrimeTip: this.setActiveCrimeTip,
+		getUserForActiveCrimeTip: this.getUserForActiveCrimeTip,	
 	}
 }]);

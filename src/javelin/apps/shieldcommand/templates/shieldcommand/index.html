@@ -342,15 +342,15 @@
 						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
 							<tr class="first">
 								<td>Name</td>
-								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.getFullName() : '(anonymous)' }}</td>
+								<td>{{ (currentProfile) ? currentProfile.getFullName() : '(anonymous)' }}</td>
 							</tr>
 							<tr>
 								<td>Phone</td>
-								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.phoneNumber : '(anonymous)' }}</td>
+								<td>{{ (currentProfile) ? currentProfile.phoneNumber : '(anonymous)' }}</td>
 							</tr>
 							<tr>
 								<td>Email</td>
-								<td>{{ (!currentProfile.anonymous && currentProfile.user) ? currentProfile.user.email : '(anonymous)' }}</td>
+								<td>{{ (currentProfile) ? currentProfile.email : '(anonymous)' }}</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'alert'">

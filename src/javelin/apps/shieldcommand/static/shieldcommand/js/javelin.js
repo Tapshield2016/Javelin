@@ -224,6 +224,7 @@
 		APITimeStampedObject.call(this, attributes);
 		this.distance = attributes.distance;
 		this.body = attributes.body;
+		this.reporter = attributes.reporter;
 		this.reportType = getObjectProperty(Javelin.CRIME_TYPE_CHOICES, attributes.report_type);
 		this.reportIcon = getCrimeTipIcon(this.reportType);
 		this.imageURL = attributes.report_image_url;
@@ -234,8 +235,8 @@
 		this.geocodedAddress = null;
 		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
-		Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
-		this.user = Javelin.activeCrimeTipUser;
+		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
+		//this.user = Javelin.activeCrimeTipUser;
 		
 		return this;
 	}

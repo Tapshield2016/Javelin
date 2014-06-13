@@ -81,12 +81,15 @@ angular.module('shieldCommand.controllers', [])
 				}
 			});
 		}
-		else if ($scope.activeCrimeTip)
+		else if ($scope.activeCrimeTip && ! $scope.activeCrimeTip.anonymous)
 		{
-			$scope.currentProfile = $scope.activeCrimeTip;
-			if (callback) {
-					callback($scope.currentProfile);
+			crimeTipService.getUserForActiveCrimeTip(function(user)
+			{ 
+				$scope.currentProfile = user;
+				if (callback) {
+					callback(user);
 				}
+			});
 		}
 		else
 		{
