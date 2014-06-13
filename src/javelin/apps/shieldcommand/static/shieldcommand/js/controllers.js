@@ -227,17 +227,21 @@ angular.module('shieldCommand.controllers', [])
 				$scope.clearAddressBar();
 			}
 		});
-		if ($scope.currentActiveLocation.type == 'alert')
+		
+		if ($scope.currentActiveLocation)
 		{
-			crimeTipService.activeCrimeTip = null;
-			$scope.markerSetForActiveAlert = true;
-			$scope.markerSetForActiveCrimeTip = false;
-		}
-		else if ($scope.currentActiveLocation.type == 'crimeTip')
-		{
-			alertService.activeAlert = null;
-			$scope.markerSetForActiveCrimeTip = true;
-			$scope.markerSetForActiveAlert = false;
+			if ($scope.currentActiveLocation.type == 'alert')
+			{
+				crimeTipService.activeCrimeTip = null;
+				$scope.markerSetForActiveAlert = true;
+				$scope.markerSetForActiveCrimeTip = false;
+			}
+			else if ($scope.currentActiveLocation.type == 'crimeTip')
+			{
+				alertService.activeAlert = null;
+				$scope.markerSetForActiveCrimeTip = true;
+				$scope.markerSetForActiveAlert = false;
+			}
 		}
 	})
 
