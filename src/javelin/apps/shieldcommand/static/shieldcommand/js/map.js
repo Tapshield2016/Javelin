@@ -88,7 +88,7 @@ function getIconForLocation(location) {
 		{
 			var crimeType = location.reportType ? location.reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
 			
-			icon = location.type + '/' + 'pins_' + crimeType + '_icon.png';
+			icon = location.type.toLowerCase() + '/' + 'pins_' + crimeType + '_icon.png';
 		}
     }
     
