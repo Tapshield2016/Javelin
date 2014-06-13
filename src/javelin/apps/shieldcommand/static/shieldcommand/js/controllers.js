@@ -38,10 +38,9 @@ angular.module('shieldCommand.controllers', [])
 		{
 			$scope.profileType = 'crimeTip';
 		}
-		$scope.isProfileVisible = !$scope.isProfileVisible;
-		if ($scope.isProfileVisible) {
-			$rootScope.$broadcast('profileWasOpened');
-			$rootScope.profileIsOpen = true;
+		//$scope.isProfileVisible = !$scope.isProfileVisible;
+		if ( ! $scope.isProfileVisible) {
+			$rootScope.$broadcast('toggleProfileOpen');
 		}
 		else {
 			$rootScope.$broadcast('profileWasClosed');
