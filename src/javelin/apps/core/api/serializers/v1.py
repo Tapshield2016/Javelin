@@ -24,36 +24,20 @@ class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
         model = EntourageMember
 
 
-class AgencySerializer(serializers.HyperlinkedModelSerializer):
-    distance = serializers.SerializerMethodField('distance_if_exists')
-    dispatch_centers = DispatchCenterSerializer(required=False, many=True)
-    region = RegionSerializer(required=False, many=True)
-
-    class Meta:
-        model = Agency
-
-    def distance_if_exists(self, obj):
-        if getattr(obj, 'distance', None):
-            return obj.distance.mi
-
-
 class RegionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Region
 
-class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
-
-    # closed_dates = ClosedDateSerializer(required=False, many=True)
-    # schedule = ScheduleSerializer(required=False)
-
-    class Meta:
-        model = DispatchCenter
-
 class ClosedDateSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = ClosedDate
+
+class DispatcherTimesSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = DispatcherTimes
 
 class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -69,10 +53,27 @@ class DaySerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Day
 
-class DispatcherTimesSerializer(serializers.HyperlinkedModelSerializer):
+
+class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
+
+    # closed_dates = ClosedDateSerializer(required=False, many=True)
+    # schedule = ScheduleSerializer(required=False)
 
     class Meta:
-        model = DispatcherTimes
+        model = DispatchCenter
+
+class AgencySerializer(serializers.HyperlinkedModelSerializer):
+    distance = serializers.SerializerMethodField('distance_if_exists')
+    dispatch_centers = DispatchCenterSerializer(required=False, many=True)
+    region = RegionSerializer(required=False, many=True)
+
+    class Meta:
+        model = Agency
+
+    def distance_if_exists(self, obj):
+        if getattr(obj, 'distance', None):
+            return obj.distance.mi
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
