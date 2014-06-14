@@ -32,9 +32,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
                                      DispatcherTimesSerializer,
-                                     ClosedDateSerializer,
-                                     DaySerializer,
-                                     ScheduleSerializer)
+                                     ClosedDateSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
