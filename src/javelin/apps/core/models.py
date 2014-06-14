@@ -169,6 +169,7 @@ class Region(models.Model):
         if self.center_latitude and self.center_longitude:
             self.center_point = Point(self.center_longitude,
                                       self.center_latitude)
+        super(Region, self).save(*args, **kwargs)
 
 
 
