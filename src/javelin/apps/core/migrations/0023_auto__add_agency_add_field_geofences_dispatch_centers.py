@@ -232,7 +232,7 @@ class Migration(SchemaMigration):
             'center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
         },
         u'core.dispatchcenter': {
-            'Meta': {'ordering': "['name']", 'object_name': 'Region'},
+            'Meta': {'ordering': "['name']", 'object_name': 'DispatchCenter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),

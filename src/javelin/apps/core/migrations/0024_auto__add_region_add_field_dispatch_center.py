@@ -13,17 +13,17 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter']))
 
-        # # Adding field 'Region.secondary_dispatch_center'
-        # db.add_column(u'core_region', 'secondary_dispatch_center',
-        #               self.gf('django.db.models.fields.related.ForeignKey')
-        #               (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter']),
-        #               keep_default=False)
-        #
-        # # Adding field 'Region.fallback_dispatch_center'
-        # db.add_column(u'core_region', 'fallback_dispatch_center',
-        #               self.gf('django.db.models.fields.related.ForeignKey')
-        #               (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter']),
-        #               keep_default=False)
+        # Adding field 'Region.secondary_dispatch_center'
+        db.add_column(u'core_region', 'secondary_dispatch_center',
+                      self.gf('django.db.models.fields.related.ForeignKey')
+                      (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter']),
+                      keep_default=False)
+
+        # Adding field 'Region.fallback_dispatch_center'
+        db.add_column(u'core_region', 'fallback_dispatch_center',
+                      self.gf('django.db.models.fields.related.ForeignKey')
+                      (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter']),
+                      keep_default=False)
 
 
 
@@ -226,15 +226,15 @@ class Migration(SchemaMigration):
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'primary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'primary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
-            # 'secondary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'secondary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
-            # 'fallback_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fallback_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'secondary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'secondary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'fallback_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fallback_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
             'boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
             'center_latitude': ('django.db.models.fields.FloatField', [], {}),
             'center_longitude': ('django.db.models.fields.FloatField', [], {}),
             'center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
         },
         u'core.dispatchcenter': {
-            'Meta': {'ordering': "['name']", 'object_name': 'Region'},
+            'Meta': {'ordering': "['name']", 'object_name': 'DispatchCenter'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
