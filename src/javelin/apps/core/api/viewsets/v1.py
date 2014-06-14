@@ -468,6 +468,6 @@ class RegionViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
 class DispatchCenterViewSet(viewsets.ModelViewSet):
-    queryset = AlertLocation.objects.select_related('agency').all()
+    queryset = DispatchCenter.objects.select_related('agency').all()
     serializer_class = DispatchCenterSerializer
     filter_fields = ('agency',)
