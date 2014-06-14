@@ -43,7 +43,7 @@ class DispatcherTimesSerializer(serializers.HyperlinkedModelSerializer):
 class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
 
     closed_date = ClosedDateSerializer(required=False, many=True)
-    weekly_hours = DispatcherTimesSerializer(required=False, many=True)
+    dispatcher_times = DispatcherTimesSerializer(required=False, many=True)
 
     class Meta:
         model = DispatchCenter
