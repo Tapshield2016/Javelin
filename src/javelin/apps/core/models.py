@@ -118,7 +118,7 @@ class Agency(TimeStampedModel):
 class ClosedDate(models.Model):
 
     dispatch_center = models.ForeignKey('DispatchCenter',
-                                 related_name="closed_date")
+                                        related_name="closed_date")
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
 
@@ -127,7 +127,7 @@ class DispatcherTimes(models.Model):
     day = models.ForeignKey('Day',
                             related_name="dispatcher_times")
     dispatch_center = models.ForeignKey('DispatchCenter',
-                                 related_name="dispatcher_times")
+                                        related_name="dispatcher_times")
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
 
