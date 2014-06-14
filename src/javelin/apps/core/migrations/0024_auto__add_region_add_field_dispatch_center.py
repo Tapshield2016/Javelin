@@ -9,17 +9,17 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Region.primary_dispatch_center'
-        db.add_column(u'core_region', 'primary_dispatch_center',
+        db.add_column(u'core_dispatchcenter', 'primary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
         # Adding field 'Region.secondary_dispatch_center'
-        db.add_column(u'core_region', 'secondary_dispatch_center',
+        db.add_column(u'core_dispatchcenter', 'secondary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
         # Adding field 'Region.fallback_dispatch_center'
-        db.add_column(u'core_region', 'fallback_dispatch_center',
+        db.add_column(u'core_dispatchcenter', 'fallback_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
@@ -27,13 +27,13 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_region', 'primary_dispatch_center')
+        db.delete_column(u'core_dispatchcenter', 'primary_dispatch_center')
 
         # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_region', 'secondary_dispatch_center')
+        db.delete_column(u'core_dispatchcenter', 'secondary_dispatch_center')
 
         # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_region', 'fallback_dispatch_center')
+        db.delete_column(u'core_dispatchcenter', 'fallback_dispatch_center')
 
     models = {
         u'auth.group': {
@@ -218,6 +218,26 @@ class Migration(SchemaMigration):
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.AgencyUser']", 'unique': 'True'}),
             'weight': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'})
         }
+        u'core.region': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Region'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'primary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'primary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'secondary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'secondary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'fallback_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fallback_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'center_latitude': ('django.db.models.fields.FloatField', [], {}),
+            'center_longitude': ('django.db.models.fields.FloatField', [], {}),
+            'center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+        },
+        u'core.dispatchcenter': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Region'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '24'}),
+        },
     }
 
     complete_apps = ['core']
