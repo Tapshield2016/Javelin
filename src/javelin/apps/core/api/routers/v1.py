@@ -4,7 +4,7 @@ from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
                                   AlertViewSet, AlertLocationViewSet,
                                   ChatMessageViewSet, MassAlertViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
-                                  EntourageMemberViewSet)
+                                  EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)

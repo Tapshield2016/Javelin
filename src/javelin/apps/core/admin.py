@@ -18,6 +18,15 @@ class EntourageMemberInline(admin.StackedInline):
     extra = 0
 
 
+class RegionInline(admin.StackedInline):
+    model = Region
+    extra = 0
+
+class DispatchCenterInline(admin.StackedInline):
+    model = DispatchCenter
+    extra = 0
+
+
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
         ('General Settings', {
@@ -54,15 +63,6 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     inlines = [
         RegionInline, DispatchCenterInline,
     ]
-
-class RegionInline(admin.StackedInline):
-    model = Region
-    extra = 0
-
-class DispatchCenterInline(admin.StackedInline):
-    model = DispatchCenter
-    extra = 0
-
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
