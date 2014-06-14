@@ -8,34 +8,27 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Region.primary_dispatch_center'
-        db.add_column(u'core_region', 'primary_dispatch_center',
-                      self.gf('django.db.models.fields.related.ForeignKey')
-                      (related_name='primary_dispatch_center', to=orm['core.DispatchCenter']))
 
-        # Adding field 'Region.secondary_dispatch_center'
-        db.add_column(u'core_region', 'secondary_dispatch_center',
-                      self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter']),
-                      keep_default=False)
+        db.create_table(u'core_closeddate', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='closed_dates', to=orm['core.DispatchCenter'])),
+            ('start_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('end_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
 
-        # Adding field 'Region.fallback_dispatch_center'
-        db.add_column(u'core_region', 'fallback_dispatch_center',
-                      self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter']),
-                      keep_default=False)
+        ))
+        db.send_create_signal(u'core', ['ClosedDate'])
 
-
+# class ClosedDate(models.Model):
+#
+#     dispatch_center = models.ForeignKey('DispatchCenter',
+#                                         related_name="closed_date")
+#     start_date = models.DateTimeField(null=True, blank=True)
+#     end_date = models.DateTimeField(null=True, blank=True)
 
     def backwards(self, orm):
-        # Deleting field 'Region.primary_dispatch_center'
-        db.delete_column(u'core_region', 'primary_dispatch_center')
 
-        # Deleting field 'Region.secondary_dispatch_center'
-        db.delete_column(u'core_region', 'secondary_dispatch_center')
-
-        # Deleting field 'Region.fallback_dispatch_center'
-        db.delete_column(u'core_region', 'fallback_dispatch_center')
+        # Deleting model 'DispatchCenter'
+        db.delete_table(u'core_closeddate')
 
     models = {
         u'auth.group': {
@@ -239,6 +232,14 @@ class Migration(SchemaMigration):
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '24'}),
+        },
+        u'core.core_closeddate': {
+            'Meta': {'ordering': "['name']", 'object_name': 'ClosedDate'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'closed_dates'", 'to': u"orm['core.DispatchCenter']"}),
+            'start_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
         },
     }
 

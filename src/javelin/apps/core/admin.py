@@ -12,11 +12,15 @@ from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
 class EntourageMemberAdmin(admin.ModelAdmin):
     pass
 
-
 class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
     extra = 0
 
+class ClosedDateInline(admin.StackedInline):
+    model = ClosedDate
+
+class DispatchCenterAdmin(admin.ModelAdmin):
+    inlines = [ClosedDateInline,]
 
 class RegionInline(admin.StackedInline):
     model = Region
@@ -25,6 +29,8 @@ class RegionInline(admin.StackedInline):
 class DispatchCenterInline(admin.StackedInline):
     model = DispatchCenter
     extra = 0
+    fields = ('name', 'phone_number', 'changeform_link')
+    readonly_fields = ('changeform_link', )
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
@@ -113,3 +119,4 @@ admin.site.register(ChatMessage, ChatMessageAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
+admin.site.register(DispatchCenter, DispatchCenterAdmin)

@@ -150,6 +150,16 @@ class DispatchCenter(models.Model):
     def __unicode__(self):
         return u'%s - %s' % (self.agency.name, self.name)
 
+    def changeform_link(self):
+        if self.id:
+            changeform_url = urlresolvers.reverse(
+                'admin:core_dispatchcenter_change', args=(self.id,)
+            )
+            return u'<a href="%s" target="_blank">Details</a>' % changeform_url
+        return u''
+    changeform_link.allow_tags = True
+    changeform_link.short_description = ''   # omit column header
+
 class Region(models.Model):
 
     agency = models.ForeignKey('Agency',

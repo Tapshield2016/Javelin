@@ -56,7 +56,7 @@ class DaySerializer(serializers.HyperlinkedModelSerializer):
 
 class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
 
-    # closed_dates = ClosedDateSerializer(required=False, many=True)
+    closed_dates = ClosedDateSerializer(required=False, many=True)
     # schedule = ScheduleSerializer(required=False)
 
     class Meta:
