@@ -42,7 +42,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, DispatcherTimes,
-                         ClosedDate, Day, Schedule)
+                         ClosedDate)
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
