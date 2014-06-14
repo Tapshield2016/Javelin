@@ -148,7 +148,7 @@ class DispatchCenter(models.Model):
     phone_number = models.CharField(max_length=24)
 
     def __unicode__(self):
-        return self.name
+        return self.agency.name
 
 class Region(models.Model):
 
