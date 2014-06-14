@@ -52,7 +52,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenter,
+        RegionInline, DispatchCenterInline,
     ]
 
 class RegionInline(admin.StackedInline):
