@@ -231,7 +231,7 @@ class Migration(SchemaMigration):
         u'core.core_closeddate': {
             'Meta': {'ordering': "['name']", 'object_name': 'ClosedDate'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'closed_dates'", 'to': u"orm['core.DispatchCenter']"}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'closed_date'", 'to': u"orm['core.DispatchCenter']"}),
             'start_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
         },
