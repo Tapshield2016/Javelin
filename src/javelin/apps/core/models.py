@@ -125,21 +125,26 @@ class ClosedDate(models.Model):
 
 class DispatcherTimes(models.Model):
 
-    day = models.ForeignKey('Day',
-                            related_name="dispatcher_times")
+    DAY = (
+        ('1', 'Sunday'),
+        ('2', 'Monday'),
+        ('3', 'Tuesday'),
+        ('4', 'Wednesday'),
+        ('5', 'Thursday'),
+        ('6', 'Friday'),
+        ('7', 'Saturday'),
+    )
+
     dispatch_center = models.ForeignKey('DispatchCenter',
                                         related_name="dispatcher_times")
+    day = models.CharField(max_length=1,
+                           choices=DAY,
+                           default='1')
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
 
-class Schedule(models.Model):
-
-    name = "Open Times"
-
-class Day(models.Model):
-
-    name = "monday"
-
+    class Meta:
+        ordering = ['day']
 
 class DispatchCenter(models.Model):
 

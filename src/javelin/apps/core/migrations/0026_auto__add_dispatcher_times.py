@@ -9,20 +9,21 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Adding model 'ClosedDate'
-        db.create_table(u'core_closeddate', (
+        # Adding model 'DispatcherTimes'
+        db.create_table(u'core_dispatchertimes', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='closed_dates', to=orm['core.DispatchCenter'])),
-            ('start_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
-            ('end_date', self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True)),
+            ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='dispatcher_times', to=orm['core.DispatchCenter'])),
+            ('day', self.gf('django.db.models.fields.CharField')(default='1', max_length=1)),
+            ('start_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
+            ('end_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
 
         ))
-        db.send_create_signal(u'core', ['ClosedDate'])
+        db.send_create_signal(u'core', ['DispatcherTimes'])
 
     def backwards(self, orm):
 
-        # Deleting model 'ClosedDate'
-        db.delete_table(u'core_closeddate')
+        # Deleting model 'DispatcherTimes'
+        db.delete_table(u'core_dispatchertimes')
 
     models = {
         u'auth.group': {
@@ -230,10 +231,17 @@ class Migration(SchemaMigration):
         u'core.core_closeddate': {
             'Meta': {'ordering': "['name']", 'object_name': 'ClosedDate'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'closed_dates'", 'to': u"orm['core.DispatchCenter']"}),
             'start_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+        },
+        u'core.core_dispatchertimes': {
+            'Meta': {'ordering': "['name']", 'object_name': 'DispatcherTimes'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dispatcher_times'", 'to': u"orm['core.DispatchCenter']"}),
+            'day': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '1'}),
+            'start_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+            'end_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
         },
     }
 

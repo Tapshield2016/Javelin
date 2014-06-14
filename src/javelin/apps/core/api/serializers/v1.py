@@ -6,7 +6,7 @@ from rest_framework import serializers
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, DispatcherTimes, ClosedDate, Day, Schedule)
+                         DispatchCenter, DispatcherTimes, ClosedDate,)
 
 User = get_user_model()
 
@@ -39,25 +39,11 @@ class DispatcherTimesSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = DispatcherTimes
 
-class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
-
-    monday = DispatcherTimesSerializer(required=False, many=True)
-
-    class Meta:
-        model = Schedule
-
-class DaySerializer(serializers.HyperlinkedModelSerializer):
-
-    time = DispatcherTimesSerializer(required=False, many=True)
-
-    class Meta:
-        model = Day
-
 
 class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
 
     closed_dates = ClosedDateSerializer(required=False, many=True)
-    # schedule = ScheduleSerializer(required=False)
+    weekly_hours = DispatcherTimesSerializer(required=False, many=True)
 
     class Meta:
         model = DispatchCenter
