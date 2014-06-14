@@ -459,6 +459,15 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
 
+class DispatcherTimesViewSet(viewsets.ModelViewSet):
+    queryset = DispatcherTimes.objects.select_related('dispatch_center').all()
+    serializer_class = DispatcherTimesSerializer
+    filter_fields = ('dispatch_center',)
+
+class ClosedDateViewSet(viewsets.ModelViewSet):
+    queryset = ClosedDate.objects.select_related('dispatch_center').all()
+    serializer_class = ClosedDateSerializer
+    filter_fields = ('dispatch_center',)
 
 class RegionViewSet(viewsets.ModelViewSet):
     queryset = Region.objects.select_related('agency').all()
