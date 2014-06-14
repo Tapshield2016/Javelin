@@ -18,6 +18,7 @@ class EntourageMemberInline(admin.StackedInline):
 
 class ClosedDateInline(admin.StackedInline):
     model = ClosedDate
+    extra = 0
 
 class DispatchCenterAdmin(admin.ModelAdmin):
     inlines = [ClosedDateInline,]
