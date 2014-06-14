@@ -143,6 +143,7 @@ class Schedule(models.Model):
 
 class Day(models.Model):
 
+    name = "monday"
 
 
 class DispatchCenter(models.Model):
