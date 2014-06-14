@@ -5,7 +5,8 @@ from rest_framework import serializers
 
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
-                         EntourageMember, SocialCrimeReport)
+                         EntourageMember, SocialCrimeReport, Region,
+                         DispatchCenter, DispatcherTimes, ClosedDate, Day, Schedule)
 
 User = get_user_model()
 
@@ -25,6 +26,8 @@ class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
+    dispatch_centers = DispatchCenterSerializer(required=False, many=True)
+    region = RegionSerializer(required=False, many=True)
 
     class Meta:
         model = Agency
@@ -33,6 +36,41 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
 
+
+class RegionSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Region
+
+class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
+
+    # closed_dates = ClosedDateSerializer(required=False, many=True)
+    # schedule = ScheduleSerializer(required=False)
+
+    class Meta:
+        model = DispatchCenter
+
+class ClosedDateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = ClosedDate
+
+class ScheduleSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Schedule
+
+class DaySerializer(serializers.HyperlinkedModelSerializer):
+
+    time = DispatcherTimesSerializer(required=False, many=True)
+
+    class Meta:
+        model = Day
+
+class DispatcherTimesSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = DispatcherTimes
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,

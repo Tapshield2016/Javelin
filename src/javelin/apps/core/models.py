@@ -115,20 +115,35 @@ class Agency(TimeStampedModel):
             notify_waiting_users_of_congestion.delay(self.pk)
 
 
-class ScheduleDate(models.Model):
+class ClosedDate(models.Model):
 
-    geofence = models.ForeignKey('Geofence',
-                                 related_name="schedule_date")
+    dispatch_center = models.ForeignKey('DispatchCenter',
+                                 related_name="closed_date")
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
 
-class WeekdayTimes(models.Model):
+class DispatcherTimes(models.Model):
 
-    geofence = models.ForeignKey('Geofence',
-                                 related_name="weekday_times")
+    day = models.ForeignKey('Day',
+                            related_name="dispatcher_times")
+    dispatch_center = models.ForeignKey('DispatchCenter',
+                                 related_name="dispatcher_times")
     start_time = models.TimeField(null=True, blank=True)
     end_time = models.TimeField(null=True, blank=True)
-    dispatcher_number = models.CharField(max_length=24)
+
+class Schedule(models.Model):
+
+    monday = Day()
+    tuesday = Day()
+    wednesday = Day()
+    thursday = Day()
+    friday = Day()
+    saturday = Day()
+    sunday = Day()
+
+class Day(models.Model):
+
+
 
 class DispatchCenter(models.Model):
 
@@ -137,17 +152,29 @@ class DispatchCenter(models.Model):
     name = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=24)
 
+    def __unicode__(self):
+        return self.name
 
-class Geofence(models.Model):
+class Region(models.Model):
 
     agency = models.ForeignKey('Agency',
-                               related_name="geofence")
+                               related_name="region")
     name = models.CharField(max_length=255)
     boundaries = models.TextField(null=True, blank=True)
     center_latitude = models.FloatField()
     center_longitude = models.FloatField()
     center_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+
+        if self.center_latitude and self.center_longitude:
+            self.center_point = Point(self.center_longitude,
+                                      self.center_latitude)
+
 
 
 class Alert(TimeStampedModel):

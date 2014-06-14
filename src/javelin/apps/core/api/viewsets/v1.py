@@ -28,7 +28,13 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      SocialCrimeReportSerializer,
                                      EntourageMemberGETSerializer,
                                      EntourageMemberUpdateSerializer,
-                                     UserUpdateSerializer)
+                                     UserUpdateSerializer,
+                                     RegionSerializer,
+                                     DispatchCenterSerializer,
+                                     DispatcherTimesSerializer,
+                                     ClosedDateSerializer,
+                                     DaySerializer,
+                                     ScheduleSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -36,7 +42,9 @@ from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
-                         SocialCrimeReport)
+                         SocialCrimeReport,  Region,
+                         DispatchCenter, DispatcherTimes,
+                         ClosedDate, Day, Schedule)
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
@@ -452,3 +460,14 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.select_related().all()
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
+
+
+class RegionViewSet(viewsets.ModelViewSet):
+    queryset = Region.objects.select_related('agency').all()
+    serializer_class = RegionSerializer
+    filter_fields = ('agency',)
+
+class DispatchCenterViewSet(viewsets.ModelViewSet):
+    queryset = AlertLocation.objects.select_related('agency').all()
+    serializer_class = DispatchCenterSerializer
+    filter_fields = ('agency',)
