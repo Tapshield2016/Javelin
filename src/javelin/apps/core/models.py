@@ -133,13 +133,7 @@ class DispatcherTimes(models.Model):
 
 class Schedule(models.Model):
 
-    monday = Day()
-    tuesday = Day()
-    wednesday = Day()
-    thursday = Day()
-    friday = Day()
-    saturday = Day()
-    sunday = Day()
+    name = "Open Times"
 
 class Day(models.Model):
 
