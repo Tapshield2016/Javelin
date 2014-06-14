@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding field 'Region.primary_dispatch_center'
         db.add_column(u'core_region', 'primary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter']))
+                      (related_name='primary_dispatch_center', to=orm['core.DispatchCenter']))
 
         # Adding field 'Region.secondary_dispatch_center'
         db.add_column(u'core_region', 'secondary_dispatch_center',
@@ -225,7 +225,7 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'primary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'primary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'primary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'primary_dispatch_center'", 'to': u"orm['core.DispatchCenter']"}),
             'secondary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'secondary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
             'fallback_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fallback_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
             'boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
