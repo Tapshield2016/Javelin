@@ -1,5 +1,6 @@
 import random
 import reversion
+from django.core import urlresolvers
 
 from datetime import datetime
 
