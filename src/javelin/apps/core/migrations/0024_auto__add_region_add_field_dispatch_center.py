@@ -9,31 +9,31 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Region.primary_dispatch_center'
-        db.add_column(u'core_dispatchcenter', 'primary_dispatch_center',
+        db.add_column(u'core_region', 'primary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
         # Adding field 'Region.secondary_dispatch_center'
-        db.add_column(u'core_dispatchcenter', 'secondary_dispatch_center',
+        db.add_column(u'core_region', 'secondary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
         # Adding field 'Region.fallback_dispatch_center'
-        db.add_column(u'core_dispatchcenter', 'fallback_dispatch_center',
+        db.add_column(u'core_region', 'fallback_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
                       (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
 
 
 
     def backwards(self, orm):
-        # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_dispatchcenter', 'primary_dispatch_center')
+        # Deleting field 'Region.primary_dispatch_center'
+        db.delete_column(u'core_region', 'primary_dispatch_center')
 
-        # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_dispatchcenter', 'secondary_dispatch_center')
+        # Deleting field 'Region.primary_dispatch_center'
+        db.delete_column(u'core_region', 'secondary_dispatch_center')
 
-        # Deleting field 'Agency.primary_dispatch_center'
-        db.delete_column(u'core_dispatchcenter', 'fallback_dispatch_center')
+        # Deleting field 'Region.primary_dispatch_center'
+        db.delete_column(u'core_region', 'fallback_dispatch_center')
 
     models = {
         u'auth.group': {
