@@ -156,7 +156,8 @@ class Region(models.Model):
                                related_name="region")
     name = models.CharField(max_length=255)
     primary_dispatch_center = models.ForeignKey('DispatchCenter',
-                                                related_name='primary_dispatch_center')
+                                                related_name='primary_dispatch_center',
+                                                limit_choices_to={'agency': agency})
     secondary_dispatch_center = models.ForeignKey('DispatchCenter',
                                                   related_name='secondary_dispatch_center',
                                                   null=True, blank=True)
