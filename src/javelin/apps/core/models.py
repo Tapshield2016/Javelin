@@ -156,15 +156,15 @@ class Region(models.Model):
                                related_name="region")
     name = models.CharField(max_length=255)
     primary_dispatch_center =\
-        models.ForeignKey(DispatchCenter,
+        models.ForeignKey('DispatchCenter',
                           related_name='primary_dispatch_center',
                           null=True, blank=True)
     secondary_dispatch_center =\
-        models.ForeignKey(DispatchCenter,
+        models.ForeignKey('DispatchCenter',
                           related_name='secondary_dispatch_center',
                           null=True, blank=True)
     fallback_dispatch_center =\
-        models.ForeignKey(DispatchCenter,
+        models.ForeignKey('DispatchCenter',
                           related_name='fallback_dispatch_center',
                           null=True, blank=True)
     boundaries = models.TextField(null=True, blank=True)
