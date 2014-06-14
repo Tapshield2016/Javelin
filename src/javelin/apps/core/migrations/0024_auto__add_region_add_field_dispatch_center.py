@@ -11,17 +11,20 @@ class Migration(SchemaMigration):
         # Adding field 'Region.primary_dispatch_center'
         db.add_column(u'core_region', 'primary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
+                      (blank=True, related_name='primary_dispatch_center', null=True, to=orm['core.DispatchCenter']),
+                      keep_default=False)
 
         # Adding field 'Region.secondary_dispatch_center'
         db.add_column(u'core_region', 'secondary_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
+                      (blank=True, related_name='secondary_dispatch_center', null=True, to=orm['core.DispatchCenter']),
+                      keep_default=False)
 
         # Adding field 'Region.fallback_dispatch_center'
         db.add_column(u'core_region', 'fallback_dispatch_center',
                       self.gf('django.db.models.fields.related.ForeignKey')
-                      (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter'])),
+                      (blank=True, related_name='fallback_dispatch_center', null=True, to=orm['core.DispatchCenter']),
+                      keep_default=False)
 
 
 
@@ -29,10 +32,10 @@ class Migration(SchemaMigration):
         # Deleting field 'Region.primary_dispatch_center'
         db.delete_column(u'core_region', 'primary_dispatch_center')
 
-        # Deleting field 'Region.primary_dispatch_center'
+        # Deleting field 'Region.secondary_dispatch_center'
         db.delete_column(u'core_region', 'secondary_dispatch_center')
 
-        # Deleting field 'Region.primary_dispatch_center'
+        # Deleting field 'Region.fallback_dispatch_center'
         db.delete_column(u'core_region', 'fallback_dispatch_center')
 
     models = {
