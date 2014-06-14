@@ -64,7 +64,7 @@ class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
-    dispatch_centers = DispatchCenterSerializer(required=False, many=True)
+    dispatch_center = DispatchCenterSerializer(required=False, many=True)
     region = RegionSerializer(required=False, many=True)
 
     class Meta:
