@@ -217,7 +217,7 @@ class Migration(SchemaMigration):
             'race': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.AgencyUser']", 'unique': 'True'}),
             'weight': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'})
-        }
+        },
         u'core.region': {
             'Meta': {'ordering': "['name']", 'object_name': 'Region'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
