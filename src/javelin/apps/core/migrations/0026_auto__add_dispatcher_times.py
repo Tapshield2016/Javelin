@@ -14,8 +14,8 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='opening_hours', to=orm['core.DispatchCenter'])),
             ('day', self.gf('django.db.models.fields.CharField')(default='1', max_length=1)),
-            ('start_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
-            ('end_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
+            ('open', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
+            ('close', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
 
         ))
         db.send_create_signal(u'core', ['Period'])
