@@ -144,6 +144,8 @@ class Period(models.Model):
     end_time = models.TimeField(null=True, blank=True)
 
     class Meta:
+        verbose_name = "Period"
+        verbose_name_plural = "Opening Hours"
         ordering = ['day']
 
 class DispatchCenter(models.Model):
