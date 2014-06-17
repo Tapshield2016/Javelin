@@ -23,7 +23,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
 
         # Deleting model 'Period'
-        db.delete_table(u'core_dispatchertimes')
+        db.delete_table(u'core_period')
 
     models = {
         u'auth.group': {
