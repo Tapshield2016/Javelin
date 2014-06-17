@@ -31,7 +31,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      UserUpdateSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
-                                     DispatcherTimesSerializer,
+                                     PeriodSerializer,
                                      ClosedDateSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
@@ -41,7 +41,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
-                         DispatchCenter, DispatcherTimes,
+                         DispatchCenter, Period,
                          ClosedDate)
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
@@ -459,9 +459,9 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
 
-class DispatcherTimesViewSet(viewsets.ModelViewSet):
-    queryset = DispatcherTimes.objects.select_related('dispatch_center').all()
-    serializer_class = DispatcherTimesSerializer
+class PeriodViewSet(viewsets.ModelViewSet):
+    queryset = Period.objects.select_related('dispatch_center').all()
+    serializer_class = PeriodTimesSerializer
     filter_fields = ('dispatch_center',)
 
 class ClosedDateViewSet(viewsets.ModelViewSet):

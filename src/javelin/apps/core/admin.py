@@ -6,7 +6,7 @@ from django.contrib.gis import admin as geo_admin
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    DispatcherTimes, ClosedDate,)
+                    Period, ClosedDate,)
 
 
 class EntourageMemberAdmin(admin.ModelAdmin):
@@ -16,8 +16,8 @@ class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
     extra = 0
 
-class DispatcherTimesInline(admin.StackedInline):
-    model = DispatcherTimes
+class PeriodInline(admin.StackedInline):
+    model = Period
     extra = 0
 
 class ClosedDateInline(admin.StackedInline):
@@ -25,7 +25,7 @@ class ClosedDateInline(admin.StackedInline):
     extra = 0
 
 class DispatchCenterAdmin(admin.ModelAdmin):
-    inlines = [ClosedDateInline, DispatcherTimesInline]
+    inlines = [ClosedDateInline, PeriodInline]
 
 class RegionInline(admin.StackedInline):
     model = Region

@@ -5,7 +5,7 @@ from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
                                   ChatMessageViewSet, MassAlertViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
                                   EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
-                                  ClosedDateViewSet, DispatcherTimesViewSet)
+                                  ClosedDateViewSet, PeriodViewSet)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)
@@ -21,4 +21,4 @@ router_v1.register(r'entourage-members', EntourageMemberViewSet)
 router_v1.register(r'region', RegionViewSet)
 router_v1.register(r'dispatch-center', DispatchCenterViewSet)
 router_v1.register(r'closed-date', ClosedDateViewSet)
-router_v1.register(r'dispatcher-times', DispatcherTimesViewSet)
+router_v1.register(r'opening-hours', PeriodViewSet)

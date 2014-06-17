@@ -123,7 +123,7 @@ class ClosedDate(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
 
-class DispatcherTimes(models.Model):
+class Period(models.Model):
 
     DAY = (
         ('1', 'Sunday'),
@@ -136,7 +136,7 @@ class DispatcherTimes(models.Model):
     )
 
     dispatch_center = models.ForeignKey('DispatchCenter',
-                                        related_name="dispatcher_times")
+                                        related_name="opening_hours")
     day = models.CharField(max_length=1,
                            choices=DAY,
                            default='1')

@@ -9,20 +9,20 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
 
-        # Adding model 'DispatcherTimes'
-        db.create_table(u'core_dispatchertimes', (
+        # Adding model 'Period'
+        db.create_table(u'core_period', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='dispatcher_times', to=orm['core.DispatchCenter'])),
+            ('dispatch_center', self.gf('django.db.models.fields.related.ForeignKey')(related_name='opening_hours', to=orm['core.DispatchCenter'])),
             ('day', self.gf('django.db.models.fields.CharField')(default='1', max_length=1)),
             ('start_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
             ('end_time', self.gf('django.db.models.fields.TimeField')(null=True, blank=True)),
 
         ))
-        db.send_create_signal(u'core', ['DispatcherTimes'])
+        db.send_create_signal(u'core', ['Period'])
 
     def backwards(self, orm):
 
-        # Deleting model 'DispatcherTimes'
+        # Deleting model 'Period'
         db.delete_table(u'core_dispatchertimes')
 
     models = {
@@ -235,10 +235,10 @@ class Migration(SchemaMigration):
             'start_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
             'end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
         },
-        u'core.core_dispatchertimes': {
-            'Meta': {'ordering': "['name']", 'object_name': 'DispatcherTimes'},
+        u'core.core_period': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Period'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'dispatcher_times'", 'to': u"orm['core.DispatchCenter']"}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'opening_hours'", 'to': u"orm['core.DispatchCenter']"}),
             'day': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '1'}),
             'start_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
             'end_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
