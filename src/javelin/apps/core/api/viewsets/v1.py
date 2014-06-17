@@ -461,7 +461,7 @@ class UserProfileViewSet(viewsets.ModelViewSet):
 
 class PeriodViewSet(viewsets.ModelViewSet):
     queryset = Period.objects.select_related('dispatch_center').all()
-    serializer_class = PeriodTimesSerializer
+    serializer_class = PeriodSerializer
     filter_fields = ('dispatch_center',)
 
 class ClosedDateViewSet(viewsets.ModelViewSet):
