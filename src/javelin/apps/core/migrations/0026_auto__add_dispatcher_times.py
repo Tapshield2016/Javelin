@@ -240,8 +240,8 @@ class Migration(SchemaMigration):
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'opening_hours'", 'to': u"orm['core.DispatchCenter']"}),
             'day': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '1'}),
-            'start_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
-            'end_time': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+            'open': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+            'close': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
         },
     }
 

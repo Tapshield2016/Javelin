@@ -140,8 +140,8 @@ class Period(models.Model):
     day = models.CharField(max_length=1,
                            choices=DAY,
                            default='1')
-    start_time = models.TimeField(null=True, blank=True)
-    end_time = models.TimeField(null=True, blank=True)
+    open = models.TimeField(null=True, blank=True)
+    close = models.TimeField(null=True, blank=True)
 
     class Meta:
         verbose_name = "Period"
