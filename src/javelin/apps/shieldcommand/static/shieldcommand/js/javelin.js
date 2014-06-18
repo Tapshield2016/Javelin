@@ -586,7 +586,7 @@
 		var then = Number(new Date(now - (24 * 60 * 60)));
 		Javelin.getCrimeTips({
 			modified_since: then,
-			page_size: 35,
+			page_size: 100,
 		}, callback);		
 	}
 
