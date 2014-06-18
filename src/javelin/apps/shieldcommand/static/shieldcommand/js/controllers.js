@@ -241,18 +241,19 @@ angular.module('shieldCommand.controllers', [])
 		};
 	});
 
-	$scope.$watch('currentActiveLocation', function() {
-		updateMarker($scope.currentActiveLocation);
+	$scope.$watch('currentActiveLocation', function() {	
 		if ($scope.currentActiveLocation)
 		{
 			if ($scope.currentActiveLocation.type == 'alert')
 			{
+				updateMarker($scope.currentActiveLocation);
 				crimeTipService.activeCrimeTip = null;
 				$scope.markerSetForActiveAlert = true;
 				$scope.markerSetForActiveCrimeTip = false;
 			}
 			else if ($scope.currentActiveLocation.type == 'crimeTip')
 			{
+				zoomToCrime(currentActiveLocation);
 				alertService.activeAlert = null;
 				$scope.markerSetForActiveCrimeTip = true;
 				$scope.markerSetForActiveAlert = false;
@@ -355,6 +356,11 @@ angular.module('shieldCommand.controllers', [])
 				$scope.newAlertDocumentTitleInterval = null;
 			}
 			document.title = "Shield Command";
+		}
+		
+		if ($scope.crimeTipsLength > 0)
+		{
+			addCrimeMarkers($scope.crimeTips);
 		}
   	};
 

@@ -236,6 +236,7 @@
 		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
 		this.accuracy = null;
+		this.last24 = false;
 		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
 		//this.user = Javelin.activeCrimeTipUser;
 		
@@ -267,6 +268,11 @@
 			timestamp /= 1000;
 		}
 		return timestamp;		
+	}
+	
+	function createPastTimestamp(past)
+	{
+		return Math.round(new Date().getTime() / 1000) - past;
 	}
 
 	Javelin.initialize = function(serverURL, agencyID, apiToken) {
@@ -568,6 +574,13 @@
 			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 			for (var i = data.results.length - 1; i >= 0; i--) {
 				newCrimeTip = new CrimeTip(data.results[i]);
+				var past24 = createPastTimestamp(24 * 3600);
+				
+				if (newCrimeTip.lastModified >= past24)
+				{
+					newCrimeTip.last24 = true;
+				}
+				
 				retrievedCrimeTips.push(newCrimeTip);
 				newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
 				if (newCrimeTipDate > latestDate) {
