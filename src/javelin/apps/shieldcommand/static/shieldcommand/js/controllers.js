@@ -253,7 +253,7 @@ angular.module('shieldCommand.controllers', [])
 			}
 			else if ($scope.currentActiveLocation.type == 'crimeTip')
 			{
-				zoomToCrime(currentActiveLocation);
+				zoomToCrime($scope.currentActiveLocation);
 				alertService.activeAlert = null;
 				$scope.markerSetForActiveCrimeTip = true;
 				$scope.markerSetForActiveAlert = false;
