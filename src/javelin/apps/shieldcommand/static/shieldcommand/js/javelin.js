@@ -235,6 +235,7 @@
 		this.geocodedAddress = null;
 		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
+		this.accuracy = null;
 		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
 		//this.user = Javelin.activeCrimeTipUser;
 		

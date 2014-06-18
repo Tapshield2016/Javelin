@@ -84,7 +84,7 @@ function getIconForLocation(location) {
 		{
         	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon; 
 		}
-		else if (location.type == 'crimeTip' || location.type == 'spotcrime')
+		else if (location.type == 'crimeTip' || location.type == 'spotCrime')
 		{
 			var crimeType = location.reportType ? location.reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
 			
@@ -95,19 +95,13 @@ function getIconForLocation(location) {
 	return '/media/static/shieldcommand/img/' + icon;
 }
 
-function getCrimeIcon(source, type) {
-	var type = type ? type.toLowerCase().replace(/[\s\/]/g, '') : 'other';
-	
-	return '/media/static/shieldcommand/img/' + source + '/' + 'pins_' + type + '_icon.png';
-}
-
 function setMarker(location) {
     if (!location) {
         return;
     };
     googleMapMarker.setOptions(markerOptions);
     googleMapAccuracyCircle.setOptions(circleOptions);
-    alert_location = new google.maps.LatLng(location.latitude, location.longitude);
+    var alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon(getIconForLocation(location));
     googleMapMarker.setTitle(location.title);
@@ -117,7 +111,19 @@ function setMarker(location) {
     googleMap.setCenter(googleMapMarker.getPosition());
 }
 
-function addCrimeMarkers(source, crimes) {
+function zoomToCrime(crime)
+{
+	if (! crime)
+	{
+		return;
+	};
+	
+	googleMap.setZoom(18);
+	var crimeLocation = new google.maps.LatLng(crime.latitude, crime.longitude);
+    googleMap.setCenter(crimeLocation);
+}
+
+function addCrimeMarkers(crimes) {
     if (! crimes)
 	{
 		return;
@@ -132,8 +138,8 @@ function addCrimeMarkers(source, crimes) {
 		marker = new google.maps.Marker({
 			position: new google.maps.LatLng(crime.latitude, crime.longitude),
 			map: googleMap,
-			title: crime.title,
-			icon: getCrimeIcon(source, crime.type)
+			title: crime.reportType,
+			icon: getIconForLocation(crime)
         });
 	}
 }
