@@ -190,7 +190,7 @@
 						<div class="panel-body accordion-panel-body"> 
 							<!-- Crime Tips -->
 							<ul class="alerts-list">
-								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'lastModified'" ng-class="selectedClass(crimeTip)">
+								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-lastModified'" ng-class="selectedClass(crimeTip)">
 									<div id="{{ crimeTip.object_id }}" class="alert-container" ng-click="crimeTipClicked(crimeTip)">
 										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
 										<div class="alert-contact">
