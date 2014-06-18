@@ -360,7 +360,7 @@ angular.module('shieldCommand.controllers', [])
 		
 		if ($scope.crimeTipsLength > 0)
 		{
-			addCrimeMarkers($scope.crimeTips);
+			addCrimeMarkers($filter("filter")($scope.crimeTips, {last24: true}));
 		}
   	};
 
