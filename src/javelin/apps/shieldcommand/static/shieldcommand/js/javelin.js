@@ -573,16 +573,17 @@
 			var retrievedCrimeTips = [];
 			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 			for (var i = data.results.length - 1; i >= 0; i--) {
-				newCrimeTip = new CrimeTip(data.results[i]);
+				var newCrimeTip = new CrimeTip(data.results[i]);
 				var past24 = createPastTimestamp(24 * 3600);
+				var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
 				
-				if (newCrimeTip.lastModified >= past24)
+				if (newCrimeTipDate >= past24)
 				{
 					newCrimeTip.showPin = true;
 				}
 				
 				retrievedCrimeTips.push(newCrimeTip);
-				newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+				
 				if (newCrimeTipDate > latestDate) {
 					latestDate = newCrimeTipDate;
 				}
