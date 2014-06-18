@@ -236,7 +236,7 @@
 		this.type = 'crimeTip';
 		this.anonymous = attributes.report_anonymous;
 		this.accuracy = null;
-		this.last24 = false;
+		this.showPin = false;
 		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
 		//this.user = Javelin.activeCrimeTipUser;
 		
@@ -578,7 +578,7 @@
 				
 				if (newCrimeTip.lastModified >= past24)
 				{
-					newCrimeTip.last24 = true;
+					newCrimeTip.showPin = true;
 				}
 				
 				retrievedCrimeTips.push(newCrimeTip);

@@ -360,7 +360,7 @@ angular.module('shieldCommand.controllers', [])
 		
 		if ($scope.crimeTipsLength > 0)
 		{
-			addCrimeMarkers($filter("filter")($scope.crimeTips, {last24: true}));
+			addCrimeMarkers($filter("showPin")($scope.crimeTips, {showPin: true}));
 		}
   	};
 
@@ -535,7 +535,7 @@ angular.module('shieldCommand.controllers', [])
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
 				if (crimeTipService.activeCrimeTip) {
 					
-					if ( ! crimeTipService.activeCrimeTip.last24)
+					if ( ! crimeTipService.activeCrimeTip.showPin)
 					{
 						setMarker(crimeTipService.activeCrimeTip);
 					}
