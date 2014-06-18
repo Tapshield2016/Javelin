@@ -534,7 +534,12 @@ angular.module('shieldCommand.controllers', [])
 
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
 				if (crimeTipService.activeCrimeTip) {
-					//setMarker(crimeTipService.activeCrimeTip);
+					
+					if ( ! crimeTipService.activeCrimeTip.last24)
+					{
+						setMarker(crimeTipService.activeCrimeTip);
+					}
+					
 					$scope.currentActiveLocation = crimeTipService.activeCrimeTip;
 				}
 			}
