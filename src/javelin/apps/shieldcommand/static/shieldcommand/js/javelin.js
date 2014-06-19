@@ -592,9 +592,6 @@
 			if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
 				Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
 			}
-			console.log(retrievedCrimeTips.length + ' retrieved crime tips');
-			console.log(data.results.length + ' results length');
-			console.log(data.count + ' results count');
 			callback(retrievedCrimeTips);
 		})
 	}
@@ -617,6 +614,7 @@
 	Javelin.getCrimeTipsModifiedSinceLastCheck = function(callback) {
 		Javelin.getCrimeTips({
 			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
+			page_size: 100,
 		}, callback);
 	}
 

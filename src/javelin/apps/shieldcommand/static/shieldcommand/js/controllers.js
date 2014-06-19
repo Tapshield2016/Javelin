@@ -325,7 +325,6 @@ angular.module('shieldCommand.controllers', [])
 	
 	function updateCrimeTips(crimeTips) {
 		$scope.crimeTips = crimeTips;
-		console.log(crimeTips.length + ' crime tips update');
 		$rootScope.crimeTips = crimeTips;
 		updateDisplay();
   	};
@@ -336,7 +335,6 @@ angular.module('shieldCommand.controllers', [])
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
 		$scope.crimeTipsLength = $scope.crimeTips.length;
-		console.log($scope.crimeTipsLength + ' crime tips');
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -442,7 +440,6 @@ angular.module('shieldCommand.controllers', [])
   		try {
 	  		crimeTipService.getUpdatedCrimeTips($scope.crimeTips, function(updatedCrimeTips) {
 	  			updateCrimeTips(updatedCrimeTips);
-				console.log(updatedCrimeTips.length + ' updated crime tips');
 				if (crimeTipService.activeCrimeTip) {
 					for (var i = 0; i < updatedCrimeTips.length; i++) {
 						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
