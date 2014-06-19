@@ -179,7 +179,9 @@ function addCrimeMarkers(crimes) {
 		crimeMarkers[crime.type][crime.object_id] = marker;
 		marker.crimeType = crime.type;
 		marker.crimeId = crime.object_id;
-		google.maps.event.addListener(marker, 'click', crimePinClicked);
+		google.maps.event.addListener(marker, 'click', function() {
+			crimePinClicked(crime);
+		});
 	}
 }
 
@@ -191,9 +193,9 @@ function crimePinClicked(crime)
 		console.log('no crime');
 		return;
 	}
-	console.log(crime.crimeType);
-	console.log($('#' + crime.crimeType + '-' + crime.crimeId).length + ' jquery obj length');
-	$('#' + crime.crimeType + '-' + crime.crimeId).click();
+	console.log(crime.type);
+	console.log($('#' + crime.type + '-' + crime.object_id).length + ' jquery obj length');
+	$('#' + crime.type + '-' + crime.object_id).click();
 }
 
 function removeCrimeMarkers(crimes)
