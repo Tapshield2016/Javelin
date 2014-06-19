@@ -596,10 +596,10 @@
 	}
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
-		var now = getTimestamp(milliseconds=true);
-		var then = Number(new Date(now - (24 * 60 * 60)));
+		//var now = getTimestamp(milliseconds=true);
+		//var then = Number(new Date(now - (24 * 60 * 60)));
 		Javelin.getCrimeTips({
-			modified_since: then,
+			//modified_since: then,
 			page_size: 100,
 		}, callback);		
 	}
