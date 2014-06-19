@@ -47,7 +47,11 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
-		clearTimeout($scope.updateTimeout);
+		if ($scope.updateTimeout)
+		{
+			clearTimeout($scope.updateTimeout);
+		}
+		
 		if (alertService.activeAlert)
 		{
 			$scope.profileType = 'alert';
