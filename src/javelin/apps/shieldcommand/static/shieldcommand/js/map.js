@@ -159,7 +159,7 @@ function addCrimeMarkers(crimes) {
 	{
 		var crime = crimes[i];
 		
-		if ( ! crime)
+		if ( ! crime || crimeMarkers[crime.type][crime.object_id])
 		{
 			continue;
 		}

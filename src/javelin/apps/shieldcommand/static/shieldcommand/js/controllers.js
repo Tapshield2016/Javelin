@@ -335,6 +335,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
 		$scope.crimeTipsLength = $scope.crimeTips.length;
+		console.log($scope.crimeTipsLength + ' crime tips');
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
