@@ -139,7 +139,7 @@ function zoomToCrime(crime)
 	
 	googleMap.setZoom(18);
 	
-	if (crimeMarkers[crime.type][crime.object_id])
+	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 	{
 		clearActiveAlertMarker();
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
@@ -159,7 +159,7 @@ function addCrimeMarkers(crimes) {
 	{
 		var crime = crimes[i];
 		
-		if ( ! crime || crimeMarkers[crime.type][crime.object_id])
+		if ( ! crime || (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]))
 		{
 			continue;
 		}
@@ -196,7 +196,7 @@ function removeCrimeMarkers(crimes)
 			continue;
 		}
 		
-		if (crimeMarkers[crime.type][crime.object_id])
+		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 		{
 			crimeMarkers[crime.type][crime.object_id].setMap(null);
 		}
