@@ -226,6 +226,7 @@
 		this.body = attributes.body;
 		this.reporter = attributes.reporter;
 		this.reportType = getObjectProperty(Javelin.CRIME_TYPE_CHOICES, attributes.report_type);
+		this.title = this.reportType;
 		this.reportIcon = getCrimeTipIcon(this.reportType);
 		this.imageURL = attributes.report_image_url;
 		this.videoURL = attributes.report_video_url;

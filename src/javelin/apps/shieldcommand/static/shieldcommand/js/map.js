@@ -73,14 +73,12 @@ function updateMarker(location) {
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
 	googleMapMarker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-	//googleMapMarker.setVisible(true);
-    googleMapAccuracyCircle.setCenter(alert_location);
-    googleMapAccuracyCircle.setRadius(location.accuracy);
-}
-
-function hideMarker()
-{
-	googleMapMarker.setVisible(false);
+	
+	if (location.accuracy)
+	{
+    	googleMapAccuracyCircle.setCenter(alert_location);
+    	googleMapAccuracyCircle.setRadius(location.accuracy);
+	}
 }
 
 function getIconForLocation(location) {
@@ -108,13 +106,19 @@ function setMarker(location) {
         return;
     };
     googleMapMarker.setOptions(markerOptions);
-    googleMapAccuracyCircle.setOptions(circleOptions);
     var alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon(getIconForLocation(location));
     googleMapMarker.setTitle(location.title);
-    googleMapAccuracyCircle.setCenter(alert_location);
-    googleMapAccuracyCircle.setRadius(location.accuracy);
+	googleMapMarker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+	
+	if (location.accuracy)
+	{
+    	googleMapAccuracyCircle.setOptions(circleOptions);
+		googleMapAccuracyCircle.setCenter(alert_location);
+    	googleMapAccuracyCircle.setRadius(location.accuracy);
+	}
+	
     googleMap.setZoom(18);
     googleMap.setCenter(googleMapMarker.getPosition());
 }
