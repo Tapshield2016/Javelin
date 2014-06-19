@@ -176,25 +176,21 @@ function addCrimeMarkers(crimes) {
 			crimeMarkers[crime.type] = [];
 		}
 		
-		crimeMarkers[crime.type][crime.object_id] = marker;
 		marker.crimeType = crime.type;
 		marker.crimeId = crime.object_id;
-		google.maps.event.addListener(marker, 'click', function() {
-			crimePinClicked(crime);
-		});
+		crimeMarkers[crime.type][crime.object_id] = marker;
+		
+		//google.maps.event.addListener(marker, 'click', crimePinClicked);
 	}
 }
 
-function crimePinClicked(crime)
+function crimePinClicked(event)
 {
-	console.log('crime pin clicked');
 	if ( ! crime)
 	{
-		console.log('no crime');
 		return;
 	}
-	console.log(crime.type);
-	console.log($('#' + crime.type + '-' + crime.object_id).length + ' jquery obj length');
+
 	$('#' + crime.type + '-' + crime.object_id).click();
 }
 
