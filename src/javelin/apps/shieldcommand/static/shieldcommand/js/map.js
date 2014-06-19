@@ -191,7 +191,8 @@ function crimePinClicked(crime)
 		console.log('no crime');
 		return;
 	}
-	
+	console.log(crime.crimeType);
+	console.log($('#' + crime.crimeType + '-' + crime.crimeId).length + ' jquery obj length');
 	$('#' + crime.crimeType + '-' + crime.crimeId).click();
 }
 
