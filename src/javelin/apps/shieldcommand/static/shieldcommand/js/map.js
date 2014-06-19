@@ -140,7 +140,6 @@ function zoomToCrime(crime)
 	if (crimeMarkers[crime.type][crime.object_id])
 	{
 		clearActiveAlertMarker();
-		alert('clear active marker');
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
@@ -170,7 +169,10 @@ function addCrimeMarkers(crimes) {
 			icon: getIconForLocation(crime)
         });
 		
-		crimeMarkers[crime.type] = [];
+		if ( ! crimeMarkers[crime.type])
+		{
+			crimeMarkers[crime.type] = [];
+		}
 		
 		crimeMarkers[crime.type][crime.object_id] = marker;
 	}
