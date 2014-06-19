@@ -7,6 +7,7 @@ var googleMapAccuracyCircle = new google.maps.Circle();
 var googleMapGeocoder = new google.maps.Geocoder();
 var googleMapAgencyBoundaries = [];
 var crimeMarkers = [];
+var markerZIndex = 1;
 
 function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
@@ -125,7 +126,8 @@ function setMarker(location) {
 
 function bringMarkerToFront(marker)
 {
-	marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+	marker.setZIndex(google.maps.Marker.MAX_ZINDEX + markerZIndex);
+	markerZIndex++;
 }
 
 function zoomToCrime(crime)
