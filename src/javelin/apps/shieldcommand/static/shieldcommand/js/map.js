@@ -158,7 +158,8 @@ function addCrimeMarkers(crimes) {
 			title: crime.reportType,
 			icon: getIconForLocation(crime)
         });
-		alert(crime.type);
+		
+		crimeMarkers[crime.type] = [];
 		
 		crimeMarkers[crime.type][crime.object_id] = marker;
 	}
