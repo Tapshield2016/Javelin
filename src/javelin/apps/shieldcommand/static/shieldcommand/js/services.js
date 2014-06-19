@@ -146,8 +146,8 @@ angular.module('shieldCommand.services', [])
 				}
 				if (!foundCrimeTip) {
 					existingCrimeTips.push(updatedCrimeTips[i]);
-				};
-			};
+				}
+			}
 			callback(existingCrimeTips);
 		});
 	}
