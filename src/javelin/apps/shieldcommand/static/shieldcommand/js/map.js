@@ -126,9 +126,14 @@ function zoomToCrime(crime)
 		return;
 	};
 	
-	//hideMarker();
 	googleMap.setZoom(18);
-	var marker = crimeMarkers[crime.type][crime.object_id];
+	
+	if (crimeMarkers[crime.type][crime.object_id])
+	{
+		var marker = crimeMarkers[crime.type][crime.object_id];
+		hideMarker();
+	}
+	
     googleMap.setCenter(marker.getPosition());
 }
 
@@ -153,6 +158,7 @@ function addCrimeMarkers(crimes) {
 			title: crime.reportType,
 			icon: getIconForLocation(crime)
         });
+		alert(crime.type);
 		
 		crimeMarkers[crime.type][crime.object_id] = marker;
 	}
