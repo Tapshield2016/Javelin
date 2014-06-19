@@ -72,7 +72,7 @@ function updateMarker(location) {
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
-	googleMapMarker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+	bringMarkerToFront(googleMapMarker);
 	
 	if (location.accuracy)
 	{
@@ -110,7 +110,7 @@ function setMarker(location) {
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setIcon(getIconForLocation(location));
     googleMapMarker.setTitle(location.title);
-	googleMapMarker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+	bringMarkerToFront(googleMapMarker);
 	
 	if (location.accuracy)
 	{
@@ -123,18 +123,24 @@ function setMarker(location) {
     googleMap.setCenter(googleMapMarker.getPosition());
 }
 
+function bringMarkerToFront(marker)
+{
+	marker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
+}
+
 function zoomToCrime(crime)
 {
 	if (! crime)
 	{
 		return;
-	};
+	}
 	
 	googleMap.setZoom(18);
 	
 	if (crimeMarkers[crime.type][crime.object_id])
 	{
 		clearActiveAlertMarker();
+		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
 	var crimeLocation = new google.maps.LatLng(crime.latitude, crime.longitude);   
@@ -145,7 +151,7 @@ function addCrimeMarkers(crimes) {
     if (! crimes)
 	{
 		return;
-	};
+	}
 	
 	for (var i = 0; i < crimes.length; i++)
 	{
@@ -169,15 +175,25 @@ function addCrimeMarkers(crimes) {
 	}
 }
 
-function removeCrimeMarker(crime)
+function removeCrimeMarkers(crimes)
 {
-	if ( ! crime)
+	if ( ! crimes)
 	{
 		return;
 	}
 	
-	if (crimeMarkers[crime.type][crime.object_id])
+	for (var i = 0; i < crimes.length; i++)
 	{
-		crimeMarkers[crime.type][crime.object_id].setMap(null);
+		var crime = crimes[i];
+		
+		if ( ! crime)
+		{
+			continue;
+		}
+		
+		if (crimeMarkers[crime.type][crime.object_id])
+		{
+			crimeMarkers[crime.type][crime.object_id].setMap(null);
+		}
 	}
 }
