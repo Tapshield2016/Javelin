@@ -325,6 +325,7 @@ angular.module('shieldCommand.controllers', [])
 	
 	function updateCrimeTips(crimeTips) {
 		$scope.crimeTips = crimeTips;
+		console.log(crimeTips.length + ' crime tips update');
 		$rootScope.crimeTips = crimeTips;
 		updateDisplay();
   	};
@@ -441,6 +442,7 @@ angular.module('shieldCommand.controllers', [])
   		try {
 	  		crimeTipService.getUpdatedCrimeTips($scope.crimeTips, function(updatedCrimeTips) {
 	  			updateCrimeTips(updatedCrimeTips);
+				console.log(updatedCrimeTips.length + ' updated crime tips');
 				if (crimeTipService.activeCrimeTip) {
 					for (var i = 0; i < updatedCrimeTips.length; i++) {
 						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
