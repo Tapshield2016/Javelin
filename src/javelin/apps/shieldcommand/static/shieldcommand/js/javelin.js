@@ -592,7 +592,7 @@
 			if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
 				Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
 			}
-			console.log(retrievedCrimeTips + ' retrieved crime tips');
+			console.log(retrievedCrimeTips.length + ' retrieved crime tips');
 			console.log(data.count + ' results count');
 			callback(retrievedCrimeTips);
 		})
