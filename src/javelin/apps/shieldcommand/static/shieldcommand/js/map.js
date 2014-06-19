@@ -177,7 +177,22 @@ function addCrimeMarkers(crimes) {
 		}
 		
 		crimeMarkers[crime.type][crime.object_id] = marker;
+		marker.crimeType = crime.type;
+		marker.crimeId = crime.object_id;
+		google.maps.event.addListener(marker, 'click', crimePinClicked);
 	}
+}
+
+function crimePinClicked(crime)
+{
+	console.log('crime pin clicked');
+	if ( ! crime)
+	{
+		console.log('no crime');
+		return;
+	}
+	
+	$('#' + crime.crimeType + '-' + crime.crimeId).click();
 }
 
 function removeCrimeMarkers(crimes)
