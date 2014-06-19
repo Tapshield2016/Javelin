@@ -126,7 +126,7 @@ function zoomToCrime(crime)
 		return;
 	};
 	
-	hideMarker();
+	//hideMarker();
 	googleMap.setZoom(18);
 	var marker = crimeMarkers[crime.type][crime.object_id];
     googleMap.setCenter(marker.getPosition());
@@ -142,6 +142,11 @@ function addCrimeMarkers(crimes) {
 	{
 		var crime = crimes[i];
 		
+		if ( ! crime)
+		{
+			continue;
+		}
+		
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(crime.latitude, crime.longitude),
 			map: googleMap,
@@ -155,5 +160,13 @@ function addCrimeMarkers(crimes) {
 
 function removeCrimeMarker(crime)
 {
-	crimeMarkers[crime.type][crime.object_id].setMap(null);
+	if ( ! crime)
+	{
+		return;
+	}
+	
+	if (crimeMarkers[crime.type][crime.object_id])
+	{
+		crimeMarkers[crime.type][crime.object_id].setMap(null);
+	}
 }
