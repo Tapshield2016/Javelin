@@ -73,7 +73,7 @@ function updateMarker(location) {
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
 	googleMapMarker.setZIndex(google.maps.Marker.MAX_ZINDEX + 1);
-	googleMapMarker.setVisible(true);
+	//googleMapMarker.setVisible(true);
     googleMapAccuracyCircle.setCenter(alert_location);
     googleMapAccuracyCircle.setRadius(location.accuracy);
 }
@@ -130,11 +130,11 @@ function zoomToCrime(crime)
 	
 	if (crimeMarkers[crime.type][crime.object_id])
 	{
-		var marker = crimeMarkers[crime.type][crime.object_id];
-		hideMarker();
+		clearActiveAlertMarker();
 	}
 	
-    googleMap.setCenter(marker.getPosition());
+	var crimeLocation = new google.maps.LatLng(crime.latitude, crime.longitude);   
+    googleMap.setCenter(crimeLocation);
 }
 
 function addCrimeMarkers(crimes) {
