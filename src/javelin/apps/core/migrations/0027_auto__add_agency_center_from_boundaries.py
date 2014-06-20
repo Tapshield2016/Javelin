@@ -8,14 +8,16 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Agency.agency_center_from_boundaries'
-        db.add_column(u'core_agency', 'agency_center_from_boundaries',
-                      self.gf('django.db.models.fields.BooleanField')(default=False))
+
+        # Adding field 'Agency.agency_radius'
+        db.add_column(u'core_agency', 'agency_radius',
+                      self.gf('django.db.models.fields.FloatField')(default=1))
+
 
     def backwards(self, orm):
-        # Deleting field 'Agency.agency_center_from_boundaries'
-        db.delete_column(u'core_agency', 'agency_center_from_boundaries')
 
+        # Deleting model 'Period'
+        db.delete_table(u'core_period')
 
     models = {
         u'auth.group': {
@@ -42,7 +44,6 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Agency'},
             'agency_alternate_logo': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'agency_boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
-            'agency_center_from_boundaries': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'agency_center_latitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_longitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
@@ -200,7 +201,42 @@ class Migration(SchemaMigration):
             'race': ('django.db.models.fields.CharField', [], {'max_length': '3', 'null': 'True', 'blank': 'True'}),
             'user': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.AgencyUser']", 'unique': 'True'}),
             'weight': ('django.db.models.fields.PositiveIntegerField', [], {'default': '0', 'null': 'True', 'blank': 'True'})
-        }
+        },
+        u'core.region': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Region'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'primary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'primary_dispatch_center'", 'to': u"orm['core.DispatchCenter']"}),
+            'secondary_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'secondary_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'fallback_dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'fallback_dispatch_center'", 'null': 'True', 'to': u"orm['core.DispatchCenter']"}),
+            'boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'center_latitude': ('django.db.models.fields.FloatField', [], {}),
+            'center_longitude': ('django.db.models.fields.FloatField', [], {}),
+            'center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+        },
+        u'core.dispatchcenter': {
+            'Meta': {'ordering': "['name']", 'object_name': 'DispatchCenter'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.Agency']"}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'phone_number': ('django.db.models.fields.CharField', [], {'max_length': '24'}),
+        },
+        u'core.core_closeddate': {
+            'Meta': {'ordering': "['name']", 'object_name': 'ClosedDate'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'closed_date'", 'to': u"orm['core.DispatchCenter']"}),
+            'start_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+            'end_date': ('django.db.models.fields.DateTimeField', [], {'null': 'True', 'blank': 'True'}),
+        },
+        u'core.core_period': {
+            'Meta': {'ordering': "['name']", 'object_name': 'Period'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'dispatch_center': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'opening_hours'", 'to': u"orm['core.DispatchCenter']"}),
+            'day': ('django.db.models.fields.CharField', [], {'default': "'1'", 'max_length': '1'}),
+            'open': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+            'close': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
+        },
     }
 
     complete_apps = ['core']

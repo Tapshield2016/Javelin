@@ -56,7 +56,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'enable_user_location_requests',])
         }),
         ('Agency Location and Boundaries', {
-                'fields': (['agency_boundaries', 'agency_center_latitude',
+                'fields': (['agency_boundaries', 'agency_center_from_boundaries', 'agency_center_latitude',
                             'agency_center_longitude', 'agency_center_point', 'agency_radius',
                             'default_map_zoom_level']),
         }),

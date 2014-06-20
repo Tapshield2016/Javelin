@@ -51,6 +51,7 @@ class Agency(TimeStampedModel):
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
     agency_boundaries = models.TextField(null=True, blank=True)
+    agency_center_from_boundaries = models.BooleanField(default=False)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
     agency_center_point = db_models.PointField(geography=True,
@@ -104,7 +105,7 @@ class Agency(TimeStampedModel):
 
         boundaries = None
 
-        if self.agency_boundaries:
+        if self.agency_boundaries and self.agency_center_from_boundaries:
             boundaries = eval(self.agency_boundaries)
 
         #Find centroid
@@ -118,13 +119,10 @@ class Agency(TimeStampedModel):
                 xcoordinates.append(float(split[0]))
                 ycoordinates.append(float(split[1]))
 
-            centroidex = sum(xcoordinates)/len(xcoordinates)
-            centroidey = sum(ycoordinates)/len(ycoordinates)
+            agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
+            agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
 
-            self.agency_center_point = Point(centroidex,
-                                             centroidey)
-
-        elif self.agency_center_latitude and self.agency_center_longitude:
+        if self.agency_center_latitude and self.agency_center_longitude:
             self.agency_center_point = Point(self.agency_center_latitude,
                                              self.agency_center_longitude)
 
