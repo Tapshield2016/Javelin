@@ -154,6 +154,14 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SocialCrimeReport
 
+    def to_native(self, obj):
+        ret = super(SocialCrimeReportSerializer, self).to_native(obj)
+        if obj:
+            if not obj.report_anonymous:
+                reporter_meta = UserSerializer(instance=obj.reporter)
+                ret['reporter_meta'] = reporter_meta.data
+        return ret
+
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
