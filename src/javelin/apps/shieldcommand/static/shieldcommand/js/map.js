@@ -194,10 +194,15 @@ function crimePinClicked(evt)
 			
 			if (marker.getPosition() == evt.latLng)
 			{
-				$('#crimeTipListLink').click();
+				var scrollContainer = $('#crimeTipList');
+				
+				if ( ! scrollContainer.is(':visible'))
+				{
+					$('#crimeTipListLink').click();
+				}
+				
 				var crimeTipItem = $('#crimeTip-' + crimeTipID);
 				crimeTipItem.click();
-				var scrollContainer = $('#crimeTipList');
 				scrollContainer.animate({
 				    scrollTop: crimeTipItem.offset().top - scrollContainer.offset().top + scrollContainer.scrollTop()
 				});
