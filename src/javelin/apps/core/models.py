@@ -47,7 +47,7 @@ def centroid_from_boundaries(boundaries):
         y0 = y_coordinates[i];
 
         j = i+1
-        if i == len(x_coordinates):
+        if i == len(x_coordinates)-1:
             j = 0
 
         x1 = x_coordinates[j];
@@ -151,7 +151,7 @@ class Agency(TimeStampedModel):
             centroid = centroid_from_boundaries(boundaries)
             self.agency_center_latitude = centroid.x
             self.agency_center_longitude = centroid.y
-            
+
             # xcoordinates = []
             # ycoordinates = []
             #
