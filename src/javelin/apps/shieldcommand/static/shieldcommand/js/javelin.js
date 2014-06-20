@@ -406,11 +406,11 @@
 				{
 					for (var i = 0; i < data.results.length; i++)
 					{
-						var user = data.results[i];
+						var user = new AgencyUser(data.results[i]);
 						
 						if (user.object_id == userID)
 						{
-							callback(new AgencyUser(user));
+							callback(user);
 							break;
 						}
 					}
