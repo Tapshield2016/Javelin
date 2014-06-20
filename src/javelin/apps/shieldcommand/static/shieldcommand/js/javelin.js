@@ -238,6 +238,14 @@
 		this.anonymous = attributes.report_anonymous;
 		this.accuracy = null;
 		this.showPin = false;
+		this.firstName = attributes.reporter_first_name ? attributes.reporter_first_name : '';
+		this.lastName = attributes.reporter_last_name ? attributes.reporter_last_name : '';
+		this.email = attributes.reporter_email ? attributes.reporter_email : '';
+		this.phoneNumber = attributes.reporter_phone_number ? attributes.reporter_phone_number : '';
+
+		this.getFullName = function() {
+			return this.firstName + " " + this.lastName;
+		};
 		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
 		//this.user = Javelin.activeCrimeTipUser;
 		
@@ -390,7 +398,23 @@
 		var request = Javelin.client.users.read({user: userID});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
-				callback(new AgencyUser(data['results'][0]));
+				if (data.results.length == 1)
+				{
+					callback(new AgencyUser(data['results'][0]));
+				}
+				else
+				{
+					for (var i = 0; i < data.results.length; i++)
+					{
+						var user = data.results[i];
+						
+						if (user.object_id == userID)
+						{
+							callback(new AgencyUser(user));
+							break;
+						}
+					}
+				}
 			}
 			else {
 				callback(null);

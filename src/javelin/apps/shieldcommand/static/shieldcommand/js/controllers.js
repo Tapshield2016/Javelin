@@ -365,7 +365,8 @@ angular.module('shieldCommand.controllers', [])
 		if ($scope.crimeTipsLength > 0)
 		{
 			addCrimeMarkers($filter("filter")($scope.crimeTips, {showPin: true}));
-			//removeCrimeMarkers($filter("filter")($scope.crimeTips, {showPin: false}));
+			var crimeMarkersForRemoval = $filter("filter")($scope.crimeTips, {showPin: false});
+			removeCrimeMarkers(crimeMarkersForRemoval, crimeTipService.activeCrimeTip);
 		}
   	};
 

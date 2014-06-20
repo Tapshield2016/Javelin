@@ -22,6 +22,18 @@ angular.module('shieldCommand.filters', [])
 	}
 }])
 
+.filter('notActiveCrimeTip', [function() {
+	return function(crimeTips, activeCrimeTip) {
+		var filtered = [];
+		for (var i = 0; i < crimeTips.length; i++) {
+			if (activeCrimeTip && crimeTips[i].object_id != activeCrimeTip.object_id) {
+				filtered.push(crimeTips[i]);
+			}
+		};
+		return filtered;
+	}
+}])
+
 .filter('locationsByStatusAndAgencyDispatcher', [function() {
 	return function(alerts, statuses) {
 		var filtered = [];
