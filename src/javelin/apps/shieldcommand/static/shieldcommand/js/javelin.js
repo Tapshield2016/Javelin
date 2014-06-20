@@ -407,9 +407,11 @@
 					for (var i = 0; i < data.results.length; i++)
 					{
 						var user = new AgencyUser(data.results[i]);
+						console.log(user.object_id);
 						
 						if (user.object_id == userID)
 						{
+							console.log('user found');
 							callback(user);
 							break;
 						}
