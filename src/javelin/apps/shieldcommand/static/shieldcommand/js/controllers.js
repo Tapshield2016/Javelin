@@ -47,6 +47,8 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
+		console.log('profile open');
+		
 		if ($scope.updateTimeout)
 		{
 			clearTimeout($scope.updateTimeout);
@@ -54,12 +56,14 @@ angular.module('shieldCommand.controllers', [])
 		
 		if (alertService.activeAlert)
 		{
+			console.log('alert profile');
 			$scope.profileType = 'alert';
 			$scope.activeAlert = alertService.activeAlert;
 			$scope.activeCrimeTip = null;
 		}
 		else if (crimeTipService.activeCrimeTip)
 		{
+			console.log('crime tip profile');
 			$scope.profileType = 'crimeTip';
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
 			$scope.activeAlert = null;
@@ -78,6 +82,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.updateProfile = function(callback) {
+		console.log('update profile');
 		if ($scope.activeAlert)
 		{
 			alertService.getUserProfileForActiveAlert(function(profile) {

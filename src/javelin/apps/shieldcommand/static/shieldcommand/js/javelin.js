@@ -397,21 +397,19 @@
 	Javelin.getUser = function(userID, callback) {
 		var request = Javelin.client.users.read({user: userID, page_size: 100});
 		request.done(function(data) {
-			if (data['results'].length > 0) {
+			if (data.results.length > 0) {
 				if (data.results.length == 1)
 				{
-					callback(new AgencyUser(data['results'][0]));
+					callback(new AgencyUser(data.results[0]));
 				}
 				else
 				{
 					for (var i = 0; i < data.results.length; i++)
 					{
 						var user = new AgencyUser(data.results[i]);
-						console.log(user.object_id);
 						
 						if (user.object_id == userID)
 						{
-							console.log('user found');
 							callback(user);
 							break;
 						}
