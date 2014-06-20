@@ -102,8 +102,12 @@ class Agency(TimeStampedModel):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
 
-        boundaries = eval(self.agency_boundaries)
+        boundaries = None
 
+        if self.agency_boundaries:
+            boundaries = eval(self.agency_boundaries)
+
+        #Find centroid
         if boundaries:
 
             xcoordinates = []
