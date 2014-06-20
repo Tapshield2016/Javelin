@@ -105,12 +105,20 @@ class Agency(TimeStampedModel):
         boundaries = eval(self.agency_boundaries)
 
         if boundaries:
-            firstPoint = boundaries[0]
-            split = firstPoint.split(',')
-            lat = split[0]
-            lon = split[1]
-            self.agency_center_point = Point(float(lat),
-                                             float(lon))
+
+            xcoordinates = None
+            ycoordinates = None
+
+            for x in boundaries:
+                split = x.split(',')
+                xcoordinates.append(float(split[0]))
+                ycoordinates.append(float(split[1]))
+
+            centroidex = sum(xcoordinates)/len(xcoordinates)
+            centroidey = sum(ycoordinates)/len(ycoordinates)
+
+            self.agency_center_point = Point(centroidex,
+                                             centroidey)
 
         # if self.agency_center_latitude and self.agency_center_longitude:
         #     self.agency_center_point = Point(self.agency_center_longitude,
