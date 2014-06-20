@@ -28,6 +28,43 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
 
 
+def centroid_from_boundaries(boundaries):
+
+    x_coordinates = []
+    y_coordinates = []
+
+    for x in boundaries:
+        split = x.split(',')
+        x_coordinates.append(float(split[0]))
+        y_coordinates.append(float(split[1]))
+
+    signed_area = 0.0
+    centroid = Point(0, 0)
+
+    for i in range(len(x_coordinates)):
+
+        x0 = x_coordinates[i];
+        y0 = y_coordinates[i];
+
+        j = i+1
+        if i == len(x_coordinates):
+            j = 0
+
+        x1 = x_coordinates[j];
+        y1 = y_coordinates[j];
+        a = x0*y1 - x1*y0;
+        signed_area += a;
+        centroid.x += (x0 + x1)*a;
+        centroid.y += (y0 + y1)*a;
+
+    signed_area *= 0.5;
+    centroid.x /= (6.0*signed_area);
+    centroid.y /= (6.0*signed_area);
+
+    return centroid;
+
+
+
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -111,16 +148,20 @@ class Agency(TimeStampedModel):
         #Find centroid
         if boundaries:
 
-            xcoordinates = []
-            ycoordinates = []
-
-            for x in boundaries:
-                split = x.split(',')
-                xcoordinates.append(float(split[0]))
-                ycoordinates.append(float(split[1]))
-
-            self.agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
-            self.agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
+            centroid = centroid_from_boundaries(boundaries)
+            self.agency_center_latitude = centroid.x
+            self.agency_center_longitude = centroid.y
+            
+            # xcoordinates = []
+            # ycoordinates = []
+            #
+            # for x in boundaries:
+            #     split = x.split(',')
+            #     xcoordinates.append(float(split[0]))
+            #     ycoordinates.append(float(split[1]))
+            #
+            # self.agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
+            # self.agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
 
         if self.agency_center_latitude and self.agency_center_longitude:
             self.agency_center_point = Point(self.agency_center_latitude,
