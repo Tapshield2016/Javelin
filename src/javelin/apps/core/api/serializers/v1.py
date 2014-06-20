@@ -95,6 +95,13 @@ class UserUpdateSerializer(serializers.HyperlinkedModelSerializer):
                   'last_reported_longitude')
 
 
+class ReporterSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'first_name', 'last_name',)
+
+
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -158,7 +165,7 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(SocialCrimeReportSerializer, self).to_native(obj)
         if obj:
             if not obj.report_anonymous:
-                reporter_meta = UserSerializer(instance=obj.reporter)
+                reporter_meta = ReporterSerializer(instance=obj.reporter)
                 ret['reporter_meta'] = reporter_meta.data
         return ret
 
