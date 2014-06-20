@@ -119,8 +119,8 @@ class Agency(TimeStampedModel):
                 xcoordinates.append(float(split[0]))
                 ycoordinates.append(float(split[1]))
 
-            agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
-            agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
+            self.agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
+            self.agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
 
         if self.agency_center_latitude and self.agency_center_longitude:
             self.agency_center_point = Point(self.agency_center_latitude,
