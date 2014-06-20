@@ -106,8 +106,8 @@ class Agency(TimeStampedModel):
 
         if boundaries:
 
-            xcoordinates = None
-            ycoordinates = None
+            xcoordinates = []
+            ycoordinates = []
 
             for x in boundaries:
                 split = x.split(',')
