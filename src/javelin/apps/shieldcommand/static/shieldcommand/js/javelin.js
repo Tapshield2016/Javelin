@@ -395,7 +395,7 @@
 	};
 
 	Javelin.getUser = function(userID, callback) {
-		var request = Javelin.client.users.read({user: userID});
+		var request = Javelin.client.users.read({user: userID, page_size: 100});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
 				if (data.results.length == 1)
