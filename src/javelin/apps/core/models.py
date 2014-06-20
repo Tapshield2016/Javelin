@@ -125,9 +125,8 @@ class Agency(TimeStampedModel):
                                              centroidey)
 
         elif self.agency_center_latitude and self.agency_center_longitude:
-            self.agency_center_point = Point(self.agency_center_longitude,
-                                             self.agency_center_latitude)
-
+            self.agency_center_point = Point(self.agency_center_latitude,
+                                             self.agency_center_longitude)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
