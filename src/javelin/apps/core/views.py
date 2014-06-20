@@ -51,8 +51,8 @@ User = get_user_model()
 class DatetimeEncoder(json.JSONEncoder):
 
     def default(self, obj):
-        if isinstance(obj, datetime.datetime):
-            return int(mktime(obj.timetuple()))
+        # if isinstance(obj, datetime.datetime):
+        #     return int(mktime(obj.timetuple()))
 
         return json.JSONEncoder.default(self, obj)
 
