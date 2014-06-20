@@ -152,17 +152,6 @@ class Agency(TimeStampedModel):
             self.agency_center_latitude = centroid.x
             self.agency_center_longitude = centroid.y
 
-            # xcoordinates = []
-            # ycoordinates = []
-            #
-            # for x in boundaries:
-            #     split = x.split(',')
-            #     xcoordinates.append(float(split[0]))
-            #     ycoordinates.append(float(split[1]))
-            #
-            # self.agency_center_latitude = sum(xcoordinates)/len(xcoordinates)
-            # self.agency_center_longitude = sum(ycoordinates)/len(ycoordinates)
-
         if self.agency_center_latitude and self.agency_center_longitude:
             self.agency_center_point = Point(self.agency_center_latitude,
                                              self.agency_center_longitude)
@@ -254,9 +243,22 @@ class Region(models.Model):
 
     def save(self, *args, **kwargs):
 
+        boundaries = None
+
+        if self.boundaries:
+            boundaries = eval(self.boundaries)
+
+        #Find centroid
+        if boundaries:
+
+            centroid = centroid_from_boundaries(boundaries)
+            self.center_latitude = centroid.x
+            self.center_longitude = centroid.y
+
         if self.center_latitude and self.center_longitude:
-            self.center_point = Point(self.center_longitude,
-                                      self.center_latitude)
+            self.center_point = Point(self.center_latitude,
+                                      self.center_longitude)
+
         super(Region, self).save(*args, **kwargs)
 
 
