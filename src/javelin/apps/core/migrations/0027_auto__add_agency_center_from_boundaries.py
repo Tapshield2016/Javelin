@@ -8,16 +8,13 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-
-        # Adding field 'Agency.agency_radius'
-        db.add_column(u'core_agency', 'agency_radius',
-                      self.gf('django.db.models.fields.FloatField')(default=1))
-
+        # Adding field 'Agency.agency_center_from_boundaries'
+        db.add_column(u'core_agency', 'agency_center_from_boundaries',
+                      self.gf('django.db.models.fields.BooleanField')(default=False))
 
     def backwards(self, orm):
-
-        # Deleting model 'Period'
-        db.delete_table(u'core_period')
+        # Deleting field 'Agency.agency_center_from_boundaries'
+        db.delete_column(u'core_agency', 'agency_center_from_boundaries')
 
     models = {
         u'auth.group': {
@@ -44,6 +41,7 @@ class Migration(SchemaMigration):
             'Meta': {'ordering': "['name']", 'object_name': 'Agency'},
             'agency_alternate_logo': ('django.db.models.fields.URLField', [], {'max_length': '200', 'null': 'True', 'blank': 'True'}),
             'agency_boundaries': ('django.db.models.fields.TextField', [], {'null': 'True', 'blank': 'True'}),
+            'agency_center_from_boundaries': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'agency_center_latitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_longitude': ('django.db.models.fields.FloatField', [], {}),
             'agency_center_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
