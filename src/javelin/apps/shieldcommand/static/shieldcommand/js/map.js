@@ -194,7 +194,13 @@ function crimePinClicked(evt)
 			
 			if (marker.getPosition() == evt.latLng)
 			{
-				$('#crimeTip-' + crimeTipID).click();
+				$('#crimeTipListLink').click();
+				var crimeTipItem = $('#crimeTip-' + crimeTipID);
+				crimeTipItem.click();
+				var scrollContainer = $('#crimeTipList');
+				scrollContainer.animate({
+				    scrollTop: crimeTipItem.offset().top - scrollContainer.offset().top + scrollContainer.scrollTop()
+				});
 			}
 		}
 	}

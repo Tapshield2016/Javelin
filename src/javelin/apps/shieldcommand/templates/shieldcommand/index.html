@@ -183,11 +183,11 @@
 					</div>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive">
+					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink">
 						<h4 class="panel-title"> Crime Tips ({{ crimeTipsLength }}) </h4>
 					</div>
 					<div id="collapseFive" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body"> 
+						<div class="panel-body accordion-panel-body" id="crimeTipList"> 
 							<!-- Crime Tips -->
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-lastModified'" ng-class="selectedClass(crimeTip)">
