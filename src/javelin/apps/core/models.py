@@ -101,9 +101,20 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
-        if self.agency_center_latitude and self.agency_center_longitude:
-            self.agency_center_point = Point(self.agency_center_longitude,
-                                             self.agency_center_latitude)
+
+        boundaries = eval(self.agency_boundaries)
+
+        if boundaries:
+            firstPoint = boundaries[0]
+            split = firstPoint.split(',')
+            lat = split[0]
+            lon = split[1]
+            self.agency_center_point = Point(float(lat),
+                                             float(lon))
+
+        # if self.agency_center_latitude and self.agency_center_longitude:
+        #     self.agency_center_point = Point(self.agency_center_longitude,
+        #                                      self.agency_center_latitude)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
