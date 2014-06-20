@@ -176,22 +176,28 @@ function addCrimeMarkers(crimes) {
 			crimeMarkers[crime.type] = [];
 		}
 		
-		marker.crimeType = crime.type;
-		marker.crimeId = crime.object_id;
+		//marker.crimeType = crime.type;
+		//marker.crimeId = crime.object_id;
 		crimeMarkers[crime.type][crime.object_id] = marker;
 		
-		//google.maps.event.addListener(marker, 'click', crimePinClicked);
+		google.maps.event.addListener(marker, 'click', crimePinClicked);
 	}
 }
 
-function crimePinClicked(event)
+function crimePinClicked(evt)
 {
-	if ( ! crime)
+	if (crimeMarkers['crimeTip'])
 	{
-		return;
+		for (crimeTipID in crimeMarkers['crimeTip'])
+		{
+			var marker = crimeMarkers['crimeTip'][crimeTipID];
+			
+			if (marker.getPosition() == evt.latLng)
+			{
+				$('#crimeTip-' + crimeTipID).click();
+			}
+		}
 	}
-
-	$('#' + crime.type + '-' + crime.object_id).click();
 }
 
 function removeCrimeMarkers(crimes)
