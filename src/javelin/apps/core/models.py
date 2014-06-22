@@ -404,9 +404,42 @@ class AlertLocation(TimeStampedModel):
 
 
 class MassAlert(TimeStampedModel):
+
+    MASS_ALERT_TYPE = (
+        ('AB', 'Abuse'),
+        ('AR', 'Arrest'),
+        ('AN', 'Arson'),
+        ('AS', 'Assault'),
+        # ('BL', 'Bleeding'),
+        # ('BB', 'Broken Bone'),
+        ('BU', 'Burglary'),
+        ('CA', 'Car Accident'),
+        # ('CH', 'Choking'),
+        # ('CP', 'CPR'),
+        ('DI', 'Disturbance'),
+        ('DR', 'Drugs/Alcohol'),
+        ('H', 'Harassment'),
+        # ('HA', 'Heart Attack'),
+        # ('HF', 'High Fever'),
+        ('MH', 'Mental Health'),
+        ('O', 'Other'),
+        ('R', 'Robbery'),
+        ('SH', 'Shooting'),
+        # ('ST', 'Stroke'),
+        ('S', 'Suggestion'),
+        ('SA', 'Suspicious Activity'),
+        ('T', 'Theft'),
+        ('V', 'Vandalism'),
+    )
+
+    address = models.CharField(max_length=255, null=True, blank=True)
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     message = models.TextField()
+    type = models.CharField(max_length=2, null=True, blank=True,
+                                   choices=MASS_ALERT_TYPE)
 
     class Meta:
         ordering = ['-creation_date']
@@ -582,17 +615,25 @@ class SocialCrimeReport(TimeStampedModel):
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
+    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
     report_image_url = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Location of asset on S3")
     report_video_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Location of asset on S3")
-    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Location of asset on S3")
     report_latitude = models.FloatField()
     report_longitude = models.FloatField()
     report_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
     report_anonymous = models.BooleanField(default=False)
+    flagged_spam = models.BooleanField(default=False)
+    flagged_by_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                              related_name="flagged_by_dispatcher",
+                                              blank=True, null=True)
+    viewed_time = models.DateTimeField(null=True, blank=True)
+    viewed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                  related_name="viewed_by",
+                                  blank=True, null=True)
                                         
 
     objects = db_models.GeoManager()
