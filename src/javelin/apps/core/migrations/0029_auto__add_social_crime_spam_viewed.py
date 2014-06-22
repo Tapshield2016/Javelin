@@ -13,14 +13,14 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.DateTimeField')(null=True, blank=True))
 
         db.add_column(u'core_socialcrimereport', 'viewed_by',
-                      self.gf('django.db.models.fields.ForeignKey')
+                      self.gf('django.db.models.ForeignKey')
                       (blank=True, null=True, related_name='viewed_by', to=orm['core.AgencyUser'])),
 
         db.add_column(u'core_socialcrimereport', 'flagged_spam',
                       self.gf('django.db.models.fields.BooleanField')(default=False))
 
         db.add_column(u'core_socialcrimereport', 'flagged_by_dispatcher',
-                      self.gf('django.db.models.fields.ForeignKey')
+                      self.gf('django.db.models.ForeignKey')
                       (blank=True, null=True, related_name='flagged_by_dispatcher', to=orm['core.AgencyUser'])),
 
     def backwards(self, orm):
