@@ -330,10 +330,6 @@ angular.module('shieldCommand.controllers', [])
 			var flashes = 0;
 			
 			var i = setInterval(function() {
-				if (flashes == 3)
-				{
-					clearInterval(i);
-				}
 				if ($crimeTipPanel.css('background-color') == bgColor)
 				{
 					$crimeTipPanel.css('background-color', '#3AA1D3');
@@ -344,7 +340,12 @@ angular.module('shieldCommand.controllers', [])
 				}
 				
 				flashes++;
-			}, 500);
+				
+				if (flashes == 3)
+				{
+					clearInterval(i);
+				}
+			}, 300);
 		}
 	});
 
