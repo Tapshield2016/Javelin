@@ -92,15 +92,31 @@ angular.module('shieldCommand.controllers', [])
 				}
 			});
 		}
-		else if ($scope.activeCrimeTip && ! $scope.activeCrimeTip.anonymous)
+		else if ($scope.activeCrimeTip)
 		{
-			crimeTipService.getUserForActiveCrimeTip(function(user)
-			{ 
-				$scope.currentProfile = user;
-				if (callback) {
-					callback(user);
-				}
-			});
+			if (! $scope.activeCrimeTip.anonymous)
+			{
+				crimeTipService.getUserForActiveCrimeTip(function(user)
+				{ 
+					$scope.currentProfile = user;
+					if (callback) {
+						callback(user);
+					}
+				});
+			}
+			
+			if ($scope.activeCrimeTip.viewedBy)
+			{
+				crimeTipService.getUserForCrimeTipViewed(function(user) {
+					$scope.activeCrimeTip.viewedByName = user.getFullName();
+				});
+			}
+			else if ($scope.activeCrimeTip.flaggedBy)
+			{
+				crimeTipService.getUserForCrimeTipFlagged(function(user) {
+					$scope.activeCrimeTip.flaggedByName = user.getFullName();
+				});
+			}
 		}
 		else
 		{
@@ -138,10 +154,6 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.shouldDisplayViewedBy = function() {
 		if ($scope.activeCrimeTip && $scope.activeCrimeTip.viewedBy) {
-			crimeTipService.getUserForCrimeTipViewed(function(user) {
-				$scope.activeCrimeTip.viewedByName = user.getFullName();
-			});
-			
 			return true;
 		}
 		return false;
@@ -149,10 +161,6 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.shouldDisplayFlaggedBy = function() {
 		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedBy) {
-			crimeTipService.getUserForCrimeTipFlagged(function(user) {
-				$scope.activeCrimeTip.flaggedByName = user.getFullName();
-			});
-			
 			return true;
 		}
 		return false;
