@@ -535,14 +535,12 @@
 
 
             {% if region_boundaries %}
-                googleMapRegions = {{ region_boundaries }};
-            {% endif %}
+                {% for region in region_boundaries %}
+                    googleMapRegions = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
 
-//                {% for region in region_boundaries %}
-//                    boundaries = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
-//
 //                    googleMapRegions.push(boundaries);
-//                {% endfor %}
+                {% endfor %}
+            {% endif %}
 
             googleMapOptions = {
                 center: new google.maps.LatLng({{ agency.agency_center_latitude }}, {{ agency.agency_center_longitude }}),
