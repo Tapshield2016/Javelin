@@ -580,7 +580,7 @@
 				var past24 = createPastTimestamp(24 * 3600);
 				var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
 				
-				if (newCrimeTipDate >= past24)
+				if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
 				{
 					newCrimeTip.showPin = true;
 				}
