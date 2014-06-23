@@ -182,7 +182,7 @@ angular.module('shieldCommand.controllers', [])
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
 		removeCrimeMarkers(crimeTips);
-		clearActiveAlertMarker()
+		clearActiveAlertMarker();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
 		$crimeTip.find('.badge-viewed').removeClass('hidden')();
 		$crimeTip.fadeTo('fast', 0.5);
@@ -198,7 +198,7 @@ angular.module('shieldCommand.controllers', [])
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
 		removeCrimeMarkers(crimeTips);
-		clearActiveAlertMarker()
+		clearActiveAlertMarker();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
 		$crimeTip.find('.badge-spam').removeClass('hidden');
 		$crimeTip.fadeTo('fast', 0.2);
