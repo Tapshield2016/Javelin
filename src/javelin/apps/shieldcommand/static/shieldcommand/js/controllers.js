@@ -341,7 +341,7 @@ angular.module('shieldCommand.controllers', [])
 				
 				flashes++;
 				
-				if (flashes == 3)
+				if (flashes == 4)
 				{
 					clearInterval(i);
 				}
