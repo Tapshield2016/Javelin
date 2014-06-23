@@ -486,11 +486,11 @@
 					</div>
 					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayViewedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Viewed By: </h5>
-						<p>{{ activeCrimeTip.viewedBy }} - {{ activeCrimeTip.viewedTime | date:'MM-dd HH:mm:ss' }}</p>
+						<p>{{ activeCrimeTip.viewedByName }} - {{ activeCrimeTip.viewedTime | date:'MM-dd HH:mm:ss' }}</p>
 					</div>
 					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayFlaggedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Flagged As Spam By: </h5>
-						<p>{{ activeCrimeTip.flaggedBy }}</p>
+						<p>{{ activeCrimeTip.flaggedByName }}</p>
 					</div>
 				</div>
 				<!-- /.profile-content --> 

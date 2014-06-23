@@ -242,6 +242,8 @@
 		this.flaggedBy = attributes.flagged_by_dispatcher;
 		this.viewedTime = attributes.viewed_time;
 		this.viewedBy = attributes.viewed_by;
+		this.flaggedByName = null;
+		this.viewedByName = null;
 		
 		return this;
 	}

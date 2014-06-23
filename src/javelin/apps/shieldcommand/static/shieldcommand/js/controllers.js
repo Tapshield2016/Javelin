@@ -138,6 +138,10 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.shouldDisplayViewedBy = function() {
 		if ($scope.activeCrimeTip && $scope.activeCrimeTip.viewedBy) {
+			crimeTipService.getUserForCrimeTipViewed(function(user) {
+				$scope.activeCrimeTip.viewedByName = user.getFullName();
+			});
+			
 			return true;
 		}
 		return false;
@@ -145,6 +149,10 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.shouldDisplayFlaggedBy = function() {
 		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedBy) {
+			crimeTipService.getUserForCrimeTipFlagged(function(user) {
+				$scope.activeCrimeTip.flaggedByName = user.getFullName();
+			});
+			
 			return true;
 		}
 		return false;
@@ -184,7 +192,7 @@ angular.module('shieldCommand.controllers', [])
 		removeCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
-		$crimeTip.find('.badge-viewed').removeClass('hidden')();
+		$crimeTip.find('.badge-viewed').removeClass('hidden');
 		$crimeTip.fadeTo('fast', 0.5);
 		crimeTipService.markCrimeTipViewed(function(data) {
 			$scope.activeCrimeTip = null;

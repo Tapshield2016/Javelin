@@ -173,6 +173,38 @@ angular.module('shieldCommand.services', [])
 		}
 	}
 	
+	this.getUserForCrimeTipViewed = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.viewedBy), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
+	}
+	
+	this.getUserForCrimeTipFlagged = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.flaggedBy), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
+	}
+	
 	this.markCrimeTipViewed = function(callback) {
 		Javelin.markCrimeTipViewed(this.activeCrimeTip, function(success) {
 			callback(success);
@@ -191,6 +223,8 @@ angular.module('shieldCommand.services', [])
 		getUpdatedCrimeTips: this.getUpdatedCrimeTips,	
 		setActiveCrimeTip: this.setActiveCrimeTip,
 		getUserForActiveCrimeTip: this.getUserForActiveCrimeTip,
+		getUserForCrimeTipViewed: this.getUserForCrimeTipViewed,
+		getUserForCrimeTipFlagged: this.getUserForCrimeTipFlagged,
 		markCrimeTipViewed: this.markCrimeTipViewed,
 		markCrimeTipSpam: this.markCrimeTipSpam,	
 	}
