@@ -533,8 +533,15 @@
             googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
             {% endif %}
 
+
             {% if region_boundaries %}
-            googleMapRegions = region_boundaries; //[{% for region in region_boundaries %} {% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %} {% endfor %}];
+                {% for region in region_boundaries %}
+                    googleMapRegionBoundaries = [];
+                    {% for pair in region %}
+                        googleMapRegionBoundaries.push(new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}));
+                    {% endfor %}
+                    googleMapRegions.push(googleMapAgencyBoundaries);
+                {% endfor %}
             {% endif %}
 
             googleMapOptions = {
