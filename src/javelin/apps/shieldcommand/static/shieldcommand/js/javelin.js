@@ -155,6 +155,15 @@
 		return this;
 	}
 
+    function Region(attributes) {
+		this.name = attributes.name;
+		this.boundaries = attributes.boundaries;
+		this.centerLatitude = attributes.center_latitude;
+		this.centerLongitude = attributes.center_longitude;
+		this.radius = attributes.radius;
+		return this;
+	}
+
 	function Agency(attributes) {
 		APITimeStampedObject.call(this, attributes);
 		this.name = attributes.name;
@@ -178,7 +187,7 @@
         if (!$.isEmptyObject(attributes.region)) {
 
             this.region.push(new Region(attributes.region[0]));
-                
+
 //            var region = attributes.region;
 //            for (var attr in region) {
 //                );
@@ -265,15 +274,6 @@
 		this.message = attributes.message;
 		this.messageID = attributes.message_id;
 		this.senderID = attributes.sender_id;
-		return this;
-	}
-
-	function Region(attributes) {
-		this.name = attributes.name;
-		this.boundaries = attributes.boundaries;
-		this.centerLatitude = attributes.center_latitude;
-		this.centerLongitude = attributes.center_longitude;
-		this.radius = attributes.radius;
 		return this;
 	}
 
