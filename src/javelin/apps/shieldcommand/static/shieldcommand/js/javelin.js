@@ -238,16 +238,10 @@
 		this.anonymous = attributes.report_anonymous;
 		this.accuracy = null;
 		this.showPin = false;
-		this.firstName = attributes.reporter_first_name ? attributes.reporter_first_name : '';
-		this.lastName = attributes.reporter_last_name ? attributes.reporter_last_name : '';
-		this.email = attributes.reporter_email ? attributes.reporter_email : '';
-		this.phoneNumber = attributes.reporter_phone_number ? attributes.reporter_phone_number : '';
-
-		this.getFullName = function() {
-			return this.firstName + " " + this.lastName;
-		};
-		//Javelin.getUser(this.parseIDFromURL(attributes.reporter), Javelin.setActiveCrimeTipUser);
-		//this.user = Javelin.activeCrimeTipUser;
+		this.flaggedSpam = attributes.flagged_spam;
+		this.flaggedBy = attributes.flagged_by_dispatcher;
+		this.viewedTime = attributes.viewed_time;
+		this.viewedBy = attributes.viewed_by;
 		
 		return this;
 	}

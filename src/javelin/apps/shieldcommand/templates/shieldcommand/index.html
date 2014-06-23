@@ -480,6 +480,14 @@
 						<h5>Completed By: </h5>
 						<p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
 					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayCrimeTipButtons()) ? 'col-md-3' : 'hidden'">
+						<h5>Mark Crime Tip As</h5>
+						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" ng-click="markCrimeTipViewed()">Viewed</a> <a href="#" type="button" class="btn btn-default" ng-click="markCrimeTipSpam()">Spam</a></div>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayViewedBy()) ? 'col-md-3' : 'hidden'">
+						<h5>Viewed By: </h5>
+						<p>{{ activeCrimeTip.viewedBy }} - {{ activeCrimeTip.viewedTime | date:'MM-dd HH:mm:ss' }}</p>
+					</div>
 				</div>
 				<!-- /.profile-content --> 
 			</div>

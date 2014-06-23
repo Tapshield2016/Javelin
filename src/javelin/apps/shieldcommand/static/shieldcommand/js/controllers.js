@@ -321,6 +321,32 @@ angular.module('shieldCommand.controllers', [])
 			}
 		}
 	});
+	
+	$scope.$watch('crimeTipsLength', function(newLength, oldLength) {
+		if (newLength > oldLength) {
+			newCrimeTipSound.play();
+			var $crimeTipPanel = $('#crimeTipListLink');
+			var bgColor = $crimeTipPanel.css('background-color');
+			var flashes = 0;
+			
+			var i = setInterval(function() {
+				if (flashes == 3)
+				{
+					clearInterval(i);
+				}
+				if ($crimeTipPanel.css('background-color') == bgColor)
+				{
+					$crimeTipPanel.css('background-color', '#3AA1D3');
+				}
+				else
+				{
+					$crimeTipPanel.css('background-color', bgColor);
+				}
+				
+				flashes++;
+			}, 500);
+		}
+	});
 
   	function updateAlerts(alerts) {
 		$scope.alerts = alerts;
@@ -371,7 +397,7 @@ angular.module('shieldCommand.controllers', [])
 		{
 			addCrimeMarkers($filter("filter")($scope.crimeTips, {showPin: true}));
 			var crimeMarkersForRemoval = $filter("filter")($scope.crimeTips, {showPin: false});
-			removeCrimeMarkers(crimeMarkersForRemoval, crimeTipService.activeCrimeTip);
+			removeCrimeMarkers($filter("notActiveCrimeTip")(crimeMarkersForRemoval, crimeTipService.activeCrimeTip));
 		}
   	};
 
