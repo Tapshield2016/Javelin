@@ -1,385 +1,459 @@
 <!doctype html>{% load compress %}
 <html lang="en" ng-app="shieldCommand">
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <title>Shield Command</title>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Shield Command</title>
+{% compress css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">
+{% endcompress %}
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
+</head><body>
 
-        {% compress css %}<link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">{% endcompress %}
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
-        <script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-        <link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
-
-    </head>
-    <body>
-
-        <!-- Preloader -->
-        <div id="preloader">
-          <div id="status">&nbsp;</div>
-        </div>
-
-        <div id="network-error" class="hide">
-          <div id="ugh">
-            <div id="network-error-message">
-              <p><span class="glyphicon glyphicon-exclamation-sign"></span> There was an issue connecting to Shield Command. Check network connection or try reloading...</p>
-            </div>
-          </div>
-        </div>    
-
-        <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container-full">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a>
-                </div>
-                <div class="collapse navbar-collapse">
-                    <ul class="nav navbar-nav pull-right">
-                        {% if agency.display_command_alert %}<li><a href="#" data-toggle="modal" data-target="#commandAlert">Command Alert</a></li>{% endif %}
-                        <li class="dropdown">
-                            <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ request.user.first_name }} <b class="caret"></b></a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
-                                <!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agency Settings</a></li>-->
-                                <li role="presentation" class="dropdown-header">Support</li>
-                                <li role="presentation"><a href="">(877) 553-9049</a></li>
-                                <li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
-                                <li role="presentation" class="divider"></li> 
-                                <li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">Organization Settings</a></li>
-                                <li role="presentation" class="divider"></li>
-                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
-                            </ul>
-                        </li>
-                        <li class="status-indicator">
-                          <a href="" id="status-indicator-ok" title="Connected to Shield Command"><span class="glyphicon glyphicon-ok-circle"></span></a>
-                          <a href="" id="status-indicator-disconnected" class="hide" title="Connection Problems Detected"><span class="glyphicon glyphicon-remove-circle"></span></a>                        
-                        </li>
-                    </ul>
-                </div><!--/.nav-collapse -->
-            </div>
-
-        </div>
-        {% verbatim %}
-        <div class="container-full">
-
-            <!-- Agency Settings Modal -->
-            <div class="modal fade" id="agencySettingsModal" tabindex="-1" role="dialog" aria-labelledby="agencySettingsModalLabel" aria-hidden="true"></div>
-
-            <!-- Command Alert Modal -->
-            <div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true" command-alert-modal ng-controller="CommandAlertController" ng-cloak>
-              <div class="modal-dialog">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title" id="commandAlertLabel">Command Alert</h4>
-                  </div>
-                  <div class="modal-body">
-                    <textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
-                  </div>
-                  <div class="modal-footer">
-                    <p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-primary" ng-click="sendCommandAlertMessage()">Send Message</button>
-                  </div>
-                </div><!-- /.modal-content -->
-              </div><!-- /.modal-dialog -->
-            </div><!-- /.modal -->
-
-            <div class="row full-height">
-                <!-- sidebar -->
-                <div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
-                    <div class="panel-group" id="accordion">
-                      <div class="panel panel-default">
-                        <div class="panel-heading accordion-panel-heading accordion-default" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
-                          <h4 class="panel-title">
-                            My Alerts ({{ myAlertsLength }})
-                          </h4>
-                        </div>
-
-                        <div id="collapseOne" class="panel-collapse collapse in">
-                            <div class="panel-body accordion-panel-body">
-                                <!-- My Alerts -->
-                                <ul class="alerts-list">
-
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
-                                        <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-                                            <div class="alert-type {{ alert.initiatedBy }}-alert-type">
-                                                <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                            </div>
-                                            <div class="alert-contact">
-                                                <div class="alert-contact-info">
-                                                    <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                    <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div alert-chat-window alert="alert"></div>
-                                    </li>
-
-                                </ul>
-                            </div>
-                        </div>
-                      </div>
-                      <div class="panel panel-default">
-                        <div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
-                          <h4 class="panel-title">
-                            New Alerts ({{ newAlertsLength }})
-                          </h4>
-                        </div>
-                        <div id="collapseTwo" class="panel-collapse collapse">
-                          <div class="panel-body accordion-panel-body">
-                          <!-- New Alerts -->
-
-                                <ul class="alerts-list">
-                                    <li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-class="selectedClass(alert)">
-                                        <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-                                            <div class="alert-type {{ alert.initiatedBy }}-alert-type">
-                                                <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                            </div>
-                                            <div class="alert-contact">
-                                                <div class="alert-contact-info">
-                                                    <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                    <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
-                                    </li>
-                                </ul>
-
-                          </div>
-                        </div>
-                      </div>
-                      <div class="panel panel-default">
-                        <div class="panel-heading accordion-panel-heading panel-pending-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
-                          <h4 class="panel-title">
-                            Pending Alerts ({{ pendingAlertsLength }})
-                          </h4>
-                        </div>
-                        <div id="collapseThree" class="panel-collapse collapse">
-                          <div class="panel-body accordion-panel-body">
-                          <!-- Pending Alerts -->
-
-                            <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-class="selectedClass(alert)">
-                                    <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type">
-                                            <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                    <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                    <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
-                                </li>
-                            </ul>
-
-                          </div>
-                        </div>
-                      </div>
-                       <div class="panel panel-default">
-                        <div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
-                          <h4 class="panel-title">
-                            Past Alerts ({{ completedAlertsLength }})
-                          </h4>
-                        </div>
-                        <div id="collapseFour" class="panel-collapse collapse">
-                          <div class="panel-body accordion-panel-body">  
-                          <!-- Completed Alerts -->
-                              <ul class="alerts-list">
-                                <li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
-                                    <div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type">
-                                            <i class="icon-{{ alert.initiatedBy }}_type"></i>
-                                        </div>
-                                        <div class="alert-contact">
-                                            <div class="alert-contact-info">
-                                                <div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-                                                <div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div alert-chat-window alert="alert"></div>
-                                </li>
-
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                </div>
-
-                <!-- map -->
-                <div class="" >
-                    <div class="full-width sidebar-offset" ng-controller="UserProfileController" ng-cloak>
-
-                        <!-- Modal -->
-                        <dismiss-mark-completed-modal mark-complete="markActiveAlertAsCompleted()" alert="activeAlert"></dismiss-mark-completed-modal>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="markAlertPending" tabindex="-1" role="dialog" aria-labelledby="markAlertPendingLabel" aria-hidden="true" dismiss-mark-pending-modal>
-                          <div class="modal-dialog">
-                            <div class="modal-content">
-                              <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                <h4 class="modal-title" id="markAlertPendingLabel">Mark Alert as Pending</h4>
-                              </div>
-                              <div class="modal-body">
-                                  <p>Are you sure you would like to set the status of this alert to Pending?</p>
-                              </div>
-                              <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                <button type="button" class="btn btn-primary" ng-click="markActiveAlertAsPending()">Mark Pending</button>
-                              </div>
-                            </div><!-- /.modal-content -->
-                          </div><!-- /.modal-dialog -->
-                        </div><!-- /.modal -->
-
-                        <div id="map-container" class="col-md-12">
-                          <div id="alert-address" class="hide" ng-class="(isProfileVisible) ? 'alert-address-profile-open' : ''">
-                              <p></p>
-                          </div>
-
-                          <div id="map-canvas" ng-class="(isProfileVisible) ? 'map-profile-open' : ''"></div>
-
-                        </div>
-
-                        <div id="map-controls" map-controls>
-                            <nav id="alerts-nav">
-                                    <ul class="minimized">
-                                            <li ng-click="toggleMyAlerts()" id="myAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> My Alerts </li>
-                                            <li ng-click="toggleNewAlerts()" id="newAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> New Alerts </li>
-                                            <li ng-click="togglePendingAlerts()" id="pendingAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Pending Alerts </li>
-                                            <li ng-click="togglePastAlerts()" id="pastAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Past Alerts </li>
-                                            <li ng-click="toggleAllAlerts()" id="allAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> All Alerts </li>
-                                            <li class="view_alert" ng-click="toggleControls()"><i class="icon-view"></i> View </li>
-                                    </ul>
-                            </nav>
-                            <nav id="controls-nav">
-                                    <ul class="inline">
-                                            <li ng-click="returnToGeofenceCenter()">
-                                                    <i class="icon-geofence"></i>
-                                            </li>
-                                            <li ng-click="zoomToActiveAlertMarker()">
-                                                    <i class="icon-userzoom"></i>
-                                            </li>
-                                    </ul>
-                            </nav>
-                        </div>
-
-                        <!-- profile -->
-                        <div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
-                            <p class="profile-title">Profile</p>
-                            <div class="profile-content">
-                                <div class="profile-top-content">
-                                    <div class="profile-image-container">
-                                        <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a>
-                                    </div>
-                                    <div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
-                                        <div class="modal-dialog" style="width: 365px;">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                                    <h4 class="modal-title" id="profileImageLabel">{{ activeAlert.agencyUserMeta.getFullName() }}</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <img ng-src="{{ getProfileImage() }}" />
-                                                </div>
-                                            </div><!-- /.modal-content -->
-                                        </div><!-- /.modal-dialog -->
-                                    </div><!-- /.modal -->
-                                    <div class="disarm-code">
-                                        <div class="title">Disarm Code</div>
-                                            <div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
-                                        </div><!-- /.title -->
-                                    </div><!-- /.disarm-code -->
-                                </div>
-                                <div class="profile-information" style="clear: both;">
-
-                                    <table class="table table-condensed">
-                                        <tr class="first">
-                                            <td>Name</td>
-                                            <td>{{ activeAlert.agencyUserMeta.getFullName() }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Phone</td>
-                                            <td>{{ activeAlert.agencyUserMeta.phoneNumber }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Email</td>
-                                            <td>{{ activeAlert.agencyUserMeta.email }}</td>
-                                        </tr>        
-                                        <tr>
-                                            <td>DOB</td>
-                                            <td>{{ currentProfile.birthday }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Address</td>
-                                            <td>{{ currentProfile.address }}</td>
-                                        </tr>                                   
-                                    </table>
-
-                                    <table class="table table-condensed">
-                                        <caption>Characteristics</caption>
-                                        <tr>
-                                            <td>Sex</td>
-                                            <td>{{ currentProfile.gender }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Age</td>
-                                            <td>{{ getAge(currentProfile.birthday) }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Race</td>
-                                            <td>{{ currentProfile.race }}</td>
-                                        </tr>        
-                                        <tr>
-                                            <td>Height</td>
-                                            <td>{{ currentProfile.height }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Weight</td>
-                                            <td>{{ currentProfile.weight }} lbs</td>
-                                        </tr>                                     
-                                        <tr>
-                                            <td>Hair</td>
-                                            <td>{{ currentProfile.hairColor }}</td>
-                                        </tr>                                                                             
-                                    </table>
-
-                                    <table class="table table-condensed">
-                                        <caption>Medical</caption>
-                                        <tr>
-                                            <td>Allergies</td>
-                                            <td>{{ currentProfile.knownAllergies }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Medication</td>
-                                            <td>{{ currentProfile.medications }}</td>
-                                        </tr>
-                                    </table>
-
-                                    <table class="table table-condensed">
-                                        <caption>Emergency Contact</caption>
-                                        <tr>
-                                            <td>Name</td>
-                                            <td>{{ currentProfile.emergencyContactFirstName }} {{ currentProfile.emergencyContactLastName }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Phone</td>
-                                            <td>{{ currentProfile.emergencyContactPhoneNumber }}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Relation</td>
-                                            <td>{{ currentProfile.emergencyContactRelationship }}</td>
-                                        </tr>        
-                                    </table>
-
-                                    <!-- <table class="table table-condensed">
+<!-- Preloader -->
+<div id="preloader">
+	<div id="status">&nbsp;</div>
+</div>
+<div id="network-error" class="hide">
+	<div id="ugh">
+		<div id="network-error-message">
+			<p><span class="glyphicon glyphicon-exclamation-sign"></span> There was an issue connecting to Shield Command. Check network connection or try reloading...</p>
+		</div>
+	</div>
+</div>
+<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<div class="container-full">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> </button>
+			<a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>
+		<div class="collapse navbar-collapse">
+			<ul class="nav navbar-nav pull-right">
+				{% if agency.display_command_alert %}
+				<li><a href="#" data-toggle="modal" data-target="#commandAlert">Command Alert</a></li>
+				{% endif %}
+				<li class="dropdown"> <a href="#" id="drop3" role="button" class="dropdown-toggle" data-toggle="dropdown">Welcome, {{ request.user.first_name }} <b class="caret"></b></a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="drop3">
+						<!-- <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Agency Settings</a></li>-->
+						<li role="presentation" class="dropdown-header">Support</li>
+						<li role="presentation"><a href="">(877) 553-9049</a></li>
+						<li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
+						<li role="presentation" class="divider"></li>
+						<li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">Organization Settings</a></li>
+						<li role="presentation" class="divider"></li>
+						<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
+					</ul>
+				</li>
+				<li class="status-indicator"> <a href="" id="status-indicator-ok" title="Connected to Shield Command"><span class="glyphicon glyphicon-ok-circle"></span></a> <a href="" id="status-indicator-disconnected" class="hide" title="Connection Problems Detected"><span class="glyphicon glyphicon-remove-circle"></span></a> </li>
+			</ul>
+		</div>
+		<!--/.nav-collapse --> 
+	</div>
+</div>
+{% verbatim %}
+<div class="container-full"> 
+	
+	<!-- Agency Settings Modal -->
+	<div class="modal fade" id="agencySettingsModal" tabindex="-1" role="dialog" aria-labelledby="agencySettingsModalLabel" aria-hidden="true"></div>
+	
+	<!-- Command Alert Modal -->
+	<div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true" command-alert-modal ng-controller="CommandAlertController" ng-cloak>
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h4 class="modal-title" id="commandAlertLabel">Command Alert</h4>
+				</div>
+				<div class="modal-body">
+					<textarea rows="6" class="form-control" placeholder="Enter Mass Alert Message..." ng-model="message" maxlength="140"></textarea>
+				</div>
+				<div class="modal-footer">
+					<p class="pull-left">{{message.length || 0}} / 140 characters remaining</p>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+					<button type="button" class="btn btn-primary" ng-click="sendCommandAlertMessage()">Send Message</button>
+				</div>
+			</div>
+			<!-- /.modal-content --> 
+		</div>
+		<!-- /.modal-dialog --> 
+	</div>
+	<!-- /.modal -->
+	
+	<div class="row full-height"> 
+		<!-- sidebar -->
+		<div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
+			<div class="panel-group" id="accordion">
+				<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading accordion-default" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne">
+						<h4 class="panel-title"> My Alerts ({{ myAlertsLength }}) </h4>
+					</div>
+					<div id="collapseOne" class="panel-collapse collapse in">
+						<div class="panel-body accordion-panel-body"> 
+							<!-- My Alerts -->
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
+									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<div alert-chat-window alert="alert"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo">
+						<h4 class="panel-title"> New Alerts ({{ newAlertsLength }}) </h4>
+					</div>
+					<div id="collapseTwo" class="panel-collapse collapse">
+						<div class="panel-body accordion-panel-body"> 
+							<!-- New Alerts -->
+							
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-class="selectedClass(alert)">
+									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading panel-pending-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree">
+						<h4 class="panel-title"> Pending Alerts ({{ pendingAlertsLength }}) </h4>
+					</div>
+					<div id="collapseThree" class="panel-collapse collapse">
+						<div class="panel-body accordion-panel-body"> 
+							<!-- Pending Alerts -->
+							
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-class="selectedClass(alert)">
+									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour">
+						<h4 class="panel-title"> Past Alerts ({{ completedAlertsLength }}) </h4>
+					</div>
+					<div id="collapseFour" class="panel-collapse collapse">
+						<div class="panel-body accordion-panel-body"> 
+							<!-- Completed Alerts -->
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
+									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<div alert-chat-window alert="alert"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink">
+						<h4 class="panel-title"> Crime Tips ({{ crimeTipsLength }}) </h4>
+					</div>
+					<div id="collapseFive" class="panel-collapse collapse">
+						<div class="panel-body accordion-panel-body" id="crimeTipList"> 
+							<!-- Crime Tips -->
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-creationDate'" ng-class="selectedClass(crimeTip)">
+									<div id="crimeTip-{{ crimeTip.object_id }}" class="alert-container" ng-click="crimeTipClicked(crimeTip)" style="opacity: {{ crimeTip.viewedTime ? 0.5 : crimeTip.flaggedSpam ? 0.2 : 1.0 }}">
+										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ crimeTip.reportType }} <span class="badge-disarmed badge-viewed" ng-class="crimeTip.viewedTime ? '' : 'hidden'">viewed</span><span class="badge-disarmed badge-spam" ng-class="crimeTip.flaggedSpam ? '' : 'hidden'">spam</span></div>
+												<div class="contact-number">{{ crimeTip.lastModified | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<!--<div alert-chat-window alert="alert"></div>--> 
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<!--<div class="panel panel-default">
+					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix">
+						<h4 class="panel-title"> Spot Crimes </h4>
+					</div>
+					<div id="collapseSix" class="panel-collapse collapse">
+						<div class="panel-body accordion-panel-body"> -->
+							<!-- Spot Crimes -->
+				<!--
+							<ul class="alerts-list">
+								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
+									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-contact">
+											<div class="alert-contact-info">
+												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+											</div>
+										</div>
+									</div>
+									<div alert-chat-window alert="alert"></div>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>-->
+			</div>
+		</div>
+		
+		<!-- map -->
+		<div class="" >
+			<div class="full-width sidebar-offset" ng-controller="UserProfileController" ng-cloak> 
+				
+				<!-- Modal -->
+				<dismiss-mark-completed-modal mark-complete="markActiveAlertAsCompleted()" alert="activeAlert"></dismiss-mark-completed-modal>
+				
+				<!-- Modal -->
+				<div class="modal fade" id="markAlertPending" tabindex="-1" role="dialog" aria-labelledby="markAlertPendingLabel" aria-hidden="true" dismiss-mark-pending-modal>
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<div class="modal-header">
+								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title" id="markAlertPendingLabel">Mark Alert as Pending</h4>
+							</div>
+							<div class="modal-body">
+								<p>Are you sure you would like to set the status of this alert to Pending?</p>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+								<button type="button" class="btn btn-primary" ng-click="markActiveAlertAsPending()">Mark Pending</button>
+							</div>
+						</div>
+						<!-- /.modal-content --> 
+					</div>
+					<!-- /.modal-dialog --> 
+				</div>
+				<!-- /.modal -->
+				
+				<div id="map-container" class="col-md-12">
+					<div id="alert-address" class="hide" ng-class="(isProfileVisible) ? 'alert-address-profile-open' : ''">
+						<p></p>
+					</div>
+					<div id="map-canvas" ng-class="(isProfileVisible) ? 'map-profile-open' : ''"></div>
+				</div>
+				<div id="map-controls" map-controls>
+					<nav id="alerts-nav">
+						<ul class="minimized">
+							<li ng-click="toggleMyAlerts()" id="myAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> My Alerts </li>
+							<li ng-click="toggleNewAlerts()" id="newAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> New Alerts </li>
+							<li ng-click="togglePendingAlerts()" id="pendingAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Pending Alerts </li>
+							<li ng-click="togglePastAlerts()" id="pastAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> Past Alerts </li>
+							<li ng-click="toggleAllAlerts()" id="allAlerts-toggle" class="alert-toggle hide"><i class="icon-checkmark"></i> All Alerts </li>
+							<li class="view_alert" ng-click="toggleControls()"><i class="icon-view"></i> View </li>
+						</ul>
+					</nav>
+					<nav id="controls-nav">
+						<ul class="inline">
+							<li ng-click="returnToGeofenceCenter()"> <i class="icon-geofence"></i> </li>
+							<li ng-click="zoomToActiveAlertMarker()"> <i class="icon-userzoom"></i> </li>
+						</ul>
+					</nav>
+				</div>
+				
+				<!-- profile -->
+				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
+					<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>
+					<div class="profile-content" ng-if="profileType == 'alert'">
+						<div class="profile-top-content">
+							<div class="profile-image-container"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
+							<div class="modal fade" id="profileImage" tabindex="-1" role="dialog" aria-labelledby="profileImageLabel" aria-hidden="true">
+								<div class="modal-dialog" style="width: 365px;">
+									<div class="modal-content">
+										<div class="modal-header">
+											<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+											<h4 class="modal-title" id="profileImageLabel">{{ activeAlert.agencyUserMeta.getFullName() }}</h4>
+										</div>
+										<div class="modal-body"> <img ng-src="{{ getProfileImage() }}" /> </div>
+									</div>
+									<!-- /.modal-content --> 
+								</div>
+								<!-- /.modal-dialog --> 
+							</div>
+							<!-- /.modal -->
+							<div class="disarm-code">
+								<div class="title">Disarm Code</div>
+								<div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
+							</div>
+							<!-- /.title --> 
+						</div>
+						<!-- /.disarm-code --> 
+					</div>
+					<div class="modal fade" ng-if="profileType == 'crimeTip'" id="crimeTipImage" tabindex="-1" role="dialog" aria-labelledby="crimeTipImageLabel" aria-hidden="true">
+						<div class="modal-dialog" style="width: 600px;">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="crimeTipImageLabel">{{ activeCrimeTip.reportType }}</h4>
+								</div>
+								<div class="modal-body">
+									<img ng-src="{{ activeCrimeTip.imageURL }}" />
+								</div>
+							</div>
+							<!-- /.modal-content --> 
+						</div>
+						<!-- /.modal-dialog --> 
+					</div>
+					<!-- /.modal -->
+					<div class="profile-information" style="clear: both;">
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
+							<tr class="first">
+								<td>Name</td>
+								<td>{{ activeAlert.agencyUserMeta.getFullName() }}</td>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td>{{ activeAlert.agencyUserMeta.phoneNumber }}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>{{ activeAlert.agencyUserMeta.email }}</td>
+							</tr>
+							<tr>
+								<td>DOB</td>
+								<td>{{ currentProfile.birthday }}</td>
+							</tr>
+							<tr>
+								<td>Address</td>
+								<td>{{ currentProfile.address }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
+						<caption style="border-top: 0;">Details</caption>
+							<tr class="first">
+								<td>Type</td>
+								<td>{{ activeCrimeTip.reportType }}</td>
+							</tr>
+							<tr>
+								<td>Description</td>
+								<td>{{ activeCrimeTip.body }}</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.imageURL">
+								<td>Image</td>
+								<td><a href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage">View Image</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.videoURL">
+								<td>Video</td>
+								<td><a href="{{ activeCrimeTip.videoURL }}" target="_blank">View Video</td>
+							</tr>
+							<tr ng-if="activeCrimeTip.audioURL">
+								<td>Audio</td>
+								<td><a href="{{ activeCrimeTip.audioURL }}" target="_blank">Listen to Audio</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
+							<caption>Reported by</caption>
+							<tr class="first">
+								<td>Name</td>
+								<td>{{ (currentProfile) ? currentProfile.getFullName() : '(anonymous)' }}</td>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td>{{ (currentProfile) ? currentProfile.phoneNumber : '(anonymous)' }}</td>
+							</tr>
+							<tr>
+								<td>Email</td>
+								<td>{{ (currentProfile) ? currentProfile.email : '(anonymous)' }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
+							<caption>
+							Characteristics
+							</caption>
+							<tr>
+								<td>Sex</td>
+								<td>{{ currentProfile.gender }}</td>
+							</tr>
+							<tr>
+								<td>Age</td>
+								<td>{{ getAge(currentProfile.birthday) }}</td>
+							</tr>
+							<tr>
+								<td>Race</td>
+								<td>{{ currentProfile.race }}</td>
+							</tr>
+							<tr>
+								<td>Height</td>
+								<td>{{ currentProfile.height }}</td>
+							</tr>
+							<tr>
+								<td>Weight</td>
+								<td>{{ currentProfile.weight }} lbs</td>
+							</tr>
+							<tr>
+								<td>Hair</td>
+								<td>{{ currentProfile.hairColor }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
+							<caption>
+							Medical
+							</caption>
+							<tr>
+								<td>Allergies</td>
+								<td>{{ currentProfile.knownAllergies }}</td>
+							</tr>
+							<tr>
+								<td>Medication</td>
+								<td>{{ currentProfile.medications }}</td>
+							</tr>
+						</table>
+						<table class="table table-condensed" ng-if="profileType == 'alert'">
+							<caption>
+							Emergency Contact
+							</caption>
+							<tr>
+								<td>Name</td>
+								<td>{{ currentProfile.emergencyContactFirstName }} {{ currentProfile.emergencyContactLastName }}</td>
+							</tr>
+							<tr>
+								<td>Phone</td>
+								<td>{{ currentProfile.emergencyContactPhoneNumber }}</td>
+							</tr>
+							<tr>
+								<td>Relation</td>
+								<td>{{ currentProfile.emergencyContactRelationship }}</td>
+							</tr>
+						</table>
+						
+						<!-- <table class="table table-condensed">
                                         <caption>Past Alerts</caption>
                                         <tr>
                                             <th>Date</th>
@@ -393,61 +467,68 @@
                                             <td>07/12/2012</td>
                                             <td>Bar Fight</td>
                                         </tr>
-                                    </table> -->
+                                    </table> --> 
+						
+					</div>
+					<!-- /.profile-information -->
+					
+					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
+						<h5>Mark Alert As</h5>
+						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a> <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a> </div>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
+						<h5>Completed By: </h5>
+						<p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayCrimeTipButtons()) ? 'col-md-3' : 'hidden'">
+						<h5>Mark Crime Tip As</h5>
+						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" ng-click="markCrimeTipViewed()">Viewed</a> <a href="#" type="button" class="btn btn-danger" ng-click="markCrimeTipSpam()">Spam</a></div>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayViewedBy()) ? 'col-md-3' : 'hidden'">
+						<h5>Viewed By: </h5>
+						<p>{{ activeCrimeTip.viewedByName }} - {{ activeCrimeTip.viewedTime | date:'MM-dd HH:mm:ss' }}</p>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayFlaggedBy()) ? 'col-md-3' : 'hidden'">
+						<h5>Flagged As Spam By: </h5>
+						<p>{{ activeCrimeTip.flaggedByName }}</p>
+					</div>
+				</div>
+				<!-- /.profile-content --> 
+			</div>
+			<!-- /.profile --> 
+			
+			<!-- /.profile --> 
+		</div>
+	</div>
+</div>
+<!--</div>-->
+{% endverbatim %}
 
-                                </div><!-- /.profile-information -->
-
-                                <div class="profile-buttons" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
-                                    <h5>Mark Alert As</h5>
-                                    <div class="btn-group btn-group-justified">
-                                        <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a>
-                                        <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a>
-                                    </div>
-                                </div>
-
-                                <div class="profile-buttons" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
-                                    <h5>Completed By: </h5>
-                                    <p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
-                                </div>
-
-                           </div><!-- /.profile-content -->
-                        </div><!-- /.profile -->
-
-                        <!-- /.profile -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        {% endverbatim %}
-
-        {% compress js %}
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/map.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
-
-        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
-        <script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
-        {% endcompress %}
-
-        <script>
+        {% compress js %} 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/map.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script> 
+<script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script> 
+{% endcompress %} 
+<script>
             {% if agency_boundaries %}
             googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
             {% endif %}
@@ -470,19 +551,18 @@
                 first_name: "{{ user.first_name }}",
                 last_name: "{{ user.last_name }}",
             });
-        </script>
-
-        <script>
+        </script> 
+<script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
             e=o.createElement(i);r=o.getElementsByTagName(i)[0];
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script>
+        </script> 
 
-        <!-- Preloader -->
-        <script type="text/javascript">
+<!-- Preloader --> 
+<script type="text/javascript">
           //<![CDATA[
             $(window).load(function() { // makes sure the whole site is loaded
               $('#status').fadeOut(); // will first fade out the loading animation
@@ -490,7 +570,6 @@
               $('body').delay(350).css({'overflow':'visible'});
             })
           //]]>
-        </script> 
-
+        </script>
 </body>
 </html>

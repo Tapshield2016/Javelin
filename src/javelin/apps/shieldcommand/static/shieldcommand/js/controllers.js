@@ -20,11 +20,14 @@ angular.module('shieldCommand.controllers', [])
 
 }])
 
-.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', function($rootScope, $scope, alertService) {
+.controller('UserProfileController', ['$rootScope', '$scope', 'alertService', 'crimeTipService', function($rootScope, $scope, alertService, crimeTipService) {
 
 	$scope.currentProfile = null;
 	$scope.activeAlert = null;
+	$scope.activeCrimeTip = null;
+	$scope.profileType = null;
 	$scope.isProfileVisible = false;
+	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
 
 	$scope.toggle = function() {
@@ -44,23 +47,86 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {
-		$scope.activeAlert = alertService.activeAlert;
-		$scope.updateProfile(function(profile) {
-			$scope.isProfileVisible = true;
-			$rootScope.profileIsOpen = true;
-			$rootScope.$broadcast('profileWasOpened');
-			$rootScope.$broadcast('profileWasUpdated');
-			setTimeout($scope.updateProfile, 10000);
-		});
+		console.log('profile open');
+		
+		if ($scope.updateTimeout)
+		{
+			clearTimeout($scope.updateTimeout);
+		}
+		
+		if (alertService.activeAlert)
+		{
+			console.log('alert profile');
+			$scope.profileType = 'alert';
+			$scope.activeAlert = alertService.activeAlert;
+			$scope.activeCrimeTip = null;
+		}
+		else if (crimeTipService.activeCrimeTip)
+		{
+			console.log('crime tip profile');
+			$scope.profileType = 'crimeTip';
+			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
+			$scope.activeAlert = null;
+		}
+		
+		if ($scope.activeAlert || $scope.activeCrimeTip)
+		{
+			$scope.updateProfile(function(profile) {
+				$scope.isProfileVisible = true;
+				$rootScope.profileIsOpen = true;
+				$rootScope.$broadcast('profileWasOpened');
+				$rootScope.$broadcast('profileWasUpdated');
+				$scope.updateTimeout = setTimeout($scope.updateProfile, 10000);
+			});
+		}
 	});
 
 	$scope.updateProfile = function(callback) {
-		alertService.getUserProfileForActiveAlert(function(profile) {
-			$scope.currentProfile = profile;
-			if (callback) {
-				callback(profile);
+		console.log('update profile');
+		if ($scope.activeAlert)
+		{
+			alertService.getUserProfileForActiveAlert(function(profile) {
+				$scope.currentProfile = profile;
+				if (callback) {
+					callback(profile);
+				}
+			});
+		}
+		else if ($scope.activeCrimeTip)
+		{
+			if (! $scope.activeCrimeTip.anonymous)
+			{
+				crimeTipService.getUserForActiveCrimeTip(function(user)
+				{ 
+					$scope.currentProfile = user;
+					if (callback) {
+						callback(user);
+					}
+				});
 			}
-		});
+			
+			if ($scope.activeCrimeTip.viewedBy)
+			{
+				crimeTipService.getUserForCrimeTipViewed(function(user) {
+					$scope.activeCrimeTip.viewedByName = user.getFullName();
+				});
+			}
+			else if ($scope.activeCrimeTip.flaggedBy)
+			{
+				crimeTipService.getUserForCrimeTipFlagged(function(user) {
+					$scope.activeCrimeTip.flaggedByName = user.getFullName();
+				});
+			}
+		}
+		else
+		{
+			$scope.currentProfile = null;
+			
+			if (callback)
+			{
+				callback(null);
+			}
+		}
 	}
 
 	$scope.shouldDisplayProfileButtons = function() {
@@ -71,9 +137,30 @@ angular.module('shieldCommand.controllers', [])
 		}
 		return false;
 	}
+	
+	$scope.shouldDisplayCrimeTipButtons = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedSpam == false && $scope.activeCrimeTip.viewedTime == null) {
+			return true;
+		}
+		return false;
+	}
 
 	$scope.shouldDisplayCompletedBy = function() {
 		if ($scope.activeAlert && $scope.activeAlert.status == 'C') {
+			return true;
+		}
+		return false;
+	}
+	
+	$scope.shouldDisplayViewedBy = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.viewedBy) {
+			return true;
+		}
+		return false;
+	}
+	
+	$scope.shouldDisplayFlaggedBy = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedBy) {
 			return true;
 		}
 		return false;
@@ -105,6 +192,39 @@ angular.module('shieldCommand.controllers', [])
 			$rootScope.$broadcast('alertMarkedPending');
 		});
 	}
+	
+	$scope.markCrimeTipViewed = function() {
+		$scope.toggle();
+		var crimeTips = [];
+		crimeTips.push($scope.activeCrimeTip);
+		removeCrimeMarkers(crimeTips);
+		clearActiveAlertMarker();
+		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
+		$crimeTip.find('.badge-viewed').removeClass('hidden');
+		$crimeTip.fadeTo('fast', 0.5);
+		crimeTipService.markCrimeTipViewed(function(data) {
+			$scope.activeCrimeTip = null;
+			crimeTipService.activeCrimeTip = null;
+			$rootScope.$broadcast('crimeTipMarkedChange');
+		});
+	}
+	
+	$scope.markCrimeTipSpam = function() {
+		$scope.toggle();
+		var crimeTips = [];
+		crimeTips.push($scope.activeCrimeTip);
+		removeCrimeMarkers(crimeTips);
+		clearActiveAlertMarker();
+		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
+		$crimeTip.find('.badge-spam').removeClass('hidden');
+		$crimeTip.fadeTo('fast', 0.2);
+		crimeTipService.markCrimeTipSpam(function(data) {
+			$scope.activeCrimeTip = null;
+			crimeTipService.activeCrimeTip = null;
+			$rootScope.$broadcast('crimeTipMarkedChange');
+		});
+	}
+
 
 	$scope.getAge = function(dateString) {
 		if (!dateString) {
@@ -133,17 +253,21 @@ angular.module('shieldCommand.controllers', [])
 	}
 
 	$scope.zoomToActiveAlertMarker = function () {
-		if ($scope.activeAlert) {
+		if ($scope.profileType == 'alert' && $scope.activeAlert) {
 			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
 			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
-		};
+		}
+		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
+		{
+			setMarker($scope.activeCrimeTip);
+		}
 	}
 
 }])
 
-.controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', function($rootScope, $scope, $filter, alertService) {
+.controller('AlertsListController', ['$rootScope', '$scope', '$filter', 'alertService', 'crimeTipService', function($rootScope, $scope, $filter, alertService, crimeTipService) {
 
 	$scope.alerts = [];
 	$rootScope.chats = {};
@@ -158,6 +282,11 @@ angular.module('shieldCommand.controllers', [])
 	$scope.newAlertSoundInterval = null;
 	$scope.newAlertDocumentTitleInterval = null;
 	$scope.currentActiveLocation = null;
+	$scope.crimeTips = [];
+	$scope.crimeTipsLength = 0;
+	$scope.crimeTipUpdateInterval = 20;
+	$scope.markerSetForActiveCrimeTip = false;
+	$scope.crimeTipsVisible = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -192,22 +321,52 @@ angular.module('shieldCommand.controllers', [])
 		};
 	});
 
-	$scope.$watch('currentActiveLocation', function() {
-		updateMarker($scope.currentActiveLocation);
-		addressForLocation($scope.currentActiveLocation, function(address) {
-			if (!alertService.activeAlert) {
-				return;
+	$scope.$watch('currentActiveLocation', function() {	
+		if ($scope.currentActiveLocation)
+		{
+			if ($scope.currentActiveLocation.type == 'alert')
+			{
+				updateMarker($scope.currentActiveLocation);
+				crimeTipService.activeCrimeTip = null;
+				$scope.markerSetForActiveAlert = true;
+				$scope.markerSetForActiveCrimeTip = false;
 			}
-			if (address) {
-				alertService.activeAlert.geocodedAddress = address;
+			else if ($scope.currentActiveLocation.type == 'crimeTip')
+			{
+				zoomToCrime($scope.currentActiveLocation);
+				alertService.activeAlert = null;
+				$scope.markerSetForActiveCrimeTip = true;
+				$scope.markerSetForActiveAlert = false;
+			}
+		}
+		addressForLocation($scope.currentActiveLocation, function(address) {
+			if (address)
+			{
+				if ($scope.currentActiveLocation.type == 'alert' && alertService.activeAlert)
+				{
+					alertService.activeAlert.geocodedAddress = address;
+				}
+				else if ($scope.currentActiveLocation.type == 'crimeTip' && crimeTipService.activeCrimeTip)
+				{
+					crimeTipService.activeCrimeTip.geocodedAddress = address;
+				}
+				else
+				{
+					address = null;
+				}
+				
+			}
+			
+			if (address)
+			{
 				$("#alert-address  p").html("<strong>Location:</strong> " + address);
 				$("#alert-address").removeClass('hide');
 			}
-			else {
+			else
+			{
 				$scope.clearAddressBar();
 			}
 		});
-		$scope.markerSetForActiveAlert = true;
 	})
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
@@ -233,10 +392,50 @@ angular.module('shieldCommand.controllers', [])
 			}
 		}
 	});
+	
+	$scope.$watch('crimeTipsLength', function(newLength, oldLength) {
+		if (newLength > oldLength) {
+			newCrimeTipSound.play();
+			var $crimeTipPanel = $('#crimeTipListLink');
+			var bgColor = $crimeTipPanel.css('background-color');
+			var flashes = 0;
+			
+			var i = setInterval(function() {
+				if ($crimeTipPanel.css('background-color') == bgColor)
+				{
+					$crimeTipPanel.css('background-color', '#3AA1D3');
+				}
+				else
+				{
+					$crimeTipPanel.css('background-color', bgColor);
+				}
+				
+				flashes++;
+				
+				if (flashes == 6)
+				{
+					clearInterval(i);
+				}
+			}, 300);
+		}
+	});
+	
+	$scope.$watch('crimeTipsVisible', function(visible, oldValue) {
+		if (visible == false && oldValue == true)
+		{
+			$rootScope.$broadcast('toggleProfile');
+		}
+	});
 
   	function updateAlerts(alerts) {
 		$scope.alerts = alerts;
 		$rootScope.alerts = $scope.alerts;
+		updateDisplay();
+  	};
+	
+	function updateCrimeTips(crimeTips) {
+		$scope.crimeTips = crimeTips;
+		$rootScope.crimeTips = crimeTips;
 		updateDisplay();
   	};
 
@@ -245,6 +444,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.newAlertsLength = $filter("filter")($scope.alerts, {status: 'N'}).length;
 		$scope.pendingAlertsLength = $filter("filter")($scope.alerts, {status: 'P'}).length;
 		$scope.completedAlertsLength = $filter("filter")($scope.alerts, {status: 'C'}).length;
+		$scope.crimeTipsLength = $scope.crimeTips.length;
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
@@ -270,6 +470,13 @@ angular.module('shieldCommand.controllers', [])
 				$scope.newAlertDocumentTitleInterval = null;
 			}
 			document.title = "Shield Command";
+		}
+		
+		if ($scope.crimeTipsLength > 0)
+		{
+			addCrimeMarkers($filter("filter")($scope.crimeTips, {showPin: true}));
+			var crimeMarkersForRemoval = $filter("filter")($scope.crimeTips, {showPin: false});
+			removeCrimeMarkers($filter("notActiveCrimeTip")(crimeMarkersForRemoval, crimeTipService.activeCrimeTip));
 		}
   	};
 
@@ -298,6 +505,20 @@ angular.module('shieldCommand.controllers', [])
 			setTimeout($scope.getUpdatedAlerts, 3000);
 		}
   	};
+	
+	$scope.loadInitialCrimeTips = function() {
+  		try {
+			crimeTipService.loadInitialCrimeTips(function(crimeTips) {
+				updateCrimeTips(crimeTips);
+			});
+		}
+		catch (error) {
+			console.log(error);
+		}
+		finally {
+			setTimeout($scope.getUpdatedCrimeTips, $scope.crimeTipUpdateInterval * 1000);
+		}
+  	};
 
   	$scope.getUpdatedAlerts = function() {
   		try {
@@ -323,6 +544,28 @@ angular.module('shieldCommand.controllers', [])
 		}
 		finally {
 			setTimeout($scope.getUpdatedAlerts, 3000);
+		}
+  	}
+	
+	$scope.getUpdatedCrimeTips = function() {
+  		try {
+	  		crimeTipService.getUpdatedCrimeTips($scope.crimeTips, function(updatedCrimeTips) {
+	  			updateCrimeTips(updatedCrimeTips);
+				if (crimeTipService.activeCrimeTip) {
+					for (var i = 0; i < updatedCrimeTips.length; i++) {
+						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
+							$scope.currentActiveLocation = updatedCrimeTips[i];
+							updateDisplay();
+						}
+					}
+				}
+	  		});
+		}
+		catch (error) {
+			console.log(error);
+		}
+		finally {
+			setTimeout($scope.getUpdatedCrimeTips, $scope.crimeTipUpdateInterval * 1000);
 		}
   	}
 
@@ -389,6 +632,35 @@ angular.module('shieldCommand.controllers', [])
 			}
 
   			$rootScope.$broadcast('activeAlertUpdated');
+			$rootScope.$broadcast('toggleProfileOpen');
+  		}
+  	};
+	
+	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
+  		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
+  		if (crimeTip === crimeTipService.activeCrimeTip) {
+  			if (shouldToggleProfile) {
+	  			$rootScope.$broadcast('toggleProfile');
+  			}
+  		}
+  		else {
+	  		crimeTipService.setActiveCrimeTip(crimeTip);
+			alertService.setActiveAlert(null);
+	  		$scope.markerSetForActiveCrimeTip = false;	
+
+			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
+				if (crimeTipService.activeCrimeTip) {
+					
+					if ( ! crimeTipService.activeCrimeTip.showPin)
+					{
+						setMarker(crimeTipService.activeCrimeTip);
+					}
+					
+					$scope.currentActiveLocation = crimeTipService.activeCrimeTip;
+				}
+			}
+
+  			$rootScope.$broadcast('activeCrimeTipUpdated');
 			$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
@@ -478,8 +750,19 @@ angular.module('shieldCommand.controllers', [])
 		}
   	}
 
-    $scope.selectedClass = function(alert) {
-        return alert === alertService.activeAlert ? 'selected' : undefined;
+    $scope.selectedClass = function(obj) {
+        if (obj.type == 'alert')
+		{
+			return obj === alertService.activeAlert ? 'selected' : undefined;
+		}
+		else if (obj.type == 'crimeTip')
+		{
+			return obj === crimeTipService.activeCrimeTip ? 'selected' : undefined;
+		}
+		else
+		{
+			return undefined;
+		}
     };
 
   	$scope.acceptClicked = function(alert) {
@@ -510,4 +793,5 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.loadInitialAlerts();
+	setTimeout($scope.loadInitialCrimeTips, 1500);
 }]);

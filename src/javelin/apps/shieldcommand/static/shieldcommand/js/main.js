@@ -109,6 +109,10 @@ var newAlertSound = new buzz.sound("/media/static/shieldcommand/sounds/new_alert
     preload: true,
 });
 
+var newCrimeTipSound = new buzz.sound("/media/static/shieldcommand/sounds/new_crimetip", {
+    formats: ["mp3", "ogg",],
+    preload: true,
+});
 
 var newChatSound = new buzz.sound("/media/static/shieldcommand/sounds/new_chat", {
     formats: ["mp3", "wav",],
