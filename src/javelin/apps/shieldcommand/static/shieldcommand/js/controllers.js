@@ -286,6 +286,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.crimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
+	$scope.crimeTipsVisible = $('#crimeTipList').is(':visible');
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -416,6 +417,13 @@ angular.module('shieldCommand.controllers', [])
 					clearInterval(i);
 				}
 			}, 300);
+		}
+	});
+	
+	$scope.$watch('crimeTipsVisible', function(visible) {
+		if (! visible)
+		{
+			$rootScope.$broadcast('toggleProfile');
 		}
 	});
 
