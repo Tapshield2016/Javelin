@@ -173,11 +173,16 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
+        this.region = [];
+
         if (!$.isEmptyObject(attributes.region)) {
-            this.region = [];
-            for (var attr in attributes.region) {
-                this.region.push(new Region(attr));
-            }
+
+            this.region.push(new Region(attributes.region[0]));
+                
+//            var region = attributes.region;
+//            for (var attr in region) {
+//                );
+//            }
 		}
 		return this;
 	}
@@ -621,7 +626,7 @@
 					    latestDate = newCrimeTipDate;
 				    }
 			    }
-                
+
 			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
 				    Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
                 }
