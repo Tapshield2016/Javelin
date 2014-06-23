@@ -28,7 +28,11 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      SocialCrimeReportSerializer,
                                      EntourageMemberGETSerializer,
                                      EntourageMemberUpdateSerializer,
-                                     UserUpdateSerializer)
+                                     UserUpdateSerializer,
+                                     RegionSerializer,
+                                     DispatchCenterSerializer,
+                                     PeriodSerializer,
+                                     ClosedDateSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -36,7 +40,9 @@ from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
-                         SocialCrimeReport)
+                         SocialCrimeReport,  Region,
+                         DispatchCenter, Period,
+                         ClosedDate)
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
@@ -452,3 +458,23 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.select_related().all()
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
+
+class PeriodViewSet(viewsets.ModelViewSet):
+    queryset = Period.objects.select_related('dispatch_center').all()
+    serializer_class = PeriodSerializer
+    filter_fields = ('dispatch_center',)
+
+class ClosedDateViewSet(viewsets.ModelViewSet):
+    queryset = ClosedDate.objects.select_related('dispatch_center').all()
+    serializer_class = ClosedDateSerializer
+    filter_fields = ('dispatch_center',)
+
+class RegionViewSet(viewsets.ModelViewSet):
+    queryset = Region.objects.select_related('agency').all()
+    serializer_class = RegionSerializer
+    filter_fields = ('agency',)
+
+class DispatchCenterViewSet(viewsets.ModelViewSet):
+    queryset = DispatchCenter.objects.select_related('agency').all()
+    serializer_class = DispatchCenterSerializer
+    filter_fields = ('agency',)

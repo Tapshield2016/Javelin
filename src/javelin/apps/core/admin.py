@@ -5,16 +5,37 @@ from django.contrib.gis import admin as geo_admin
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
-                    EntourageMember)
+                    EntourageMember, Region, DispatchCenter,
+                    Period, ClosedDate,)
 
 
 class EntourageMemberAdmin(admin.ModelAdmin):
     pass
 
-
 class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
     extra = 0
+
+class PeriodInline(admin.StackedInline):
+    model = Period
+    extra = 0
+
+class ClosedDateInline(admin.StackedInline):
+    model = ClosedDate
+    extra = 0
+
+class DispatchCenterAdmin(admin.ModelAdmin):
+    inlines = [ClosedDateInline, PeriodInline]
+
+class RegionInline(admin.StackedInline):
+    model = Region
+    extra = 0
+
+class DispatchCenterInline(admin.StackedInline):
+    model = DispatchCenter
+    extra = 0
+    fields = ('name', 'phone_number', 'changeform_link')
+    readonly_fields = ('changeform_link', )
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
@@ -35,9 +56,9 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'enable_user_location_requests',])
         }),
         ('Agency Location and Boundaries', {
-                'fields': (['agency_boundaries', 'agency_center_latitude',
+                'fields': (['agency_boundaries', 'agency_center_from_boundaries', 'agency_center_latitude',
                             'agency_center_longitude', 'agency_center_point', 'agency_radius',
-                            'default_map_zoom_level',]),
+                            'default_map_zoom_level']),
         }),
         ('Agency Theme', {
                 'fields': (['agency_logo', 'agency_alternate_logo',
@@ -47,7 +68,9 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                 'fields': (['agency_info_url', 'agency_rss_url',]),
         }),
     )
-
+    inlines = [
+        RegionInline, DispatchCenterInline,
+    ]
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
@@ -101,3 +124,4 @@ admin.site.register(ChatMessage, ChatMessageAdmin)
 admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
+admin.site.register(DispatchCenter, DispatchCenterAdmin)

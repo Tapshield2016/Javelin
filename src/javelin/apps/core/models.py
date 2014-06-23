@@ -1,7 +1,9 @@
 import random
 import reversion
+from django.core import urlresolvers
 
 from datetime import datetime
+from math import sin, cos, sqrt, atan2, radians
 
 import django.utils.timezone
 
@@ -27,6 +29,78 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
 
 
+def kilometers_between_coordinates(point1, point2):
+
+    R = 6371 # km
+
+    lat1 = radians(point1.x)
+    lon1 = radians(point1.y)
+    lat2 = radians(point2.x)
+    lon2 = radians(point2.y)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    distance = R * c
+    return distance
+
+
+def radius_from_center(point, boundaries):
+
+    point2 = Point(0, 0)
+    max_distance = 0
+
+    for string in boundaries:
+        split = string.split(',')
+        point2.x = float(split[0])
+        point2.y = float(split[1])
+
+        distance = kilometers_between_coordinates(point, point2)
+
+        if distance > max_distance:
+            max_distance = distance
+
+    return max_distance*0.621371 #miles
+
+
+def centroid_from_boundaries(boundaries):
+
+    x_coordinates = []
+    y_coordinates = []
+
+    for x in boundaries:
+        split = x.split(',')
+        x_coordinates.append(float(split[0]))
+        y_coordinates.append(float(split[1]))
+
+    signed_area = 0.0
+    centroid = Point(0, 0)
+
+    for i in range(len(x_coordinates)):
+
+        x0 = x_coordinates[i];
+        y0 = y_coordinates[i];
+
+        j = i+1
+        if i == len(x_coordinates)-1:
+            j = 0
+
+        x1 = x_coordinates[j];
+        y1 = y_coordinates[j];
+        a = x0*y1 - x1*y0;
+        signed_area += a;
+        centroid.x += (x0 + x1)*a;
+        centroid.y += (y0 + y1)*a;
+
+    signed_area *= 0.5;
+    centroid.x /= (6.0*signed_area);
+    centroid.y /= (6.0*signed_area);
+
+    return centroid;
+
+
+
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
@@ -50,11 +124,12 @@ class Agency(TimeStampedModel):
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
     agency_boundaries = models.TextField(null=True, blank=True)
+    agency_center_from_boundaries = models.BooleanField(default=False)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
-    agency_radius = models.FloatField(default=1)
+    agency_radius = models.FloatField(default=0)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
@@ -100,9 +175,26 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
+
+        boundaries = None
+
+        if self.agency_boundaries and self.agency_center_from_boundaries:
+            boundaries = eval(self.agency_boundaries)
+
+        #Find centroid
+        if boundaries:
+
+            centroid = centroid_from_boundaries(boundaries)
+            self.agency_center_latitude = centroid.x
+            self.agency_center_longitude = centroid.y
+
         if self.agency_center_latitude and self.agency_center_longitude:
-            self.agency_center_point = Point(self.agency_center_longitude,
-                                             self.agency_center_latitude)
+            self.agency_center_point = Point(self.agency_center_latitude,
+                                             self.agency_center_longitude)
+
+        if self.agency_radius==0 and self.agency_boundaries:
+            radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))
+            self.agency_radius = round(radius,2)
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
@@ -113,6 +205,107 @@ class Agency(TimeStampedModel):
             create_agency_topic.delay(self.pk)
         if self.enable_chat_autoresponder:
             notify_waiting_users_of_congestion.delay(self.pk)
+
+
+class ClosedDate(models.Model):
+
+    dispatch_center = models.ForeignKey('DispatchCenter',
+                                        related_name="closed_date")
+    start_date = models.DateTimeField(null=True, blank=True)
+    end_date = models.DateTimeField(null=True, blank=True)
+
+class Period(models.Model):
+
+    DAY = (
+        ('1', 'Sunday'),
+        ('2', 'Monday'),
+        ('3', 'Tuesday'),
+        ('4', 'Wednesday'),
+        ('5', 'Thursday'),
+        ('6', 'Friday'),
+        ('7', 'Saturday'),
+    )
+
+    dispatch_center = models.ForeignKey('DispatchCenter',
+                                        related_name="opening_hours")
+    day = models.CharField(max_length=1,
+                           choices=DAY,
+                           default='1')
+    open = models.TimeField(null=True, blank=True)
+    close = models.TimeField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Period"
+        verbose_name_plural = "Opening Hours"
+        ordering = ['day']
+
+class DispatchCenter(models.Model):
+
+    agency = models.ForeignKey('Agency',
+                               related_name="dispatch_center")
+    name = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=24)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.agency.name, self.name)
+
+    def changeform_link(self):
+        if self.id:
+            changeform_url = urlresolvers.reverse(
+                'admin:core_dispatchcenter_change', args=(self.id,)
+            )
+            return u'<a href="%s" target="_blank">Change Schedule</a>' % changeform_url
+        return u''
+    changeform_link.allow_tags = True
+    changeform_link.short_description = ''   # omit column header
+
+class Region(models.Model):
+
+    agency = models.ForeignKey('Agency',
+                               related_name="region")
+    name = models.CharField(max_length=255)
+    primary_dispatch_center = models.ForeignKey('DispatchCenter',
+                                                related_name='primary_dispatch_center')
+    secondary_dispatch_center = models.ForeignKey('DispatchCenter',
+                                                  related_name='secondary_dispatch_center',
+                                                  null=True, blank=True)
+    fallback_dispatch_center = models.ForeignKey('DispatchCenter',
+                                                 related_name='fallback_dispatch_center',
+                                                 null=True, blank=True)
+    boundaries = models.TextField(null=True, blank=True)
+    center_latitude = models.FloatField()
+    center_longitude = models.FloatField()
+    center_point = db_models.PointField(geography=True,
+                                        null=True, blank=True)
+    radius = models.FloatField(default=0)
+
+    def __unicode__(self):
+        return self.name
+
+    def save(self, *args, **kwargs):
+
+        boundaries = None
+
+        if self.boundaries:
+            boundaries = eval(self.boundaries)
+
+        #Find centroid
+        if boundaries:
+
+            centroid = centroid_from_boundaries(boundaries)
+            self.center_latitude = centroid.x
+            self.center_longitude = centroid.y
+
+        if self.center_latitude and self.center_longitude:
+            self.center_point = Point(self.center_latitude,
+                                      self.center_longitude)
+
+        if self.radius==0 and self.boundaries:
+            radius = radius_from_center(self.center_point, eval(self.boundaries))
+            self.radius = round(radius,2)
+
+        super(Region, self).save(*args, **kwargs)
+
 
 
 class Alert(TimeStampedModel):
@@ -256,9 +449,42 @@ class AlertLocation(TimeStampedModel):
 
 
 class MassAlert(TimeStampedModel):
+
+    MASS_ALERT_TYPE = (
+        ('AB', 'Abuse'),
+        ('AR', 'Arrest'),
+        ('AN', 'Arson'),
+        ('AS', 'Assault'),
+        # ('BL', 'Bleeding'),
+        # ('BB', 'Broken Bone'),
+        ('BU', 'Burglary'),
+        ('CA', 'Car Accident'),
+        # ('CH', 'Choking'),
+        # ('CP', 'CPR'),
+        ('DI', 'Disturbance'),
+        ('DR', 'Drugs/Alcohol'),
+        ('H', 'Harassment'),
+        # ('HA', 'Heart Attack'),
+        # ('HF', 'High Fever'),
+        ('MH', 'Mental Health'),
+        ('O', 'Other'),
+        ('R', 'Robbery'),
+        ('SH', 'Shooting'),
+        # ('ST', 'Stroke'),
+        ('S', 'Suggestion'),
+        ('SA', 'Suspicious Activity'),
+        ('T', 'Theft'),
+        ('V', 'Vandalism'),
+    )
+
+    address = models.CharField(max_length=255, null=True, blank=True)
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     message = models.TextField()
+    type = models.CharField(max_length=2, null=True, blank=True,
+                                   choices=MASS_ALERT_TYPE)
 
     class Meta:
         ordering = ['-creation_date']
@@ -434,17 +660,25 @@ class SocialCrimeReport(TimeStampedModel):
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
+    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Location of asset on S3")
     report_image_url = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Location of asset on S3")
     report_video_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Location of asset on S3")
-    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Location of asset on S3")
     report_latitude = models.FloatField()
     report_longitude = models.FloatField()
     report_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
     report_anonymous = models.BooleanField(default=False)
+    flagged_spam = models.BooleanField(default=False)
+    flagged_by_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                              related_name="flagged_by_dispatcher",
+                                              blank=True, null=True)
+    viewed_time = models.DateTimeField(null=True, blank=True)
+    viewed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                  related_name="viewed_by",
+                                  blank=True, null=True)
                                         
 
     objects = db_models.GeoManager()

@@ -3,7 +3,7 @@ import json
 import requests
 
 from time import mktime
-
+from django.core.serializers.json import DjangoJSONEncoder
 from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
@@ -214,7 +214,7 @@ def login(request):
         if request.user.agency:
             serialized.data['agency'] =\
                 AgencySerializer(request.user.agency).data
-        message = json.dumps(serialized.data, cls=DatetimeEncoder)
+        message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
     else:
         status = 401
         message = "Authorization required."
