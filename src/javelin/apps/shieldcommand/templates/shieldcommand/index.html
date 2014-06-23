@@ -535,11 +535,8 @@
 
 
             {% if region_boundaries %}
-                {% for region in region_boundaries %}
-                    boundaries = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
+                googleMapRegions = [{% for region in region_boundaries %}boundaries = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}], {% endfor %}];
 
-                    googleMapRegions.push(boundaries);
-                {% endfor %}
             {% endif %}
 
             googleMapOptions = {

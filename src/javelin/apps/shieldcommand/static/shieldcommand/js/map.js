@@ -34,13 +34,6 @@ function initializeMap() {
 
         for (region in googleMapRegions) {
 
-//            var regionBoundaries = [];
-//
-//            for (coord in region) {
-//                var newCoord = new google.maps.LatLng(coord[0], coord[1]);
-//                regionBoundaries.push(newCoord);
-//            }
-
             geofence = new google.maps.Polygon({
                 paths: region,
                 strokeColor: '#0ab60a',
@@ -52,7 +45,6 @@ function initializeMap() {
 
             geofence.setMap(googleMap);
         }
-
 
     }
     else if (googleMapAgencyBoundaries.length > 0) {
