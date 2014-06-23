@@ -121,9 +121,30 @@ angular.module('shieldCommand.controllers', [])
 		}
 		return false;
 	}
+	
+	$scope.shouldDisplayCrimeTipButtons = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedSpam == false && $scope.activeCrimeTip.viewedTime == null) {
+			return true;
+		}
+		return false;
+	}
 
 	$scope.shouldDisplayCompletedBy = function() {
 		if ($scope.activeAlert && $scope.activeAlert.status == 'C') {
+			return true;
+		}
+		return false;
+	}
+	
+	$scope.shouldDisplayViewedBy = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.viewedBy) {
+			return true;
+		}
+		return false;
+	}
+	
+	$scope.shouldDisplayFlaggedBy = function() {
+		if ($scope.activeCrimeTip && $scope.activeCrimeTip.flaggedBy) {
 			return true;
 		}
 		return false;
@@ -155,6 +176,37 @@ angular.module('shieldCommand.controllers', [])
 			$rootScope.$broadcast('alertMarkedPending');
 		});
 	}
+	
+	$scope.markCrimeTipViewed = function() {
+		$scope.toggle();
+		var crimeTips = [];
+		crimeTips.push($scope.activeCrimeTip);
+		removeCrimeMarkers(crimeTips);
+		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
+		$crimeTip.find('.badge-viewed').show();
+		$crimeTip.fadeTo('fast', 0.5);
+		crimeTipService.markCrimeTipViewed(function(data) {
+			$scope.activeCrimeTip = null;
+			crimeTipService.activeCrimeTip = null;
+			$rootScope.$broadcast('crimeTipMarkedChange');
+		});
+	}
+	
+	$scope.markCrimeTipSpam = function() {
+		$scope.toggle();
+		var crimeTips = [];
+		crimeTips.push($scope.activeCrimeTip);
+		removeCrimeMarkers(crimeTips);
+		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
+		$crimeTip.find('.badge-spam').show();
+		$crimeTip.fadeTo('fast', 0.2);
+		crimeTipService.markCrimeTipSpam(function(data) {
+			$scope.activeCrimeTip = null;
+			crimeTipService.activeCrimeTip = null;
+			$rootScope.$broadcast('crimeTipMarkedChange');
+		});
+	}
+
 
 	$scope.getAge = function(dateString) {
 		if (!dateString) {

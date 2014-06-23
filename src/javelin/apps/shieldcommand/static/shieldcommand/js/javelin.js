@@ -619,5 +619,26 @@
 			page_size: 100,
 		}, callback);
 	}
+	
+	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
+		var d = new Date();
+		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+			viewed_time: d.toISOString(),
+			viewed_by: Javelin.activeAgencyUser.url,
+		});
+		request.done(function(data) {
+			callback(data);
+		})
+	}
+	
+	Javelin.markCrimeTipSpam = function(crimeTip, callback) {
+		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+			flagged_spam: true,
+			flagged_by_dispatcher: Javelin.activeAgencyUser.url,
+		});
+		request.done(function(data) {
+			callback(data);
+		})
+	}
 
 }(this));

@@ -172,12 +172,26 @@ angular.module('shieldCommand.services', [])
 			}
 		}
 	}
+	
+	this.markCrimeTipViewed = function(callback) {
+		Javelin.markCrimeTipViewed(this.activeCrimeTip, function(success) {
+			callback(success);
+		});
+	}
+	
+	this.markCrimeTipSpam = function(callback) {
+		Javelin.markCrimeTipSpam(this.activeCrimeTip, function(success) {
+			callback(success);
+		});
+	}
 
 	return {
 		activeCrimeTip: this.activeCrimeTip,
 		loadInitialCrimeTips: this.loadInitialCrimeTips,
 		getUpdatedCrimeTips: this.getUpdatedCrimeTips,	
 		setActiveCrimeTip: this.setActiveCrimeTip,
-		getUserForActiveCrimeTip: this.getUserForActiveCrimeTip,	
+		getUserForActiveCrimeTip: this.getUserForActiveCrimeTip,
+		markCrimeTipViewed: this.markCrimeTipViewed,
+		markCrimeTipSpam: this.markCrimeTipSpam,	
 	}
 }]);

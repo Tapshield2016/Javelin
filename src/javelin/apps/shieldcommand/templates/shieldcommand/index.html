@@ -195,7 +195,7 @@
 										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ crimeTip.reportType }}</div>
+												<div class="contact-name">{{ crimeTip.reportType }} <span class="hidden badge-disarmed badge-viewed">viewed</span><span class="hidden badge-disarmed badge-spam">spam</span></div>
 												<div class="contact-number">{{ crimeTip.lastModified | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
@@ -482,11 +482,15 @@
 					</div>
 					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayCrimeTipButtons()) ? 'col-md-3' : 'hidden'">
 						<h5>Mark Crime Tip As</h5>
-						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" ng-click="markCrimeTipViewed()">Viewed</a> <a href="#" type="button" class="btn btn-default" ng-click="markCrimeTipSpam()">Spam</a></div>
+						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" ng-click="markCrimeTipViewed()">Viewed</a> <a href="#" type="button" class="btn btn-danger" ng-click="markCrimeTipSpam()">Spam</a></div>
 					</div>
 					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayViewedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Viewed By: </h5>
 						<p>{{ activeCrimeTip.viewedBy }} - {{ activeCrimeTip.viewedTime | date:'MM-dd HH:mm:ss' }}</p>
+					</div>
+					<div class="profile-buttons" ng-if="profileType == 'crimeTip'" ng-class="(shouldDisplayFlaggedBy()) ? 'col-md-3' : 'hidden'">
+						<h5>Flagged As Spam By: </h5>
+						<p>{{ activeCrimeTip.flaggedBy }}</p>
 					</div>
 				</div>
 				<!-- /.profile-content --> 
