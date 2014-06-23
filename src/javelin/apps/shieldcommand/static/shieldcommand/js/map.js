@@ -34,7 +34,7 @@ function initializeMap() {
 
         geofence = new google.maps.Polygon({
                 paths: googleMapRegions,
-                strokeColor: '#0ab60a',
+                strokeColor: '#3aa1d3',
                 strokeOpacity: 0.9,
                 strokeWeight: 2,
                 fillColor: '#76b676',
