@@ -420,8 +420,8 @@ angular.module('shieldCommand.controllers', [])
 		}
 	});
 	
-	$scope.$watch('crimeTipsVisible', function(visible) {
-		if (! visible)
+	$scope.$watch('crimeTipsVisible', function(visible, oldValue) {
+		if (visible == false && oldValue == true)
 		{
 			$rootScope.$broadcast('toggleProfile');
 		}
