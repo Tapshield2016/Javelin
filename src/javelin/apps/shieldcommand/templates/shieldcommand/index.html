@@ -530,14 +530,19 @@
 {% endcompress %} 
 <script>
             {% if agency_boundaries %}
-            googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
+                googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
             {% endif %}
 
 
             {% if region_boundaries %}
-                googleMapRegions = [{% for region in region_boundaries %}boundaries = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}], {% endfor %}];
-
+                googleMapRegions = {{ region_boundaries|safe }};
             {% endif %}
+
+//                {% for region in region_boundaries %}
+//                    boundaries = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
+//
+//                    googleMapRegions.push(boundaries);
+//                {% endfor %}
 
             googleMapOptions = {
                 center: new google.maps.LatLng({{ agency.agency_center_latitude }}, {{ agency.agency_center_longitude }}),

@@ -7,7 +7,6 @@ var googleMapAccuracyCircle = new google.maps.Circle();
 var googleMapGeocoder = new google.maps.Geocoder();
 var googleMapAgencyBoundaries = [];
 var googleMapRegions = [];
-var googleMapRegionBoundaries = [];
 var crimeMarkers = [];
 var markerZIndex = 1;
 
@@ -30,12 +29,18 @@ function initializeMap() {
 		map: googleMap
 	};
 
+    var geofence;
     if (googleMapRegions.length > 0) {
 
         for (region in googleMapRegions) {
 
+            var path = [];
+            for (boundaries in region) {
+                path.push(google.maps.LatLng(boundaries[0], boundaries[1]);
+            }
+
             geofence = new google.maps.Polygon({
-                paths: region,
+                paths: path,
                 strokeColor: '#0ab60a',
                 strokeOpacity: 0.9,
                 strokeWeight: 2,
