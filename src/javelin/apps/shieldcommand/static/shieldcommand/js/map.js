@@ -42,28 +42,6 @@ function initializeMap() {
         });
 
         geofence.setMap(googleMap);
-//
-//            geofence.setMap(googleMap);
-//
-//        for (region in googleMapRegions) {
-
-//            var path = [];
-//            for (boundaries in region) {
-//                path.push(google.maps.LatLng(boundaries[0], boundaries[1]);
-//            }
-
-//            geofence = new google.maps.Polygon({
-//                paths: path,
-//                strokeColor: '#0ab60a',
-//                strokeOpacity: 0.9,
-//                strokeWeight: 2,
-//                fillColor: '#76b676',
-//                fillOpacity: 0.15
-//            });
-//
-//            geofence.setMap(googleMap);
-//        }
-
     }
 
     if (googleMapAgencyBoundaries.length > 0) {

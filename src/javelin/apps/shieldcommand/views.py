@@ -29,7 +29,7 @@ def index(request):
                 for coord in region_boundaries_list:
                     lat, long = coord.split(',')
                     region_boundaries_coord.append((lat, long))
-                multi_region_boundaries.append(region_boundaries_coord)
+                multi_region_boundaries.append(list(region_boundaries_coord))
 
     if agency.agency_boundaries:
         agency_boundaries_list = eval(agency.agency_boundaries)

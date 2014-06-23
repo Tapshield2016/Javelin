@@ -536,9 +536,8 @@
 
             {% if region_boundaries %}
                 {% for region in region_boundaries %}
-                    googleMapRegions = [{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
+                    googleMapRegions.push([{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}]);
 
-//                    googleMapRegions.push(boundaries);
                 {% endfor %}
             {% endif %}
 
