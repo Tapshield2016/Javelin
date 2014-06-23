@@ -597,7 +597,7 @@
 //            }
 //        }
 //        else {
-//            regionOptions.push(defaultOptions);
+        regionOptions.push(defaultOptions);
 //        }
 
         var retrievedCrimeTips = [];
