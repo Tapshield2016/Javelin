@@ -3,6 +3,7 @@ import reversion
 from django.core import urlresolvers
 
 from datetime import datetime
+from math import sin, cos, sqrt, atan2, radians
 
 import django.utils.timezone
 
@@ -26,6 +27,41 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       InitiatedByTimerAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
+
+
+def kilometers_between_coordinates(point1, point2):
+
+    R = 6371 # km
+
+    lat1 = radians(point1.x)
+    lon1 = radians(point1.y)
+    lat2 = radians(point2.x)
+    lon2 = radians(point2.y)
+
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = (sin(dlat/2))**2 + cos(lat1) * cos(lat2) * (sin(dlon/2))**2
+    c = 2 * atan2(sqrt(a), sqrt(1-a))
+    distance = R * c
+    return distance
+
+
+def radius_from_center(point, boundaries):
+
+    point2 = Point(0, 0)
+    max_distance = 0
+
+    for string in boundaries:
+        split = string.split(',')
+        point2.x = float(split[0])
+        point2.y = float(split[1])
+
+        distance = kilometers_between_coordinates(point, point2)
+
+        if distance > max_distance:
+            max_distance = distance
+
+    return max_distance*0.621371 #miles
 
 
 def centroid_from_boundaries(boundaries):
@@ -93,7 +129,7 @@ class Agency(TimeStampedModel):
     agency_center_longitude = models.FloatField()
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
-    agency_radius = models.FloatField(default=1)
+    agency_radius = models.FloatField(default=0)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
@@ -155,6 +191,9 @@ class Agency(TimeStampedModel):
         if self.agency_center_latitude and self.agency_center_longitude:
             self.agency_center_point = Point(self.agency_center_latitude,
                                              self.agency_center_longitude)
+
+        if self.radius==0 and self.boundaries:
+            self.radius = radius_from_center(self.center_point, eval(self.boundaries))
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
@@ -237,6 +276,7 @@ class Region(models.Model):
     center_longitude = models.FloatField()
     center_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
+    radius = models.FloatField(default=0)
 
     def __unicode__(self):
         return self.name
@@ -258,6 +298,9 @@ class Region(models.Model):
         if self.center_latitude and self.center_longitude:
             self.center_point = Point(self.center_latitude,
                                       self.center_longitude)
+
+        if self.radius==0 and self.boundaries:
+            self.radius = radius_from_center(self.center_point, eval(self.boundaries))
 
         super(Region, self).save(*args, **kwargs)
 
