@@ -596,7 +596,7 @@
 
         if (agency.region){
             for (var region in agency.region) {
-               regionOptions.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: 1 });
+               regionOptions.push({ latitude: 40, longitude: -80, distance_within: 1 });
             }
         }
         else {
