@@ -173,7 +173,7 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
-//        this.regions = attributes.region;
+        this.regions = attributes.region;
 		return this;
 	}
 
@@ -571,25 +571,39 @@
 		{
 			callback(null);
 		}
-		
+		var regionOptions = [];
 		var agency = Javelin.activeAgency;
-		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
-		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
-		request.done(function(data) {
-			var retrievedCrimeTips = [];
-			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+        var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
+
+        if (agency.regions){
+            for (region in agency.regions) {
+               regionOptions.push({ latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius });
+            }
+
+        }
+        else {
+            regionOptions = [defaultOptions];
+        }
+
+        var retrievedCrimeTips = [];
+		var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+
+        for (regionOption in regionOptions) {
+            var request = Javelin.client.crimetips.read(params=Javelin.$.extend(regionOption, options));
+		    request.done(function(data) {
+
 			for (var i = data.results.length - 1; i >= 0; i--) {
 				var newCrimeTip = new CrimeTip(data.results[i]);
 				var past24 = createPastTimestamp(24 * 3600);
 				var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
-				
+
 				if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
 				{
 					newCrimeTip.showPin = true;
 				}
-				
+
 				retrievedCrimeTips.push(newCrimeTip);
-				
+
 				if (newCrimeTipDate > latestDate) {
 					latestDate = newCrimeTipDate;
 				}
@@ -597,8 +611,10 @@
 			if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
 				Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
 			}
-			callback(retrievedCrimeTips);
-		})
+
+		    })
+        }
+        callback(retrievedCrimeTips);
 	}
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
