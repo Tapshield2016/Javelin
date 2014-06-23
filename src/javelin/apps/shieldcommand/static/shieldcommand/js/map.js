@@ -29,12 +29,11 @@ function initializeMap() {
 		map: googleMap
 	};
 
-//    var geofence;
     if (googleMapRegions.length > 0) {
 
         geofence = new google.maps.Polygon({
                 paths: googleMapRegions,
-                strokeColor: '#3aa1d3',
+                strokeColor: '#0ab60a',
                 strokeOpacity: 0.9,
                 strokeWeight: 2,
                 fillColor: '#76b676',
@@ -43,8 +42,7 @@ function initializeMap() {
 
         geofence.setMap(googleMap);
     }
-
-    if (googleMapAgencyBoundaries.length > 0) {
+    else if (googleMapAgencyBoundaries.length > 0) {
         bermudaTriangle = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
             strokeColor: '#0ab60a',
