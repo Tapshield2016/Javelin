@@ -286,7 +286,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.crimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
-	$scope.crimeTipsVisible = $('#crimeTipList').is(':visible');
+	$scope.crimeTipsVisible = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
