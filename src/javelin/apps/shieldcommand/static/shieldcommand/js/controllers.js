@@ -637,7 +637,7 @@ angular.module('shieldCommand.controllers', [])
   		}
   		else {
 	  		crimeTipService.setActiveCrimeTip(crimeTip);
-
+			alertService.setActiveAlert(null);
 	  		$scope.markerSetForActiveCrimeTip = false;	
 
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
