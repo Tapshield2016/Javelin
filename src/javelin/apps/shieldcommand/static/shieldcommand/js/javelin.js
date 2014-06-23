@@ -173,7 +173,12 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
-        this.regions = attributes.region;
+        if (!$.isEmptyObject(attributes.region)) {
+            this.region = [];
+            for (var attr in attributes.region) {
+                this.region.push(new Region(attr));
+            }
+		};
 		return this;
 	}
 
@@ -255,6 +260,15 @@
 		this.message = attributes.message;
 		this.messageID = attributes.message_id;
 		this.senderID = attributes.sender_id;
+		return this;
+	}
+
+	function Region(attributes) {
+		this.name = attributes.name;
+		this.boundaries = attributes.boundaries;
+		this.centerLatitude = attributes.center_latitude;
+		this.centerLongitude = attributes.center_longitude;
+		this.radius = attributes.radius;
 		return this;
 	}
 
@@ -575,9 +589,9 @@
 		var agency = Javelin.activeAgency;
         var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
 
-        if (agency.regions){
-            for (var region in agency.regions) {
-               regionOptions.push({ latitude: region.center_latitude, longitude: region.center_longitude, distance_within: region.radius });
+        if (agency.region){
+            for (var region in agency.region) {
+               regionOptions.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius });
             }
         }
         else {
