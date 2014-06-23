@@ -576,10 +576,9 @@
         var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
 
         if (agency.regions){
-            for (region in agency.regions) {
-               regionOptions.push({ latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius });
+            for (var region in agency.regions) {
+               regionOptions.push({ latitude: region.center_latitude, longitude: region.center_longitude, distance_within: region.radius });
             }
-
         }
         else {
             regionOptions = [defaultOptions];
