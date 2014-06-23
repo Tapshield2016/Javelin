@@ -591,7 +591,7 @@
 
         if (agency.region){
             for (var region in agency.region) {
-               regionOptions.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius });
+               regionOptions.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: 1 });
             }
         }
         else {
