@@ -23,11 +23,13 @@ def index(request):
 
     if agency.region:
         for region in agency.region.all():
-            region_boundaries_coord = []
-            for coord in region.boundaries:
-                lat, long = coord.split(',')
-                region_boundaries_coord.append((lat, long))
-            multi_region_boundaries.append(region_boundaries_coord)
+            if region.boundaries:
+                region_boundaries_coord = []
+                region_boundaries_list = eval(region.boundaries)
+                for coord in region_boundaries_list:
+                    lat, long = coord.split(',')
+                    region_boundaries_coord.append((lat, long))
+                multi_region_boundaries.append(region_boundaries_coord)
 
     if agency.agency_boundaries:
         agency_boundaries_list = eval(agency.agency_boundaries)
