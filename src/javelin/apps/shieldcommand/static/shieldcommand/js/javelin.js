@@ -594,14 +594,14 @@
 		var agency = Javelin.activeAgency;
         var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
 
-        if (agency.region){
+//        if (agency.region){
 //            for (var region in agency.region) {
-            regionOptions.push({ latitude: 40, longitude: -80, distance_within: 1 });
+//            regionOptions.push({ latitude: 40, longitude: -80, distance_within: 1 });
 //            }
-        }
-        else {
-            regionOptions.push(defaultOptions);
-        }
+//        }
+//        else {
+        regionOptions.push(defaultOptions);
+//        }
 
         var retrievedCrimeTips = [];
 		var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
