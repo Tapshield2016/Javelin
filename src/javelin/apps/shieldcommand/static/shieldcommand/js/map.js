@@ -65,7 +65,8 @@ function initializeMap() {
 //        }
 
     }
-    else if (googleMapAgencyBoundaries.length > 0) {
+
+    if (googleMapAgencyBoundaries.length > 0) {
         bermudaTriangle = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
             strokeColor: '#0ab60a',
