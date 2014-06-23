@@ -192,8 +192,8 @@ class Agency(TimeStampedModel):
             self.agency_center_point = Point(self.agency_center_latitude,
                                              self.agency_center_longitude)
 
-        if self.radius==0 and self.boundaries:
-            self.radius = radius_from_center(self.center_point, eval(self.boundaries))
+        if self.agency_radius==0 and self.agency_boundaries:
+            self.agency_radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))
 
         if not self.chat_autoresponder_message:
             self.chat_autoresponder_message =\
