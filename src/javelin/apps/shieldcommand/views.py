@@ -19,6 +19,8 @@ def index(request):
     agency_boundaries_coords = []
     multi_region_boundaries = []
     user = UserSerializer(request.user)
+    region = agency.regions
+
     if agency.region:
         for region in agency.region:
             region_boundaries_coord = []
