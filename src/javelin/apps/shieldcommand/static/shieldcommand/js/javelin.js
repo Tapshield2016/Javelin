@@ -607,7 +607,7 @@
 		var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 
         for (var regionOption in regionOptions) {
-            var request = Javelin.client.crimetips.read(params=Javelin.$.extend(regionOption, options));
+            var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
 		    request.done(function(data) {
 
 			    for (var i = data.results.length - 1; i >= 0; i--) {
