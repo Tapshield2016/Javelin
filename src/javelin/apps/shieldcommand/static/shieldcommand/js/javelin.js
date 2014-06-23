@@ -173,6 +173,7 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
+//        this.regions = attributes.region;
 		return this;
 	}
 

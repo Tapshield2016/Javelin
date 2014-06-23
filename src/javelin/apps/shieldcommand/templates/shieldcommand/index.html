@@ -533,6 +533,10 @@
             googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
             {% endif %}
 
+            {% if region_boundaries %}
+            googleMapRegions = region_boundaries; //[{% for region in region_boundaries %} {% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %} {% endfor %}];
+            {% endif %}
+
             googleMapOptions = {
                 center: new google.maps.LatLng({{ agency.agency_center_latitude }}, {{ agency.agency_center_longitude }}),
                 zoom: {{ agency.default_map_zoom_level }},

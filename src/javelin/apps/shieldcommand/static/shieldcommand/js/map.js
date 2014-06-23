@@ -6,6 +6,7 @@ var googleMapMarker = new google.maps.Marker();
 var googleMapAccuracyCircle = new google.maps.Circle();
 var googleMapGeocoder = new google.maps.Geocoder();
 var googleMapAgencyBoundaries = [];
+var googleMapRegions = [];
 var crimeMarkers = [];
 var markerZIndex = 1;
 
@@ -28,7 +29,32 @@ function initializeMap() {
 		map: googleMap
 	};
 
-    if (googleMapAgencyBoundaries.length > 0) {
+    if (googleMapRegions.length > 0) {
+
+        for (region in googleMapRegions) {
+
+            var regionBoundaries = [];
+            
+            for (coord in region) {
+                var newCoord = new google.maps.LatLng(coord[0], coord[1]);
+                regionBoundaries.push(newCoord);
+            }
+
+            geofence = new google.maps.Polygon({
+                paths: regionBoundaries,
+                strokeColor: '#0ab60a',
+                strokeOpacity: 0.9,
+                strokeWeight: 2,
+                fillColor: '#76b676',
+                fillOpacity: 0.15
+            });
+
+            geofence.setMap(googleMap);
+        }
+
+
+    }
+    else if (googleMapAgencyBoundaries.length > 0) {
         bermudaTriangle = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
             strokeColor: '#0ab60a',
