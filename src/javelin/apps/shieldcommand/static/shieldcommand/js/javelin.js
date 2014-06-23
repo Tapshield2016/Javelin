@@ -186,12 +186,9 @@
 
         if (!$.isEmptyObject(attributes.region)) {
 
-            this.region.push(new Region(attributes.region[0]));
-
-//            var region = attributes.region;
-//            for (var attr in region) {
-//                );
-//            }
+            for (var attr in attributes.region) {
+                this.region.push(new Region(attr));
+            }
 		}
 		return this;
 	}
@@ -594,14 +591,14 @@
 		var agency = Javelin.activeAgency;
         var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
 
-//        if (agency.region){
-//            for (var region in agency.region) {
-//            regionOptions.push({ latitude: 40, longitude: -80, distance_within: 1 });
-//            }
-//        }
-//        else {
-        regionOptions.push(defaultOptions);
-//        }
+        if (agency.region){
+            for (var region in agency.region) {
+            defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
+            }
+        }
+        else {
+            regionOptions.push(defaultOptions);
+        }
 
         var retrievedCrimeTips = [];
 		var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
