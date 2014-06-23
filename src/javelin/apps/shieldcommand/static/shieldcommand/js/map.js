@@ -40,6 +40,8 @@ function initializeMap() {
                 fillColor: '#76b676',
                 fillOpacity: 0.15
         });
+
+        geofence.setMap(googleMap);
 //
 //            geofence.setMap(googleMap);
 //
