@@ -621,10 +621,12 @@
 	}
 	
 	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
-		var d = new Date();
+		var now = new Date();
+		var old = new Date("March 25, 1981 11:33:00");
 		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
-			viewed_time: d.toISOString(),
+			viewed_time: now.toISOString(),
 			viewed_by: Javelin.activeAgencyUser.url,
+			last_modified: old.toISOString(),
 		});
 		request.done(function(data) {
 			callback(data);
@@ -632,9 +634,11 @@
 	}
 	
 	Javelin.markCrimeTipSpam = function(crimeTip, callback) {
+		var old = new Date("March 25, 1981 11:33:00");
 		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
 			flagged_spam: true,
 			flagged_by_dispatcher: Javelin.activeAgencyUser.url,
+			last_modified: old.toISOString(),
 		});
 		request.done(function(data) {
 			callback(data);
