@@ -614,13 +614,17 @@
 
  		var agency = Javelin.activeAgency;
         var region = Javelin.regions[0];
-        var defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
-// 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
+//        var defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
+		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
 
-        var allOptions = [];
-        allOptions.push(defaultOptions);
+        var allParameters = [];
 
- 		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(allOptions[0], options));
+        Javelin.requestCrimeTips(defaultOptions, options, callback);
+ 	}
+
+    Javelin.requestCrimeTips = function(parameters, options, callback) {
+
+        var request = Javelin.client.crimetips.read(params=Javelin.$.extend(parameters, options));
  		request.done(function(data) {
  			var retrievedCrimeTips = [];
  			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
@@ -645,7 +649,8 @@
  			}
  			callback(retrievedCrimeTips);
  		})
- 	}
+    }
+
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
 		//var now = getTimestamp(milliseconds=true);
