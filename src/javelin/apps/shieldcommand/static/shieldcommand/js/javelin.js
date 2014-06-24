@@ -616,7 +616,11 @@
         var region = Javelin.regions[0];
         var defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
 // 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
- 		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
+
+        var allOptions = [];
+        allOptions.push(defaultOptions);
+
+ 		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(allOptions[0], options));
  		request.done(function(data) {
  			var retrievedCrimeTips = [];
  			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
