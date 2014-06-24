@@ -613,13 +613,47 @@
  		}
 
  		var agency = Javelin.activeAgency;
-        var region = Javelin.regions[0];
-//        var defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
-		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
-
+		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
         var allParameters = [];
 
-        Javelin.requestCrimeTips(defaultOptions, options, callback);
+        if (Javelin.regions)
+            for (var region in Javelin.regions) {
+                allParameters.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius });
+            }
+        else {
+            allParameters.push(defaultOptions);
+        }
+
+        var retrievedCrimeTips = [];
+        var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+
+        for (var parameters in allParameters) {
+           var request = Javelin.client.crimetips.read(params=Javelin.$.extend(parameters, options));
+ 		    request.done(function(data) {
+
+ 			    for (var i = data.results.length - 1; i >= 0; i--) {
+ 				    var newCrimeTip = new CrimeTip(data.results[i]);
+ 				    var past24 = createPastTimestamp(24 * 3600);
+ 				    var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+
+ 				    if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
+ 				    {
+ 				    	newCrimeTip.showPin = true;
+ 				    }
+
+ 				    retrievedCrimeTips.push(newCrimeTip);
+
+ 				    if (newCrimeTipDate > latestDate) {
+ 				    	latestDate = newCrimeTipDate;
+ 				    }
+ 			    }
+ 			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+ 		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+ 		    	}
+
+ 		    })
+        }
+        callback(retrievedCrimeTips);
  	}
 
     Javelin.requestCrimeTips = function(parameters, options, callback) {
