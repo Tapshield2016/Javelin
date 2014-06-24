@@ -616,7 +616,7 @@
  		var agency = Javelin.activeAgency;
 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
         var allParameters = [];
-        var regions = agency.regions;
+        var regions = agency.region;
 
         if (regions)
             for (var i = regions.length - 1; i >= 0; i--) {
