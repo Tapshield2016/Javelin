@@ -17,7 +17,6 @@
 	Javelin.activeCrimeTip = null;
 	Javelin.activeCrimeTipUser = null;
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
-    Javelin.regions = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -186,7 +185,7 @@
 
         if (attributes.region) {
             this.region = [];
-            for (var i = attributes.region.length - 1; i >= 0; i--) {
+            for (var i = 0; i < attributes.region.length; i++) {
 		        newRegion = new Region(attributes.region[i]);
 			    this.region.push(newRegion);
 			}
@@ -336,10 +335,6 @@
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
-
-            Javelin.getRegions(agencyID, function(regions) {
-                Javelin.regions = regions;
-            });
 		});
 	};
 
@@ -444,7 +439,7 @@
 		request.done(function(data) {
 			if (data['results'].length > 0) {
                 var allRegions = [];
-                for (var i = data.results.length - 1; i >= 0; i--) {
+                for (var i = 0; i < data.results.length; i++) {
 				    newRegion = new Region(data.results[i]);
 				    allRegions.push(newRegion);
 			    }
