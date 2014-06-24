@@ -183,14 +183,7 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
-//        this.region = [];
-//
-//        if (!$.isEmptyObject(attributes.region)) {
-//
-//            for (var attr in attributes.region) {
-//                this.region.push(new Region(attr));
-//            }
-//		}
+
 		return this;
 	}
 
@@ -615,10 +608,11 @@
  		var agency = Javelin.activeAgency;
 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
         var allParameters = [];
+        var regions = Javelin.regions;
 
-        if (Javelin.regions)
-            for (var region in Javelin.regions) {
-                allParameters.push({ latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius });
+        if (regions)
+            for (var i = regions.length - 1; i >= 0; i--) {
+                allParameters.push({ latitude: regions[i].centerLatitude, longitude: regions[i].centerLongitude, distance_within: regions[i].radius });
             }
         else {
             allParameters.push(defaultOptions);
@@ -627,8 +621,8 @@
         var retrievedCrimeTips = [];
         var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
 
-        for (var parameters in allParameters) {
-           var request = Javelin.client.crimetips.read(params=Javelin.$.extend(parameters, options));
+        for (var i = allParameters.length - 1; i >= 0; i--) {
+           var request = Javelin.client.crimetips.read(params=Javelin.$.extend(allParameters[i], options));
  		    request.done(function(data) {
 
  			    for (var i = data.results.length - 1; i >= 0; i--) {
@@ -655,35 +649,6 @@
         }
         callback(retrievedCrimeTips);
  	}
-
-    Javelin.requestCrimeTips = function(parameters, options, callback) {
-
-        var request = Javelin.client.crimetips.read(params=Javelin.$.extend(parameters, options));
- 		request.done(function(data) {
- 			var retrievedCrimeTips = [];
- 			var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
- 			for (var i = data.results.length - 1; i >= 0; i--) {
- 				var newCrimeTip = new CrimeTip(data.results[i]);
- 				var past24 = createPastTimestamp(24 * 3600);
- 				var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
-
- 				if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
- 				{
- 					newCrimeTip.showPin = true;
- 				}
-
- 				retrievedCrimeTips.push(newCrimeTip);
-
- 				if (newCrimeTipDate > latestDate) {
- 					latestDate = newCrimeTipDate;
- 				}
- 			}
- 			if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
- 				Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
- 			}
- 			callback(retrievedCrimeTips);
- 		})
-    }
 
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
