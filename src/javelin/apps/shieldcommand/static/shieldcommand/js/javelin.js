@@ -442,11 +442,12 @@
 		var request = Javelin.client.region.read({agency: agencyID});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
-                var regions = [];
-                for (var attr in data['results']) {
-                    regions.push(new Region(attr));
-                }
-				callback(regions);
+                var allRegions = [];
+                for (var i = data.results.length - 1; i >= 0; i--) {
+				    newRegion = new Region(data.results[i]);
+				    allRegions.push(newRegion);
+			    }
+				callback(allRegions);
 			}
 			else {
 				callback(null);
