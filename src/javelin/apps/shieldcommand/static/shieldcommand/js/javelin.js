@@ -186,7 +186,7 @@
 
         if (attributes.region) {
             this.region = [];
-            for (var i = data.results.length - 1; i >= 0; i--) {
+            for (var i = attributes.region.length - 1; i >= 0; i--) {
 		        newRegion = new Region(attributes.region[i]);
 			    this.region.push(newRegion);
 			}
