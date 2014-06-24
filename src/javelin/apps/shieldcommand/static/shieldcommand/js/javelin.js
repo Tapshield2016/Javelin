@@ -613,7 +613,7 @@
         var allParameters = [];
         var regions = agency.region;
 
-        if (regions)
+        if (regions.length > 0)
             for (var i = regions.length - 1; i >= 0; i--) {
                 allParameters.push({ latitude: regions[i].centerLatitude, longitude: regions[i].centerLongitude, distance_within: regions[i].radius });
             }
