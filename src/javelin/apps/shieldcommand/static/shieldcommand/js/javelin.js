@@ -182,14 +182,14 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
-        this.region = attributes.region;
+        this.region = [];
 
-//        if (!$.isEmptyObject(attributes.region)) {
-//
-//            for (var attr in attributes.region) {
-//                this.region.push(new Region(attr));
-//            }
-//		}
+        if (!$.isEmptyObject(attributes.region)) {
+
+            for (var attr in attributes.region) {
+                this.region.push(new Region(attr));
+            }
+		}
 		return this;
 	}
 
@@ -589,7 +589,8 @@
  		}
 
  		var agency = Javelin.activeAgency;
- 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
+        var region = agency.region[0]
+ 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
  		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
  		request.done(function(data) {
  			var retrievedCrimeTips = [];
