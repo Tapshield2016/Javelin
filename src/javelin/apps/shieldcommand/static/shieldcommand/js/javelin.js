@@ -17,6 +17,7 @@
 	Javelin.activeCrimeTip = null;
 	Javelin.activeCrimeTipUser = null;
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
+    Javelin.regions = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -182,14 +183,14 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
-        this.region = [];
-
-        if (!$.isEmptyObject(attributes.region)) {
-
-            for (var attr in attributes.region) {
-                this.region.push(new Region(attr));
-            }
-		}
+//        this.region = [];
+//
+//        if (!$.isEmptyObject(attributes.region)) {
+//
+//            for (var attr in attributes.region) {
+//                this.region.push(new Region(attr));
+//            }
+//		}
 		return this;
 	}
 
@@ -320,6 +321,8 @@
 		Javelin.client.add('agencies');
 		Javelin.client.agencies.add('send_mass_alert');
 
+        Javelin.client.add('region', {url: 'region'});
+
 		Javelin.client.add('alerts');
 		Javelin.client.alerts.add('send_message');
 		Javelin.client.alerts.add('messages');
@@ -332,6 +335,10 @@
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
+
+            Javelin.getRegions(agencyID, function(regions) {
+                Javelin.regions = regions;
+            });
 		});
 	};
 
@@ -424,6 +431,22 @@
 		request.done(function(data) {
 			if (data['results'].length > 0) {
 				callback(new AgencyUserProfile(data['results'][0]));
+			}
+			else {
+				callback(null);
+			}
+		});
+	};
+
+    Javelin.getRegions = function(agencyID, callback) {
+		var request = Javelin.client.region.read({agency: agencyID});
+		request.done(function(data) {
+			if (data['results'].length > 0) {
+                var regions = [];
+                for (var attr in data['results']) {
+                    regions.push(new Region(attr));
+                }
+				callback(regions);
 			}
 			else {
 				callback(null);
@@ -589,8 +612,9 @@
  		}
 
  		var agency = Javelin.activeAgency;
-        var region = agency.region[0]
- 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
+        var region = Javelin.regions[0];
+        var defaultOptions = { latitude: region.centerLatitude, longitude: region.centerLongitude, distance_within: region.radius };
+// 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: region.radius };
  		var request = Javelin.client.crimetips.read(params=Javelin.$.extend(defaultOptions, options));
  		request.done(function(data) {
  			var retrievedCrimeTips = [];
