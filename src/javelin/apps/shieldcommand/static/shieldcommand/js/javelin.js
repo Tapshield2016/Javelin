@@ -184,6 +184,14 @@
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
 
+        if (attributes.region) {
+            this.region = [];
+            for (var i = data.results.length - 1; i >= 0; i--) {
+		        newRegion = new Region(attributes.region[i]);
+			    this.region.push(newRegion);
+			}
+        }
+
 		return this;
 	}
 
@@ -608,7 +616,7 @@
  		var agency = Javelin.activeAgency;
 		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
         var allParameters = [];
-        var regions = Javelin.regions;
+        var regions = agency.regions;
 
         if (regions)
             for (var i = regions.length - 1; i >= 0; i--) {
