@@ -46,9 +46,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 	});
 
-	$scope.$on('toggleProfileOpen', function() {
-		console.log('profile open');
-		
+	$scope.$on('toggleProfileOpen', function() {		
 		if ($scope.updateTimeout)
 		{
 			clearTimeout($scope.updateTimeout);
@@ -56,14 +54,12 @@ angular.module('shieldCommand.controllers', [])
 		
 		if (alertService.activeAlert)
 		{
-			console.log('alert profile');
 			$scope.profileType = 'alert';
 			$scope.activeAlert = alertService.activeAlert;
 			$scope.activeCrimeTip = null;
 		}
 		else if (crimeTipService.activeCrimeTip)
 		{
-			console.log('crime tip profile');
 			$scope.profileType = 'crimeTip';
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
 			$scope.activeAlert = null;
@@ -82,7 +78,6 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.updateProfile = function(callback) {
-		console.log('update profile');
 		if ($scope.activeAlert)
 		{
 			alertService.getUserProfileForActiveAlert(function(profile) {
@@ -199,6 +194,7 @@ angular.module('shieldCommand.controllers', [])
 		crimeTips.push($scope.activeCrimeTip);
 		removeCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
+		$scope.returnToGeofenceCenter();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
 		$crimeTip.find('.badge-viewed').removeClass('hidden');
 		$crimeTip.fadeTo('fast', 0.5);
@@ -215,6 +211,7 @@ angular.module('shieldCommand.controllers', [])
 		crimeTips.push($scope.activeCrimeTip);
 		removeCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
+		$scope.returnToGeofenceCenter();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
 		$crimeTip.find('.badge-spam').removeClass('hidden');
 		$crimeTip.fadeTo('fast', 0.2);
@@ -286,7 +283,6 @@ angular.module('shieldCommand.controllers', [])
 	$scope.crimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
-	$scope.crimeTipsVisible = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -601,6 +597,16 @@ angular.module('shieldCommand.controllers', [])
 			}
 		};    	
     });
+	
+	$scope.panelClicked = function(panel) {
+		if (panel != 'crimeTip')
+		{
+			if (crimeTipService.activeCrimeTip && $rootScope.profileIsOpen)
+			{
+				$rootScope.$broadcast('toggleProfile');
+			}
+		}
+	}
 
   	$scope.alertClicked = function(alert, shouldToggleProfile) {
   		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;

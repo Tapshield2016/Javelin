@@ -632,13 +632,19 @@
  				    var newCrimeTip = new CrimeTip(data.results[i]);
  				    var past24 = createPastTimestamp(24 * 3600);
  				    var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+					var newCrimeTipCreation = createTimestampFromDate(new Date(newCrimeTip.creationDate));
 
  				    if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
  				    {
  				    	newCrimeTip.showPin = true;
  				    }
 
- 				    retrievedCrimeTips.push(newCrimeTip);
+ 				    if (newCrimeTipDate < past24 && (newCrimeTip.flaggedSpam || newCrimeTip.viewedTime))
+					{
+						continue;
+					}
+					
+					retrievedCrimeTips.push(newCrimeTip);
 
  				    if (newCrimeTipDate > latestDate) {
  				    	latestDate = newCrimeTipDate;
