@@ -549,7 +549,7 @@ angular.module('shieldCommand.controllers', [])
 	  			updateCrimeTips(updatedCrimeTips);
 				if (crimeTipService.activeCrimeTip) {
 					for (var i = 0; i < updatedCrimeTips.length; i++) {
-						if (updatedCrimeTips[i].object_id != crimeTipService.activeCrimeTip.object_id) {
+						if (updatedCrimeTips[i].object_id == crimeTipService.activeCrimeTip.object_id) {
 							$scope.currentActiveLocation = updatedCrimeTips[i];
 							updateDisplay();
 						}

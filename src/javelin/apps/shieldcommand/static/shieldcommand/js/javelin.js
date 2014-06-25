@@ -646,13 +646,13 @@
 					
 					retrievedCrimeTips.push(newCrimeTip);
 
-// 				    if (newCrimeTipDate > latestDate) {
-// 				    	latestDate = newCrimeTipDate;
-// 				    }
+				    if (newCrimeTipDate > latestDate) {
+				    	latestDate = newCrimeTipDate;
+				    }
 			    }
-// 			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
-// 		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
-// 		    	}
+			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+		    	}
 
  		    })
         }
@@ -677,7 +677,7 @@
 	
 	Javelin.getCrimeTipsModifiedSinceLastCheck = function(callback) {
 		Javelin.getCrimeTips({
-			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
+//			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
 			page_size: 100,
 		}, callback);
 	}
