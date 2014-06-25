@@ -646,13 +646,13 @@
 					
 					retrievedCrimeTips.push(newCrimeTip);
 
-// 				    if (newCrimeTipDate > latestDate) {
-// 				    	latestDate = newCrimeTipDate;
-// 				    }
+				    if (newCrimeTipDate > latestDate) {
+				    	latestDate = newCrimeTipDate;
+				    }
 			    }
-// 			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
-// 		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
-// 		    	}
+			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+		    	}
 
  		    })
         }
