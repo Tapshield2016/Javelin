@@ -653,10 +653,10 @@
 			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
 		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
 		    	}
-
+                callback(retrievedCrimeTips);
  		    })
         }
-        callback(retrievedCrimeTips);
+
  	}
 
 	
