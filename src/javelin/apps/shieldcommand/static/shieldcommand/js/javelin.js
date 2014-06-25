@@ -650,9 +650,9 @@
 				    	latestDate = newCrimeTipDate;
 				    }
 			    }
-			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
-		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
-		    	}
+//			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+//		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+//		    	}
 
  		    })
         }
