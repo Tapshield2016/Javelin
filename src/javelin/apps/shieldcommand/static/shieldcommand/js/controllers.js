@@ -29,7 +29,6 @@ angular.module('shieldCommand.controllers', [])
 	$scope.isProfileVisible = false;
 	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
-	$scope.crimeTipsList = $('#crimeTipList');
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
@@ -262,16 +261,6 @@ angular.module('shieldCommand.controllers', [])
 			setMarker($scope.activeCrimeTip);
 		}
 	}
-	
-	
-	$scope.$watch(
-		function () { return $scope.crimeTipsList.is(':visible'); },
-		function (newValue, oldValue) {
-	  		if (newValue !== oldValue && oldValue == true && $scope.activeCrimeTip && $scope.isProfileVisible) {
-				$rootScope.$broadcast('toggleProfile');
-	  		}
-		}
-	);
 
 }])
 
@@ -608,6 +597,16 @@ angular.module('shieldCommand.controllers', [])
 			}
 		};    	
     });
+	
+	$scope.panelClicked = function(panel) {
+		if (panel != 'crimeTip')
+		{
+			if (crimeTipService.activeCrimeTip && $rootScope.profileIsOpen)
+			{
+				$rootScope.$broadcast('toggleProfile');
+			}
+		}
+	}
 
   	$scope.alertClicked = function(alert, shouldToggleProfile) {
   		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
