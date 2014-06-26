@@ -657,9 +657,8 @@ angular.module('shieldCommand.controllers', [])
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
 				if (crimeTipService.activeCrimeTip) {
 					
-					if (crimeTipService.activeCrimeTip.showPin == false ||
-                        (crimeTipService.activeCrimeTip.viewedTime ||
-                            crimeTipService.activeCrimeTip.flaggedSpam)) {
+					if ( ! crimeTipService.activeCrimeTip.showPin)
+					{
 						setMarker(crimeTipService.activeCrimeTip);
 					}
 					
