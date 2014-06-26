@@ -261,6 +261,74 @@ angular.module('shieldCommand.controllers', [])
 			setMarker($scope.activeCrimeTip);
 		}
 	}
+	
+	$scope.getFileType = function(filename) {
+		return filename.split('.').pop().toLowerCase();
+	}
+	
+	$scope.isAudioSupported = function(filename) {
+		if ( ! buzz.isSupported())
+		{
+			console.log('buzz not supported');
+			return false;
+		}
+		
+		var format = $scope.getFileType(filename);
+		
+		switch(format)
+		{
+			case 'ogg':
+				console.log('ogg: ' + buzz.isOGGSupported());
+				return buzz.isOGGSupported();
+			case 'wav':
+				console.log('wav: ' + buzz.isOGGSupported());
+				return buzz.isWAVSupported();
+			case 'mp3':
+				console.log('mp3: ' + buzz.isOGGSupported());
+				return buzz.isMP3Supported();
+			case 'aac':
+			case 'mp4':
+			case 'm4a':
+			case '3gp':
+				console.log('aac: ' + buzz.isOGGSupported());
+				return buzz.isAACSupported();
+			default:
+				return false;
+		}
+	}
+	
+	$scope.isVideoSupported = function(filename) {
+		if ( ! Modernizr.video)
+		{
+			console.log('video not supported');
+			return false;
+		}
+		
+		var format = $scope.getFileType(filename);
+		
+		switch(format)
+		{
+			case 'ogg':
+				console.log('ogg video: ' + Modernizr.video.ogg);
+				return Modernizr.video.ogg;
+			case 'mp4':
+				console.log('mp4 video: ' + Modernizr.video.h264);
+				return Modernizr.video.h264;
+			default:
+				return false;
+		}
+	}
+	
+	$scope.playAudio = function(filename) {
+		if ( ! $scope.isAudioSupported(filename))
+		{
+			return false;
+		}
+		
+		var audio = new sound(filename);
+		console.log('playing audio');
+		audio.play();
+	}
 
 }])
 
