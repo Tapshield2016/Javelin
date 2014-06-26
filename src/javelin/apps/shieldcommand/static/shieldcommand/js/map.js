@@ -245,6 +245,7 @@ function removeCrimeMarkers(crimes)
 		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 		{
 			crimeMarkers[crime.type][crime.object_id].setMap(null);
+            crimeMarkers[crime.type].splice([crime.object_id], 1);
 		}
 	}
 }
