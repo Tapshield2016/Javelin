@@ -99,6 +99,10 @@ angular.module('shieldCommand.controllers', [])
 					}
 				});
 			}
+			else
+			{
+				$scope.currentProfile = null;
+			}
 			
 			if ($scope.activeCrimeTip.viewedBy)
 			{
