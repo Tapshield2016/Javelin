@@ -83,6 +83,7 @@ function updateMarker(location) {
     if (!location) {
         return;
     }
+    googleMapMarker = new google.maps.Marker();
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setTitle(location.title);
