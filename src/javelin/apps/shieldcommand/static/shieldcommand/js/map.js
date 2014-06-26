@@ -192,6 +192,7 @@ function addCrimeMarkers(crimes) {
 			title: crime.reportType,
 			icon: getIconForLocation(crime)
         });
+        marker.setAnimation(google.maps.Animation.DROP);
 		
 		if ( ! crimeMarkers[crime.type])
 		{
@@ -236,6 +237,10 @@ function crimePinClicked(evt)
 function showCrimeMarker(crime) {
 
     if (!crime) {
+        return;
+    }
+
+    if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
         return;
     }
 
