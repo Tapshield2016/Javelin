@@ -258,7 +258,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
-			setMarker($scope.activeCrimeTip);
+			showCrimeMarker($scope.activeCrimeTip);
 		}
 	}
 
