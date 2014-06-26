@@ -192,7 +192,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
-		removeCrimeMarkers(crimeTips);
+		hideCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
 		$scope.returnToGeofenceCenter();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
@@ -209,7 +209,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
-		removeCrimeMarkers(crimeTips);
+		hideCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
 		$scope.returnToGeofenceCenter();
 		var $crimeTip = $('#crimeTip-' + $scope.activeCrimeTip.object_id);
@@ -258,7 +258,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
-			setMarker($scope.activeCrimeTip);
+			showCrimeMarker($scope.activeCrimeTip);
 		}
 	}
 
@@ -470,9 +470,9 @@ angular.module('shieldCommand.controllers', [])
 		
 		if ($scope.crimeTipsLength > 0)
 		{
-			addCrimeMarkers($filter("filter")($scope.crimeTips, {showPin: true}));
+			addCrimeMarkers($scope.crimeTips);
 			var crimeMarkersForRemoval = $filter("filter")($scope.crimeTips, {showPin: false});
-			removeCrimeMarkers($filter("notActiveCrimeTip")(crimeMarkersForRemoval, crimeTipService.activeCrimeTip));
+			hideCrimeMarkers($filter("notActiveCrimeTip")(crimeMarkersForRemoval, crimeTipService.activeCrimeTip));
 		}
   	};
 
@@ -656,11 +656,8 @@ angular.module('shieldCommand.controllers', [])
 
 			if (crimeTipService.activeCrimeTip && !$scope.markerSetForActiveCrimeTip) {
 				if (crimeTipService.activeCrimeTip) {
-					
-					if ( ! crimeTipService.activeCrimeTip.showPin)
-					{
-						setMarker(crimeTipService.activeCrimeTip);
-					}
+
+					showCrimeMarker(crimeTipService.activeCrimeTip);
 					
 					$scope.currentActiveLocation = crimeTipService.activeCrimeTip;
 				}
