@@ -239,8 +239,9 @@ function showCrimeMarker(crime) {
         return;
     }
 
-    if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]){
-			crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
+    if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
+        crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
+        crimeMarkers[crime.type][crime.object_id].setAnimation(google.maps.Animation.DROP);
     }
 }
 
