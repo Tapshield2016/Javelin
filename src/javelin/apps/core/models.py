@@ -189,8 +189,8 @@ class Agency(TimeStampedModel):
             self.agency_center_longitude = centroid.y
 
         if self.agency_center_latitude and self.agency_center_longitude:
-            self.agency_center_point = Point(self.agency_center_latitude,
-                                             self.agency_center_longitude)
+            self.agency_center_point = Point(self.agency_center_longitude,
+                                             self.agency_center_latitude)
 
         if self.agency_radius==0 and self.agency_boundaries:
             radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))
@@ -297,8 +297,8 @@ class Region(models.Model):
             self.center_longitude = centroid.y
 
         if self.center_latitude and self.center_longitude:
-            self.center_point = Point(self.center_latitude,
-                                      self.center_longitude)
+            self.center_point = Point(self.center_longitude,
+                                      self.center_latitude)
 
         if self.radius==0 and self.boundaries:
             radius = radius_from_center(self.center_point, eval(self.boundaries))
