@@ -260,6 +260,10 @@ function hideCrimeMarkers(crimes)
 	for (var i = 0; i < crimes.length; i++)
 	{
 		var crime = crimes[i];
+
+        if (crime.showPin) {
+            crime.showPin = false;
+        }
 		
 		if ( ! crime)
 		{
