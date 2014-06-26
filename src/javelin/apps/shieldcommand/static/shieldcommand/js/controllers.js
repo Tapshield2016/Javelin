@@ -199,10 +199,10 @@ angular.module('shieldCommand.controllers', [])
 		$crimeTip.find('.badge-viewed').removeClass('hidden');
 		$crimeTip.fadeTo('fast', 0.5);
 		crimeTipService.markCrimeTipViewed(function(data) {
-			$scope.activeCrimeTip = null;
-			crimeTipService.activeCrimeTip = null;
 			$rootScope.$broadcast('crimeTipMarkedChange');
 		});
+        $scope.activeCrimeTip = null;
+		crimeTipService.activeCrimeTip = null;
 	}
 	
 	$scope.markCrimeTipSpam = function() {
