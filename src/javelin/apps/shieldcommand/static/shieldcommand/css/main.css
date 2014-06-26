@@ -5714,3 +5714,7 @@ body {
   -o-transition: all .3s linear;
   -ms-transition: all .3s linear;
   transition: all .3s linear; }
+  
+ i[class*='icon-'] {
+	 font-style: normal !important;
+ }
