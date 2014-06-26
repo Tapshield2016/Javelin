@@ -332,7 +332,7 @@
 						<!-- /.modal-dialog --> 
 					</div>
 					<!-- /.modal -->
-					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.videoURL" id="crimeTipVideo" tabindex="-1" role="dialog" aria-labelledby="crimeTipVideoLabel" aria-hidden="true">
+					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.videoURL && isVideoSupported(activeCrimeTip.videoURL)" id="crimeTipVideo" tabindex="-1" role="dialog" aria-labelledby="crimeTipVideoLabel" aria-hidden="true">
 						<div class="modal-dialog" style="width: 800px;">
 							<div class="modal-content">
 								<div class="modal-header">
@@ -341,7 +341,8 @@
 								</div>
 								<div class="modal-body">
 									<video width="775" autoplay controls>
-									  <source src="{{ activeCrimeTip.videoURL }}" type="video/{{ getFileType(activeCrimeTip.videoURL) }}">
+									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'mp4'" src="{{ activeCrimeTip.videoURL }}" type="video/mp4">
+									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'ogg'" src="{{ activeCrimeTip.videoURL }}" type="video/ogg">
 									</video>
 								</div>
 							</div>
