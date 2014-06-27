@@ -86,7 +86,6 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             address = []
             for email in email_address:
                 address.append(EmailAddressGETSerializer(instance=email).data)
-
             ret['secondary_emails'] = address
         return ret
 

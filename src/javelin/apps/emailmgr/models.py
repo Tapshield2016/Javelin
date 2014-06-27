@@ -32,30 +32,30 @@ class EmailAddress(models.Model):
 #########################################################
 # stick signals listeners here to do some work for us
 #########################################################
-def create_primary_email_for_new_user(sender, instance, created, **kwargs):
-    """
-    Create a matching email address seperate from that of User object when a user object is created.
-    """
-    # user was just created, so no worries about duplicate emails as it has been done before
-    if instance.email:
-        try:
-            EmailAddress.objects.get(user=instance, email__iexact=instance.email)
-        except EmailAddress.DoesNotExist:
-            e = EmailAddress(**{'user': instance, 
-                                'email': instance.email, 
-                                'is_primary': True,
-                                'is_active': True})
-            e.save()
-
-def remove_all_emails_for_deleted_user(sender, instance, **kwargs):
-    """
-    Delete all emails addresses associated with this user that was just delete.
-    """
-    # user was just delete, delete any email associated with this user
-    emails = EmailAddress.objects.filter(user=instance)
-    for e in emails:
-        e.delete()
-
-# latch on signals here
-signals.post_save.connect(create_primary_email_for_new_user, sender=settings.AUTH_USER_MODEL)
-signals.post_delete.connect(remove_all_emails_for_deleted_user, sender=settings.AUTH_USER_MODEL)
+# def create_primary_email_for_new_user(sender, instance, created, **kwargs):
+#     """
+#     Create a matching email address seperate from that of User object when a user object is created.
+#     """
+#     # user was just created, so no worries about duplicate emails as it has been done before
+#     if instance.email:
+#         try:
+#             EmailAddress.objects.get(user=instance, email__iexact=instance.email)
+#         except EmailAddress.DoesNotExist:
+#             e = EmailAddress(**{'user': instance,
+#                                 'email': instance.email,
+#                                 'is_primary': True,
+#                                 'is_active': True})
+#             e.save()
+#
+# def remove_all_emails_for_deleted_user(sender, instance, **kwargs):
+#     """
+#     Delete all emails addresses associated with this user that was just delete.
+#     """
+#     # user was just delete, delete any email associated with this user
+#     emails = EmailAddress.objects.filter(user=instance)
+#     for e in emails:
+#         e.delete()
+#
+# # latch on signals here
+# signals.post_save.connect(create_primary_email_for_new_user, sender=settings.AUTH_USER_MODEL)
+# signals.post_delete.connect(remove_all_emails_for_deleted_user, sender=settings.AUTH_USER_MODEL)
