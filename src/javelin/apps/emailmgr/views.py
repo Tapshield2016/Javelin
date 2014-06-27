@@ -71,7 +71,7 @@ def email_make_primary(request):
             for e in emails:
                 e.is_primary = False
                 e.save()
-    
+
             request.user.email = email.email
             request.user.save()
             email.is_primary = True
