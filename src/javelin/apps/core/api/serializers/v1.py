@@ -171,13 +171,15 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
             if obj.viewed_by is None:
                 return ret
 
-            if obj.flagged_by_dispatcher is None:
-                return ret
-
             if obj.viewed_by:
                 ret['dispatcher_name'] =\
                     obj.viewed_by.get_full_name()
-            elif obj.flagged_by_dispatcher:
+
+
+            if obj.flagged_by_dispatcher is None:
+                return ret
+            
+            if obj.flagged_by_dispatcher:
                 ret['dispatcher_name'] =\
                     obj.viewed_by.get_full_name()
 
