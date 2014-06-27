@@ -17,6 +17,8 @@
 	Javelin.activeCrimeTip = null;
 	Javelin.activeCrimeTipUser = null;
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
+	Javelin.spotCrimeURL = 'http://api.spotcrime.com/crimes.json';
+	Javelin.spotCrimeKey = '246c313f9889be187cfbca0c3f5a09f9e4a5d8224edbf86ad795c72b0561';
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -657,7 +659,34 @@
         }
 
  	}
+	
+	Javelin.getSpotCrimes = function(callback) {
+		if ( ! Javelin.activeAgency)
+ 		{
+ 			callback(null);
+ 		}
 
+ 		var agency = Javelin.activeAgency;
+		var date = new Date();
+		date.setDate(date.getDate()-1);
+        var retrievedSpotCrimes = [];
+		$.ajax({
+			url: Javelin.spotCrimeURL,
+			dataType: 'jsonp',
+			jsonp: 'callback',
+			data: {
+				key: Javelin.spotCrimeKey,
+				lat: agency.agencyCenterLatitude,
+				lon: agency.agencyCenterLongitude,
+				radius: agency.radius,
+				since: date.toISOString().slice(0,10),
+				max_records: 500
+			},
+			success: function(response) {
+				console.log(response);
+			}
+		});
+ 	}
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
 		//var now = getTimestamp(milliseconds=true);
