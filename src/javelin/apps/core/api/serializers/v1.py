@@ -161,13 +161,21 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SocialCrimeReport
 
-    # def to_native(self, obj):
-    #     ret = super(SocialCrimeReportSerializer, self).to_native(obj)
-    #     if obj:
-    #         if not obj.report_anonymous:
-    #             reporter_meta = ReporterSerializer(instance=obj.reporter)
-    #             ret['reporter_meta'] = reporter_meta.data
-    #     return ret
+    def to_native(self, obj):
+        ret = super(SocialCrimeReportSerializer, self).to_native(obj)
+        if obj:
+            if not obj.report_anonymous:
+                reporter_meta = ReporterSerializer(instance=obj.reporter)
+                ret['reporter_meta'] = reporter_meta.data
+
+            if obj.viewed_by:
+                ret['dispatcher_name'] =\
+                    obj.viewed_by.get_full_name()
+            elif obj.flagged_by_dispatcher:
+                ret['dispatcher_name'] =\
+                    obj.viewed_by.get_full_name()
+
+        return ret
 
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
