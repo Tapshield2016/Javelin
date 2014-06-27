@@ -262,7 +262,7 @@
 		this.viewedBy = attributes.viewed_by;
 		this.flaggedByName = null;
 		this.viewedByName = null;
-//        this.dispatcherName = attributes.dispatcher_name;
+        this.dispatcherName = attributes.dispatcher_name;
 		
 		return this;
 	}
