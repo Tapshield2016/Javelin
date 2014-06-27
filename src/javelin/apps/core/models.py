@@ -710,8 +710,15 @@ def create_primary_email_for_new_user(sender, instance, created, **kwargs):
             e = EmailAddress(**{'user': instance,
                                 'email': instance.email,
                                 'is_primary': True,
-                                'is_active': True})
+                                'is_active': instance.email_verified})
             e.save()
+            return
+
+        if instance.email_verified:
+            email = EmailAddress.objects.get(user=instance, email__iexact=instance.email)
+            if email:
+                email.is_active = True
+                email.save()
 
 @receiver(post_delete, sender=AgencyUser)
 def remove_all_emails_for_deleted_user(sender, instance, **kwargs):
