@@ -76,7 +76,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members',
-                  'last_reported_time', 'distance')
+                  'last_reported_time', 'distance', 'secondary_emails')
 
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
