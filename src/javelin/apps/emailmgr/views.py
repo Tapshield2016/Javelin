@@ -74,9 +74,6 @@ def email_make_primary(request):
                 e.is_primary = False
                 e.save()
 
-            user = User.objects.get(username=request.user.email)
-            user.email = email.email
-            user.save()
             email.is_primary = True
             email.save()
             return Response({"message": "Email now primary."},
