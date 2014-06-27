@@ -106,15 +106,25 @@ angular.module('shieldCommand.controllers', [])
 			
 			if ($scope.activeCrimeTip.viewedBy)
 			{
-				crimeTipService.getUserForCrimeTipViewed(function(user) {
-					$scope.activeCrimeTip.viewedByName = user.getFullName();
-				});
+                if ($scope.activeCrimeTip.dispatcherName) {
+                    $scope.activeCrimeTip.viewedByName = $scope.activeCrimeTip.dispatcherName;
+                }
+                else {
+				    crimeTipService.getUserForCrimeTipViewed(function(user) {
+				    	$scope.activeCrimeTip.viewedByName = user.getFullName();
+				    });
+                }
 			}
 			else if ($scope.activeCrimeTip.flaggedBy)
 			{
-				crimeTipService.getUserForCrimeTipFlagged(function(user) {
-					$scope.activeCrimeTip.flaggedByName = user.getFullName();
-				});
+                if ($scope.activeCrimeTip.dispatcherName) {
+                    $scope.activeCrimeTip.flaggedByName = $scope.activeCrimeTip.dispatcherName;
+                }
+                else {
+                    crimeTipService.getUserForCrimeTipFlagged(function (user) {
+                        $scope.activeCrimeTip.flaggedByName = user.getFullName();
+                    });
+                }
 			}
 		}
 		else
