@@ -700,22 +700,22 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 @receiver(post_save, sender=AgencyUser)
 def create_primary_email_for_new_user(sender, instance, created, **kwargs):
     """
-    Create a matching email address seperate from that of User object when a user object is created.
+    Create a matching email address separate from that of User object when a user object is created.
     """
     # user was just created, so no worries about duplicate emails as it has been done before
     if instance.email:
         try:
-            EmailAddress.objects.get(user=instance, email__iexact=instance.email)
+            EmailAddress.objects.get(user=instance, email__iexact=instance.email.lower())
         except EmailAddress.DoesNotExist:
             e = EmailAddress(**{'user': instance,
-                                'email': instance.email,
+                                'email': instance.email.lower(),
                                 'is_primary': True,
                                 'is_active': instance.email_verified})
             e.save()
             return
 
         if instance.email_verified:
-            email = EmailAddress.objects.get(user=instance, email__iexact=instance.email)
+            email = EmailAddress.objects.get(user=instance, email__iexact=instance.email.lower())
             if email:
                 email.is_active = True
                 email.save()

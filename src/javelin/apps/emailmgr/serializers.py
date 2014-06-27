@@ -9,7 +9,7 @@ class EmailAddressGETSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = EmailAddress
-        fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
+        fields = ('email', 'is_primary', 'is_active', 'is_activation_sent',)
 
 
 class EmailAddressUpdateSerializer(serializers.ModelSerializer):

@@ -13,7 +13,7 @@ urlpatterns = patterns('',
         name='emailmgr_email_add'
         ),
     url(
-        r'^email/send_activation/(?P<identifier>\w+)/$',
+        r'^email/send_activation/$',
         email_send_activation,
         name='emailmgr_email_send_activation'
         ),
@@ -23,12 +23,12 @@ urlpatterns = patterns('',
         name='emailmgr_email_activate'
         ),
     url(
-        r'^email/make_primary/(?P<identifier>\w+)/$',
+        r'^email/make_primary/$',
         email_make_primary,
         name='emailmgr_email_make_primary'
         ),
     url(
-        r'^email/delete/(?P<identifier>\w+)/$',
+        r'^email/delete/$',
         email_delete,
         name='emailmgr_email_delete'
         ),
