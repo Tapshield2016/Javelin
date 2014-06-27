@@ -73,7 +73,7 @@ def email_make_primary(request):
                 e.save()
     
             request.user.email = email.email
-            email.user.save()
+            request.user.save()
             email.is_primary = True
             email.save()
             return Response({"message": "Email now primary."},
