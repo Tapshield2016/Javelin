@@ -14,6 +14,9 @@
     Javelin.activeAlert = null;
     Javelin.activeAlertTarget = null;
     Javelin.lastCheckedAlertsTimestamp = null;
+	Javelin.activeCrimeTip = null;
+	Javelin.activeCrimeTipUser = null;
+	Javelin.lastCheckedCrimeTipsTimestamp = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -64,11 +67,38 @@
 	    'FR': 'Friend',
 	    'O': 'Other',
 	}
-
+	
+	Javelin.CRIME_TYPE_CHOICES = {
+	    'AB': 'Abuse',
+	    'AS': 'Assault',
+	    'CA': 'Car Accident',
+	    'DI': 'Disturbance',
+	    'DR': 'Drugs/Alcohol',
+	    'H': 'Harassment',
+	    'MH': 'Mental Health',
+	    'O': 'Other',
+		'RN': 'Repair Needed',
+		'S': 'Suggestion',
+		'SA': 'Suspicious Activity',
+		'T': 'Theft',
+		'V': 'Vandalism',
+	}
+	
+	function getObjectProperty(obj, key)
+	{
+		return typeof obj[key] !== 'undefined' ? obj[key] : null;
+	}
+	
+	function getCrimeTipIcon(reportType)
+	{
+		var crimeType = reportType ? reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
+		
+		return '/media/static/shieldcommand/img/crimetip/alert_' + crimeType + '_icon.png';
+	}
 
 	function APIResponseObject(attributes) {
 		this.parseIDFromURL = function(url) {
-			var tokens = url.split('/')
+			var tokens = url.split('/');
 			return tokens[tokens.length - 2];
 		}
 
@@ -125,6 +155,15 @@
 		return this;
 	}
 
+    function Region(attributes) {
+		this.name = attributes.name;
+		this.boundaries = attributes.boundaries;
+		this.centerLatitude = attributes.center_latitude;
+		this.centerLongitude = attributes.center_longitude;
+		this.radius = attributes.radius;
+		return this;
+	}
+
 	function Agency(attributes) {
 		APITimeStampedObject.call(this, attributes);
 		this.name = attributes.name;
@@ -137,11 +176,21 @@
 		this.agencyBoundaries = attributes.agency_boundaries;
 		this.agencyCenterLatitude = attributes.agency_center_latitude;
 		this.agencyCenterLongitude = attributes.agency_center_longitude;
+		this.radius = attributes.agency_radius;
 		this.defaultMapZoomLevel = attributes.default_map_zoom_level;
 		this.alertCompletedMessage = attributes.alert_completed_message;
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
+
+        if (attributes.region) {
+            this.region = [];
+            for (var i = 0; i < attributes.region.length; i++) {
+		        newRegion = new Region(attributes.region[i]);
+			    this.region.push(newRegion);
+			}
+        }
+
 		return this;
 	}
 
@@ -157,6 +206,7 @@
 		this.pendingTime = attributes.pending_time;
 		this.status = attributes.status;
 		this.initiatedBy = Javelin.ALERT_TYPE_CHOICES[attributes.initiated_by];
+		this.type = 'alert';
 		this.location = null;
 		this.geocodedAddress = '';
 
@@ -179,10 +229,41 @@
 		this.accuracy = attributes.accuracy;
 		this.altitude = attributes.altitude;
 		this.latitude = attributes.latitude;
+		this.type = 'alert';
 		this.longitude = attributes.longitude;
 		this.alertType = null;
 		this.alertStatus = null;
 		this.title = null;
+
+		return this;
+	}
+	
+	function CrimeTip(attributes) {
+		APITimeStampedObject.call(this, attributes);
+		this.distance = attributes.distance;
+		this.body = attributes.body;
+		this.reporter = attributes.reporter;
+		this.reportType = getObjectProperty(Javelin.CRIME_TYPE_CHOICES, attributes.report_type);
+		this.title = this.reportType;
+		this.reportIcon = getCrimeTipIcon(this.reportType);
+		this.imageURL = attributes.report_image_url;
+		this.videoURL = attributes.report_video_url;
+		this.audioURL = attributes.report_audio_url;
+		this.latitude = attributes.report_latitude;
+		this.longitude = attributes.report_longitude;
+		this.geocodedAddress = null;
+		this.type = 'crimeTip';
+		this.anonymous = attributes.report_anonymous;
+		this.accuracy = null;
+		this.showPin = false;
+		this.flaggedSpam = attributes.flagged_spam;
+		this.flaggedBy = attributes.flagged_by_dispatcher;
+		this.viewedTime = attributes.viewed_time;
+		this.viewedBy = attributes.viewed_by;
+		this.flaggedByName = null;
+		this.viewedByName = null;
+        this.dispatcherName = attributes.dispatcher_name;
+		
 		return this;
 	}
 
@@ -212,6 +293,11 @@
 		}
 		return timestamp;		
 	}
+	
+	function createPastTimestamp(past)
+	{
+		return Math.round(new Date().getTime() / 1000) - past;
+	}
 
 	Javelin.initialize = function(serverURL, agencyID, apiToken) {
 		Javelin._initialize(serverURL, agencyID, apiToken);
@@ -236,6 +322,8 @@
 		Javelin.client.add('agencies');
 		Javelin.client.agencies.add('send_mass_alert');
 
+        Javelin.client.add('region', {url: 'region'});
+
 		Javelin.client.add('alerts');
 		Javelin.client.alerts.add('send_message');
 		Javelin.client.alerts.add('messages');
@@ -244,6 +332,7 @@
 		Javelin.client.add('alertlocations', {url: 'alert-locations'});
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
+		Javelin.client.add('crimetips', {url: 'social-crime-reports'});
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
@@ -256,6 +345,14 @@
 
 	Javelin.setActiveAlert = function(alert) {
 		Javelin.activeAlert = alert;
+	}
+	
+	Javelin.setActiveCrimeTip = function(crimeTip) {
+		Javelin.activeCrimeTip = crimeTip;
+	}
+	
+	Javelin.setActiveCrimeTipUser = function(user) {
+		Javelin.activeCrimeTipUser = user;
 	}
 
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
@@ -304,7 +401,7 @@
 		Javelin.getAlertsModifiedSinceLastCheck(function(updatedAlerts) {
 			callback(updatedAlerts);
 		});
-	}
+	};
 
 	Javelin.getAgency = function(agencyID, callback) {
 		var request = Javelin.client.agencies.read(agencyID);
@@ -314,11 +411,40 @@
 		});
 	};
 
+	Javelin.getUser = function(userID, callback) {
+		var request = Javelin.client.users.read(userID);
+		request.done(function(data) {
+			if (data) {
+					callback(new AgencyUser(data));
+			}
+			else {
+				callback(null);
+			}
+		});
+	};
+	
 	Javelin.getUserProfileForUser = function(userID, callback) {
 		var request = Javelin.client.userprofiles.read({user: userID});
 		request.done(function(data) {
 			if (data['results'].length > 0) {
 				callback(new AgencyUserProfile(data['results'][0]));
+			}
+			else {
+				callback(null);
+			}
+		});
+	};
+
+    Javelin.getRegions = function(agencyID, callback) {
+		var request = Javelin.client.region.read({agency: agencyID});
+		request.done(function(data) {
+			if (data['results'].length > 0) {
+                var allRegions = [];
+                for (var i = 0; i < data.results.length; i++) {
+				    newRegion = new Region(data.results[i]);
+				    allRegions.push(newRegion);
+			    }
+				callback(allRegions);
 			}
 			else {
 				callback(null);
@@ -475,6 +601,111 @@
 		request.fail(function(data) {
 			callback(false);
 		});
+	}
+	
+	Javelin.getCrimeTips = function(options, callback) {
+		if ( ! Javelin.activeAgency)
+ 		{
+ 			callback(null);
+ 		}
+
+ 		var agency = Javelin.activeAgency;
+		var defaultOptions = { latitude: agency.agencyCenterLatitude, longitude: agency.agencyCenterLongitude, distance_within: agency.radius };
+        var allParameters = [];
+        var regions = agency.region;
+
+        if (regions.length > 0)
+            for (var i = regions.length - 1; i >= 0; i--) {
+                allParameters.push({ latitude: regions[i].centerLatitude, longitude: regions[i].centerLongitude, distance_within: regions[i].radius });
+            }
+        else {
+            allParameters.push(defaultOptions);
+        }
+
+        var retrievedCrimeTips = [];
+        var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+
+        for (var i = allParameters.length - 1; i >= 0; i--) {
+           var request = Javelin.client.crimetips.read(params=Javelin.$.extend(allParameters[i], options));
+ 		    request.done(function(data) {
+
+ 			    for (var i = data.results.length - 1; i >= 0; i--) {
+ 				    var newCrimeTip = new CrimeTip(data.results[i]);
+ 				    var past24 = createPastTimestamp(24 * 3600);
+ 				    var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+					var newCrimeTipCreation = createTimestampFromDate(new Date(newCrimeTip.creationDate));
+
+ 				    if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
+ 				    {
+ 				    	newCrimeTip.showPin = true;
+ 				    }
+
+ 				    if (newCrimeTipDate < past24 && (newCrimeTip.flaggedSpam || newCrimeTip.viewedTime))
+					{
+						continue;
+					}
+					
+					retrievedCrimeTips.push(newCrimeTip);
+
+				    if (newCrimeTipDate > latestDate) {
+				    	latestDate = newCrimeTipDate;
+				    }
+			    }
+			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+		    	}
+                callback(retrievedCrimeTips);
+ 		    })
+        }
+
+ 	}
+
+	
+	Javelin.loadInitialCrimeTips = function(callback) {
+		//var now = getTimestamp(milliseconds=true);
+		//var then = Number(new Date(now - (24 * 60 * 60)));
+		Javelin.getCrimeTips({
+			//modified_since: then,
+			page_size: 100,
+		}, callback);		
+	}
+
+	Javelin.updateCrimeTips = function(callback) {
+		Javelin.getCrimeTipsModifiedSinceLastCheck(function(updatedCrimeTips) {
+			callback(updatedCrimeTips);
+		});
+	}
+	
+	Javelin.getCrimeTipsModifiedSinceLastCheck = function(callback) {
+		Javelin.getCrimeTips({
+			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
+			page_size: 100,
+		}, callback);
+	}
+	
+	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
+		var now = new Date();
+		var old = new Date("March 25, 1981 11:33:00");
+		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+			viewed_time: now.toISOString(),
+			viewed_by: Javelin.activeAgencyUser.url,
+			last_modified: old.toISOString(),
+		});
+		request.done(function(data) {
+			callback(data);
+		})
+	}
+	
+	Javelin.markCrimeTipSpam = function(crimeTip, callback) {
+		var old = new Date("March 25, 1981 11:33:00");
+		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+			flagged_spam: true,
+			flagged_by_dispatcher: Javelin.activeAgencyUser.url,
+			last_modified: old.toISOString(),
+		});
+		request.done(function(data) {
+			callback(data);
+		})
 	}
 
 }(this));

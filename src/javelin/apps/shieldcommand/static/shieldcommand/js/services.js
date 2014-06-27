@@ -119,4 +119,113 @@ angular.module('shieldCommand.services', [])
 		activeAgency: this.activeAgency,
 		sendMassAlert: this.sendMassAlert,
 	}
+}])
+
+.factory('crimeTipService', [function () {
+	var activeCrimeTip = null;
+
+	this.loadInitialCrimeTips = function (callback) {
+		Javelin.loadInitialCrimeTips(function(initialCrimeTips) {
+			callback(initialCrimeTips);
+		});
+	};
+
+	this.getUpdatedCrimeTips = function (existingCrimeTips, callback) {
+		Javelin.updateCrimeTips(function(updatedCrimeTips) {
+
+			for (var i = 0; i < updatedCrimeTips.length; i++) {
+				var foundCrimeTip = false;
+				for (var j = 0; j < existingCrimeTips.length; j++) {
+					if (existingCrimeTips[j].url === updatedCrimeTips[i].url) {
+						foundCrimeTip = true;
+						for (var key in updatedCrimeTips[i]) {
+							existingCrimeTips[j][key] = updatedCrimeTips[i][key];
+						}
+						break;
+					}
+				}
+				if (!foundCrimeTip) {
+					existingCrimeTips.push(updatedCrimeTips[i]);
+				}
+			}
+			callback(existingCrimeTips);
+		});
+	}
+	
+	this.setActiveCrimeTip = function(crimeTip) {
+		this.activeCrimeTip = crimeTip;
+		Javelin.setActiveCrimeTip(crimeTip);
+	}
+	
+	this.getUserForActiveCrimeTip = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.reporter), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
+	}
+	
+	this.getUserForCrimeTipViewed = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.viewedBy), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
+	}
+	
+	this.getUserForCrimeTipFlagged = function(callback) {
+		if (this.activeCrimeTip) {
+			Javelin.getUser(this.activeCrimeTip.parseIDFromURL(this.activeCrimeTip.flaggedBy), function(user) {
+				if (callback)
+				{
+					callback(user);
+				}
+			});
+		}
+		else {
+			if (callback) {
+				callback(null);
+			}
+		}
+	}
+	
+	this.markCrimeTipViewed = function(callback) {
+		Javelin.markCrimeTipViewed(this.activeCrimeTip, function(success) {
+			callback(success);
+		});
+	}
+	
+	this.markCrimeTipSpam = function(callback) {
+		Javelin.markCrimeTipSpam(this.activeCrimeTip, function(success) {
+			callback(success);
+		});
+	}
+
+	return {
+		activeCrimeTip: this.activeCrimeTip,
+		loadInitialCrimeTips: this.loadInitialCrimeTips,
+		getUpdatedCrimeTips: this.getUpdatedCrimeTips,	
+		setActiveCrimeTip: this.setActiveCrimeTip,
+		getUserForActiveCrimeTip: this.getUserForActiveCrimeTip,
+		getUserForCrimeTipViewed: this.getUserForCrimeTipViewed,
+		getUserForCrimeTipFlagged: this.getUserForCrimeTipFlagged,
+		markCrimeTipViewed: this.markCrimeTipViewed,
+		markCrimeTipSpam: this.markCrimeTipSpam,	
+	}
 }]);

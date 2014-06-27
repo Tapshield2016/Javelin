@@ -17,7 +17,20 @@ def index(request):
     site = get_current_site(request)
     agency = request.user.agency
     agency_boundaries_coords = []
+    multi_region_boundaries = []
     user = UserSerializer(request.user)
+    region = agency.region
+
+    if agency.region:
+        for region in agency.region.all():
+            if region.boundaries:
+                region_boundaries_coord = []
+                region_boundaries_list = eval(region.boundaries)
+                for coord in region_boundaries_list:
+                    lat, long = coord.split(',')
+                    region_boundaries_coord.append((lat, long))
+                multi_region_boundaries.append(list(region_boundaries_coord))
+
     if agency.agency_boundaries:
         agency_boundaries_list = eval(agency.agency_boundaries)
         for coord in agency_boundaries_list:
@@ -30,5 +43,6 @@ def index(request):
                                "auth_token": auth_token,
                                "api_version":\
                                    settings.SHIELD_COMMAND_API_VERSION,
+                               "region_boundaries": multi_region_boundaries,
                                "user": user.data},
                               context_instance=RequestContext(request))

@@ -5,7 +5,8 @@ from rest_framework import serializers
 
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
-                         EntourageMember, SocialCrimeReport)
+                         EntourageMember, SocialCrimeReport, Region,
+                         DispatchCenter, Period, ClosedDate,)
 
 User = get_user_model()
 
@@ -23,8 +24,34 @@ class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
         model = EntourageMember
 
 
+class RegionSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Region
+
+class ClosedDateSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = ClosedDate
+
+class PeriodSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Period
+
+
+class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
+
+    closed_date = ClosedDateSerializer(required=False, many=True)
+    opening_hours = PeriodSerializer(required=False, many=True)
+
+    class Meta:
+        model = DispatchCenter
+
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
+    dispatch_center = DispatchCenterSerializer(required=False, many=True)
+    region = RegionSerializer(required=False, many=True)
 
     class Meta:
         model = Agency
@@ -66,6 +93,13 @@ class UserUpdateSerializer(serializers.HyperlinkedModelSerializer):
                   'user_logged_in_via_social',
                   'last_reported_time', 'last_reported_latitude',
                   'last_reported_longitude')
+
+
+class ReporterSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('email', 'phone_number', 'first_name', 'last_name',)
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
@@ -126,6 +160,22 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = SocialCrimeReport
+
+    def to_native(self, obj):
+        ret = super(SocialCrimeReportSerializer, self).to_native(obj)
+        if obj:
+            # if not obj.report_anonymous:
+            #     reporter_meta = ReporterSerializer(instance=obj.reporter)
+            #     ret['reporter_meta'] = reporter_meta.data
+
+            if obj.viewed_by:
+                ret['dispatcher_name'] =\
+                    obj.viewed_by.get_full_name()
+            elif obj.flagged_by_dispatcher:
+                ret['dispatcher_name'] =\
+                    obj.flagged_by_dispatcher.get_full_name()
+
+        return ret
 
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
