@@ -9,7 +9,7 @@ from django.contrib import messages as Msg
 from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
 from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
@@ -17,8 +17,10 @@ from rest_framework.response import Response
 from rest_framework import status, serializers, viewsets
 from emailmgr.serializers import (EmailAddressGETSerializer, EmailAddressUpdateSerializer,
                                   EmailAddressViewSet,)
+from django.contrib.auth import (authenticate, get_user_model,
+                                 login as auth_login)
 
-
+User = get_user_model()
 
 
 @api_view(['POST'])
@@ -72,8 +74,8 @@ def email_make_primary(request):
                 e.is_primary = False
                 e.save()
 
-            email.user.email = email.email
-            email.user.save()
+            request.user.email = email.email
+            request.user.save()
             email.is_primary = True
             email.save()
             return Response({"message": "Email now primary."},
