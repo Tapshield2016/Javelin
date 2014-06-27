@@ -8,6 +8,8 @@ from core.models import (Agency, Alert, AlertLocation,
                          EntourageMember, SocialCrimeReport, Region,
                          DispatchCenter, Period, ClosedDate,)
 
+from emailmgr.serializers import EmailAddressGETSerializer
+
 User = get_user_model()
 
 
@@ -66,6 +68,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberGETSerializer(required=False, many=True)
     distance = serializers.SerializerMethodField('distance_if_exists')
+    secondary_emails = EmailAddressGETSerializer(required=False, many=True)
 
     class Meta:
         model = User

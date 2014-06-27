@@ -15,6 +15,10 @@ from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status, serializers, viewsets
+from emailmgr.serializers import (EmailAddressGETSerializer, EmailAddressUpdateSerializer,
+                                  EmailAddressViewSet,)
+
+
 
 
 @api_view(['POST'])
@@ -166,24 +170,24 @@ def email_list(request):
 
 
 
-class EmailAddressGETSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = EmailAddress
-        fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
-
-
-class EmailAddressUpdateSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = EmailAddress
-
-
-class EmailAddressViewSet(viewsets.ModelViewSet):
-    queryset = EmailAddress.objects.select_related('user').all()
-    model = EmailAddress
-    # filter_fields = ('user',)
-    # serializer_class = EmailAddressGETSerializer
+# class EmailAddressGETSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = EmailAddress
+#         fields = ('email', 'is_primary', 'is_active', 'is_activation_sent', 'identifier',)
+#
+#
+# class EmailAddressUpdateSerializer(serializers.ModelSerializer):
+#
+#     class Meta:
+#         model = EmailAddress
+#
+#
+# class EmailAddressViewSet(viewsets.ModelViewSet):
+#     queryset = EmailAddress.objects.select_related('user').all()
+#     model = EmailAddress
+#     # filter_fields = ('user',)
+#     # serializer_class = EmailAddressGETSerializer
 
 
 
