@@ -82,7 +82,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(UserSerializer, self).to_native(obj)
         if obj:
-            email_address = EmailAddress.objects.select_related('user').all()
+            email_address = EmailAddress.objects.filter(user=obj)
             ret['secondary_emails'] = email_address.data
         return ret
 
