@@ -684,7 +684,14 @@
 				max_records: 500
 			},
 			success: function(response) {
-				console.log(response);
+				if (response.crimes)
+				{
+					
+				}
+				else
+				{
+					console.log('spotcrime api error');
+				}
 			}
 		});
  	}
