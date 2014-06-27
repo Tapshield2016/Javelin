@@ -167,6 +167,12 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
             # if not obj.report_anonymous:
             #     reporter_meta = ReporterSerializer(instance=obj.reporter)
             #     ret['reporter_meta'] = reporter_meta.data
+            
+            if (obj.viewed_by is None) or (len(obj.viewed_by) == 0):
+                return ret
+
+            if (obj.flagged_by_dispatcher is None) or (len(obj.flagged_by_dispatcher) == 0):
+                return ret
 
             if obj.viewed_by:
                 ret['dispatcher_name'] =\
