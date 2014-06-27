@@ -83,7 +83,11 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(UserSerializer, self).to_native(obj)
         if obj:
             email_address = EmailAddress.objects.filter(user=obj)
-            ret['secondary_emails'] = email_address
+            address = []
+            for email in email_address:
+                address.append(EmailAddressGETSerializer(email))
+
+            ret['secondary_emails'] = address
         return ret
 
     def distance_if_exists(self, obj):
