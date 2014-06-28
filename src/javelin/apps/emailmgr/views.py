@@ -67,7 +67,7 @@ def email_make_primary(request):
     email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_make_primary.lower())
     if email.is_active:
         if email.is_primary:
-            return Response({"message": "Email already primary."},
+            return Response(UserSerializer(instance=request.user).data,
                         status=status.HTTP_200_OK)
         else:
             emails = EmailAddress.objects.filter(user=email.user)
@@ -77,7 +77,7 @@ def email_make_primary(request):
 
             email.is_primary = True
             email.save()
-            return Response({"message": "Email now primary."},
+            return Response(UserSerializer(instance=request.user).data,
                         status=status.HTTP_200_OK)
 
     return Response({"message": "Email must first be activated."},
@@ -167,7 +167,7 @@ def email_delete(request):
     else:
         email.delete()
 
-    return Response({"message": "Email address removed."},
+    return Response(UserSerializer(instance=request.user).data,
                         status=status.HTTP_200_OK)
 
 
