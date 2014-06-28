@@ -19,6 +19,7 @@ from emailmgr.serializers import (EmailAddressGETSerializer, EmailAddressUpdateS
                                   EmailAddressViewSet,)
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
+from core.api.serializers.v1 import UserSerializer
 
 User = get_user_model()
 
@@ -46,7 +47,7 @@ def email_add(request):
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
 
-    return Response(EmailAddressGETSerializer(instance=email).data,
+    return Response(UserSerializer(instance=request.user).data,
                     status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
