@@ -685,9 +685,10 @@
 		var date = new Date();
 		date.setDate(date.getDate()-1);
         var retrievedSpotCrimes = [];
-		$.ajax({
+		Javelin.$.ajax({
 			type: 'GET',
 			url: Javelin.spotCrimeURL,
+			crossDomain: true,
 			async: false,
 			dataType: 'jsonp',
 			jsonp: 'callback',
