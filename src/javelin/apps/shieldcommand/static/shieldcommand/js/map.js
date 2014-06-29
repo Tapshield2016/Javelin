@@ -237,18 +237,30 @@ function crimePinClicked(evt)
 
 function showCrimeMarker(crime) {
 
-    if (!crime) {
+    if ( ! crime) {
         return;
     }
 
-    if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
+	if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
+		return;
+	}
+
+	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
+		crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
+		crimeMarkers[crime.type][crime.object_id].setAnimation(google.maps.Animation.DROP);
+	}
+}
+
+function showCrimeMarkers(crimes) {
+
+    if ( ! crimes) {
         return;
     }
-
-    if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
-        crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
-        crimeMarkers[crime.type][crime.object_id].setAnimation(google.maps.Animation.DROP);
-    }
+	
+	for (var i = 0; i < crimes.length; i++)
+	{
+		showCrimeMarker(crimes[i]);
+	}
 }
 
 function hideCrimeMarkers(crimes)

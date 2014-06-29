@@ -278,6 +278,7 @@
 		this.creationDate = attributes.date;
 		this.link = attributes.link;
 		this.address = attributes.address;
+		this.description = attributes.description ? attributes.description : null;
 		this.type = 'spotCrime';
 		
 		return this;
@@ -683,7 +684,7 @@
 
  		var agency = Javelin.activeAgency;
 		var date = new Date();
-		date.setDate(date.getDate()-1);
+		date.setDate(date.getDate() - 1);
         var retrievedSpotCrimes = [];
 		Javelin.$.ajax({
 			type: 'GET',
@@ -697,14 +698,17 @@
 				lat: agency.agencyCenterLatitude,
 				lon: agency.agencyCenterLongitude,
 				radius: agency.radius,
-				since: date.toISOString().slice(0,10),
+				since: date.toISOString().slice(0, 10),
 				max_records: 500
 			},
+			complete: function() {
+        		console.log(this.url)
+    		},
 			success: function(response) {
-				console.log(response);
+				//console.log(response);
 				if (response.crimes)
 				{
-					console.log(response.crimes.length + ' spot crimes found');
+					//console.log(response.crimes.length + ' spot crimes found');
 					for (var i = 0; i < response.crimes.length; i++)
 					{
 						retrievedSpotCrimes.push(new SpotCrime(response.crimes[i]));
