@@ -353,7 +353,7 @@ angular.module('shieldCommand.controllers', [])
 			addCrimeMarkers(spotCrimes);
 		});
 		
-		setTimeout($scope.getSpotCrimes, $scope.spotCrimesUpdateInterval * 1000);
+		setTimeout($scope.getSpotCrimes, $scope.spotCrimeUpdateInterval * 1000);
 	}
 	
 	setTimeout($scope.getSpotCrimes, 2500);
