@@ -49,6 +49,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 
 	$scope.$on('toggleProfileOpen', function() {		
+		console.log('profile open');
 		if ($scope.updateTimeout)
 		{
 			clearTimeout($scope.updateTimeout);
@@ -275,6 +276,7 @@ angular.module('shieldCommand.controllers', [])
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
 			showCrimeMarker($scope.activeCrimeTip);
+			zoomToCrime($scope.activeCrimeTip);
 		}
 	}
 	

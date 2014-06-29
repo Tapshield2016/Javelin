@@ -156,7 +156,7 @@ function zoomToCrime(crime)
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 	{
-		clearActiveAlertMarker();
+		//clearActiveAlertMarker();
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
