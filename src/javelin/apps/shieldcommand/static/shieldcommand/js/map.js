@@ -189,10 +189,10 @@ function addCrimeMarkers(crimes) {
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(crime.latitude, crime.longitude),
 			map: map,
-			title: crime.reportType,
-			icon: getIconForLocation(crime)
+			title: crime.title,
+			icon: getIconForLocation(crime),
+			animation: google.maps.Animation.DROP
         });
-        marker.setAnimation(google.maps.Animation.DROP);
 		
 		if ( ! crimeMarkers[crime.type])
 		{
@@ -247,7 +247,6 @@ function showCrimeMarker(crime) {
 
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
 		crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
-		crimeMarkers[crime.type][crime.object_id].setAnimation(google.maps.Animation.DROP);
 	}
 }
 

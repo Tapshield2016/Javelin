@@ -348,10 +348,9 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.getSpotCrimes = function() {
 		Javelin.getSpotCrimes(function(spotCrimes) {
-			hideCrimeMarkers($scope.spotCrimes);
+			hideCrimeMarkers($($scope.spotCrimes).not(spotCrimes).get());
+			addCrimeMarkers($(spotCrimes).not($scope.spotCrimes).get());
 			$scope.spotCrimes = spotCrimes;
-			addCrimeMarkers(spotCrimes);
-			showCrimeMarkers(spotCrimes);
 		});
 		
 		setTimeout($scope.getSpotCrimes, $scope.spotCrimeUpdateInterval * 1000);
