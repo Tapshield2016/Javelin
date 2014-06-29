@@ -351,6 +351,7 @@ angular.module('shieldCommand.controllers', [])
 			hideCrimeMarkers($scope.spotCrimes);
 			$scope.spotCrimes = spotCrimes;
 			addCrimeMarkers(spotCrimes);
+			
 		});
 		
 		setTimeout($scope.getSpotCrimes, $scope.spotCrimeUpdateInterval * 1000);

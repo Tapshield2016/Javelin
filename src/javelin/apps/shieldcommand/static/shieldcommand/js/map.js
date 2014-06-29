@@ -181,7 +181,7 @@ function addCrimeMarkers(crimes) {
 
         var map = null;
 
-        if (crime.showPin) {
+        if (crime.showPin || crime.type == 'spotCrime') {
 
             map = googleMap;
         }
