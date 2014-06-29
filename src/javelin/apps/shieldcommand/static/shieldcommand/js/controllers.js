@@ -356,7 +356,7 @@ angular.module('shieldCommand.controllers', [])
 		setTimeout($scope.getSpotCrimes, $scope.spotCrimeUpdateInterval * 1000);
 	}
 	
-	//setTimeout($scope.getSpotCrimes, 2500);
+	setTimeout($scope.getSpotCrimes, 2500);
 
 }])
 
