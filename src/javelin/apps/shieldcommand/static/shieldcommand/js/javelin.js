@@ -700,8 +700,10 @@
 				max_records: 500
 			},
 			success: function(response) {
+				console.log(response);
 				if (response.crimes)
 				{
+					console.log(response.crimes.length + ' spot crimes found');
 					for (var i = 0; i < response.crimes.length; i++)
 					{
 						retrievedSpotCrimes.push(new SpotCrime(response.crimes[i]));
