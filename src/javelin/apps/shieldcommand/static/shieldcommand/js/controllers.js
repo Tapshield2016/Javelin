@@ -348,8 +348,11 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.getSpotCrimes = function() {
 		Javelin.getSpotCrimes(function(spotCrimes) {
+			console.log(spotCrimes.length);
 			hideCrimeMarkers($($scope.spotCrimes).not(spotCrimes).get());
-			addCrimeMarkers($(spotCrimes).not($scope.spotCrimes).get());
+			var newSpotCrimes = $(spotCrimes).not($scope.spotCrimes).get();
+			addCrimeMarkers(newSpotCrimes);
+			showCrimeMarkers(newSpotCrimes);
 			$scope.spotCrimes = spotCrimes;
 		});
 		
