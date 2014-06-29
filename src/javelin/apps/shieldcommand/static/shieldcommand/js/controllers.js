@@ -48,8 +48,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 	});
 
-	$scope.$on('toggleProfileOpen', function() {		
-		console.log('profile open');
+	$scope.$on('toggleProfileOpen', function() {
 		if ($scope.updateTimeout)
 		{
 			clearTimeout($scope.updateTimeout);
@@ -70,10 +69,10 @@ angular.module('shieldCommand.controllers', [])
 		
 		if ($scope.activeAlert || $scope.activeCrimeTip)
 		{
-			$scope.updateProfile(function(profile) {
-				$scope.isProfileVisible = true;
-				$rootScope.profileIsOpen = true;
-				$rootScope.$broadcast('profileWasOpened');
+			$scope.isProfileVisible = true;
+			$rootScope.profileIsOpen = true;
+			$rootScope.$broadcast('profileWasOpened');
+			$scope.updateProfile(function(profile) {	
 				$rootScope.$broadcast('profileWasUpdated');
 				$scope.updateTimeout = setTimeout($scope.updateProfile, 10000);
 			});
@@ -350,7 +349,6 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.getSpotCrimes = function() {
 		Javelin.getSpotCrimes(function(spotCrimes) {
-			console.log(spotCrimes.length);
 			hideCrimeMarkers($($scope.spotCrimes).not(spotCrimes).get());
 			var newSpotCrimes = $(spotCrimes).not($scope.spotCrimes).get();
 			addCrimeMarkers(newSpotCrimes);

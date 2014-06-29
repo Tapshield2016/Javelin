@@ -701,14 +701,9 @@
 				since: date.toISOString().slice(0, 10),
 				max_records: 500
 			},
-			complete: function() {
-        		console.log(this.url)
-    		},
 			success: function(response) {
-				//console.log(response);
 				if (response.crimes)
 				{
-					//console.log(response.crimes.length + ' spot crimes found');
 					for (var i = 0; i < response.crimes.length; i++)
 					{
 						retrievedSpotCrimes.push(new SpotCrime(response.crimes[i]));
