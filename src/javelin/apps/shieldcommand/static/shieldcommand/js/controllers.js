@@ -29,6 +29,8 @@ angular.module('shieldCommand.controllers', [])
 	$scope.isProfileVisible = false;
 	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
+	$scope.spotCrimes = [];
+	$scope.spotCrimeUpdateInterval = 60;
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
@@ -343,6 +345,18 @@ angular.module('shieldCommand.controllers', [])
 		console.log('playing audio');
 		audio.play();
 	}
+	
+	$scope.getSpotCrimes = function() {
+		Javelin.getSpotCrimes(function(spotCrimes) {
+			hideCrimeMarkers($scope.spotCrimes);
+			$scope.spotCrimes = spotCrimes;
+			addCrimeMarkers(spotCrimes);
+		});
+		
+		setTimeout($scope.getSpotCrimes, $scope.spotCrimesUpdateInterval * 1000);
+	}
+	
+	setTimeout($scope.getSpotCrimes, 2500);
 
 }])
 

@@ -268,6 +268,20 @@
 		
 		return this;
 	}
+	
+	function SpotCrime(attributes) {
+		this.object_id = attributes.cdid;
+		this.reportType = attributes.type;
+		this.title = attributes.type;
+		this.latitude = attributes.lat;
+		this.longitude = attributes.lon;
+		this.creationDate = attributes.date;
+		this.link = attributes.link;
+		this.address = attributes.address;
+		this.type = 'spotCrime';
+		
+		return this;
+	}
 
 	function ChatMessage(attributes) {
 		this.alertID = attributes.alert_id;
@@ -686,7 +700,12 @@
 			success: function(response) {
 				if (response.crimes)
 				{
+					for (var i = 0; i < response.crimes.length; i++)
+					{
+						retrievedSpotCrimes.push(new SpotCrime(response.crimes[i]));
+					}
 					
+					callback(retrievedSpotCrimes);
 				}
 				else
 				{

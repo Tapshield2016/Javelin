@@ -199,11 +199,12 @@ function addCrimeMarkers(crimes) {
 			crimeMarkers[crime.type] = [];
 		}
 		
-		//marker.crimeType = crime.type;
-		//marker.crimeId = crime.object_id;
 		crimeMarkers[crime.type][crime.object_id] = marker;
 		
-		google.maps.event.addListener(marker, 'click', crimePinClicked);
+		if (crime.type == 'crimeTip')
+		{
+			google.maps.event.addListener(marker, 'click', crimePinClicked);
+		}
 	}
 }
 
