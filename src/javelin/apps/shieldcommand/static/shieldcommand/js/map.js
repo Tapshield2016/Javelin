@@ -253,7 +253,7 @@ function spotCrimePinClicked(evt)
 			{
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
-				var infoContent = '<h1 id="' + titleID + '"></h1>'+
+				var infoContent = '<h1 id="' + titleID + '">' + marker.title + '</h1>' +
 				'<div id="' + contentID + '">Loading...</div>';
 				
 				var infoWindow = new google.maps.InfoWindow({
@@ -270,7 +270,7 @@ function spotCrimePinClicked(evt)
 					
 					$('#' + titleID).html(spotCrime.title);
 					var date = new Date(attributes.date);
-					$('#' + contentID).html('<table>'+
+					$('#' + contentID).html('<table>' +
 					'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
 					'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 					'<tr><td><strong>Description</td><td>' + spotCrime.description + '</td></tr>' +
