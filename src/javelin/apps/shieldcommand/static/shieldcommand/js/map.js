@@ -203,12 +203,16 @@ function addCrimeMarkers(crimes) {
 		
 		if (crime.type == 'crimeTip')
 		{
-			google.maps.event.addListener(marker, 'click', crimePinClicked);
+			google.maps.event.addListener(marker, 'click', crimeTipPinClicked);
+		}
+		else if (crime.type == 'spotCrime')
+		{
+			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
 		}
 	}
 }
 
-function crimePinClicked(evt)
+function crimeTipPinClicked(evt)
 {
 	if (crimeMarkers['crimeTip'])
 	{
@@ -230,6 +234,51 @@ function crimePinClicked(evt)
 				scrollContainer.animate({
 				    scrollTop: crimeTipItem.offset().top - scrollContainer.offset().top + scrollContainer.scrollTop()
 				});
+				
+				break;
+			}
+		}
+	}
+}
+
+function spotCrimePinClicked(evt)
+{
+	if (crimeMarkers['spotCrime'])
+	{
+		for (spotCrimeID in crimeMarkers['spotCrime'])
+		{
+			var marker = crimeMarkers['spotCrime'][spotCrimeID];
+			
+			if (marker.getPosition() == evt.latLng)
+			{
+				var titleID = 'sc-title-' + spotCrimeID;
+				var contentID = 'sc-content-' + spotCrimeID;
+				var infoContent = '<h1 id="' + titleID + '"></h1>'+
+				'<div id="' + contentID + '">Loading...</div>';
+				
+				var infoWindow = new google.maps.InfoWindow({
+					content: infoContent
+				});
+				
+				infoWindow.open(googleMap, marker);
+				
+				Javelin.getSpotCrime(spotCrimeID, function(spotCrime) {
+					if ( ! spotCrime)
+					{
+						return;
+					}
+					
+					$('#' + titleID).html(spotCrime.title);
+					var date = new Date(attributes.date);
+					$('#' + contentID).html('<table>'+
+					'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
+					'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
+					'<tr><td><strong>Description</td><td>' + spotCrime.description + '</td></tr>' +
+					'</table>' +
+					'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>');
+				});
+				
+				break;
 			}
 		}
 	}

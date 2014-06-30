@@ -18,6 +18,7 @@
 	Javelin.activeCrimeTipUser = null;
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
 	Javelin.spotCrimeURL = 'https://api.spotcrime.com/crimes.json';
+	Javelin.spotCrimeDetailURL = 'https://api.spotcrime.com/crimes/<CDID>.json';
 	Javelin.spotCrimeKey = '246c313f9889be187cfbca0c3f5a09f9e4a5d8224edbf86ad795c72b0561';
 
 	// If jQuery or Zepto has been included, grab a reference to it.
@@ -713,6 +714,32 @@
 				}
 				else
 				{
+					callback(null);
+					console.log('spotcrime api error');
+				}
+			}
+		});
+ 	}
+	
+	Javelin.getSpotCrime = function(id, callback) {
+		Javelin.$.ajax({
+			type: 'GET',
+			url: Javelin.spotCrimeDetailURL.replace('<CDID>', id),
+			crossDomain: true,
+			async: false,
+			dataType: 'jsonp',
+			jsonp: 'callback',
+			data: {
+				key: Javelin.spotCrimeKey
+			},
+			success: function(response) {
+				if (response)
+				{
+					callback(new SpotCrime(response));
+				}
+				else
+				{
+					callback(null);
 					console.log('spotcrime api error');
 				}
 			}
