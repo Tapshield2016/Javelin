@@ -8,6 +8,7 @@ var googleMapGeocoder = new google.maps.Geocoder();
 var googleMapAgencyBoundaries = [];
 var googleMapRegions = [];
 var crimeMarkers = [];
+var spotCrimes = [];
 var markerZIndex = 1;
 
 function initializeMap() {
@@ -207,6 +208,7 @@ function addCrimeMarkers(crimes) {
 		}
 		else if (crime.type == 'spotCrime')
 		{
+			spotCrimes[crime.object_id] = crime;
 			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
 		}
 	}
@@ -248,13 +250,20 @@ function spotCrimePinClicked(evt)
 		for (spotCrimeID in crimeMarkers['spotCrime'])
 		{
 			var marker = crimeMarkers['spotCrime'][spotCrimeID];
+			var spotCrime = spotCrimes[spotCrimeID];
 			
 			if (marker.getPosition() == evt.latLng)
 			{
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
-				var infoContent = '<h1 id="' + titleID + '">' + marker.title + '</h1>' +
-				'<div id="' + contentID + '">Loading...</div>';
+				var infoContent = '<h3>' + marker.title + '</h3>' +
+				'<div id="' + contentID + '">' +
+				'<table>' +
+					'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
+					'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
+					'</table>' +
+					'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'</div>';
 				
 				var infoWindow = new google.maps.InfoWindow({
 					content: infoContent
@@ -262,7 +271,7 @@ function spotCrimePinClicked(evt)
 				
 				infoWindow.open(googleMap, marker);
 				
-				Javelin.getSpotCrime(spotCrimeID, function(spotCrime) {
+				/*Javelin.getSpotCrime(spotCrimeID, function(spotCrime) {
 					if ( ! spotCrime)
 					{
 						return;
@@ -276,7 +285,7 @@ function spotCrimePinClicked(evt)
 					'<tr><td><strong>Description</td><td>' + spotCrime.description + '</td></tr>' +
 					'</table>' +
 					'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>');
-				});
+				});*/
 				
 				break;
 			}
