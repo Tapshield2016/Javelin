@@ -171,7 +171,6 @@ def email_delete(request):
                         status=status.HTTP_200_OK)
 
 
-@api_view(['GET', 'POST'])
 def email_list(request):
     """
     All email address associated with User account will be passed into the template as a list
