@@ -251,7 +251,8 @@ function spotCrimePinClicked(evt)
 		{
 			var marker = crimeMarkers['spotCrime'][spotCrimeID];
 			var spotCrime = spotCrimes[spotCrimeID];
-			var date = Date.parse(spotCrime.creationDate);
+			var date = new Date();
+			date.setTime(Date.parse(spotCrime.creationDate));
 			
 			if (marker.getPosition() == evt.latLng)
 			{
