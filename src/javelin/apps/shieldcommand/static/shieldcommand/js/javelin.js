@@ -725,10 +725,10 @@
 		Javelin.$.ajax({
 			type: 'GET',
 			url: Javelin.spotCrimeDetailURL.replace('<CDID>', id),
-			crossDomain: true,
+			//crossDomain: true,
 			async: false,
-			dataType: 'jsonp',
-			jsonp: 'callback',
+			dataType: 'json',
+			//jsonp: 'callback',
 			data: {
 				key: Javelin.spotCrimeKey
 			},
