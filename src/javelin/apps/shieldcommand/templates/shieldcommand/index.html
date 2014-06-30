@@ -364,7 +364,7 @@
 								<td>
 								<div class="btn-group">
 								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage"><i class="icon-picture" title="View">View</i></a>
-								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}"><i class="icon-download-alt" title="Download">Download</i></a>
+								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
 								</div></td>
 							</tr>
 							<tr ng-if="activeCrimeTip.videoURL">
@@ -372,7 +372,7 @@
 								<td>
 								<div class="btn-group">
 								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>
-								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}"><i class="icon-download-alt" title="Download">Download</i></a>
+								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
 								</div>
 								</td>
 							</tr>
@@ -381,7 +381,7 @@
 								<td>
 								<div class="btn-group">
 								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>
-								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}"><i class="icon-download-alt" title="Download">Download</i></a>
+								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
 								</div>
 								</td>
 							</tr>
