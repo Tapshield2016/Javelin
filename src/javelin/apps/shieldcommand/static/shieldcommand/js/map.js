@@ -251,19 +251,19 @@ function spotCrimePinClicked(evt)
 		{
 			var marker = crimeMarkers['spotCrime'][spotCrimeID];
 			var spotCrime = spotCrimes[spotCrimeID];
-			var date = new Date(spotCrime.creationDate);
+			var date = Date.parse(spotCrime.creationDate);
 			
 			if (marker.getPosition() == evt.latLng)
 			{
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
-				var infoContent = '<h3>' + marker.title + '</h3>' +
+				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
 				'<div id="' + contentID + '">' +
-				'<table>' +
+				'<table class="table">' +
 				'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
-				'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'</div>';
 				
 				var infoWindow = new google.maps.InfoWindow({
