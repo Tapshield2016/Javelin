@@ -251,6 +251,7 @@ function spotCrimePinClicked(evt)
 		{
 			var marker = crimeMarkers['spotCrime'][spotCrimeID];
 			var spotCrime = spotCrimes[spotCrimeID];
+			var date = new Date(spotCrime.date);
 			
 			if (marker.getPosition() == evt.latLng)
 			{
@@ -259,10 +260,10 @@ function spotCrimePinClicked(evt)
 				var infoContent = '<h3>' + marker.title + '</h3>' +
 				'<div id="' + contentID + '">' +
 				'<table>' +
-					'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
-					'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
-					'</table>' +
-					'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
+				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
+				'</table>' +
+				'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'</div>';
 				
 				var infoWindow = new google.maps.InfoWindow({
