@@ -9,6 +9,7 @@ var googleMapAgencyBoundaries = [];
 var googleMapRegions = [];
 var crimeMarkers = [];
 var spotCrimes = [];
+var infoWindow = null;
 var markerZIndex = 1;
 
 function initializeMap() {
@@ -153,6 +154,7 @@ function zoomToCrime(crime)
 		return;
 	}
 	
+	closeInfoWindow();
 	googleMap.setZoom(18);
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
@@ -216,6 +218,8 @@ function addCrimeMarkers(crimes) {
 
 function crimeTipPinClicked(evt)
 {
+	closeInfoWindow();
+	
 	if (crimeMarkers['crimeTip'])
 	{
 		for (crimeTipID in crimeMarkers['crimeTip'])
@@ -250,24 +254,25 @@ function spotCrimePinClicked(evt)
 		for (spotCrimeID in crimeMarkers['spotCrime'])
 		{
 			var marker = crimeMarkers['spotCrime'][spotCrimeID];
-			var spotCrime = spotCrimes[spotCrimeID];
-			var date = new Date();
-			date.setTime(Date.parse(spotCrime.creationDate));
 			
 			if (marker.getPosition() == evt.latLng)
 			{
+				var spotCrime = spotCrimes[spotCrimeID];
+				zoomToCrime(spotCrime);
+				var date = new Date();
+				date.setTime(Date.parse(spotCrime.creationDate));
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
 				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
 				'<div id="' + contentID + '">' +
-				'<table class="table">' +
+				'<table class="table table-condensed">' +
 				'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
 				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'</div>';
 				
-				var infoWindow = new google.maps.InfoWindow({
+				infoWindow = new google.maps.InfoWindow({
 					content: infoContent
 				});
 				
@@ -293,6 +298,16 @@ function spotCrimePinClicked(evt)
 			}
 		}
 	}
+}
+
+function closeInfoWindow()
+{
+	if ( ! infoWindow)
+	{
+		return;
+	}
+	
+	infoWindow.close();
 }
 
 function showCrimeMarker(crime) {
