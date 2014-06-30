@@ -64,16 +64,16 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
 			$scope.activeAlert = null;
 		}
-		
-		if ($scope.activeAlert || $scope.activeCrimeTip)
-		{
+        
+        if ($scope.activeAlert || $scope.activeCrimeTip)
+        {
+			$scope.isProfileVisible = true;
+            $rootScope.profileIsOpen = true;
+            $rootScope.$broadcast('profileWasOpened');
 			$scope.updateProfile(function(profile) {
-				$scope.isProfileVisible = true;
-				$rootScope.profileIsOpen = true;
-				$rootScope.$broadcast('profileWasOpened');
 				$rootScope.$broadcast('profileWasUpdated');
 				$scope.updateTimeout = setTimeout($scope.updateProfile, 10000);
-			});
+            });
 		}
 	});
 
