@@ -263,6 +263,7 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.returnToGeofenceCenter = function () {
 		setMapCenterToDefault();
+		closeInfoWindow();
 	}
 
 	$scope.zoomToActiveAlertMarker = function () {
@@ -271,6 +272,7 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
 			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
+			closeInfoWindow();
 		}
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
