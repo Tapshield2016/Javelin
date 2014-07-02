@@ -316,8 +316,7 @@
 								</div>
 								<div class="modal-body">
 									<video width="775" autoplay controls>
-									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'mp4'" src="{{ activeCrimeTip.videoURL }}" type="video/mp4">
-									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'ogg'" src="{{ activeCrimeTip.videoURL }}" type="video/ogg">
+									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'mp4'" src="" type="video/mp4">
 									</video>
 								</div>
 							</div>
@@ -371,7 +370,7 @@
 								<td>Video</td>
 								<td>
 								<div class="btn-group">
-								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>
+								<!--<a class="btn btn-info" href="#" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>-->
 								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
 								</div>
 								</td>
@@ -380,7 +379,7 @@
 								<td>Audio</td>
 								<td>
 								<div class="btn-group">
-								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>
+								<a class="btn btn-info" href="#" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>
 								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
 								</div>
 								</td>
