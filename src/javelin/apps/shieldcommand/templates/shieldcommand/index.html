@@ -505,29 +505,30 @@
 {% endverbatim %}
 
 {% compress js %}
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/maps.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
-<script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
-{% endcompress %} 
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/maps.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
+
+        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
+        <script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
+        {% endcompress %}
 <script>
             {% if agency_boundaries %}
                 googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
