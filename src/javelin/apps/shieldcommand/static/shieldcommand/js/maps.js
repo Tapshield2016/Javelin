@@ -261,6 +261,7 @@ function spotCrimePinClicked(evt)
 				zoomToCrime(spotCrime);
 				var date = new Date();
 				date.setTime(Date.parse(spotCrime.creationDate));
+				console.log(date.toISOString());
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
 				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
