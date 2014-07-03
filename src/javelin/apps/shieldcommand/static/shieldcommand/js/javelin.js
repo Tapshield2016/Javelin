@@ -698,9 +698,10 @@
 				key: Javelin.spotCrimeKey,
 				lat: agency.agencyCenterLatitude,
 				lon: agency.agencyCenterLongitude,
-				radius: agency.radius,
+				radius:.25,
 				since: date.toISOString().slice(0, 10),
 				max_records: 500
+
 			},
 			success: function(response) {
 				if (response.crimes)
