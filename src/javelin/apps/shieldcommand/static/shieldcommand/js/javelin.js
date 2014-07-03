@@ -685,7 +685,7 @@
 
  		var agency = Javelin.activeAgency;
 		var date = new Date();
-		date.setDate(date.getDate() - 1);
+		date.setDate(date.getDate() - 14);
         var retrievedSpotCrimes = [];
 		Javelin.$.ajax({
 			type: 'GET',
