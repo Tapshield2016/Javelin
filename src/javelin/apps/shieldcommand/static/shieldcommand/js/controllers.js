@@ -344,7 +344,7 @@ angular.module('shieldCommand.controllers', [])
 			return false;
 		}
 		
-		var audio = new sound(filename);
+		var audio = new buzz.sound(filename);
 		console.log('playing audio');
 		audio.play();
 	}
