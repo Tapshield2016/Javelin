@@ -65,8 +65,6 @@ $('#agencySettingsForm').on('submit', function(event) {
 	    <textarea cols="40" id="id_chat_autoresponder_message" name="chat_autoresponder_message" rows="3" class="form-control">{{ form.chat_autoresponder_message.value }}</textarea>
 	  </div>
 
-      <div class="modal-footer">
-
       <h4>SpotCrime History</h4>
 	  <p>Set the number of days visible.</p>
 	  <div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">
