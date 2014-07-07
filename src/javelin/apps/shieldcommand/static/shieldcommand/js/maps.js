@@ -211,9 +211,9 @@ function addCrimeMarkers(crimes) {
 		else if (crime.type == 'spotCrime')
 		{
 			spotCrimes[crime.object_id] = crime;
-			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+//			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
 
-//            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
+            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
 //            google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
 		}
 	}
@@ -261,7 +261,7 @@ function spotCrimePinClicked(evt)
 			if (marker.getPosition() == evt.latLng)
 			{
 				var spotCrime = spotCrimes[spotCrimeID];
-				zoomToCrime(spotCrime);
+//				zoomToCrime(spotCrime);
 				var date = new Date();
 				date.setTime(Date.parse(spotCrime.creationDate));
 				console.log(date.toISOString());
