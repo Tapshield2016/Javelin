@@ -175,47 +175,49 @@ function addCrimeMarkers(crimes) {
 	
 	for (var i = 0; i < crimes.length; i++)
 	{
-		var crime = crimes[i];
-		
-		if ( ! crime || (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]))
-		{
-			continue;
-		}
+        setTimeout(function() {
+            var crime = crimes[i];
 
-        var map = null;
+            if ( ! crime || (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]))
+            {
+                continue;
+            }
 
-        if (crime.showPin || crime.type == 'spotCrime') {
+            var map = null;
 
-            map = googleMap;
-        }
-		
-		var marker = new google.maps.Marker({
-			position: new google.maps.LatLng(crime.latitude, crime.longitude),
-			map: map,
-			title: crime.title,
-			icon: getIconForLocation(crime),
-			animation: google.maps.Animation.DROP
-        });
-		
-		if ( ! crimeMarkers[crime.type])
-		{
-			crimeMarkers[crime.type] = [];
-		}
-		
-		crimeMarkers[crime.type][crime.object_id] = marker;
-		
-		if (crime.type == 'crimeTip')
-		{
-			google.maps.event.addListener(marker, 'click', crimeTipPinClicked);
-		}
-		else if (crime.type == 'spotCrime')
-		{
-			spotCrimes[crime.object_id] = crime;
-//			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+            if (crime.showPin || crime.type == 'spotCrime') {
 
-            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
-//            google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
-		}
+                map = googleMap;
+            }
+
+            var marker = new google.maps.Marker({
+                position: new google.maps.LatLng(crime.latitude, crime.longitude),
+                map: map,
+                title: crime.title,
+                icon: getIconForLocation(crime),
+                animation: google.maps.Animation.DROP
+            });
+
+            if ( ! crimeMarkers[crime.type])
+            {
+                crimeMarkers[crime.type] = [];
+            }
+
+            crimeMarkers[crime.type][crime.object_id] = marker;
+
+            if (crime.type == 'crimeTip')
+            {
+                google.maps.event.addListener(marker, 'click', crimeTipPinClicked);
+            }
+            else if (crime.type == 'spotCrime')
+            {
+                spotCrimes[crime.object_id] = crime;
+    			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+    
+//                google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
+//                google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
+            }
+        }, i * 200);
 	}
 }
 
