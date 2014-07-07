@@ -132,7 +132,7 @@ a{
 }
 .alert-container{
 	width: 750px;
-	height: 276px;
+	height: 500px;
 	background-color: white;
 	/*So it's positioned in the center of the screen*/
 	top: 50%;
