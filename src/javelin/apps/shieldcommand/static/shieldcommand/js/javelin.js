@@ -185,6 +185,7 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
+        this.spotCrimeDaysVisible = attributes.spot_crime_days_visible;
 
         if (attributes.region) {
             this.region = [];
@@ -685,7 +686,7 @@
 
  		var agency = Javelin.activeAgency;
 		var date = new Date();
-		date.setDate(date.getDate() - 14);
+		date.setDate(date.getDate() - agency.spotCrimeDaysVisible);
         var retrievedSpotCrimes = [];
 		Javelin.$.ajax({
 			type: 'GET',

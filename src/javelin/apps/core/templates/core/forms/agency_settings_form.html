@@ -72,6 +72,19 @@ $('#agencySettingsForm').on('submit', function(event) {
       <hr />
 
       <div class="modal-footer">
+
+      <h4>SpotCrime History</h4>
+	  <p>Set the number of days visible.</p>
+	  <div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">
+	    <label for="{{ form.spot_crime_days_visible.id_for_label }}">{{ form.spot_crime_days_visible.label }}</label><br/>
+	    {% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}
+	    <textarea cols="40" id="id_spot_crime_days_visible" name="spot_crime_days_visible" rows="1" class="form-control">{{ form.spot_crime_days_visible.value }}</textarea>
+	  </div>
+
+      <hr />
+
+      <div class="modal-footer">
+
 	<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
 	<button form="agencySettingsForm" class="btn btn-primary" type="submit">Save changes</button>
       </div>
