@@ -363,15 +363,15 @@
 								<td>
 								<div class="btn-group">
 								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage"><i class="icon-picture" title="View">View</i></a>
-								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
+                                    <!--<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>-->
 								</div></td>
 							</tr>
 							<tr ng-if="activeCrimeTip.videoURL">
 								<td>Video</td>
 								<td>
 								<div class="btn-group">
-								<!--<a class="btn btn-info" href="#" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>-->
-								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
+								    <!--<a class="btn btn-info" href="#" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>-->
+								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" target="_blank"><i class="icon-download-alt" title="Play">Download</i></a>
 								</div>
 								</td>
 							</tr>
@@ -379,8 +379,8 @@
 								<td>Audio</td>
 								<td>
 								<div class="btn-group">
-								<a class="btn btn-info" href="#" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>
-								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>
+                                    <!--<a class="btn btn-info" href="#" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>-->
+								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" target="_blank"><i class="icon-download-alt" title="Listen">Download</i></a>
 								</div>
 								</td>
 							</tr>
@@ -459,7 +459,7 @@
 								<td>{{ currentProfile.emergencyContactRelationship }}</td>
 							</tr>
 						</table>
-						
+
 						<!-- <table class="table table-condensed">
                                         <caption>Past Alerts</caption>
                                         <tr>
@@ -474,7 +474,7 @@
                                             <td>07/12/2012</td>
                                             <td>Bar Fight</td>
                                         </tr>
-                                    </table> --> 
+                                    </table> -->
 						
 					</div>
 					<!-- /.profile-information -->
