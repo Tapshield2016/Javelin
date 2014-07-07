@@ -175,8 +175,7 @@ function addCrimeMarkers(crimes) {
 	
 	for (var i = 0; i < crimes.length; i++)
 	{
-        setTimeout(function() {
-            var crime = crimes[i];
+        var crime = crimes[i];
 
             if ( ! crime || (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]))
             {
@@ -189,6 +188,8 @@ function addCrimeMarkers(crimes) {
 
                 map = googleMap;
             }
+
+        setTimeout(function() {
 
             var marker = new google.maps.Marker({
                 position: new google.maps.LatLng(crime.latitude, crime.longitude),
@@ -213,7 +214,7 @@ function addCrimeMarkers(crimes) {
             {
                 spotCrimes[crime.object_id] = crime;
     			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
-    
+
 //                google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
 //                google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
             }
