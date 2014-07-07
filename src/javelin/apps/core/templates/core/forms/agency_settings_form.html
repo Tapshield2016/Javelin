@@ -70,8 +70,8 @@ $('#agencySettingsForm').on('submit', function(event) {
 	  <div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">
 	    <div class="text">
 	      <label for="id_spot_crime_days_visible" class="control-label">
-		{{ form.spot_crime_days_visible }}
 		{{ form.spot_crime_days_visible.label }}
+		{{ form.spot_crime_days_visible }}
 	      </label>
 	      {% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}
 	    </div>
