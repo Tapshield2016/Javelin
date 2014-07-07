@@ -65,10 +65,6 @@ $('#agencySettingsForm').on('submit', function(event) {
 	    <textarea cols="40" id="id_chat_autoresponder_message" name="chat_autoresponder_message" rows="3" class="form-control">{{ form.chat_autoresponder_message.value }}</textarea>
 	  </div>
 
-	  <!-- captures agency ID for use in POSTing form -->
-	  <input type="hidden" name="agency_id" value="{{ form.instance.id }}">
-      </p>
-
       <div class="modal-footer">
 
       <h4>SpotCrime History</h4>
@@ -82,6 +78,10 @@ $('#agencySettingsForm').on('submit', function(event) {
 	      {% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}
 	    </div>
 	  </div>
+
+	  <!-- captures agency ID for use in POSTing form -->
+	  <input type="hidden" name="agency_id" value="{{ form.instance.id }}">
+      </p>
 
       <hr />
 
