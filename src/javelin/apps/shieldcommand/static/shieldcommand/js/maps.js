@@ -154,7 +154,7 @@ function zoomToCrime(crime)
 		return;
 	}
 	
-	closeInfoWindow();
+//	closeInfoWindow();
 	googleMap.setZoom(18);
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
@@ -261,6 +261,7 @@ function spotCrimePinClicked(evt)
 			if (marker.getPosition() == evt.latLng)
 			{
 				var spotCrime = spotCrimes[spotCrimeID];
+                closeInfoWindow();
 //				zoomToCrime(spotCrime);
 				var date = new Date();
 				date.setTime(Date.parse(spotCrime.creationDate));
