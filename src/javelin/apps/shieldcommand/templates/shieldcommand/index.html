@@ -206,31 +206,6 @@
 						</div>
 					</div>
 				</div>
-				<!--<div class="panel panel-default">
-					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseSix">
-						<h4 class="panel-title"> Spot Crimes </h4>
-					</div>
-					<div id="collapseSix" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body"> -->
-							<!-- Spot Crimes -->
-				<!--
-							<ul class="alerts-list">
-								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
-									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
-										<div class="alert-contact">
-											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
-											</div>
-										</div>
-									</div>
-									<div alert-chat-window alert="alert"></div>
-								</li>
-							</ul>
-						</div>
-					</div>
-				</div>-->
 			</div>
 		</div>
 		
@@ -316,15 +291,33 @@
 						</div>
 						<!-- /.disarm-code --> 
 					</div>
-					<div class="modal fade" ng-if="profileType == 'crimeTip'" id="crimeTipImage" tabindex="-1" role="dialog" aria-labelledby="crimeTipImageLabel" aria-hidden="true">
-						<div class="modal-dialog" style="width: 600px;">
+					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.imageURL" id="crimeTipImage" tabindex="-1" role="dialog" aria-labelledby="crimeTipImageLabel" aria-hidden="true">
+						<div class="modal-dialog" style="width: 800px;">
 							<div class="modal-content">
 								<div class="modal-header">
 									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 									<h4 class="modal-title" id="crimeTipImageLabel">{{ activeCrimeTip.reportType }}</h4>
 								</div>
 								<div class="modal-body">
-									<img ng-src="{{ activeCrimeTip.imageURL }}" />
+									<img ng-src="{{ activeCrimeTip.imageURL }}" style="max-width: 775px;" />
+								</div>
+							</div>
+							<!-- /.modal-content --> 
+						</div>
+						<!-- /.modal-dialog --> 
+					</div>
+					<!-- /.modal -->
+					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.videoURL && isVideoSupported(activeCrimeTip.videoURL)" id="crimeTipVideo" tabindex="-1" role="dialog" aria-labelledby="crimeTipVideoLabel" aria-hidden="true">
+						<div class="modal-dialog" style="width: 800px;">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+									<h4 class="modal-title" id="crimeTipVideoLabel">{{ activeCrimeTip.reportType }}</h4>
+								</div>
+								<div class="modal-body">
+									<video width="775" autoplay controls>
+									  <source ng-if="getFileType(activeCrimeTip.videoURL) == 'mp4'" src="" type="video/mp4">
+									</video>
 								</div>
 							</div>
 							<!-- /.modal-content --> 
@@ -367,15 +360,29 @@
 							</tr>
 							<tr ng-if="activeCrimeTip.imageURL">
 								<td>Image</td>
-								<td><a href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage">View Image</td>
+								<td>
+								<div class="btn-group">
+								<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" data-toggle="modal" data-target="#crimeTipImage"><i class="icon-picture" title="View">View</i></a>
+                                    <!--<a class="btn btn-info" href="{{ activeCrimeTip.imageURL }}" target="_blank"><i class="icon-download-alt" title="Download">Download</i></a>-->
+								</div></td>
 							</tr>
 							<tr ng-if="activeCrimeTip.videoURL">
 								<td>Video</td>
-								<td><a href="{{ activeCrimeTip.videoURL }}" target="_blank">View Video</td>
+								<td>
+								<div class="btn-group">
+								    <!--<a class="btn btn-info" href="#" data-toggle="modal" data-target="#crimeTipVideo" ng-if="isVideoSupported(activeCrimeTip.videoURL)"><i class="icon-play" title="Play">Play</i></a>-->
+								<a class="btn btn-info" href="{{ activeCrimeTip.videoURL }}" target="_blank"><i class="icon-download-alt" title="Play">Play</i></a>
+								</div>
+								</td>
 							</tr>
 							<tr ng-if="activeCrimeTip.audioURL">
 								<td>Audio</td>
-								<td><a href="{{ activeCrimeTip.audioURL }}" target="_blank">Listen to Audio</td>
+								<td>
+								<div class="btn-group">
+                                    <!--<a class="btn btn-info" href="#" ng-if="isAudioSupported(activeCrimeTip.audioURL)" ng-click="playAudio(activeCrimeTip.audioURL)"><i class="icon-play" title="Play">Play</i></a>-->
+								<a class="btn btn-info" href="{{ activeCrimeTip.audioURL }}" target="_blank"><i class="icon-download-alt" title="Listen">Listen</i></a>
+								</div>
+								</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
@@ -452,7 +459,7 @@
 								<td>{{ currentProfile.emergencyContactRelationship }}</td>
 							</tr>
 						</table>
-						
+
 						<!-- <table class="table table-condensed">
                                         <caption>Past Alerts</caption>
                                         <tr>
@@ -467,7 +474,7 @@
                                             <td>07/12/2012</td>
                                             <td>Bar Fight</td>
                                         </tr>
-                                    </table> --> 
+                                    </table> -->
 						
 					</div>
 					<!-- /.profile-information -->
@@ -504,30 +511,31 @@
 <!--</div>-->
 {% endverbatim %}
 
-        {% compress js %} 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/map.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script> 
-<script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script> 
-{% endcompress %} 
+{% compress js %}
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/jquery/jquery.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/lib/buzz/buzz.min.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/maps.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tooltip.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/modal.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/transition.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/button.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/popover.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/collapse.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/tab.js"></script>
+
+<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/lib/angular/angular-route.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/app.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/services.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/controllers.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
+{% endcompress %}
 <script>
             {% if agency_boundaries %}
                 googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
@@ -537,7 +545,6 @@
             {% if region_boundaries %}
                 {% for region in region_boundaries %}
                     googleMapRegions.push([{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}]);
-
                 {% endfor %}
             {% endif %}
 

@@ -161,6 +161,7 @@ class Agency(TimeStampedModel):
                                         help_text="This could be a web page with important info pertaining to emergency situations")
     agency_rss_url = models.CharField(max_length=255, null=True, blank=True,
                                        help_text="RSS feed for mass alerts already populated by the system in use")
+    spot_crime_days_visible = models.PositiveIntegerField(default=1)
 
     objects = models.Manager()
     geo = db_models.GeoManager()

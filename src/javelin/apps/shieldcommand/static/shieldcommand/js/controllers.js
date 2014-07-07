@@ -29,6 +29,8 @@ angular.module('shieldCommand.controllers', [])
 	$scope.isProfileVisible = false;
 	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
+	$scope.spotCrimes = [];
+	$scope.spotCrimeUpdateInterval = 60;
 
 	$scope.toggle = function() {
 		$scope.isProfileVisible = !$scope.isProfileVisible;
@@ -46,7 +48,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.toggle();
 	});
 
-	$scope.$on('toggleProfileOpen', function() {		
+	$scope.$on('toggleProfileOpen', function() {
 		if ($scope.updateTimeout)
 		{
 			clearTimeout($scope.updateTimeout);
@@ -64,12 +66,11 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeCrimeTip = crimeTipService.activeCrimeTip;
 			$scope.activeAlert = null;
 		}
-        
-        if ($scope.activeAlert || $scope.activeCrimeTip)
-        {
+		if ($scope.activeAlert || $scope.activeCrimeTip)
+		{
 			$scope.isProfileVisible = true;
-            $rootScope.profileIsOpen = true;
-            $rootScope.$broadcast('profileWasOpened');
+			$rootScope.profileIsOpen = true;
+			$rootScope.$broadcast('profileWasOpened');
 			$scope.updateProfile(function(profile) {
 				$rootScope.$broadcast('profileWasUpdated');
 				$scope.updateTimeout = setTimeout($scope.updateProfile, 10000);
@@ -99,10 +100,10 @@ angular.module('shieldCommand.controllers', [])
 					}
 				});
 			}
-            else {
-
-                $scope.currentProfile = null;
-            }
+			else
+			{
+				$scope.currentProfile = null;
+			}
 			
 			if ($scope.activeCrimeTip.viewedBy)
 			{
@@ -261,6 +262,7 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.returnToGeofenceCenter = function () {
 		setMapCenterToDefault();
+		closeInfoWindow();
 	}
 
 	$scope.zoomToActiveAlertMarker = function () {
@@ -269,12 +271,96 @@ angular.module('shieldCommand.controllers', [])
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
 			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
+			closeInfoWindow();
 		}
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
 			showCrimeMarker($scope.activeCrimeTip);
+			zoomToCrime($scope.activeCrimeTip);
 		}
 	}
+	
+	$scope.getFileType = function(filename) {
+		return filename.split('.').pop().toLowerCase();
+	}
+	
+	$scope.isAudioSupported = function(filename) {
+		if ( ! buzz.isSupported())
+		{
+			console.log('buzz not supported');
+			return false;
+		}
+		
+		var format = $scope.getFileType(filename);
+		
+		switch(format)
+		{
+			case 'ogg':
+				console.log('ogg: ' + buzz.isOGGSupported());
+				return buzz.isOGGSupported();
+			case 'wav':
+				console.log('wav: ' + buzz.isOGGSupported());
+				return buzz.isWAVSupported();
+			case 'mp3':
+				console.log('mp3: ' + buzz.isOGGSupported());
+				return buzz.isMP3Supported();
+			case 'aac':
+			case 'mp4':
+			case 'm4a':
+			case '3gp':
+				console.log('aac: ' + buzz.isOGGSupported());
+				return buzz.isAACSupported();
+			default:
+				return false;
+		}
+	}
+	
+	$scope.isVideoSupported = function(filename) {
+		if ( ! Modernizr.video)
+		{
+			console.log('video not supported');
+			return false;
+		}
+		
+		var format = $scope.getFileType(filename);
+		
+		switch(format)
+		{
+			case 'ogg':
+				console.log('ogg video: ' + Modernizr.video.ogg);
+				return Modernizr.video.ogg;
+			case 'mp4':
+				console.log('mp4 video: ' + Modernizr.video.h264);
+				return Modernizr.video.h264;
+			default:
+				return false;
+		}
+	}
+	
+	$scope.playAudio = function(filename) {
+		if ( ! $scope.isAudioSupported(filename))
+		{
+			return false;
+		}
+		
+		var audio = new buzz.sound(filename);
+		console.log('playing audio');
+		audio.play();
+	}
+	
+	$scope.getSpotCrimes = function() {
+		Javelin.getSpotCrimes(function(spotCrimes) {
+			hideCrimeMarkers($($scope.spotCrimes).not(spotCrimes).get());
+			var newSpotCrimes = $(spotCrimes).not($scope.spotCrimes).get();
+			addCrimeMarkers(newSpotCrimes);
+			showCrimeMarkers(newSpotCrimes);
+			$scope.spotCrimes = spotCrimes;
+		});
+		
+		setTimeout($scope.getSpotCrimes, $scope.spotCrimeUpdateInterval * 1000);
+	}
+	
+	setTimeout($scope.getSpotCrimes, 2500);
 
 }])
 
