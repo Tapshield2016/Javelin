@@ -69,8 +69,8 @@ $('#agencySettingsForm').on('submit', function(event) {
 	  <p>Set the number of days visible.</p>
 	  <div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">
 	    <div class="text">
-	      <label for="Days" class="control-label">
-		{{ form.spot_crime_days_visible.label }}
+	      <label for="id_spot_crime_days_visible" class="control-label">
+		Days Visible
 		{{ form.spot_crime_days_visible }}
 	      </label>
 	      {% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}
