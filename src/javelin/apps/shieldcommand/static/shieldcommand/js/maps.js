@@ -122,6 +122,7 @@ function setMarker(location) {
     if (!location) {
         return;
     };
+    closeInfoWindow();
     googleMapMarker.setOptions(markerOptions);
     var alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
@@ -153,8 +154,7 @@ function zoomToCrime(crime)
 	{
 		return;
 	}
-	
-//	closeInfoWindow();
+
 	googleMap.setZoom(18);
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
@@ -320,6 +320,8 @@ function showCrimeMarker(crime) {
     if ( ! crime) {
         return;
     }
+    
+	closeInfoWindow();
 
 	if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
 		return;
