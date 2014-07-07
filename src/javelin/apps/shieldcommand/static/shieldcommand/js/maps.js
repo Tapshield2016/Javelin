@@ -267,7 +267,7 @@ function spotCrimePinClicked(evt)
 				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
 				'<div id="' + contentID + '">' +
 				'<table class="table table-condensed">' +
-				'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
+				'<tr><td><strong>Date</td><td>' + date.toLocaleString() + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
 				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
