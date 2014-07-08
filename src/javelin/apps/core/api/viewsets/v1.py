@@ -268,12 +268,22 @@ class GroupViewSet(viewsets.ModelViewSet):
     serializer_class = GroupSerializer
 
 
+class SocialCrimeReportModifiedSinceFilterBackend(django_filters.FilterSet):
+    modified_since = IsoDateTimeFilter(name="last_modified",
+                                       lookup_type='gt',
+                                       input_formats=(ISO_8601,
+                                                      '%m/%d/%Y %H:%M:%S'))
+
+    class Meta:
+        model = SocialCrimeReport
+
 class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     model = SocialCrimeReport
     serializer_class = SocialCrimeReportSerializer
+    filter_class = SocialCrimeReportModifiedSinceFilterBackend
 
     def get_queryset(self):
-        qs = SocialCrimeReport.objects.select_related('reporter').all().order_by('last_modified')
+        qs = SocialCrimeReport.objects.select_related('reporter').all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
         distance_within =\
@@ -284,7 +294,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             qs = SocialCrimeReport.objects\
                 .select_related('reporter')\
                 .filter(report_point__dwithin=(point, D(mi=dwithin)))\
-                .distance(point).order_by('distance')
+                .distance(point).order_by('last_modified')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = SocialCrimeReport.objects.none()
