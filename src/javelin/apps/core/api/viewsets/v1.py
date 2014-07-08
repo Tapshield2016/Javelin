@@ -273,7 +273,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     serializer_class = SocialCrimeReportSerializer
 
     def get_queryset(self):
-        qs = SocialCrimeReport.objects.select_related('reporter').all()
+        qs = SocialCrimeReport.objects.select_related('reporter').all().order_by('last_modified')
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
         distance_within =\
