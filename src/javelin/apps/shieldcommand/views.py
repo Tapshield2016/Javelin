@@ -13,7 +13,8 @@ from core.api.serializers.v1 import UserSerializer
 def index(request):
     if not request.user.is_superuser:
         if request.user.groups.filter(name='Dispatchers').count() == 0:
-            raise Http404
+            return render_to_response('shieldcommand/unauthorized.html',
+                                      context_instance=RequestContext(request))
     site = get_current_site(request)
     agency = request.user.agency
     agency_boundaries_coords = []
