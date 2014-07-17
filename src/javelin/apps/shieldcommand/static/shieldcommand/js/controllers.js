@@ -455,7 +455,7 @@ angular.module('shieldCommand.controllers', [])
 			
 			if (address)
 			{
-				$("#alert-address  p").html("<strong>Location:</strong> " + address);
+				$("#alert-address  p").html("<strong>Approx Location:</strong> " + address);
 				$("#alert-address").removeClass('hide');
 			}
 			else

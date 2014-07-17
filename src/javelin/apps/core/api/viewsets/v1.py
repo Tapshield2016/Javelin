@@ -294,7 +294,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             qs = SocialCrimeReport.objects\
                 .select_related('reporter')\
                 .filter(report_point__dwithin=(point, D(mi=dwithin)))\
-                .distance(point).order_by('last_modified')
+                .distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = SocialCrimeReport.objects.none()
