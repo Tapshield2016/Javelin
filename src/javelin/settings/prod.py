@@ -82,8 +82,8 @@ CELERY_DEFAULT_QUEUE = SQS_ALERT_QUEUE
 
 # compressor
 COMPRESS_ENABLED = True
-#COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-#COMPRESS_URL = STATIC_URL
+COMPRESS_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+COMPRESS_URL = STATIC_URL
 
 # twilio
 TWILIO_ACCOUNT_SID = 'AC16b20300998d261efefb490dbc4a6302'
