@@ -6,6 +6,7 @@ PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ADMINS = (
     ('Ben Boyd', 'ben@tapshield.com'),
+    ('Adam Share', 'adam@tapshield.com'),
 )
 
 MANAGERS = ADMINS
@@ -54,7 +55,7 @@ STATIC_ROOT = os.path.join(MEDIA_ROOT, 'static')
 
 # URL prefix for static files.
 # Example: "http://example.com/static/", "http://static.example.com/"
-STATIC_URL = '/media/static/'
+# STATIC_URL = '/media/static/'
 
 # Additional locations of static files
 STATICFILES_DIRS = (
