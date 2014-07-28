@@ -91,7 +91,7 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = User.geo.select_related('agency')\
                 .prefetch_related('groups', 'entourage_members')\
                 .filter(last_reported_point__dwithin=(point, D(mi=dwithin)))\
-                .distance(point).order_by('distance')
+                .distance(point).order_by('last_modified')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = User.objects.none()
