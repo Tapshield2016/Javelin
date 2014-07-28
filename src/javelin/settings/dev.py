@@ -22,7 +22,7 @@ DATABASES = {
 INSTALLED_APPS += (
     #'corsheaders',
     #'devserver',
-    #'rest_framework_swagger',
+    'rest_framework_swagger',
     #'debug_toolbar',
     'gunicorn',
 )
