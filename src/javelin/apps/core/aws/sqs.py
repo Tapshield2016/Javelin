@@ -12,7 +12,6 @@ class SQSManager(object):
 
     def get_sqs_connection(self):
         return SQSConnection(\
-            "us-east-1",
             aws_access_key_id=settings.SQS_ACCESS_KEY_ID,
             aws_secret_access_key=settings.SQS_SECRET_ACCESS_KEY)
 
