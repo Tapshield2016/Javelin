@@ -377,13 +377,16 @@ def create_twitter_user(request):
         serialized.data['agency'] =\
             AgencySerializer(user.agency).data
     # serialized.data['api_key'] = user.api_key.key
-    message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
+    # message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
 
-    response = HttpResponse(content=message)
-    response.status_code = 200
-    response.content_type = 'application/json'
+    return Response(serialized.data,
+                    status=status.HTTP_201_CREATED)
 
-    return response
+    # response = HttpResponse(content=message)
+    # response.status_code = 200
+    # response.content_type = 'application/json'
+    #
+    # return response
 
 
 
