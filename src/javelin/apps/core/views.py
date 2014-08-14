@@ -31,8 +31,6 @@ from allauth.socialaccount.providers.twitter.provider import TwitterProvider
 from allauth.socialaccount.providers.twitter.views import (TwitterAPI,
                                                            TwitterOAuthAdapter)
 
-from rest_framework.authtoken.models import Token
-
 from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
@@ -40,6 +38,7 @@ from registration.models import RegistrationProfile
 from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
 
 from twilio.util import TwilioCapability
 
@@ -379,7 +378,7 @@ def create_twitter_user(request):
         serialized.data['agency'] =\
             AgencySerializer(user.agency).data
     api_token = Token.objects.get_or_create(user=user)
-    serialized.data['api_key'] = "key"
+    serialized.data['api_key'] = api_token
     # message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
 
     return Response(serialized.data,
