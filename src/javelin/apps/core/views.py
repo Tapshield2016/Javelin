@@ -217,6 +217,8 @@ def login(request):
     if request.user.is_authenticated():
         status = 200
         serialized = UserSerializer(request.user, context={'request': request})
+        token, created = Token.objects.get_or_create(user=user)
+        serialized.data['token'] = token.key
         if request.user.agency:
             serialized.data['agency'] =\
                 AgencySerializer(request.user.agency).data
@@ -348,7 +350,17 @@ def create_facebook_user(request):
             login.state = SocialLogin.state_from_request(request)
             complete_social_login(request, login)
             user = set_necessary_fields_on_social_user(login.account.user)
-            return Response(UserSerializer(instance=user).data,
+
+            token, created = Token.objects.get_or_create(user=user)
+
+            serialized = UserSerializer(user, context={'request': request})
+            if user.agency:
+                serialized.data['agency'] =\
+                    AgencySerializer(user.agency).data
+
+            serialized.data['token'] = token.key
+
+            return Response(serialized.data,
                             status=status.HTTP_201_CREATED)
 
         except requests.RequestException:
@@ -386,7 +398,6 @@ def create_twitter_user(request):
             AgencySerializer(user.agency).data
 
     serialized.data['token'] = token.key
-    # message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
 
     return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
@@ -407,7 +418,17 @@ def create_google_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+
+    token, created = Token.objects.get_or_create(user=user)
+    serialized.data['token'] = token.key
+
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
 
 
@@ -424,5 +445,15 @@ def create_linkedin_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
+
+    token, created = Token.objects.get_or_create(user=user)
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+    serialized.data['token'] = token.key
+
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
