@@ -39,6 +39,7 @@ from rest_framework import status, serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.views import ObtainAuthToken
 
 from twilio.util import TwilioCapability
 
@@ -373,6 +374,8 @@ def create_twitter_user(request):
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
 
+    return ObtainAuthToken(request)
+
     # user.set_password(oauth_token_secret)
     # user.save()
     #
@@ -386,8 +389,8 @@ def create_twitter_user(request):
 
 
 
-    return Response(UserSerializer(instance=user).data,
-                    status=status.HTTP_201_CREATED)
+    # return Response(UserSerializer(instance=user).data,
+    #                 status=status.HTTP_201_CREATED)
 
 
 
