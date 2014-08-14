@@ -373,20 +373,20 @@ def create_twitter_user(request):
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
 
-    user.set_password(oauth_token_secret)
-    user.save()
-
-    serialized = UserSerializer(user, context={'request': request})
-    if user.agency:
-        serialized.data['agency'] =\
-            AgencySerializer(user.agency).data
-    api_token = Token.objects.create(user=user)
+    # user.set_password(oauth_token_secret)
+    # user.save()
+    #
+    # serialized = UserSerializer(user, context={'request': request})
+    # if user.agency:
+    #     serialized.data['agency'] =\
+    #         AgencySerializer(user.agency).data
+    # api_token = Token.objects.create(user=user)
     # serialized.data['api_key'] = api_token
     # message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
 
 
 
-    return Response({"api token": api_token.key},
+    return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
 
 
