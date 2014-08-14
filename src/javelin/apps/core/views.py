@@ -371,8 +371,16 @@ def create_twitter_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
-                    status=status.HTTP_201_CREATED)
+
+    serialized = UserSerializer(instance=user)
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+        message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
+    serialized.data['api_key'] = user.api_key.key
+
+    return Response(message,status=status.HTTP_201_CREATED)
+    
 
 
 @api_view(['POST'])
