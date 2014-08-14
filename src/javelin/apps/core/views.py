@@ -379,18 +379,16 @@ def create_twitter_user(request):
     user = set_necessary_fields_on_social_user(login.account.user)
 
     token, created = Token.objects.get_or_create(user=user)
-    # user.set_password(oauth_token_secret)
-    # user.save()
-    #
-    # serialized = UserSerializer(user, context={'request': request})
-    # if user.agency:
-    #     serialized.data['agency'] =\
-    #         AgencySerializer(user.agency).data
-    # api_token = Token.objects.create(user=user)
-    # serialized.data['api_key'] = api_token
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+    serialized.data['token'] = token.key
     # message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
 
-    return Response({'token': token.key},
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
 
 
@@ -428,49 +426,3 @@ def create_linkedin_user(request):
     user = set_necessary_fields_on_social_user(login.account.user)
     return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
-
-
-
-
-# class AuthTokenSerializer(serializers.Serializer):
-#     username = serializers.CharField()
-#     password = serializers.CharField()
-#
-#     def validate(self, attrs):
-#         username = attrs.get('username')
-#         password = attrs.get('password')
-#
-#         if username and password:
-#             user = authenticate(username=username, password=password)
-#
-#             if user:
-#                 if not user.is_active:
-#                     msg = _('User account is disabled.')
-#                     raise serializers.ValidationError(msg)
-#                 attrs['user'] = user
-#                 return attrs
-#             else:
-#                 msg = _('Unable to login with provided credentials.')
-#                 raise serializers.ValidationError(msg)
-#         else:
-#             msg = _('Must include "username" and "password"')
-#             raise serializers.ValidationError(msg)
-#
-#
-# class ObtainAuthToken(APIView):
-#     throttle_classes = ()
-#     permission_classes = ()
-#     parser_classes = (parsers.FormParser, parsers.MultiPartParser, parsers.JSONParser,)
-#     renderer_classes = (renderers.JSONRenderer,)
-#     serializer_class = AuthTokenSerializer
-#     model = Token
-#
-#     def post(self, request):
-#         serializer = self.serializer_class(data=request.DATA)
-#         if serializer.is_valid():
-#             token, created = Token.objects.get_or_create(user=serializer.object['user'])
-#             return Response({'token': token.key})
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-#
-#
-# obtain_auth_token = ObtainAuthToken.as_view()
