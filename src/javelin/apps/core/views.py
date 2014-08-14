@@ -372,7 +372,7 @@ def create_twitter_user(request):
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
 
-    serialized = UserSerializer(instance=user)
+    serialized = UserSerializer(request.user, context={'request': request})
     if user.agency:
         serialized.data['agency'] =\
             AgencySerializer(user.agency).data
