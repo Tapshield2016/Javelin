@@ -19,6 +19,8 @@ from django.utils.text import slugify
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
+from emailmgr.models import EmailAddress
+
 from managers import (ActiveAlertManager, InactiveAlertManager,
                       AcceptedAlertManager, CompletedAlertManager,
                       DisarmedAlertManager, NewAlertManager,
@@ -695,6 +697,39 @@ class SocialCrimeReport(TimeStampedModel):
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
+
+@receiver(post_save, sender=AgencyUser)
+def create_primary_email_for_new_user(sender, instance, created, **kwargs):
+    """
+    Create a matching email address separate from that of User object when a user object is created.
+    """
+    # user was just created, so no worries about duplicate emails as it has been done before
+    if instance.email:
+        try:
+            EmailAddress.objects.get(user=instance, email__iexact=instance.email.lower())
+        except EmailAddress.DoesNotExist:
+            e = EmailAddress(**{'user': instance,
+                                'email': instance.email.lower(),
+                                'is_primary': True,
+                                'is_active': instance.email_verified})
+            e.save()
+            return
+
+        if instance.email_verified:
+            email = EmailAddress.objects.get(user=instance, email__iexact=instance.email.lower())
+            if email:
+                email.is_active = True
+                email.save()
+
+@receiver(post_delete, sender=AgencyUser)
+def remove_all_emails_for_deleted_user(sender, instance, **kwargs):
+    """
+    Delete all emails addresses associated with this user that was just delete.
+    """
+    # user was just delete, delete any email associated with this user
+    emails = EmailAddress.objects.filter(user=instance)
+    for e in emails:
+        e.delete()
 
 
 @receiver(pre_save, sender=UserProfile)
