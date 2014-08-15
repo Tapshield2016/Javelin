@@ -41,9 +41,9 @@ from rest_framework.response import Response
 
 from twilio.util import TwilioCapability
 
-from models import Agency
+from models import (Agency, EntourageMember)
 from forms import AgencySettingsForm
-from api.serializers.v1 import AgencySerializer, UserSerializer
+from api.serializers.v1 import AgencySerializer, UserSerializer, EntourageMemberUpdateSerializer,
 
 User = get_user_model()
 
@@ -408,3 +408,18 @@ def create_linkedin_user(request):
     user = set_necessary_fields_on_social_user(login.account.user)
     return Response(UserSerializer(instance=user).data,
                     status=status.HTTP_201_CREATED)
+
+
+@api_view(['POST'])
+def set_entourage_members(request):
+
+    json_data = request.read()
+# json_data contains the data uploaded in request
+
+    entourage_members = json.loads(json_data)
+# data is now a Python list or dict representing the uploaded JSON.
+
+    for member in entourage_members:
+        new_member = EntourageMemberUpdateSerializer(data=member)
+
+

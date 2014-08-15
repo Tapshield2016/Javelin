@@ -8,6 +8,10 @@ from core.models import (Agency, Alert, AlertLocation,
                          EntourageMember, SocialCrimeReport, Region,
                          DispatchCenter, Period, ClosedDate,)
 
+from emailmgr.models import EmailAddress
+
+from emailmgr.serializers import EmailAddressGETSerializer
+
 User = get_user_model()
 
 
@@ -73,7 +77,17 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members',
-                  'last_reported_time', 'distance')
+                  'last_reported_time', 'distance',)
+
+    def to_native(self, obj):
+        ret = super(UserSerializer, self).to_native(obj)
+        if obj:
+            email_address = EmailAddress.objects.filter(user=obj)
+            address = []
+            for email in email_address:
+                address.append(EmailAddressGETSerializer(instance=email).data)
+            ret['secondary_emails'] = address
+        return ret
 
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):

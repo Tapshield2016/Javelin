@@ -139,6 +139,7 @@ INSTALLED_APPS = (
     'rest_framework.authtoken',
     'south',
     'storages',
+    'emailmgr',
 
     'core',
     'shieldcommand',
@@ -236,3 +237,6 @@ SOCIALACCOUNT_PROVIDERS = {
                                            'public-profile-url']},
 }
 SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'
+
+TEMPLATE_FIRST = os.path.join(PROJECT_DIR, 'templates')
+EMAIL_MGR_TEMPLATE_PATH = os.path.join(TEMPLATE_FIRST, 'emailmgr')
