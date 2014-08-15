@@ -113,7 +113,7 @@ def email_send_activation(request):
                         status=status.HTTP_200_OK)
 
 
-@api_view(['POST'])
+@api_view(['GET'])
 def email_check_activated(request):
     """
     User is logged in, has a second email that is added and
