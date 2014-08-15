@@ -53,7 +53,8 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'show_agency_name_in_app_navbar',
                             'enable_chat_autoresponder',
                             'chat_autoresponder_message',
-                            'enable_user_location_requests',])
+                            'enable_user_location_requests',
+                            'spot_crime_days_visible',])
         }),
         ('Agency Location and Boundaries', {
                 'fields': (['agency_boundaries', 'agency_center_from_boundaries', 'agency_center_latitude',

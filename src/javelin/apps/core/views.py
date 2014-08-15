@@ -35,9 +35,15 @@ from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
 
-from rest_framework import status, serializers
+from rest_framework import serializers
 from rest_framework.decorators import api_view
+from rest_framework.views import APIView
+from rest_framework import status
+from rest_framework import parsers
+from rest_framework import renderers
 from rest_framework.response import Response
+from rest_framework.authtoken.models import Token
+from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from twilio.util import TwilioCapability
 
@@ -211,6 +217,8 @@ def login(request):
     if request.user.is_authenticated():
         status = 200
         serialized = UserSerializer(request.user, context={'request': request})
+        token, created = Token.objects.get_or_create(user=user)
+        serialized.data['token'] = token.key
         if request.user.agency:
             serialized.data['agency'] =\
                 AgencySerializer(request.user.agency).data
@@ -342,7 +350,17 @@ def create_facebook_user(request):
             login.state = SocialLogin.state_from_request(request)
             complete_social_login(request, login)
             user = set_necessary_fields_on_social_user(login.account.user)
-            return Response(UserSerializer(instance=user).data,
+
+            token, created = Token.objects.get_or_create(user=user)
+
+            serialized = UserSerializer(user, context={'request': request})
+            if user.agency:
+                serialized.data['agency'] =\
+                    AgencySerializer(user.agency).data
+
+            serialized.data['token'] = token.key
+
+            return Response(serialized.data,
                             status=status.HTTP_201_CREATED)
 
         except requests.RequestException:
@@ -371,8 +389,19 @@ def create_twitter_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
+
+    token, created = Token.objects.get_or_create(user=user)
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+    serialized.data['token'] = token.key
+
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
+
 
 
 @api_view(['POST'])
@@ -389,7 +418,17 @@ def create_google_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+
+    token, created = Token.objects.get_or_create(user=user)
+    serialized.data['token'] = token.key
+
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
 
 
@@ -406,5 +445,15 @@ def create_linkedin_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    return Response(UserSerializer(instance=user).data,
+
+    token, created = Token.objects.get_or_create(user=user)
+
+    serialized = UserSerializer(user, context={'request': request})
+    if user.agency:
+        serialized.data['agency'] =\
+            AgencySerializer(user.agency).data
+
+    serialized.data['token'] = token.key
+
+    return Response(serialized.data,
                     status=status.HTTP_201_CREATED)

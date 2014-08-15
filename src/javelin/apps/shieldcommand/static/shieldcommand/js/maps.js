@@ -8,6 +8,8 @@ var googleMapGeocoder = new google.maps.Geocoder();
 var googleMapAgencyBoundaries = [];
 var googleMapRegions = [];
 var crimeMarkers = [];
+var spotCrimes = [];
+var infoWindow = null;
 var markerZIndex = 1;
 
 function initializeMap() {
@@ -120,6 +122,7 @@ function setMarker(location) {
     if (!location) {
         return;
     };
+    closeInfoWindow();
     googleMapMarker.setOptions(markerOptions);
     var alert_location = new google.maps.LatLng(location.latitude, location.longitude);
     googleMapMarker.setPosition(alert_location);
@@ -135,7 +138,7 @@ function setMarker(location) {
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
 	
-    googleMap.setZoom(18);
+    googleMap.setZoom(17);
     googleMap.setCenter(googleMapMarker.getPosition());
 }
 
@@ -151,12 +154,12 @@ function zoomToCrime(crime)
 	{
 		return;
 	}
-	
-	googleMap.setZoom(18);
+
+	googleMap.setZoom(17);
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 	{
-		clearActiveAlertMarker();
+		//clearActiveAlertMarker();
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
@@ -173,7 +176,7 @@ function addCrimeMarkers(crimes) {
 	for (var i = 0; i < crimes.length; i++)
 	{
 		var crime = crimes[i];
-		
+
 		if ( ! crime || (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]))
 		{
 			continue;
@@ -181,34 +184,45 @@ function addCrimeMarkers(crimes) {
 
         var map = null;
 
-        if (crime.showPin) {
+        if (crime.showPin || crime.type == 'spotCrime') {
 
             map = googleMap;
         }
-		
+
 		var marker = new google.maps.Marker({
 			position: new google.maps.LatLng(crime.latitude, crime.longitude),
 			map: map,
-			title: crime.reportType,
-			icon: getIconForLocation(crime)
+			title: crime.title,
+			icon: getIconForLocation(crime),
+			animation: google.maps.Animation.DROP
         });
-        marker.setAnimation(google.maps.Animation.DROP);
-		
+
 		if ( ! crimeMarkers[crime.type])
 		{
 			crimeMarkers[crime.type] = [];
 		}
-		
-		//marker.crimeType = crime.type;
-		//marker.crimeId = crime.object_id;
+
 		crimeMarkers[crime.type][crime.object_id] = marker;
-		
-		google.maps.event.addListener(marker, 'click', crimePinClicked);
+
+		if (crime.type == 'crimeTip')
+		{
+			google.maps.event.addListener(marker, 'click', crimeTipPinClicked);
+		}
+		else if (crime.type == 'spotCrime')
+		{
+			spotCrimes[crime.object_id] = crime;
+			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+
+//            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
+//            google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
+		}
 	}
 }
 
-function crimePinClicked(evt)
+function crimeTipPinClicked(evt)
 {
+	closeInfoWindow();
+	
 	if (crimeMarkers['crimeTip'])
 	{
 		for (crimeTipID in crimeMarkers['crimeTip'])
@@ -229,25 +243,105 @@ function crimePinClicked(evt)
 				scrollContainer.animate({
 				    scrollTop: crimeTipItem.offset().top - scrollContainer.offset().top + scrollContainer.scrollTop()
 				});
+				
+				break;
 			}
 		}
 	}
 }
 
+function spotCrimePinClicked(evt)
+{
+	if (crimeMarkers['spotCrime'])
+	{
+		for (spotCrimeID in crimeMarkers['spotCrime'])
+		{
+			var marker = crimeMarkers['spotCrime'][spotCrimeID];
+			
+			if (marker.getPosition() == evt.latLng)
+			{
+				var spotCrime = spotCrimes[spotCrimeID];
+                closeInfoWindow();
+//				zoomToCrime(spotCrime);
+				var date = new Date();
+				date.setTime(Date.parse(spotCrime.creationDate));
+				console.log(date.toISOString());
+				var titleID = 'sc-title-' + spotCrimeID;
+				var contentID = 'sc-content-' + spotCrimeID;
+				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
+				'<div id="' + contentID + '">' +
+				'<table class="table table-condensed">' +
+				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
+				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
+				'</table>' +
+				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'</div>';
+				
+				infoWindow = new google.maps.InfoWindow({
+					content: infoContent
+				});
+				
+				infoWindow.open(googleMap, marker);
+				
+				/*Javelin.getSpotCrime(spotCrimeID, function(spotCrime) {
+					if ( ! spotCrime)
+					{
+						return;
+					}
+					
+					$('#' + titleID).html(spotCrime.title);
+					var date = new Date(attributes.date);
+					$('#' + contentID).html('<table>' +
+					'<tr><td><strong>Date</td><td>' + date.toISOString().slice(0, 10) + '</td></tr>' +
+					'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
+					'<tr><td><strong>Description</td><td>' + spotCrime.description + '</td></tr>' +
+					'</table>' +
+					'<p><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>');
+				});*/
+				
+				break;
+			}
+		}
+	}
+}
+
+function closeInfoWindow()
+{
+	if ( ! infoWindow)
+	{
+		return;
+	}
+	
+	infoWindow.close();
+}
+
 function showCrimeMarker(crime) {
 
-    if (!crime) {
+    if ( ! crime) {
         return;
     }
 
-    if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
+	closeInfoWindow();
+
+	if (crimeMarkers[crime.type][crime.object_id].map == googleMap) {
+		return;
+	}
+
+	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
+		crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
+	}
+}
+
+function showCrimeMarkers(crimes) {
+
+    if ( ! crimes) {
         return;
     }
-
-    if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
-        crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
-        crimeMarkers[crime.type][crime.object_id].setAnimation(google.maps.Animation.DROP);
-    }
+	
+	for (var i = 0; i < crimes.length; i++)
+	{
+		showCrimeMarker(crimes[i]);
+	}
 }
 
 function hideCrimeMarkers(crimes)

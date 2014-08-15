@@ -30,7 +30,7 @@
                     {% if form.errors %}
                     <h2 class="error">Invalid username/password combination, please try again </h2>
                     {% else %}
-                    <h2>Please enter your log in information</h2>
+                    <h2>Please enter your login information</h2>
                     {% endif %}
                     <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
                         {% csrf_token %}

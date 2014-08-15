@@ -17,6 +17,9 @@
 	Javelin.activeCrimeTip = null;
 	Javelin.activeCrimeTipUser = null;
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
+	Javelin.spotCrimeURL = 'https://api.spotcrime.com/crimes.json';
+	Javelin.spotCrimeDetailURL = 'https://api.spotcrime.com/crimes/<CDID>.json';
+	Javelin.spotCrimeKey = '246c313f9889be187cfbca0c3f5a09f9e4a5d8224edbf86ad795c72b0561';
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -182,6 +185,7 @@
 		this.requireDomainEmails = attributes.require_domain_emails;
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
+        this.spotCrimeDaysVisible = attributes.spot_crime_days_visible;
 
         if (attributes.region) {
             this.region = [];
@@ -263,6 +267,21 @@
 		this.flaggedByName = null;
 		this.viewedByName = null;
         this.dispatcherName = attributes.dispatcher_name;
+		
+		return this;
+	}
+	
+	function SpotCrime(attributes) {
+		this.object_id = attributes.cdid;
+		this.reportType = attributes.type;
+		this.title = attributes.type;
+		this.latitude = attributes.lat;
+		this.longitude = attributes.lon;
+		this.creationDate = attributes.date;
+		this.link = attributes.link;
+		this.address = attributes.address;
+		this.description = attributes.description ? attributes.description : null;
+		this.type = 'spotCrime';
 		
 		return this;
 	}
@@ -470,7 +489,7 @@
 		request.done(function(data) {
 			var retrievedAlerts = [];
 			var latestDate = Javelin.lastCheckedAlertsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
-			for (var i = data.results.length - 1; i >= 0; i--) {
+			for (var i = 0; i < data.results.length; i++) {
 				newAlert = new Alert(data.results[i]);
 				retrievedAlerts.push(newAlert);
 				newAlertDate = createTimestampFromDate(new Date(newAlert.lastModified));
@@ -633,7 +652,6 @@
  				    var newCrimeTip = new CrimeTip(data.results[i]);
  				    var past24 = createPastTimestamp(24 * 3600);
  				    var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
-					var newCrimeTipCreation = createTimestampFromDate(new Date(newCrimeTip.creationDate));
 
  				    if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
  				    {
@@ -659,7 +677,76 @@
         }
 
  	}
+	
+	Javelin.getSpotCrimes = function(callback) {
+		if ( ! Javelin.activeAgency)
+ 		{
+ 			callback(null);
+ 		}
 
+ 		var agency = Javelin.activeAgency;
+		var date = new Date();
+		date.setDate(date.getDate() - agency.spotCrimeDaysVisible);
+        var retrievedSpotCrimes = [];
+		Javelin.$.ajax({
+			type: 'GET',
+			url: Javelin.spotCrimeURL,
+			crossDomain: true,
+			async: false,
+			dataType: 'jsonp',
+			jsonp: 'callback',
+			data: {
+				key: Javelin.spotCrimeKey,
+				lat: agency.agencyCenterLatitude,
+				lon: agency.agencyCenterLongitude,
+				radius:.25,
+				since: date.toISOString().slice(0, 10),
+				max_records: 500
+
+			},
+			success: function(response) {
+				if (response.crimes)
+				{
+					for (var i = 0; i < response.crimes.length; i++)
+					{
+						retrievedSpotCrimes.push(new SpotCrime(response.crimes[i]));
+					}
+					
+					callback(retrievedSpotCrimes);
+				}
+				else
+				{
+					callback(null);
+					console.log('spotcrime api error');
+				}
+			}
+		});
+ 	}
+	
+	Javelin.getSpotCrime = function(id, callback) {
+		Javelin.$.ajax({
+			type: 'GET',
+			url: Javelin.spotCrimeDetailURL.replace('<CDID>', id),
+			//crossDomain: true,
+			async: false,
+			dataType: 'json',
+			//jsonp: 'callback',
+			data: {
+				key: Javelin.spotCrimeKey
+			},
+			success: function(response) {
+				if (response)
+				{
+					callback(new SpotCrime(response));
+				}
+				else
+				{
+					callback(null);
+					console.log('spotcrime api error');
+				}
+			}
+		});
+ 	}
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
 		//var now = getTimestamp(milliseconds=true);
