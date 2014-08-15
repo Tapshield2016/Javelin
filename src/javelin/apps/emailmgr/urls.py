@@ -37,4 +37,9 @@ urlpatterns = patterns('',
         email_list,
         name='emailmgr_email_list'
         ),
+    url(
+        r'^email/email_check_activated/$',
+        email_list,
+        name='email_check_activated'
+        ),
 )

@@ -113,6 +113,28 @@ def email_send_activation(request):
                         status=status.HTTP_200_OK)
 
 
+@api_view(['POST'])
+def email_check_activated(request):
+    """
+    User is logged in, has a second email that is added and
+    wants to make check if it has been activated.
+    """
+    email_to_check = request.DATA.get('email', None)
+    try:
+        EmailAddress.objects.get(user=request.user, email__iexact=email_to_check.lower())
+    except EmailAddress.DoesNotExist:
+        return Response({"message": "Email could not be found."},
+                        status=status.HTTP_404_NOT_FOUND)
+    email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_check.lower())
+
+    if email.is_active:
+        return Response(UserSerializer(instance=request.user).data,
+                    status=status.HTTP_200_OK)
+
+    return Response({"message": "Email not yet activated."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+
 def email_activate(request, identifier="somekey"):
     """
     User is already logged in and the activation link will trigger the email address
