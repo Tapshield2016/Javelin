@@ -167,7 +167,7 @@ def email_activate(request, identifier="somekey"):
     context = {"title": title, "message_response": message_response,}
     return render_to_response(get_template('verification_complete.html'), context)
 
-@api_view(['POST', 'DELETE'])
+@api_view(['POST'])
 def email_delete(request):
     """
     Email needs to be removed from User's account, primary email address cannot be removed
