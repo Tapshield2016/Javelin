@@ -49,7 +49,7 @@ from twilio.util import TwilioCapability
 
 from models import (Agency, EntourageMember)
 from forms import AgencySettingsForm
-from api.serializers.v1 import AgencySerializer, UserSerializer, EntourageMemberUpdateSerializer,
+from api.serializers.v1 import (AgencySerializer, UserSerializer, EntourageMemberUpdateSerializer)
 
 User = get_user_model()
 
