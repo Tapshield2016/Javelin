@@ -18,10 +18,10 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
 
         # Changing field 'AgencyUser.last_reported_longitude'
-        db.alter_column(u'core_agencyuser', 'last_reported_longitude', self.gf('django.db.models.fields.FloatField')(default=0.0))
+        # db.alter_column(u'core_agencyuser', 'last_reported_longitude', self.gf('django.db.models.fields.FloatField')(default=0.0))
 
         # Changing field 'AgencyUser.last_reported_latitude'
-        db.alter_column(u'core_agencyuser', 'last_reported_latitude', self.gf('django.db.models.fields.FloatField')(default=0.0))
+        # db.alter_column(u'core_agencyuser', 'last_reported_latitude', self.gf('django.db.models.fields.FloatField')(default=0.0))
 
     models = {
         u'auth.group': {
