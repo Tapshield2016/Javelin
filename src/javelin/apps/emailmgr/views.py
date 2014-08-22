@@ -31,6 +31,8 @@ def email_add(request):
     """
     User is logged and has a primary email address already
     This will add an additional email address to this User
+
+    email -- (Required) The user's new email address
     """
 
     f = forms.EmailField()
@@ -67,6 +69,8 @@ def email_make_primary(request):
     wants to make that the primary email address.
     The User objects' email address will also be replace with this newly
     primary email address, so Django internals work it the new primary address too
+
+    email -- (Required) The user's secondary email address
     """
     email_to_make_primary = request.DATA.get('email', None)
     try:
@@ -101,6 +105,8 @@ def email_send_activation(request):
     User can do anything with the newly added email, unless it is first activated.
     This function will send an activation email to the currently primary email address 
     associated with the User's account
+
+    email -- (Required) The user's secondary email address
     """
     email_to_activate = request.DATA.get('email', None)
     try:
@@ -128,6 +134,8 @@ def email_check_activated(request):
     """
     User is logged in, has a second email that is added and
     wants to make check if it has been activated.
+
+    email -- (Required) The user's secondary email address
     """
     email_to_check = request.DATA.get('email', None)
     try:
@@ -150,6 +158,8 @@ def email_activate(request, identifier="somekey"):
     User is already logged in and the activation link will trigger the email address
     in question to be activated. If the account is already active, then a message is 
     put in the message buffer indicating that the email is already active
+
+    identifier -- (Required) Randomly generated identifier for email
     """
     title = "Verification complete"
     message_response = None
