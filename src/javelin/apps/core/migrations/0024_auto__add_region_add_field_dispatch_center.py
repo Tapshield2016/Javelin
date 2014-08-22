@@ -28,14 +28,14 @@ class Migration(SchemaMigration):
 
 
     def backwards(self, orm):
-        # Deleting field 'Region.primary_dispatch_center'
-        db.delete_column(u'core_region', 'primary_dispatch_center')
-
-        # Deleting field 'Region.secondary_dispatch_center'
-        db.delete_column(u'core_region', 'secondary_dispatch_center')
-
-        # Deleting field 'Region.fallback_dispatch_center'
-        db.delete_column(u'core_region', 'fallback_dispatch_center')
+        # # Deleting field 'Region.primary_dispatch_center'
+        # db.delete_column(u'core_region', 'primary_dispatch_center')
+        #
+        # # Deleting field 'Region.secondary_dispatch_center'
+        # db.delete_column(u'core_region', 'secondary_dispatch_center')
+        #
+        # # Deleting field 'Region.fallback_dispatch_center'
+        # db.delete_column(u'core_region', 'fallback_dispatch_center')
 
     models = {
         u'auth.group': {
