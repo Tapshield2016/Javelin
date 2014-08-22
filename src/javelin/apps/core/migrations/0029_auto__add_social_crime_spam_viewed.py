@@ -26,7 +26,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         # Deleting field 'SocialCrimeReport.agency_center_from_boundaries'
         db.delete_column(u'core_socialcrimereport', 'viewed_time')
-        db.delete_column(u'core_socialcrimereport', 'viewed_by')
+        # db.delete_column(u'core_socialcrimereport', 'viewed_by')
         db.delete_column(u'core_socialcrimereport', 'flagged_spam')
         db.delete_column(u'core_socialcrimereport', 'flagged_by_dispatcher')
 
