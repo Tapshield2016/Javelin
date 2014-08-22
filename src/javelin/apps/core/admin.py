@@ -115,7 +115,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
 
-    list_display = ('__unicode__', 'reporter', 'report_type', 'creation_date',
+    list_display = ('reporter', 'report_type', 'creation_date',
                     'last_modified', 'report_anonymous', 'flagged_spam',)
     list_filter = ('report_anonymous', 'flagged_spam',)
     # list_select_related = ('agency',)
