@@ -388,7 +388,7 @@ def create_twitter_user(request):
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
-    user.email = user.username
+    user.email = user.username+"@twitteraccount.com"
     user.save()
 
     serialized = UserSerializer(user, context={'request': request})
