@@ -4,5 +4,5 @@
 To activate this email address for use, click the following link.
 {{ activate_url }}
 
-If you didn't request an email activation from {{ this_site }}, please delete this message.
+If you didn't request an email activation from {{ site_name }}, please delete this message.
 {% endblocktrans %}
