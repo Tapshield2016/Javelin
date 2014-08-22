@@ -28,7 +28,7 @@ class Migration(SchemaMigration):
         db.delete_column(u'core_socialcrimereport', 'viewed_time')
         # db.delete_column(u'core_socialcrimereport', 'viewed_by')
         db.delete_column(u'core_socialcrimereport', 'flagged_spam')
-        db.delete_column(u'core_socialcrimereport', 'flagged_by_dispatcher')
+        # db.delete_column(u'core_socialcrimereport', 'flagged_by_dispatcher')
 
     models = {
         u'auth.group': {
