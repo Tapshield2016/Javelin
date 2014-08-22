@@ -115,11 +115,11 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
 
-    list_display = ('reporter', 'report_type', 'creation_date',
-                    'last_modified', 'report_anonymous', 'flagged_spam', 'flagged_by_dispatcher')
+    list_display = ('reporter', 'report_type', 'last_modified',
+                    'report_anonymous', 'flagged_spam', 'flagged_by_dispatcher')
     list_filter = ('report_anonymous', 'flagged_spam', 'report_type')
     # list_select_related = ('agency',)
-    # search_fields = ['reporter', 'flagged_by_dispatcher', ]
+    search_fields = ['reporter']
 
 
 admin.site.register(Agency, AgencyAdmin)
