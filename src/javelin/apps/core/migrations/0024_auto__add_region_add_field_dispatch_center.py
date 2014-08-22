@@ -27,7 +27,7 @@ class Migration(SchemaMigration):
 
 
 
-    def backwards(self, orm):
+    # def backwards(self, orm):
         # # Deleting field 'Region.primary_dispatch_center'
         # db.delete_column(u'core_region', 'primary_dispatch_center')
         #
