@@ -1,4 +1,6 @@
 from forms import EmailAddressForm
+from django import forms
+from django.core.exceptions import ValidationError
 from models import EmailAddress
 from django.conf import settings
 from utils import send_activation, get_template, sort_email
@@ -31,7 +33,15 @@ def email_add(request):
     This will add an additional email address to this User
     """
 
+    f = forms.EmailField()
     email = request.DATA.get('email', None)
+
+    try:
+        f.clean(email)
+    except ValidationError as e:
+        return Response({"message": e},
+                        status=status.HTTP_404_NOT_FOUND)
+
     email = email.lower()
 
     if EmailAddress.objects.filter(user=request.user, email=email).exists():
