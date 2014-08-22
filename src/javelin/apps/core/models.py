@@ -55,8 +55,8 @@ def radius_from_center(point, boundaries):
 
     for string in boundaries:
         split = string.split(',')
-        point2.x = float(split[0])
-        point2.y = float(split[1])
+        point2.x = float(split[1])
+        point2.y = float(split[0])
 
         distance = kilometers_between_coordinates(point, point2)
 
