@@ -39,7 +39,7 @@ def email_add(request):
     try:
         f.clean(email)
     except ValidationError as e:
-        return Response({"message": e},
+        return Response({"message": "Enter a valid email address."},
                         status=status.HTTP_404_NOT_FOUND)
 
     email = email.lower()
