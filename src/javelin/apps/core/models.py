@@ -660,8 +660,7 @@ class SocialCrimeReport(TimeStampedModel):
         ('V', 'Vandalism'),
     )
 
-    reporter = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 related_name="reporter")
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL)
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
     report_audio_url = models.CharField(max_length=255, null=True, blank=True,

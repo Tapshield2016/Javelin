@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('creation_date', self.gf('django.db.models.fields.DateTimeField')(auto_now_add=True, blank=True)),
             ('last_modified', self.gf('django.db.models.fields.DateTimeField')(auto_now=True, blank=True)),
-            ('reporter', self.gf('django.db.models.fields.related.ForeignKey')(related_name='reporter', to=orm['core.AgencyUser'])),
+            ('reporter', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.AgencyUser'])),
             ('body', self.gf('django.db.models.fields.TextField')()),
             ('report_image_url', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('report_latitude', self.gf('django.db.models.fields.FloatField')()),
@@ -157,7 +157,7 @@ class Migration(SchemaMigration):
             'report_latitude': ('django.db.models.fields.FloatField', [], {}),
             'report_longitude': ('django.db.models.fields.FloatField', [], {}),
             'report_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
-            'reporter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reporter'", 'to': u"orm['core.AgencyUser']"})
+            'reporter': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.AgencyUser']"})
         },
         u'core.userprofile': {
             'Meta': {'object_name': 'UserProfile'},
