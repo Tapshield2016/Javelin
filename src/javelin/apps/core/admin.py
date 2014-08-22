@@ -119,7 +119,7 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
                     'report_anonymous', 'flagged_spam', 'flagged_by_dispatcher')
     list_filter = ('report_anonymous', 'flagged_spam', 'report_type')
     list_select_related = ('reporter',)
-    search_fields = ['reporter']
+    search_fields = ['reporter__username',]
 
 
 admin.site.register(Agency, AgencyAdmin)
