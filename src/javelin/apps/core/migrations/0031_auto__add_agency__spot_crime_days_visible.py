@@ -182,7 +182,7 @@ class Migration(SchemaMigration):
             'report_longitude': ('django.db.models.fields.FloatField', [], {}),
             'report_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
             'report_type': ('django.db.models.fields.CharField', [], {'max_length': '2'}),
-            'reporter': ('django.db.models.fields.related.ForeignKey', [], {'to': u"orm['core.AgencyUser']"}),
+            'reporter': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'reporter'", 'to': u"orm['core.AgencyUser']"}),
             'report_anonymous' : ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'viewed_by': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'viewed_by'", 'null': 'True', 'to': u"orm['core.AgencyUser']"}),
             'flagged_by_dispatcher': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'flagged_by_dispatcher'", 'null': 'True', 'to': u"orm['core.AgencyUser']"}),
