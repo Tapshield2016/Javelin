@@ -1,7 +1,7 @@
 {% load i18n %}
 {% blocktrans with this_site.name as site_name %}
 
-To activate the new email address for '{{ user }}' at '{{ site_name }}' click the following link.
+To activate this email address for use, click the following link.
 {{ activate_url }}
 
 If you didn't request this email activation, delete this email.
