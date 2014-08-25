@@ -257,10 +257,10 @@ class DispatchCenter(models.Model):
             changeform_url = urlresolvers.reverse(
                 'admin:core_dispatchcenter_change', args=(self.id,)
             )
-            return u'<a href="%s" target="_blank">Change Schedule</a>' % changeform_url
+            return u'<a href="%s" target="_blank">View Schedule</a>' % changeform_url
         return u''
     changeform_link.allow_tags = True
-    changeform_link.short_description = ''   # omit column header
+    changeform_link.short_description = 'Schedule'   # omit column header
 
 class Region(models.Model):
 
@@ -691,6 +691,38 @@ class SocialCrimeReport(TimeStampedModel):
             self.report_point = Point(self.report_longitude,
                                       self.report_latitude)
         super(SocialCrimeReport, self).save(*args, **kwargs)
+
+
+class TalkaphoneDevice(models.Model):
+
+    uuid = models.CharField(max_length=255, null=True, blank=True,
+                                        help_text="Unique identifier")
+    agency = models.ForeignKey('Agency',
+                               related_name="TalkaphoneDevice",
+                               null=True, blank=True)
+    location_latitude = models.FloatField(null=True, blank=True)
+    location_longitude = models.FloatField(null=True, blank=True)
+    location_point = db_models.PointField(geography=True,
+                                          null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if self.location_latitude and self.location_longitude:
+            self.location_point = Point(self.location_longitude,
+                                      self.location_latitude)
+        super(TalkaphoneDevice, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        return u'%s - %s' % (self.agency.name, self.uuid)
+
+    def changeform_link(self):
+        if self.id:
+            changeform_url = urlresolvers.reverse(
+                'admin:core_talkaphonedevice_change', args=(self.id,)
+            )
+            return u'<a href="%s" target="_blank">View more options</a>' % changeform_url
+        return u''
+    changeform_link.allow_tags = True
+    changeform_link.short_description = 'Options'   # omit column header
 
 
 @receiver(post_save, sender=AgencyUser)

@@ -6,7 +6,7 @@ from django.contrib.gis import admin as geo_admin
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    Period, ClosedDate,)
+                    Period, ClosedDate, TalkaphoneDevice,)
 
 
 class EntourageMemberAdmin(admin.ModelAdmin):
@@ -24,17 +24,31 @@ class ClosedDateInline(admin.StackedInline):
     model = ClosedDate
     extra = 0
 
-class DispatchCenterAdmin(admin.ModelAdmin):
-    inlines = [ClosedDateInline, PeriodInline]
-
 class RegionInline(admin.StackedInline):
     model = Region
     extra = 0
+
+class DispatchCenterAdmin(admin.ModelAdmin):
+    inlines = [ClosedDateInline, PeriodInline]
 
 class DispatchCenterInline(admin.StackedInline):
     model = DispatchCenter
     extra = 0
     fields = ('name', 'phone_number', 'changeform_link')
+    readonly_fields = ('changeform_link', )
+
+class TalkaphoneDeviceAdmin(admin.ModelAdmin, geo_admin.OSMGeoAdmin):
+    model = TalkaphoneDevice
+    list_display = ('__unicode__', 'uuid',)
+    list_filter = ('agency',)
+    list_select_related = ('agency',)
+    search_fields = ['agency__name', 'uuid',]
+
+class TalkaphoneDeviceInline(admin.StackedInline):
+
+    model = TalkaphoneDevice
+    extra = 0
+    fields = ('uuid',)
     readonly_fields = ('changeform_link', )
 
 
@@ -70,7 +84,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenterInline,
+        RegionInline, DispatchCenterInline, TalkaphoneDeviceInline,
     ]
 
 class AgencyUserAdmin(admin.ModelAdmin):
@@ -121,7 +135,6 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
 
-
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
 admin.site.register(Alert, AlertAdmin)
@@ -131,3 +144,4 @@ admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
 admin.site.register(DispatchCenter, DispatchCenterAdmin)
+admin.site.register(TalkaphoneDevice, TalkaphoneDeviceAdmin)
