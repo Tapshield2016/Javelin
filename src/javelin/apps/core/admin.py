@@ -35,7 +35,7 @@ class DispatchCenterInline(admin.StackedInline):
     model = DispatchCenter
     extra = 0
     fields = ('name', 'phone_number', 'changeform_link')
-    readonly_fields = ('changeform_link', )
+    readonly_fields = ('changeform_link',)
 
 class TalkaphoneDeviceAdmin(geo_admin.OSMGeoAdmin):
     model = TalkaphoneDevice
@@ -48,8 +48,8 @@ class TalkaphoneDeviceInline(admin.StackedInline):
 
     model = TalkaphoneDevice
     extra = 0
-    fields = ('uuid',)
-    readonly_fields = ('changeform_link', )
+    fields = ('uuid', 'changeform_link')
+    readonly_fields = ('changeform_link',)
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
