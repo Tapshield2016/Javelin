@@ -37,7 +37,7 @@ class DispatchCenterInline(admin.StackedInline):
     fields = ('name', 'phone_number', 'changeform_link')
     readonly_fields = ('changeform_link', )
 
-class TalkaphoneDeviceAdmin(admin.ModelAdmin, geo_admin.OSMGeoAdmin):
+class TalkaphoneDeviceAdmin(geo_admin.OSMGeoAdmin):
     model = TalkaphoneDevice
     list_display = ('__unicode__', 'uuid',)
     list_filter = ('agency',)
