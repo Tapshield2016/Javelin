@@ -27,10 +27,11 @@ class Command(BaseCommand):
 
         user_group = Group.objects.get(name='Dispatchers')
         agency_name = options['agency']
-        agency = Agency.objects.get(name=agency_name)
 
-        if not agency:
-            agency_id = int(options['agency'])
+        try:
+            agency = Agency.objects.get(name=agency_name)
+        except Agency.DoesNotExist:
+            agency_id = int(agency_name)
             agency = Agency.objects.get(pk=agency_id)
 
         list = ast.literal_eval(options['list'])
