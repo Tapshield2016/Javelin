@@ -13,13 +13,15 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                             related_name='hardware_device',
                                                                             to=orm['core.TalkaphoneDevice'])),
-        db.alter_column(u'core_alert', 'agency_user', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
-                                                                                                            related_name='alert_agency_user',
-                                                                                                            to=orm['core.AgencyUser'])),
+        db.alter_column(u'core_alert', 'agency_user',
+                        self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
+                                                                              related_name='alert_agency_user',
+                                                                              to=orm['core.AgencyUser'])),
 
     def backwards(self, orm):
         # Deleting field 'Alert.hardware_device'
         # db.delete_column(u'core_alert', 'hardware_device')
+        print("back")
 
     models = {
         u'auth.group': {
