@@ -498,7 +498,7 @@ def register_talkaphone_device(request):
         longitude = request.POST.get('longitude')
         latitude = request.POST.get('latitude')
 
-        form = TalkaphoneDeviceForm(request.POST, instance=TalkaphoneDevice(uuid=uuid))
+        form = TalkaphoneDeviceForm(request.POST)
         form.save()
 
         if request.POST:
