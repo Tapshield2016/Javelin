@@ -33,6 +33,7 @@ class Command(BaseCommand):
             agency = Agency.objects.get(pk=agency_id)
 
         list = options['list']
+        print "%s" % (list)
         if not list:
             list = []
             email = options['email']
