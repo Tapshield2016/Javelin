@@ -500,9 +500,9 @@ def register_talkaphone_device(request):
     # serialized = TalkaphoneDeviceSerializer(request.POST)
 
         if request.POST:
-            return Response(status=status.HTTP_201_CREATED)
+            return HttpResponse("OK");
 
-    return Response(status=status.HTTP_400_BAD_REQUEST)
+    return Http404
 
     # lon = request.GET.get('lon', None)
     # lat = request.GET.get('lat', None)
