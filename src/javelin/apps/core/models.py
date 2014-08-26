@@ -32,11 +32,6 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
 
 
-def closest_agency(point):
-
-    return Agency.objects.distance(point).order_by('distance')[0]
-
-
 def kilometers_between_coordinates(point1, point2):
 
     R = 6371 # km
@@ -824,3 +819,8 @@ def set_email_verified(sender, user, request, **kwargs):
     user.email_verified = True
     user.save()
 user_activated.connect(set_email_verified)
+
+
+def closest_agency(point):
+
+    return Agency.objects.distance(point).order_by('distance')[0]
