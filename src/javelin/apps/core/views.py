@@ -80,6 +80,7 @@ def register_user(request):
     will fail if a user has previously registered with the provided address.
 
     agency -- (Required) Numerical ID of the agency
+    username -- (Required) The user's email address
     email -- (Required) The user's email address
     password -- (Required) The user's desired password in plain text
     phone_number -- (Optional) The user's phone number
