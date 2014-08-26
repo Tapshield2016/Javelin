@@ -343,7 +343,7 @@ class Alert(TimeStampedModel):
     agency_user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     related_name="alert_agency_user",
                                     blank=True, null=True)
-    hardware_device = models.ForeignKey(TalkaphoneDevice,
+    hardware_device = models.ForeignKey('TalkaphoneDevice',
                                         related_name="hardware_device",
                                         blank=True, null=True)
     agency_dispatcher =\
