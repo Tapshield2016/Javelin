@@ -26,16 +26,24 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         user_group = Group.objects.get(name='Dispatchers')
-        agency_name = options['agency']
+        agency = ast.literal_eval(options['agency'])
 
-        try:
-            agency = Agency.objects.get(name=agency_name)
-        except Agency.DoesNotExist:
-            agency_id = int(agency_name)
-            agency = Agency.objects.get(pk=agency_id)
+        if type(agency) is string:
+            try:
+                agency = Agency.objects.get(name=agency)
+            except Agency.DoesNotExist:
+                print "Could not locate agency %s" % agency
+                return
+
+        elif type(agency) is int:
+            try:
+                agency = Agency.objects.get(pk=agency)
+            except Agency.DoesNotExist:
+                print "Could not locate agency %s" % agency
+                return
 
         list = ast.literal_eval(options['list'])
-        print "%s" % (list)
+        print "%s" % list
         if not list:
             list = []
             email = options['email']
