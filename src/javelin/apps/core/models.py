@@ -824,5 +824,6 @@ user_activated.connect(set_email_verified)
 
 def closest_agency(point):
 
+    distance_m = 20000
     return Agency.objects.filter(point__distance_lte=(point, D(m=distance_m))).distance(point).order_by('distance')[:1][0]
     # return Agency.objects.distance(point).order_by('distance')[0]
