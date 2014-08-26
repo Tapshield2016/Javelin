@@ -34,7 +34,7 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
 
 def closest_agency(point):
 
-    return Agency.objects.distance(point).order_by('-distance')[0]
+    return Agency.objects.distance(point).order_by('distance')[0]
 
 
 def kilometers_between_coordinates(point1, point2):
