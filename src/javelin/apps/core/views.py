@@ -566,8 +566,7 @@ def talkaphone_alert(request):
     return response
 
 
-# @api_view(['POST'])
-@csrf_exempt
+@api_view(['POST'])
 def talkaphone_disarm(request):
 
     if request.method == 'POST':
