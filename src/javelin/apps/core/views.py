@@ -485,7 +485,6 @@ def register_talkaphone_device(request):
     agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
     longitude -- (Optional) The user's alert disarm code
     latitude -- (Optional) The user's first name
-    location_point -- (Optional)
     """
 
     uuid = request.POST.get('uuid')
@@ -495,9 +494,9 @@ def register_talkaphone_device(request):
     longitude = request.POST.get('longitude')
     latitude = request.POST.get('latitude')
 
-    serialized = TalkaphoneDeviceSerializer(request.POST)
+    # serialized = TalkaphoneDeviceSerializer(request.POST)
 
-    if serialized:
+    if uuid:
         return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
 
