@@ -2,6 +2,7 @@ __author__ = 'adamshare'
 
 import string
 import random
+import ast
 from django.contrib.auth.models import Group
 from core.models import AgencyUser, Agency
 from optparse import make_option
@@ -32,7 +33,7 @@ class Command(BaseCommand):
             agency_id = int(options['agency'])
             agency = Agency.objects.get(pk=agency_id)
 
-        list = [options['list']]
+        list = ast.literal_eval(options['list'])
         print "%s" % (list)
         if not list:
             list = []
