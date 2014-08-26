@@ -485,35 +485,28 @@ def register_talkaphone_device(request):
     type -- (Optional) Model number or device type
     description -- (Optional) Human readable identifier denoting location (e.g. building, street, landmark, etc.)
     agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
-    longitude -- (Optional) The user's alert disarm code
-    latitude -- (Optional) The user's first name
+    latitude -- (Optional) Latitude coordinate value
+    longitude -- (Optional) Longitude coordinate value
     """
 
     if request.method == 'POST':
         uuid = request.POST.get('uuid')
-        type = request.POST.get('type')
-        description = request.POST.get('description')
-        agency = request.POST.get('agency')
-        longitude = request.POST.get('longitude')
-        latitude = request.POST.get('latitude')
+
+        if not uuid:
+            response = HttpResponse(content="Must contain 'uuid' parameter")
+            response.status_code = 404
+            return response
 
         current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
 
         form = TalkaphoneDeviceForm(request.POST, instance=current_device)
         form.save()
 
-        if request.POST:
-            return HttpResponse("OK");
+        response = HttpResponse(content="OK")
+        response.status_code = 200
 
-    response = HttpResponse(content="GET request not allowed")
-    response.status_code = 400
+    else:
+        response = HttpResponse(content="GET request not allowed")
+        response.status_code = 403
 
     return response
-
-    # lon = request.GET.get('lon', None)
-    # lat = request.GET.get('lat', None)
-    # point = (0,0)
-    #
-    # if lon and lat:
-    #     point = Point(lon, lat)
-    #
