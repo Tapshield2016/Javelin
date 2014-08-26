@@ -20,8 +20,8 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting field 'Alert.hardware_device'
-        # db.delete_column(u'core_alert', 'hardware_device')
-        print("back")
+        db.delete_foreign_key(u'core_alert', 'hardware_device')
+        # print("back")
 
     models = {
         u'auth.group': {
