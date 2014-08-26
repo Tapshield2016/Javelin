@@ -28,18 +28,18 @@ class Command(BaseCommand):
         user_group = Group.objects.get(name='Dispatchers')
         agency = options['agency']
 
-        if type(agency) is string:
+        if type(agency) is str:
             try:
                 agency = Agency.objects.get(name=agency)
             except Agency.DoesNotExist:
-                print "Could not locate agency %s" % agency
+                print "Could not locate agency name %s" % agency
                 return
 
         elif type(ast.literal_eval(agency)) is int:
             try:
                 agency = Agency.objects.get(pk=agency)
             except Agency.DoesNotExist:
-                print "Could not locate agency %s" % agency
+                print "Could not locate agency ID %s" % agency
                 return
 
         list = []
