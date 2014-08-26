@@ -498,8 +498,10 @@ def register_talkaphone_device(request):
         longitude = request.POST.get('longitude')
         latitude = request.POST.get('latitude')
 
-        form = TalkaphoneDeviceForm(request.POST)
-        form.save()
+        current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
+
+        # form = TalkaphoneDeviceForm(request.POST)
+        # form.save()
 
         if request.POST:
             return HttpResponse("OK");
