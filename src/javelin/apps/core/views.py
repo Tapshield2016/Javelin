@@ -475,8 +475,8 @@ def set_entourage_members(request):
         new_member = EntourageMemberUpdateSerializer(data=member)
 
 
-# @api_view(['POST'])
-@csrf_exempt
+@api_view(['POST'])
+# @csrf_exempt
 def register_talkaphone_device(request):
 
     """Registers new Talkaphone devices with the API
