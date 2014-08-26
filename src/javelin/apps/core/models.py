@@ -711,9 +711,9 @@ class TalkaphoneDevice(models.Model):
                                           null=True, blank=True)
 
     def save(self, *args, **kwargs):
-        if self.location_latitude and self.location_longitude:
-            self.location_point = Point(self.location_longitude,
-                                      self.location_latitude)
+        if self.latitude and self.longitude:
+            self.location_point = Point(self.longitude,
+                                      self.latitude)
         super(TalkaphoneDevice, self).save(*args, **kwargs)
 
     def __unicode__(self):
