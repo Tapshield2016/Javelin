@@ -475,8 +475,8 @@ def set_entourage_members(request):
         new_member = EntourageMemberUpdateSerializer(data=member)
 
 
-@api_view(['POST'])
 # @csrf_exempt
+@api_view(['POST'])
 def register_talkaphone_device(request):
 
     """Registers new Talkaphone devices with the API
@@ -494,7 +494,7 @@ def register_talkaphone_device(request):
 
         if not uuid:
             response = HttpResponse(content="Must contain 'uuid' parameter")
-            response.status_code = 404
+            response.status_code = 400
             return response
 
         current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
@@ -502,11 +502,25 @@ def register_talkaphone_device(request):
         form = TalkaphoneDeviceForm(request.POST, instance=current_device)
         form.save()
 
-        response = HttpResponse(content="OK")
-        response.status_code = 200
+        if not current_device.agency:
+            current_device.delete()
+            response = HttpResponse(content="Could not find agency")
+            response.status_code = 404
+
+        else:
+            response = HttpResponse(content="OK")
+            response.status_code = 200
 
     else:
         response = HttpResponse(content="GET request not allowed")
-        response.status_code = 403
+        response.status_code = 405
 
     return response
+
+@api_view(['POST'])
+def talkaphone_alert(request):
+
+
+@api_view(['POST'])
+def talkaphone_disarm(request):
+
