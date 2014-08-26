@@ -32,7 +32,7 @@ class Command(BaseCommand):
             agency_id = int(options['agency'])
             agency = Agency.objects.get(pk=agency_id)
 
-        list = options['list']
+        list = [options['list']]
         print "%s" % (list)
         if not list:
             list = []
