@@ -14,7 +14,6 @@ class Migration(SchemaMigration):
                                                                             related_name='hardware_device',
                                                                             to=orm['core.TalkaphoneDevice'])),
 
-
     def backwards(self, orm):
         # Deleting field 'Alert.hardware_device'
         db.delete_column(u'core_alert', 'hardware_device')
