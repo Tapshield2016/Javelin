@@ -49,7 +49,8 @@ from twilio.util import TwilioCapability
 
 from models import (Agency, EntourageMember)
 from forms import AgencySettingsForm
-from api.serializers.v1 import (AgencySerializer, UserSerializer, EntourageMemberUpdateSerializer)
+from api.serializers.v1 import (AgencySerializer, UserSerializer,
+                                EntourageMemberUpdateSerializer, TalkaphoneDeviceSerializer)
 
 User = get_user_model()
 
@@ -472,3 +473,37 @@ def set_entourage_members(request):
     for member in entourage_members:
         new_member = EntourageMemberUpdateSerializer(data=member)
 
+
+@api_view(['POST'])
+def register_talkaphone_device(request):
+
+    """Allows REST calls to programmatically create new facebook users.
+
+    This code is very heavily based on
+    allauth.socialaccount.providers.facebook.views.login_by_token
+    as of allauth 0.15.0.
+
+
+    uuid -- (Optional) Unique identifier of the device (serial number or randomly generated string)
+    agency -- (Optional) Numerical ID of the agency
+    description -- (Optional) Description or name of the device location
+    lon -- (Optional) The user's alert disarm code
+    lat -- (Optional) The user's first name
+    last_name -- (Optional) The user's last name
+    """
+
+    serialized = TalkaphoneDeviceSerializer(data=request.data)
+
+    if serialized:
+        return Response(serialized.data,
+                    status=status.HTTP_201_CREATED)
+
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+    # lon = request.GET.get('lon', None)
+    # lat = request.GET.get('lat', None)
+    # point = (0,0)
+    #
+    # if lon and lat:
+    #     point = Point(lon, lat)
+    #
