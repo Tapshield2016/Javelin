@@ -485,6 +485,7 @@ def register_talkaphone_device(request):
     agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
     longitude -- (Optional) The user's alert disarm code
     latitude -- (Optional) The user's first name
+    location_point -- (Optional)
     """
 
     uuid = request.POST.get('uuid')
