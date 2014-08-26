@@ -102,7 +102,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
     search_fields = ['email', 'first_name', 'last_name']
     inlines = [
         EntourageMemberInline,
-        EmailAddress,
+        EmailAddressInline,
     ]
 
 
