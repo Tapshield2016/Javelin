@@ -487,7 +487,14 @@ def register_talkaphone_device(request):
     latitude -- (Optional) The user's first name
     """
 
-    serialized = TalkaphoneDeviceSerializer(data=request.data)
+    uuid = request.POST.get('uuid')
+    type = request.POST.get('type')
+    description = request.POST.get('description')
+    agency = request.POST.get('agency')
+    longitude = request.POST.get('longitude')
+    latitude = request.POST.get('latitude')
+
+    serialized = TalkaphoneDeviceSerializer(request.POST)
 
     if serialized:
         return Response(serialized.data,
