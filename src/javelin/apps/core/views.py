@@ -499,8 +499,8 @@ def register_talkaphone_device(request):
 
         current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
 
-        # form = TalkaphoneDeviceForm(request.POST)
-        # form.save()
+        form = TalkaphoneDeviceForm(request.POST, instance=current_device)
+        form.save()
 
         if request.POST:
             return HttpResponse("OK");
