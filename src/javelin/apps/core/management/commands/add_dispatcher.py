@@ -26,7 +26,7 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
 
         user_group = Group.objects.get(name='Dispatchers')
-        agency = ast.literal_eval(options['agency'])
+        agency = options['agency']
 
         if type(agency) is string:
             try:
@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 print "Could not locate agency %s" % agency
                 return
 
-        elif type(agency) is int:
+        elif type(ast.literal_eval(agency)) is int:
             try:
                 agency = Agency.objects.get(pk=agency)
             except Agency.DoesNotExist:
