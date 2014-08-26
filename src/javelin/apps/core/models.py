@@ -11,6 +11,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models as db_models
 from django.contrib.gis.geos import Point
+from django.contrib.gis.geos import GEOSGeometry
 from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
@@ -29,6 +30,11 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       InitiatedByTimerAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
+
+
+def closest_agency(point):
+
+    return Agency.objects.distance(point).order_by('-distance')[0]
 
 
 def kilometers_between_coordinates(point1, point2):
@@ -714,6 +720,9 @@ class TalkaphoneDevice(models.Model):
         if self.latitude and self.longitude:
             self.location_point = Point(self.longitude,
                                       self.latitude)
+            if not self.agency:
+                self.agency = closest_agency(self.location_point)
+
         super(TalkaphoneDevice, self).save(*args, **kwargs)
 
     def __unicode__(self):
