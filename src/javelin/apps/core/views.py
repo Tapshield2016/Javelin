@@ -477,19 +477,14 @@ def set_entourage_members(request):
 @api_view(['POST'])
 def register_talkaphone_device(request):
 
-    """Allows REST calls to programmatically create new facebook users.
-
-    This code is very heavily based on
-    allauth.socialaccount.providers.facebook.views.login_by_token
-    as of allauth 0.15.0.
-
+    """Registers new Talkaphone devices with the API
 
     uuid -- (Optional) Unique identifier of the device (serial number or randomly generated string)
-    agency -- (Optional) Numerical ID of the agency
-    description -- (Optional) Description or name of the device location
-    lon -- (Optional) The user's alert disarm code
-    lat -- (Optional) The user's first name
-    last_name -- (Optional) The user's last name
+    type -- (Optional) Model number or device type
+    description -- (Optional) Human readable identifier denoting location (e.g. building, street, landmark, etc.)
+    agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
+    longitude -- (Optional) The user's alert disarm code
+    latitude -- (Optional) The user's first name
     """
 
     serialized = TalkaphoneDeviceSerializer(data=request.data)
