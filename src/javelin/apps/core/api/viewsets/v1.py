@@ -492,6 +492,6 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
 class TalkaphoneDeviceViewSet(viewsets.ModelViewSet):
-    queryset = DispatchCenter.objects.select_related('agency').all()
+    queryset = TalkaphoneDevice.objects.select_related('agency').all()
     serializer_class = TalkaphoneDeviceSerializer
     filter_fields = ('agency',)
