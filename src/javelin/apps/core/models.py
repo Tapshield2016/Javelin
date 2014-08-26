@@ -408,6 +408,10 @@ class Alert(TimeStampedModel):
 
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
+
+        if not self.agency_user:
+            return
+
         db = DynamoDBManager()
         messages = db.get_messages_for_alert(self.pk)
         senders = {self.agency_user.pk: self.agency_user}
