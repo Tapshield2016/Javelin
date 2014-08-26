@@ -502,7 +502,7 @@ def register_talkaphone_device(request):
         if request.POST:
             return HttpResponse("OK");
 
-    return Http404
+    return HttpResponse(content="Get")
 
     # lon = request.GET.get('lon', None)
     # lat = request.GET.get('lat', None)
