@@ -717,7 +717,12 @@ class TalkaphoneDevice(models.Model):
         super(TalkaphoneDevice, self).save(*args, **kwargs)
 
     def __unicode__(self):
-        return u'%s - %s' % (self.agency.name, self.uuid)
+        if self.agency and self.uuid:
+            return u'%s - %s' % (self.agency.name, self.uuid)
+        elif self.uuid:
+            return u'%s' % self.uuid
+
+        return u'%s' % self.id
 
     def changeform_link(self):
         if self.id:
