@@ -64,7 +64,7 @@ class DatetimeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-# @api_view(['POST'])
+@api_view(['POST'])
 def register_user(request):
     """
     Registers a new user under the specified agency. If a phone number is
@@ -475,7 +475,7 @@ def set_entourage_members(request):
         new_member = EntourageMemberUpdateSerializer(data=member)
 
 
-@api_view(['POST'])
+# @api_view(['POST'])
 def register_talkaphone_device(request):
 
     """Registers new Talkaphone devices with the API
@@ -488,18 +488,19 @@ def register_talkaphone_device(request):
     latitude -- (Optional) The user's first name
     """
 
-    uuid = request.POST.get('uuid')
-    type = request.POST.get('type')
-    description = request.POST.get('description')
-    agency = request.POST.get('agency')
-    longitude = request.POST.get('longitude')
-    latitude = request.POST.get('latitude')
+    if request.method == 'POST':
+        # uuid = request.POST.get('uuid')
+        # type = request.POST.get('type')
+        # description = request.POST.get('description')
+        # agency = request.POST.get('agency')
+        # longitude = request.POST.get('longitude')
+        # latitude = request.POST.get('latitude')
 
     # serialized = TalkaphoneDeviceSerializer(request.POST)
 
-    if request.POST:
-        return Response(request.POST,
-                    status=status.HTTP_201_CREATED)
+        if request.POST:
+            return Response(request.POST,
+                            status=status.HTTP_201_CREATED)
 
     return Response(status=status.HTTP_400_BAD_REQUEST)
 
