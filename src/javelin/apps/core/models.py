@@ -11,7 +11,6 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models as db_models
 from django.contrib.gis.geos import Point
-from django.contrib.gis.geos import *
 from django.contrib.gis.measure import D
 from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
@@ -824,6 +823,15 @@ user_activated.connect(set_email_verified)
 
 def closest_agency(point):
 
-    distance_m = 20000
-    return Agency.objects.filter(agency_center_point__distance_lte=(point, D(m=distance_m))).distance(point).order_by('distance')[:1][0]
+    dwithin = 20
+    # queryset = Agency.objects.distance(point).filter(distance__lte=distance_m)
+    # found = queryset.order_by('distance')[:1][0]
+
+    qs = Agency.geo.select_related('agency_point_of_contact')\
+                .filter(agency_center_point__dwithin=(point,
+                                                      D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+
+    return qs[0]
+        # Agency.objects.filter(agency_center_point__distance_lte=(point, D(m=distance_m))).distance(point).order_by('distance')[:1][0]
     # return Agency.objects.distance(point).order_by('distance')[0]
