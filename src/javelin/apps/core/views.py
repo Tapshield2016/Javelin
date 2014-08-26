@@ -64,7 +64,7 @@ class DatetimeEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-@api_view(['POST'])
+# @api_view(['POST'])
 def register_user(request):
     """
     Registers a new user under the specified agency. If a phone number is
