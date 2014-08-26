@@ -11,7 +11,7 @@ class Migration(SchemaMigration):
         # Adding field 'Alert.hardware_device'
         db.add_column(u'core_alert', 'hardware_device',
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
-                                                                            relatedname='hardware_device',
+                                                                            related_name='hardware_device',
                                                                             to=orm['core.TalkaphoneDevice'])),
 
 
