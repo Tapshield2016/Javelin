@@ -32,4 +32,5 @@ urlpatterns = patterns('',
     # Talkaphone
     url(r'^register-talkaphone-device/$', 'core.views.register_talkaphone_device'),
     url(r'^talkaphone-alert/$', 'core.views.talkaphone_alert'),
+    url(r'^talkaphone-disarm/$', 'core.views.talkaphone_disarm'),
 )

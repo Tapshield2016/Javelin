@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 from django.contrib.sites.models import get_current_site
 from django.http import (HttpResponse, HttpResponseForbidden,
                          Http404, HttpResponseRedirect)
+from django.shortcuts import get_object_or_404
 from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
@@ -47,7 +48,7 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from twilio.util import TwilioCapability
 
-from models import (Agency, EntourageMember, TalkaphoneDevice)
+from models import (Agency, EntourageMember, TalkaphoneDevice, Alert)
 from forms import (AgencySettingsForm, TalkaphoneDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer,
                                 EntourageMemberUpdateSerializer, TalkaphoneDeviceSerializer)
@@ -485,9 +486,9 @@ def register_talkaphone_device(request):
     uuid -- (Required) Unique identifier of the device (serial number or randomly generated string)
     type -- (Optional) Model number or device type
     description -- (Optional) Human readable identifier denoting location (e.g. building, street, landmark, etc.)
-    agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
-    latitude -- (Optional) Latitude coordinate value
-    longitude -- (Optional) Longitude coordinate value
+    agency -- (Required) Numerical ID of the agency (agency = organization receiving alerts)
+    latitude -- (Required) Latitude coordinate value
+    longitude -- (Required) Longitude coordinate value
     """
 
     if request.method == 'POST':
@@ -520,6 +521,16 @@ def register_talkaphone_device(request):
 
 @api_view(['POST'])
 def talkaphone_alert(request):
+
+    """Send a Talkaphone alert to dispatchers
+
+    uuid -- (Required) Unique identifier of the device (serial number or randomly generated string)
+    type -- (Optional) Model number or device type
+    description -- (Optional) Human readable identifier denoting location (e.g. building, street, landmark, etc.)
+    agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
+    latitude -- (Required) Latitude coordinate value
+    longitude -- (Required) Longitude coordinate value
+    """
 
     if request.method == 'POST':
         uuid = request.POST.get('uuid')
@@ -560,7 +571,27 @@ def talkaphone_disarm(request):
     if request.method == 'POST':
         uuid = request.POST.get('uuid')
 
-    response = HttpResponse(content="Request method not allowed")
-    response.status_code = 405
+        if not uuid:
+            response = HttpResponse(content="Must contain 'uuid' parameter")
+            response.status_code = 400
+            return response
+
+        # current_device, created = TalkaphoneDevice.objects.get (uuid=uuid)
+        current_device = get_object_or_404(TalkaphoneDevice, uuid=uuid)
+
+        active_alerts = Alert.active.filter(hardware_device=current_device)
+        if active_alerts:
+            alert = active_alerts[0]
+            alert.disarm()
+            response = HttpResponse(content="Disarmed")
+            response.status_code = 200
+
+        else:
+            response = HttpResponse(content="Alert not found")
+            response.status_code = 404
+
+    else:
+        response = HttpResponse(content="Request method not allowed")
+        response.status_code = 405
 
     return response
