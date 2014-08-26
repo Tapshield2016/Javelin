@@ -47,8 +47,8 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from twilio.util import TwilioCapability
 
-from models import (Agency, EntourageMember)
-from forms import AgencySettingsForm
+from models import (Agency, EntourageMember, TalkaphoneDevice)
+from forms import (AgencySettingsForm, TalkaphoneDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer,
                                 EntourageMemberUpdateSerializer, TalkaphoneDeviceSerializer)
 
@@ -490,14 +490,16 @@ def register_talkaphone_device(request):
     """
 
     if request.method == 'POST':
-        # uuid = request.POST.get('uuid')
-        # type = request.POST.get('type')
-        # description = request.POST.get('description')
-        # agency = request.POST.get('agency')
-        # longitude = request.POST.get('longitude')
-        # latitude = request.POST.get('latitude')
+        device = TalkaphoneDevice.object
+        uuid = request.POST.get('uuid')
+        type = request.POST.get('type')
+        description = request.POST.get('description')
+        agency = request.POST.get('agency')
+        longitude = request.POST.get('longitude')
+        latitude = request.POST.get('latitude')
 
-    # serialized = TalkaphoneDeviceSerializer(request.POST)
+        form = TalkaphoneDeviceForm(request.POST, instance=TalkaphoneDevice(uuid=uuid))
+        form.save()
 
         if request.POST:
             return HttpResponse("OK");
