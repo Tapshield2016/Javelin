@@ -497,12 +497,15 @@ def register_talkaphone_device(request):
         # longitude = request.POST.get('longitude')
         # latitude = request.POST.get('latitude')
 
-    serialized = TalkaphoneDeviceSerializer(request.POST)
+    # serialized = TalkaphoneDeviceSerializer(request.POST)
 
-        if serialized:
+        if request.POST:
             return HttpResponse("OK");
 
-    return HttpResponse(content="Get")
+    response = HttpResponse(content="Get not allowed")
+    response.status_code = 400
+
+    return response
 
     # lon = request.GET.get('lon', None)
     # lat = request.GET.get('lat', None)
