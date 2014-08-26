@@ -476,7 +476,7 @@ def set_entourage_members(request):
 
 
 # @api_view(['POST'])
-@csrf_exempt
+# @csrf_exempt
 def register_talkaphone_device(request):
 
     """Registers new Talkaphone devices with the API
