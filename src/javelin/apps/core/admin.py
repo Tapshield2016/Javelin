@@ -101,8 +101,8 @@ class AgencyUserAdmin(admin.ModelAdmin):
     list_select_related = ('agency',)
     search_fields = ['email', 'first_name', 'last_name']
     inlines = [
-        EntourageMemberInline,
         EmailAddressInline,
+        EntourageMemberInline,
     ]
 
 

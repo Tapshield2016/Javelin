@@ -199,4 +199,4 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
 class TalkaphoneDeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
-        model = SocialCrimeReport
+        model = TalkaphoneDevice
