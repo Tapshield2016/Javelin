@@ -35,6 +35,8 @@
 	    'E': 'emergency',
 	    'C': 'chat',
 	    'T': 'timer',
+        'Y': 'yank',
+        'H': 'hardware',
 	}
 
 	Javelin.HAIR_COLOR_CHOICES = {
@@ -214,7 +216,7 @@
 		this.location = null;
 		this.geocodedAddress = '';
 
-		if (!$.isEmptyObject(attributes.agency_user_meta)) {
+		if (!$.isEmptyObject(attributes.agency_user_meta.url)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
 		};
 
