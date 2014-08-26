@@ -42,8 +42,10 @@ class Command(BaseCommand):
                 print "Could not locate agency %s" % agency
                 return
 
-        list = ast.literal_eval(options['list'])
-        print "%s" % list
+        raw_list = options['list']
+        if raw_list:
+            list = ast.literal_eval(raw_list)
+
         if not list:
             list = []
             email = options['email']
