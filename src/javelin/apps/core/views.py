@@ -51,6 +51,7 @@ from models import (Agency, EntourageMember, TalkaphoneDevice)
 from forms import (AgencySettingsForm, TalkaphoneDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer,
                                 EntourageMemberUpdateSerializer, TalkaphoneDeviceSerializer)
+from core.tasks import new_talkaphone_alert
 
 User = get_user_model()
 
@@ -512,7 +513,7 @@ def register_talkaphone_device(request):
             response.status_code = 200
 
     else:
-        response = HttpResponse(content="GET request not allowed")
+        response = HttpResponse(content="Request method not allowed")
         response.status_code = 405
 
     return response
@@ -523,8 +524,33 @@ def talkaphone_alert(request):
     if request.method == 'POST':
         uuid = request.POST.get('uuid')
 
-    response = HttpResponse(content="Request method not allowed")
-    response.status_code = 405
+        if not uuid:
+            response = HttpResponse(content="Must contain 'uuid' parameter")
+            response.status_code = 400
+            return response
+
+        current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
+
+        form = TalkaphoneDeviceForm(request.POST, instance=current_device)
+        form.save()
+
+        if not current_device.agency:
+            current_device.delete()
+            response = HttpResponse(content="Could not find agency")
+            response.status_code = 404
+
+        elif not current_device.location_point:
+            response = HttpResponse(content="No location provided")
+            response.status_code = 400
+
+        else:
+            response = HttpResponse(content="Created")
+            response.status_code = 201
+            new_talkaphone_alert(current_device)
+
+    else:
+        response = HttpResponse(content="Request method not allowed")
+        response.status_code = 405
 
     return response
 

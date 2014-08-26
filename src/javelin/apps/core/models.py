@@ -325,6 +325,7 @@ class Alert(TimeStampedModel):
         ('E', 'Emergency'),
         ('T', 'Timer'),
         ('Y', 'Yank'),
+        ('H', 'Hardware'),
     )
 
     ALERT_CATEGORY = (
@@ -340,7 +341,11 @@ class Alert(TimeStampedModel):
 
     agency = models.ForeignKey('Agency')
     agency_user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    related_name="alert_agency_user")
+                                    related_name="alert_agency_user",
+                                    blank=True, null=True)
+    hardware_device = models.ForeignKey(TalkaphoneDevice,
+                                        related_name="hardware_device",
+                                        blank=True, null=True)
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name="alert_agency_dispatcher",

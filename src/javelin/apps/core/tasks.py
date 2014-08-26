@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from core.aws.s3 import S3Manager
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
-from core.models import Agency, AgencyUser, Alert, AlertLocation
+from core.models import Agency, AgencyUser, Alert, AlertLocation, TalkaphoneDevice
 from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
@@ -213,3 +213,37 @@ def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
                                        agency.chat_autoresponder_message)
         alert.user_notified_of_dispatcher_congestion = True
         alert.save()
+
+
+@task
+def new_talkaphone_alert(device):
+
+    """
+    Starts an alert using the stationary device coordinates
+    """
+
+    location_latitude = device.latitude
+    location_longitude = device.longitude
+    alert_initiated_by = "H"
+
+    active_alerts = Alert.active.filter(hardware_device=device)
+    if active_alerts:
+        incoming_alert = active_alerts[0]
+        incoming_alert.disarmed_time = None
+    else:
+        incoming_alert = Alert(agency=device.agency, hardware_device=device,
+                               initiated_by=alert_initiated_by)
+        incoming_alert.save()
+
+    incoming_alert_location = AlertLocation(alert=incoming_alert,
+                                            # altitude=location_altitude,
+                                            longitude=location_longitude,
+                                            latitude=location_latitude,)
+                                            # accuracy=location_accuracy)
+    incoming_alert_location.save()
+
+    message_valid = True
+    incoming_alert.user_notified_of_receipt = True
+    incoming_alert.save()
+
+    return message_valid
