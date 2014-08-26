@@ -697,6 +697,9 @@ class TalkaphoneDevice(models.Model):
 
     uuid = models.CharField(max_length=255, null=True, blank=True,
                                         help_text="Unique identifier")
+    description = models.CharField(max_length=255, null=True, blank=True,
+                                   help_text="Human readable identifier denoting location "
+                                             "(e.g. building, street, landmark, etc.)")
     agency = models.ForeignKey('Agency',
                                related_name="TalkaphoneDevice",
                                null=True, blank=True)

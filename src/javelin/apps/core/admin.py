@@ -39,16 +39,16 @@ class DispatchCenterInline(admin.StackedInline):
 
 class TalkaphoneDeviceAdmin(geo_admin.OSMGeoAdmin):
     model = TalkaphoneDevice
-    list_display = ('__unicode__', 'uuid',)
+    list_display = ('__unicode__', 'uuid', 'description')
     list_filter = ('agency',)
     list_select_related = ('agency',)
-    search_fields = ['agency__name', 'uuid',]
+    search_fields = ['agency__name', 'uuid', 'description',]
 
 class TalkaphoneDeviceInline(admin.StackedInline):
 
     model = TalkaphoneDevice
     extra = 0
-    fields = ('uuid', 'changeform_link')
+    fields = ('uuid', 'description', 'changeform_link')
     readonly_fields = ('changeform_link',)
 
 
