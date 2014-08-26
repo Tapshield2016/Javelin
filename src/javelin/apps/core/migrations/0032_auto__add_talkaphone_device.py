@@ -12,7 +12,7 @@ class Migration(SchemaMigration):
         db.create_table(u'core_talkaphonedevice', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'TalkaphoneDevice', to=orm['core.Agency'], null=True, blank=True)),
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
@@ -260,7 +260,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'TalkaphoneDevice'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'TalkaphoneDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),

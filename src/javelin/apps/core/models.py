@@ -695,8 +695,8 @@ class SocialCrimeReport(TimeStampedModel):
 
 class TalkaphoneDevice(models.Model):
 
-    uuid = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Unique identifier (e.g. serial number)")
+    uuid = models.CharField(max_length=255,
+                            help_text="Unique identifier (e.g. serial number)")
     type = models.CharField(max_length=255, null=True, blank=True,
                             help_text="Model number or device type")
     description = models.CharField(max_length=255, null=True, blank=True,

@@ -481,7 +481,7 @@ def register_talkaphone_device(request):
 
     """Registers new Talkaphone devices with the API
 
-    uuid -- (Optional) Unique identifier of the device (serial number or randomly generated string)
+    uuid -- (Required) Unique identifier of the device (serial number or randomly generated string)
     type -- (Optional) Model number or device type
     description -- (Optional) Human readable identifier denoting location (e.g. building, street, landmark, etc.)
     agency -- (Optional) Numerical ID of the agency (agency = organization receiving alerts)
@@ -505,7 +505,7 @@ def register_talkaphone_device(request):
         if request.POST:
             return HttpResponse("OK");
 
-    response = HttpResponse(content="Get not allowed")
+    response = HttpResponse(content="GET request not allowed")
     response.status_code = 400
 
     return response
