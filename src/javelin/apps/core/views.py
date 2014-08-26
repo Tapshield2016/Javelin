@@ -520,7 +520,21 @@ def register_talkaphone_device(request):
 @api_view(['POST'])
 def talkaphone_alert(request):
 
+    if request.method == 'POST':
+        uuid = request.POST.get('uuid')
+
+    response = HttpResponse(content="Request method not allowed")
+    response.status_code = 405
+
+    return response
 
 @api_view(['POST'])
 def talkaphone_disarm(request):
 
+    if request.method == 'POST':
+        uuid = request.POST.get('uuid')
+
+    response = HttpResponse(content="Request method not allowed")
+    response.status_code = 405
+
+    return response
