@@ -3,11 +3,16 @@ import reversion
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
 
+from emailmgr.models import EmailAddress
+
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
                     Period, ClosedDate, TalkaphoneDevice,)
 
+class EmailAddressInline(admin.StackedInline):
+    model = EmailAddress
+    extra = 0
 
 class EntourageMemberAdmin(admin.ModelAdmin):
     pass
@@ -97,6 +102,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
     search_fields = ['email', 'first_name', 'last_name']
     inlines = [
         EntourageMemberInline,
+        EmailAddress,
     ]
 
 

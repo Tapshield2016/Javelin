@@ -6,7 +6,7 @@ from rest_framework import serializers
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, Period, ClosedDate,)
+                         DispatchCenter, Period, ClosedDate, TalkaphoneDevice)
 
 from emailmgr.models import EmailAddress
 
@@ -194,3 +194,9 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
+
+
+class TalkaphoneDeviceSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = SocialCrimeReport
