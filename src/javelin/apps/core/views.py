@@ -490,7 +490,6 @@ def register_talkaphone_device(request):
     """
 
     if request.method == 'POST':
-        device = TalkaphoneDevice.object
         uuid = request.POST.get('uuid')
         type = request.POST.get('type')
         description = request.POST.get('description')
