@@ -705,8 +705,8 @@ class TalkaphoneDevice(models.Model):
     agency = models.ForeignKey('Agency',
                                related_name="TalkaphoneDevice",
                                null=True, blank=True)
-    location_latitude = models.FloatField(null=True, blank=True)
-    location_longitude = models.FloatField(null=True, blank=True)
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
     location_point = db_models.PointField(geography=True,
                                           null=True, blank=True)
 

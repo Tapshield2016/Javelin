@@ -15,8 +15,8 @@ class Migration(SchemaMigration):
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
-            ('location_latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
-            ('location_longitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
+            ('longitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('location_point', self.gf('django.contrib.gis.db.models.fields.PointField')(blank=True, null=True, geography=True)),
         ))
         db.send_create_signal(u'core', ['TalkaphoneDevice'])
@@ -263,8 +263,8 @@ class Migration(SchemaMigration):
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
-            'location_latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
-            'location_longitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
+            'latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
+            'longitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
             'location_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
         },
     }
