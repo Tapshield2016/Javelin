@@ -13,7 +13,7 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                             related_name='hardware_device',
                                                                             to=orm['core.TalkaphoneDevice'])),
-        db.alter_column(u'core_alert', 'agency_user',
+        db.alter_column(u'core_alert', 'agency_user_id',
                         self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                               related_name='alert_agency_user',
                                                                               to=orm['core.AgencyUser'])),
