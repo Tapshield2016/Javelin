@@ -22,12 +22,12 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         user_group = Group.objects.get(name='Dispatchers')
         email = options['email']
-        agency_id = int(options['agency'])
-        agency = Agency.objects.get(pk=agency_id)
+        agency_name = options['agency']
+        agency = Agency.objects.get(name=agency_name)
 
         if not agency:
-            agency_name = options['agency']
-            agency = Agency.objects.get(name=agency_name)
+            agency_id = int(options['agency'])
+            agency = Agency.objects.get(pk=agency_id)
 
         password = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(6)])
         print "%s, %s" % (email, password)
