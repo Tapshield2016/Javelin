@@ -496,7 +496,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-    @action
+    @action(methods=['POST',])
     def register(self, request):
 
         return Response({'message': 'Success'})
