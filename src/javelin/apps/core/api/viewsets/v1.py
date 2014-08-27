@@ -499,28 +499,74 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-
-    def create(self, request):
-
-        uuid = request.POST.get('uuid')
-
-        if not uuid:
-            response = HttpResponse(content="Must contain 'uuid' parameter")
-            response.status_code = 400
-            return response
-
-        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
-
-        form = StaticDeviceForm(request.POST, instance=current_device)
-        form.save()
-
-        if not current_device.agency:
-            current_device.delete()
-            response = HttpResponse(content="Could not find agency")
-            response.status_code = 404
-
-        else:
-            response = HttpResponse(content="OK")
-            response.status_code = 200
-
-        return response
+    #
+    # def create(self, request):
+    #
+    #     # serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+    #     #
+    #     # if serializer.is_valid():
+    #     #     self.pre_save(serializer.object)
+    #     #     self.object = serializer.save(force_insert=True)
+    #     #     self.post_save(self.object, created=True)
+    #     #     headers = self.get_success_headers(serializer.data)
+    #     #     return Response(serializer.data, status=status.HTTP_201_CREATED,
+    #     #                     headers=headers)
+    #     #
+    #     # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+    #
+    #     if serializer.is_valid():
+    #
+    #         device = serializer.object
+    #         try:
+    #             old_device = StaticDevice.objects.get(uuid=device.uuid)
+    #         except StaticDevice.DoesNotExist:
+    #             old_device = None
+    #
+    #         if old_device:
+    #             return Response("UUID", status=status.HTTP_400_BAD_REQUEST)
+    #
+    #
+    #
+    #
+    #         try:
+    #             agency = Agency.objects.get(name=agency)
+    #         except Agency.DoesNotExist:
+    #             print "Could not locate agency with name %s" % agency
+    #             return
+    #
+    #         self.pre_save(serializer.object)
+    #         self.object = serializer.save(force_insert=True)
+    #         self.post_save(self.object, created=True)
+    #         self.object.set_password(self.object.password)
+    #         self.object.save()
+    #         headers = self.get_success_headers(serializer.data)
+    #         return Response(serializer.data, status=status.HTTP_201_CREATED,
+    #                         headers=headers)
+    #
+    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    #
+    #     uuid = request.POST.get('uuid')
+    #
+    #
+    #     if not uuid:
+    #         response = HttpResponse(content="Must contain 'uuid' parameter")
+    #         response.status_code = 400
+    #         return response
+    #
+    #     current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+    #
+    #     form = StaticDeviceForm(request.POST, instance=current_device)
+    #     form.save()
+    #
+    #     if not current_device.agency:
+    #         current_device.delete()
+    #         response = HttpResponse(content="Could not find agency")
+    #         response.status_code = 404
+    #
+    #     else:
+    #         response = HttpResponse(content="OK")
+    #         response.status_code = 200
+    #
+    #     return response

@@ -705,7 +705,7 @@ class SocialCrimeReport(TimeStampedModel):
 
 class StaticDevice(models.Model):
 
-    uuid = models.CharField(max_length=255,
+    uuid = models.CharField(max_length=255, primary_key=True,
                             help_text="Unique identifier (e.g. serial number)")
     type = models.CharField(max_length=255, null=True, blank=True,
                             help_text="Model number or device type")
