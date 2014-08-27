@@ -24,7 +24,7 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         # Deleting model 'StaticDevice'
-        db.delete_table(u'core_talkaphonedevice')
+        db.delete_table(u'core_staticdevice')
 
 
     models = {
