@@ -509,7 +509,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request_data['agency'] = reverse(AgencyViewSet, args=[agency.id])
+            request_data['agency'] = reverse('agencies', args=[agency.id])
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
