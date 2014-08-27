@@ -13,6 +13,8 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
 
+from django.http import HttpResponse
+
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
@@ -35,10 +37,11 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      ClosedDateSerializer,
                                      StaticDeviceSerializer)
 
-from core.aws.dynamodb import DynamoDBManager
-from core.aws.sns import SNSManager
-from core.filters import IsoDateTimeFilter
-from core.models import (Agency, Alert, AlertLocation,
+from forms import (StaticDeviceForm)
+from aws.dynamodb import DynamoDBManager
+from aws.sns import SNSManager
+from filters import IsoDateTimeFilter
+from models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
@@ -496,7 +499,28 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-    @action(methods=['POST',])
-    def register(self, request, pk=None):
 
-        return Response({'message': 'Success'})
+    def create(self, request):
+
+        uuid = request.POST.get('uuid')
+
+        if not uuid:
+            response = HttpResponse(content="Must contain 'uuid' parameter")
+            response.status_code = 400
+            return response
+
+        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+
+        form = StaticDeviceForm(request.POST, instance=current_device)
+        form.save()
+
+        if not current_device.agency:
+            current_device.delete()
+            response = HttpResponse(content="Could not find agency")
+            response.status_code = 404
+
+        else:
+            response = HttpResponse(content="OK")
+            response.status_code = 200
+
+        return response
