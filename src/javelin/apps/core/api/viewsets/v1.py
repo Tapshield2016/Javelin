@@ -13,6 +13,7 @@ from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.contrib.sites.models import get_current_site
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
@@ -508,7 +509,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request_data['agency'] = agency.get_absolute_url()
+            request_data['agency'] = ''.join(['https://', get_current_site(request).domain, agency.get_absolute_url()])
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
