@@ -10,7 +10,7 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'StaticDevice'
         db.create_table(u'core_staticdevice', (
-            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')()),
             ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'StaticDevice', to=orm['core.Agency'], null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, primary_key=True)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
