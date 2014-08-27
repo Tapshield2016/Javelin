@@ -1,5 +1,6 @@
 import time
 import uuid
+import ast
 
 from django.conf import settings
 
@@ -35,3 +36,22 @@ def send_message_to_user_for_alert(alert, message):
         message, message_id,
         alert.agency_user.device_type,
         alert.agency_user.device_endpoint_arn)
+
+
+def get_agency_from_unknown(unknown_object):
+
+    agency = None
+
+    if type(unknown_object) is str:
+        try:
+            agency = Agency.objects.get(name=unknown_object)
+        except Agency.DoesNotExist:
+            return None
+
+    elif type(ast.literal_eval(unknown_object)) is int:
+        try:
+            agency = Agency.objects.get(pk=unknown_object)
+        except Agency.DoesNotExist:
+            return None
+
+    return agency

@@ -47,6 +47,8 @@ from core.models import (Agency, Alert, AlertLocation,
                          DispatchCenter, Period,
                          ClosedDate, StaticDevice,)
 
+from core.utils import get_agency_from_unknown
+
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
@@ -498,74 +500,31 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-    #
-    # def create(self, request):
-    #
-    #     # serializer = self.get_serializer(data=request.DATA, files=request.FILES)
-    #     #
-    #     # if serializer.is_valid():
-    #     #     self.pre_save(serializer.object)
-    #     #     self.object = serializer.save(force_insert=True)
-    #     #     self.post_save(self.object, created=True)
-    #     #     headers = self.get_success_headers(serializer.data)
-    #     #     return Response(serializer.data, status=status.HTTP_201_CREATED,
-    #     #                     headers=headers)
-    #     #
-    #     # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     serializer = self.get_serializer(data=request.DATA, files=request.FILES)
-    #
-    #     if serializer.is_valid():
-    #
-    #         device = serializer.object
-    #         try:
-    #             old_device = StaticDevice.objects.get(uuid=device.uuid)
-    #         except StaticDevice.DoesNotExist:
-    #             old_device = None
-    #
-    #         if old_device:
-    #             return Response("UUID", status=status.HTTP_400_BAD_REQUEST)
-    #
-    #
-    #
-    #
-    #         try:
-    #             agency = Agency.objects.get(name=agency)
-    #         except Agency.DoesNotExist:
-    #             print "Could not locate agency with name %s" % agency
-    #             return
-    #
-    #         self.pre_save(serializer.object)
-    #         self.object = serializer.save(force_insert=True)
-    #         self.post_save(self.object, created=True)
-    #         self.object.set_password(self.object.password)
-    #         self.object.save()
-    #         headers = self.get_success_headers(serializer.data)
-    #         return Response(serializer.data, status=status.HTTP_201_CREATED,
-    #                         headers=headers)
-    #
-    #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    #
-    #     uuid = request.POST.get('uuid')
-    #
-    #
-    #     if not uuid:
-    #         response = HttpResponse(content="Must contain 'uuid' parameter")
-    #         response.status_code = 400
-    #         return response
-    #
-    #     current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
-    #
-    #     form = StaticDeviceForm(request.POST, instance=current_device)
-    #     form.save()
-    #
-    #     if not current_device.agency:
-    #         current_device.delete()
-    #         response = HttpResponse(content="Could not find agency")
-    #         response.status_code = 404
-    #
-    #     else:
-    #         response = HttpResponse(content="OK")
-    #         response.status_code = 200
-    #
-    #     return response
+    def create(self, request):
+
+        request_data = request.DATA.copy()
+        agency_id = request_data.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request_data['agency'] = agency
+
+        serializer = self.get_serializer(data=request_data, files=request.FILES)
+
+        if serializer.is_valid():
+
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+
+            if not self.object.agency:
+                self.object.delete()
+                return Response("Could not find agency or agency not provided", status=status.HTTP_400_BAD_REQUEST)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
