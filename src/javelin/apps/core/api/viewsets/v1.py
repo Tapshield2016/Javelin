@@ -12,7 +12,7 @@ from django.contrib.auth.models import Group
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
-from rest_framework.reverse import reverse
+from django.core.urlresolvers import reverse
 from django.http import HttpResponse
 
 from rest_framework import status, viewsets, ISO_8601
@@ -509,7 +509,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request_data['agency'] = reverse('agency', args=[agency.id], request=request)
+            request_data['agency'] = reverse(AgencyViewSet, args=[agency.id])
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
