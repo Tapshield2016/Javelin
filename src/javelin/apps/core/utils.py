@@ -46,9 +46,11 @@ def get_agency_from_unknown(unknown_object):
     try:
         agency = Agency.objects.get(name=unknown_object)
     except Agency.DoesNotExist:
-        agency_id = map(int, re.findall(r'\d+', unknown_object))
-        try:
-            agency = Agency.objects.get(pk=agency_id)
-        except Agency.DoesNotExist:
-            return None
+        agency_id = ''.join(x for x in unknown_object if x.isdigit())
+        if type(agency_id) is int:
+            try:
+                agency = Agency.objects.get(pk=agency_id)
+            except Agency.DoesNotExist:
+                return None
+
     return agency
