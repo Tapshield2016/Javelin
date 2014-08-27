@@ -495,3 +495,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
+
+    def create(self, request):
+        pass
