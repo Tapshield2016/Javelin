@@ -47,7 +47,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          DispatchCenter, Period,
                          ClosedDate, StaticDevice,)
 
-from core.utils import get_agency_from_unknown
+from core.utils import get_agency_from_unknown, group_required
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
@@ -495,6 +495,8 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     serializer_class = DispatchCenterSerializer
     filter_fields = ('agency',)
 
+
+@group_required('Device Maker')
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
