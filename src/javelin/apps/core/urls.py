@@ -17,20 +17,20 @@ urlpatterns = patterns('',
     url(r'^agency-settings/$', 'core.views.agency_settings_form',
         name='core_agency_settings'),
 
-    # social login
+    # Social login
     url(r'^create-facebook-user/$', 'core.views.create_facebook_user',),
     url(r'^create-twitter-user/$', 'core.views.create_twitter_user',),
     url(r'^create-google-user/$', 'core.views.create_google_user',),
     url(r'^create-linkedin-user/$', 'core.views.create_linkedin_user',),
 
-    # models
+    # Models
     url(r'^v1/', include(router_v1.urls)),
 
-    # email manager
+    # Email manager
     url(r'^', include('emailmgr.urls')),
 
-    # Static Device
-    url(r'^device/register/$', 'core.views.register_static_device'),
-    url(r'^device/alert/$', 'core.views.static_alert'),
-    url(r'^device/disarm/$', 'core.views.static_disarm'),
+    # Static device
+    url(r'^static-device/register/$', 'core.views.register_static_device'),
+    url(r'^static-device/alert/$', 'core.views.static_alert'),
+    url(r'^static-device/disarm/$', 'core.views.static_disarm'),
 )
