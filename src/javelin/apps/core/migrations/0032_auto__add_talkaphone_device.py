@@ -8,10 +8,10 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding model 'TalkaphoneDevice'
-        db.create_table(u'core_talkaphonedevice', (
+        # Adding model 'StaticDevice'
+        db.create_table(u'core_staticdevice', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
-            ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'TalkaphoneDevice', to=orm['core.Agency'], null=True, blank=True)),
+            ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'StaticDevice', to=orm['core.Agency'], null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
@@ -19,11 +19,11 @@ class Migration(SchemaMigration):
             ('longitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('location_point', self.gf('django.contrib.gis.db.models.fields.PointField')(blank=True, null=True, geography=True)),
         ))
-        db.send_create_signal(u'core', ['TalkaphoneDevice'])
+        db.send_create_signal(u'core', ['StaticDevice'])
 
 
     def backwards(self, orm):
-        # Deleting model 'TalkaphoneDevice'
+        # Deleting model 'StaticDevice'
         db.delete_table(u'core_talkaphonedevice')
 
 
@@ -256,10 +256,10 @@ class Migration(SchemaMigration):
             'open': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
             'close': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
         },
-        u'core.talkaphonedevice': {
-            'Meta': {'object_name': 'TalkaphoneDevice'},
+        u'core.staticdevice': {
+            'Meta': {'object_name': 'StaticDevice'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'TalkaphoneDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'StaticDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),

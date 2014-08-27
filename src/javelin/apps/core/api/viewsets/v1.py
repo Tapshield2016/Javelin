@@ -33,7 +33,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      DispatchCenterSerializer,
                                      PeriodSerializer,
                                      ClosedDateSerializer,
-                                     TalkaphoneDeviceSerializer)
+                                     StaticDeviceSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -43,7 +43,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period,
-                         ClosedDate, TalkaphoneDevice,)
+                         ClosedDate, StaticDevice,)
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
@@ -491,7 +491,7 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     serializer_class = DispatchCenterSerializer
     filter_fields = ('agency',)
 
-class TalkaphoneDeviceViewSet(viewsets.ModelViewSet):
-    queryset = TalkaphoneDevice.objects.select_related('agency').all()
-    serializer_class = TalkaphoneDeviceSerializer
+class StaticDeviceViewSet(viewsets.ModelViewSet):
+    queryset = StaticDevice.objects.select_related('agency').all()
+    serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)

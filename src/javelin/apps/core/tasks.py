@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from core.aws.s3 import S3Manager
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
-from core.models import Agency, AgencyUser, Alert, AlertLocation, TalkaphoneDevice
+from core.models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice
 from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
@@ -216,7 +216,7 @@ def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
 
 
 @task
-def new_talkaphone_alert(device):
+def new_static_alert(device):
 
     """
     Starts an alert using the stationary device coordinates

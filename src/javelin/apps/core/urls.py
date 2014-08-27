@@ -29,8 +29,8 @@ urlpatterns = patterns('',
     # email manager
     url(r'^', include('emailmgr.urls')),
 
-    # Talkaphone
-    url(r'^register-talkaphone-device/$', 'core.views.register_talkaphone_device'),
-    url(r'^talkaphone-alert/$', 'core.views.talkaphone_alert'),
-    url(r'^talkaphone-disarm/$', 'core.views.talkaphone_disarm'),
+    # Static Device
+    url(r'^device/register/$', 'core.views.register_static_device'),
+    url(r'^device/alert/$', 'core.views.static_alert'),
+    url(r'^device/disarm/$', 'core.views.static_disarm'),
 )

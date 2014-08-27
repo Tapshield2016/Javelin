@@ -8,7 +8,7 @@ from emailmgr.models import EmailAddress
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    Period, ClosedDate, TalkaphoneDevice,)
+                    Period, ClosedDate, StaticDevice,)
 
 class EmailAddressInline(admin.StackedInline):
     model = EmailAddress
@@ -42,16 +42,16 @@ class DispatchCenterInline(admin.StackedInline):
     fields = ('name', 'phone_number', 'changeform_link')
     readonly_fields = ('changeform_link',)
 
-class TalkaphoneDeviceAdmin(geo_admin.OSMGeoAdmin):
-    model = TalkaphoneDevice
+class StaticDeviceAdmin(geo_admin.OSMGeoAdmin):
+    model = StaticDevice
     list_display = ('__unicode__', 'uuid', 'type', 'description')
     list_filter = ('agency',)
     list_select_related = ('agency',)
     search_fields = ['agency__name', 'uuid', 'description', 'type',]
 
-class TalkaphoneDeviceInline(admin.StackedInline):
+class StaticDeviceInline(admin.StackedInline):
 
-    model = TalkaphoneDevice
+    model = StaticDevice
     extra = 0
     fields = ('uuid', 'type', 'description', 'changeform_link')
     readonly_fields = ('changeform_link',)
@@ -89,7 +89,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenterInline, TalkaphoneDeviceInline,
+        RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
 
 class AgencyUserAdmin(admin.ModelAdmin):
@@ -150,4 +150,4 @@ admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
 admin.site.register(DispatchCenter, DispatchCenterAdmin)
-admin.site.register(TalkaphoneDevice, TalkaphoneDeviceAdmin)
+admin.site.register(StaticDevice, StaticDeviceAdmin)

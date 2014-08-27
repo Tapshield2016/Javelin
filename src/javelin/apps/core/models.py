@@ -325,7 +325,7 @@ class Alert(TimeStampedModel):
         ('E', 'Emergency'),
         ('T', 'Timer'),
         ('Y', 'Yank'),
-        ('H', 'Hardware'),
+        ('S', 'Static'),
     )
 
     ALERT_CATEGORY = (
@@ -343,8 +343,8 @@ class Alert(TimeStampedModel):
     agency_user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                     related_name="alert_agency_user",
                                     blank=True, null=True)
-    hardware_device = models.ForeignKey('TalkaphoneDevice',
-                                        related_name="hardware_device",
+    static_device = models.ForeignKey('StaticDevice',
+                                        related_name="static_device",
                                         blank=True, null=True)
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
@@ -703,7 +703,7 @@ class SocialCrimeReport(TimeStampedModel):
         super(SocialCrimeReport, self).save(*args, **kwargs)
 
 
-class TalkaphoneDevice(models.Model):
+class StaticDevice(models.Model):
 
     uuid = models.CharField(max_length=255,
                             help_text="Unique identifier (e.g. serial number)")
@@ -713,7 +713,7 @@ class TalkaphoneDevice(models.Model):
                                    help_text="Human readable identifier denoting location "
                                              "(e.g. building, street, landmark, etc.)")
     agency = models.ForeignKey('Agency',
-                               related_name="TalkaphoneDevice",
+                               related_name="StaticDevice",
                                null=True, blank=True)
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
@@ -729,7 +729,7 @@ class TalkaphoneDevice(models.Model):
                 if agency:
                     self.agency = agency
 
-        super(TalkaphoneDevice, self).save(*args, **kwargs)
+        super(StaticDevice, self).save(*args, **kwargs)
 
     def __unicode__(self):
         if self.agency and self.uuid:
@@ -742,7 +742,7 @@ class TalkaphoneDevice(models.Model):
     def changeform_link(self):
         if self.id:
             changeform_url = urlresolvers.reverse(
-                'admin:core_talkaphonedevice_change', args=(self.id,)
+                'admin:core_staticdevice_change', args=(self.id,)
             )
             return u'<a href="%s" target="_blank">View more options</a>' % changeform_url
         return u''

@@ -32,14 +32,14 @@ class Command(BaseCommand):
             try:
                 agency = Agency.objects.get(name=agency)
             except Agency.DoesNotExist:
-                print "Could not locate agency name %s" % agency
+                print "Could not locate agency with name %s" % agency
                 return
 
         elif type(ast.literal_eval(agency)) is int:
             try:
                 agency = Agency.objects.get(pk=agency)
             except Agency.DoesNotExist:
-                print "Could not locate agency ID %s" % agency
+                print "Could not locate agency with ID %s" % agency
                 return
 
         list = []

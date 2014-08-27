@@ -9,10 +9,10 @@ class Migration(SchemaMigration):
 
     def forwards(self, orm):
         # Adding field 'Alert.hardware_device'
-        db.add_column(u'core_alert', 'hardware_device',
+        db.add_column(u'core_alert', 'static_device',
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
-                                                                            related_name='hardware_device',
-                                                                            to=orm['core.TalkaphoneDevice'])),
+                                                                            related_name='static_device',
+                                                                            to=orm['core.StaticDevice'])),
         db.alter_column(u'core_alert', 'agency_user_id',
                         self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                               related_name='alert_agency_user',
@@ -131,7 +131,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'default': "'N'", 'max_length': '1'}),
             'user_notified_of_dispatcher_congestion': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user_notified_of_receipt': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'hardware_device': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hardware_device'",'blank': 'True', 'null': 'True', 'to': u"orm['core.TalkaphoneDevice']"}),
+            'hardware_device': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hardware_device'",'blank': 'True', 'null': 'True', 'to': u"orm['core.StaticDevice']"}),
         },
         u'core.alertlocation': {
             'Meta': {'ordering': "['-creation_date']", 'object_name': 'AlertLocation'},
@@ -252,10 +252,10 @@ class Migration(SchemaMigration):
             'open': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
             'close': ('django.db.models.fields.TimeField', [], {'null': 'True', 'blank': 'True'}),
         },
-        u'core.talkaphonedevice': {
-            'Meta': {'object_name': 'TalkaphoneDevice'},
+        u'core.staticdevice': {
+            'Meta': {'object_name': 'StaticDevice'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
-            'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'TalkaphoneDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
+            'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'StaticDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),

@@ -48,11 +48,11 @@ from rest_framework.authtoken.serializers import AuthTokenSerializer
 
 from twilio.util import TwilioCapability
 
-from models import (Agency, EntourageMember, TalkaphoneDevice, Alert)
-from forms import (AgencySettingsForm, TalkaphoneDeviceForm)
+from models import (Agency, EntourageMember, StaticDevice, Alert)
+from forms import (AgencySettingsForm, StaticDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer,
-                                EntourageMemberUpdateSerializer, TalkaphoneDeviceSerializer)
-from core.tasks import new_talkaphone_alert
+                                EntourageMemberUpdateSerializer, StaticDeviceSerializer)
+from core.tasks import new_static_alert
 
 User = get_user_model()
 
@@ -479,9 +479,9 @@ def set_entourage_members(request):
 
 # @csrf_exempt
 @api_view(['POST'])
-def register_talkaphone_device(request):
+def register_static_device(request):
 
-    """Registers new Talkaphone devices with the API
+    """Registers new Static devices with the API
 
     uuid -- (Required) Unique identifier of the device (serial number or randomly generated string)
     type -- (Optional) Model number or device type
@@ -499,9 +499,9 @@ def register_talkaphone_device(request):
             response.status_code = 400
             return response
 
-        current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
+        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
 
-        form = TalkaphoneDeviceForm(request.POST, instance=current_device)
+        form = StaticDeviceForm(request.POST, instance=current_device)
         form.save()
 
         if not current_device.agency:
@@ -520,9 +520,9 @@ def register_talkaphone_device(request):
     return response
 
 @api_view(['POST'])
-def talkaphone_alert(request):
+def static_alert(request):
 
-    """Send a Talkaphone alert to dispatchers
+    """Send a Static alert to dispatchers
 
     uuid -- (Required) Unique identifier of the device (serial number or randomly generated string)
     type -- (Optional) Model number or device type
@@ -540,9 +540,9 @@ def talkaphone_alert(request):
             response.status_code = 400
             return response
 
-        current_device, created = TalkaphoneDevice.objects.get_or_create(uuid=uuid)
+        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
 
-        form = TalkaphoneDeviceForm(request.POST, instance=current_device)
+        form = StaticDeviceForm(request.POST, instance=current_device)
         form.save()
 
         if not current_device.agency:
@@ -557,7 +557,7 @@ def talkaphone_alert(request):
         else:
             response = HttpResponse(content="Created")
             response.status_code = 201
-            new_talkaphone_alert(current_device)
+            new_static_alert(current_device)
 
     else:
         response = HttpResponse(content="Request method not allowed")
@@ -567,7 +567,7 @@ def talkaphone_alert(request):
 
 
 @api_view(['POST'])
-def talkaphone_disarm(request):
+def static_disarm(request):
 
     if request.method == 'POST':
         uuid = request.POST.get('uuid')
@@ -577,8 +577,8 @@ def talkaphone_disarm(request):
             response.status_code = 400
             return response
 
-        # current_device, created = TalkaphoneDevice.objects.get (uuid=uuid)
-        current_device = get_object_or_404(TalkaphoneDevice, uuid=uuid)
+        # current_device, created = StaticDevice.objects.get (uuid=uuid)
+        current_device = get_object_or_404(StaticDevice, uuid=uuid)
 
         active_alerts = Alert.active.filter(hardware_device=current_device)
         if active_alerts:
