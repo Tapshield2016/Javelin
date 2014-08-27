@@ -12,7 +12,6 @@ from django.contrib.auth.models import Group
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
-from core.api.routers.v1 import
 from rest_framework.reverse import reverse
 from django.http import HttpResponse
 
