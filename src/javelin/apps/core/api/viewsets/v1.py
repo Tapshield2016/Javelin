@@ -14,7 +14,8 @@ from django.contrib.gis.measure import D
 from django.core.mail import send_mail
 from django.core.urlresolvers import reverse
 from django.http import HttpResponse
-from api.routers.v1 import router_v1
+
+from core.api.routers.v1 import router_v1
 
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
