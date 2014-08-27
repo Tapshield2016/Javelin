@@ -37,7 +37,6 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      ClosedDateSerializer,
                                      StaticDeviceSerializer)
 
-from forms import (StaticDeviceForm)
 from aws.dynamodb import DynamoDBManager
 from aws.sns import SNSManager
 from filters import IsoDateTimeFilter
