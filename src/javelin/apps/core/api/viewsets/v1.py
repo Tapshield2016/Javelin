@@ -497,6 +497,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
     @action(methods=['POST',])
-    def register(self, request):
+    def register(self, request, pk=None):
 
         return Response({'message': 'Success'})
