@@ -496,12 +496,13 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
 
-@group_required('Device Maker')
+
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
+    @group_required('Device Maker')
     def create(self, request):
 
         request_data = request.DATA.copy()
