@@ -37,10 +37,10 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      ClosedDateSerializer,
                                      StaticDeviceSerializer)
 
-from aws.dynamodb import DynamoDBManager
-from aws.sns import SNSManager
-from filters import IsoDateTimeFilter
-from models import (Agency, Alert, AlertLocation,
+from core.aws.dynamodb import DynamoDBManager
+from core.aws.sns import SNSManager
+from core.filters import IsoDateTimeFilter
+from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
