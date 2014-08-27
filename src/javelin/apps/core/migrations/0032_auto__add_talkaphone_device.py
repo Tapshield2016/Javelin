@@ -10,9 +10,9 @@ class Migration(SchemaMigration):
     def forwards(self, orm):
         # Adding model 'StaticDevice'
         db.create_table(u'core_staticdevice', (
-            # (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'StaticDevice', to=orm['core.Agency'], null=True, blank=True)),
-            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, primary_key=True)),
+            ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, unique=True)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
@@ -258,8 +258,9 @@ class Migration(SchemaMigration):
         },
         u'core.staticdevice': {
             'Meta': {'object_name': 'StaticDevice'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'StaticDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
-            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'primary_key': 'True'}),
+            'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
