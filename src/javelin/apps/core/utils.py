@@ -44,7 +44,7 @@ def get_agency_from_unknown(unknown_object):
     agency = None
 
     try:
-        agency = Agency.objects.get(name=unknown_object)
+        agency = Agency.objects.get(name__iexact=unknown_object)
     except Agency.DoesNotExist:
         agency_id = ''.join(x for x in unknown_object if x.isdigit())
         if type(agency_id) is int:
