@@ -587,19 +587,19 @@ def static_alert(request):
         if form.is_valid():
             form.save()
 
-        if not device.agency:
-            device.delete()
+        if not current_device.agency:
+            current_device.delete()
             response = HttpResponse(content="Could not find agency")
             response.status_code = 404
 
-        elif not device.location_point:
+        elif not current_device.location_point:
             response = HttpResponse(content="No location provided")
             response.status_code = 400
 
         else:
             response = HttpResponse(content="Created")
             response.status_code = 201
-            new_static_alert(device)
+            new_static_alert(current_device)
 
     else:
         response = HttpResponse(content="Request method not allowed")
