@@ -496,7 +496,7 @@ def register_static_device(request):
     longitude -- (Required) Longitude coordinate value
     """
 
-    return StaticDeviceViewSet.create(StaticDeviceViewSet(), request)
+    return StaticDeviceViewSet(request.POST)
 
     # if request.method == 'POST':
     #     uuid = request.POST.get('uuid')
