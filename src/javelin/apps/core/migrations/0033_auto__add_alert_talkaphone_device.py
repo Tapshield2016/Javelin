@@ -256,7 +256,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'StaticDevice'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'StaticDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
-            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Owner'", 'to': u"orm['core.AgencyUser']", 'blank': 'True', 'null': 'True',}),
+            'user': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'user'", 'to': u"orm['core.AgencyUser']", 'blank': 'True', 'null': 'True',}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),

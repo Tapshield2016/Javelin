@@ -60,7 +60,7 @@ User = get_user_model()
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
-    Assumes the model instance has an `owner` attribute.
+    Assumes the model instance has a `user` attribute.
     """
 
     def has_object_permission(self, request, view, obj):
@@ -69,14 +69,17 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        # Instance must have an attribute named `owner`.
-        return obj.owner == request.user
+        # Instance must have an attribute named `user`.
+        return obj.user == request.user
 
 class DeviceMakerOnly(permissions.BasePermission):
     """
     Only allows Device Maker group to view or edit.
     """
     def has_object_permission(self, request, view, obj):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
 
         permitted_groups = []
         permitted_groups.append(Group.objects.get(name='Device Maker'))
@@ -537,7 +540,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def create(self, request):
 
         request_data = request.DATA.copy()
-        request_data['owner'] = UserSerializer(request.user).data['url']
+        request_data['user'] = UserSerializer(request.user).data['url']
         agency_id = request_data.get('agency', None)
 
         agency = None
@@ -568,7 +571,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
-        request.DATA['owner'] = UserSerializer(request.user).data['url']
+        request.DATA['user'] = UserSerializer(request.user).data['url']
         agency_id = request.DATA.get('agency', None)
 
         agency = None
@@ -586,7 +589,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
-        request.DATA['owner'] = UserSerializer(request.user).data['url']
+        request.DATA['user'] = UserSerializer(request.user).data['url']
         agency_id = request.DATA.get('agency', None)
 
         agency = None
