@@ -78,9 +78,10 @@ class DeviceMakerOnly(permissions.BasePermission):
     """
     def has_object_permission(self, request, view, obj):
 
-        device_maker_group = Group.objects.get(name='Device Maker')
+        permitted_groups = []
+        permitted_groups.append(Group.objects.get(name='Device Maker'))
         if request.user.is_authenticated():
-            if bool(request.user.groups.filter(name__in=device_maker_group)) | request.user.is_superuser:
+            if bool(request.user.groups.filter(name__in=permitted_groups)) | request.user.is_superuser:
                 return True
             return False
         return False
