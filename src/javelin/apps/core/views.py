@@ -53,6 +53,7 @@ from forms import (AgencySettingsForm, StaticDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer,
                                 EntourageMemberUpdateSerializer, StaticDeviceSerializer)
 from core.tasks import new_static_alert
+from core.utils import group_required
 
 User = get_user_model()
 
@@ -479,6 +480,7 @@ def set_entourage_members(request):
 
 # @csrf_exempt
 @api_view(['POST'])
+@group_required('Device Maker',)
 def register_static_device(request):
 
     """Registers new Static devices with the API
@@ -520,6 +522,7 @@ def register_static_device(request):
     return response
 
 @api_view(['POST'])
+@group_required('Device Maker',)
 def static_alert(request):
 
     """Send a Static alert to dispatchers
@@ -567,6 +570,7 @@ def static_alert(request):
 
 
 @api_view(['POST'])
+@group_required('Device Maker',)
 def static_disarm(request):
 
     if request.method == 'POST':

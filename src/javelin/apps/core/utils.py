@@ -4,6 +4,7 @@ import ast
 import re
 
 from django.conf import settings
+from rest_framework import permissions
 
 from core.aws.dynamodb import DynamoDBManager
 from core.models import Agency, AgencyUser
