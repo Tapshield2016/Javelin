@@ -576,7 +576,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request_data['agency'] = AgencySerializer(agency).data['url']
 
-        request.data = request_data
+        request.DATA = request_data
 
         return super(StaticDeviceViewSet, self).update(request, pk)
 
@@ -593,6 +593,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request_data['agency'] = AgencySerializer(agency).data['url']
 
-        request.data = request_data
+        request.DATA = request_data
 
         return super(StaticDeviceViewSet, self).update(request, pk)
