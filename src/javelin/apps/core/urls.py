@@ -1,7 +1,7 @@
 from django.conf.urls import patterns, include, url
 
 from api.routers.v1 import router_v1
-from api.viewsets.v1 import StaticDeviceViewSet
+from api.viewsets.v1 import StaticDeviceDetail
 
 
 urlpatterns = patterns('',
@@ -34,4 +34,5 @@ urlpatterns = patterns('',
     url(r'^static-device/register/$', 'core.views.register_static_device'),
     url(r'^static-device/alert/$', 'core.views.static_alert'),
     url(r'^static-device/disarm/$', 'core.views.static_disarm'),
+    url(r'^static-device/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view()),
 )

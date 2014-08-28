@@ -606,3 +606,9 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         request.DATA._mutable = mutable
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
+
+
+class StaticDeviceDetail(generics.RetrieveAPIView):
+    lookup_field = 'uuid'
+    queryset = StaticDevice.objects.all()
+    serializer_class = StaticDeviceSerializer
