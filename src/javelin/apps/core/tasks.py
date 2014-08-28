@@ -224,7 +224,7 @@ def new_static_alert(device):
 
     location_latitude = device.latitude
     location_longitude = device.longitude
-    alert_initiated_by = "H"
+    alert_initiated_by = "S"
 
     active_alerts = Alert.active.filter(static_device=device)
     if active_alerts:
@@ -241,9 +241,7 @@ def new_static_alert(device):
                                             latitude=location_latitude,)
                                             # accuracy=location_accuracy)
     incoming_alert_location.save()
-
-    message_valid = True
     incoming_alert.user_notified_of_receipt = True
     incoming_alert.save()
 
-    return message_valid
+    return incoming_alert

@@ -51,7 +51,7 @@ from twilio.util import TwilioCapability
 
 from models import (Agency, EntourageMember, StaticDevice, Alert)
 from forms import (AgencySettingsForm, StaticDeviceForm)
-from api.serializers.v1 import (AgencySerializer, UserSerializer,
+from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
                                 EntourageMemberUpdateSerializer, StaticDeviceSerializer)
 from core.tasks import new_static_alert
 from core.utils import group_required
@@ -599,7 +599,16 @@ def static_alert(request):
         else:
             response = HttpResponse(content="Created")
             response.status_code = 201
-            new_static_alert(current_device)
+            alert = new_static_alert(current_device)
+            serializer = AlertSerializer(instance=alert)
+
+            headers = {}
+            try:
+                headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+            except (TypeError, KeyError):
+                pass
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
 
     else:
         response = HttpResponse(content="Request method not allowed")
