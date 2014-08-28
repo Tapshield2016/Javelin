@@ -482,6 +482,34 @@ def set_entourage_members(request):
         new_member = EntourageMemberUpdateSerializer(data=member)
 
 
+def serialize_static_device_save(request):
+
+    request_data = request.POST.copy()
+    request_data['user'] = UserSerializer(request.user).data['url']
+    agency_id = request_data.get('agency', None)
+
+    agency = None
+    if agency_id:
+        agency = get_agency_from_unknown(agency_id)
+    if agency:
+        request_data['agency'] = AgencySerializer(agency).data['url']
+
+    serializer = StaticDeviceSerializer(data=request_data)
+
+    if not serializer.is_valid():
+        return serializer
+
+    serializer.save()
+
+    if not serializer.object.agency:
+        serializer.object.delete()
+        serializer.errors = {'agency': [u'No agency could be found from the given parameters.'],}
+        return serializer
+
+    return serializer
+
+
+
 # @csrf_exempt
 @api_view(['POST'])
 @group_required('Device Maker',)
@@ -499,26 +527,31 @@ def register_static_device(request):
 
     if request.method == 'POST':
 
-        request_data = request.POST.copy()
-        request_data['user'] = UserSerializer(request.user).data['url']
-        agency_id = request_data.get('agency', None)
+        # request_data = request.POST.copy()
+        # request_data['user'] = UserSerializer(request.user).data['url']
+        # agency_id = request_data.get('agency', None)
+        #
+        # agency = None
+        # if agency_id:
+        #     agency = get_agency_from_unknown(agency_id)
+        # if agency:
+        #     request_data['agency'] = AgencySerializer(agency).data['url']
+        #
+        # serializer = StaticDeviceSerializer(data=request_data)
+        #
+        # if not serializer.is_valid():
+        #     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        #
+        # serializer.save()
+        #
+        # if not serializer.object.agency:
+        #         serializer.object.delete()
+        #         return Response("Could not find agency or agency not provided", status=status.HTTP_400_BAD_REQUEST)
 
-        agency = None
-        if agency_id:
-            agency = get_agency_from_unknown(agency_id)
-        if agency:
-            request_data['agency'] = AgencySerializer(agency).data['url']
+        serializer = serialize_static_device_save(request)
 
-        serializer = StaticDeviceSerializer(data=request_data)
-
-        if not serializer.is_valid():
+        if serializer.errors:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-        serializer.save()
-
-        if not serializer.object.agency:
-                serializer.object.delete()
-                return Response("Could not find agency or agency not provided", status=status.HTTP_400_BAD_REQUEST)
 
         headers = {}
         try:
