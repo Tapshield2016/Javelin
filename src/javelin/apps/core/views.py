@@ -495,8 +495,9 @@ def register_static_device(request):
     latitude -- (Required) Latitude coordinate value
     longitude -- (Required) Longitude coordinate value
     """
-
-    return StaticDeviceViewSet.view(request)
+    viewset = StaticDeviceViewSet()
+    viewset.request = request
+    return StaticDeviceViewSet.create(StaticDeviceViewSet(), request)
 
     # if request.method == 'POST':
     #     uuid = request.POST.get('uuid')
@@ -523,8 +524,8 @@ def register_static_device(request):
     # else:
     #     response = HttpResponse(content="Request method not allowed")
     #     response.status_code = 405
-    #
-    # return response
+
+    return response
 
 @api_view(['POST'])
 @group_required('Device Maker',)
