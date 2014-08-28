@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from django.contrib.sites.models import get_current_site
 from django.contrib.auth.decorators import user_passes_test
 
+from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
@@ -579,6 +580,8 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
             agency = get_agency_from_unknown(agency_id)
         if agency:
             request.DATA['agency'] = AgencySerializer(agency).data['url']
+        else:
+            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
 
         request.DATA._mutable = mutable
 
@@ -597,7 +600,15 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
             agency = get_agency_from_unknown(agency_id)
         if agency:
             request.DATA['agency'] = AgencySerializer(agency).data['url']
+        else:
+            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
 
         request.DATA._mutable = mutable
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
+
+
+class StaticDeviceDetail(generics.RetrieveAPIView):
+    lookup_field = 'uuid'
+    queryset = StaticDevice.objects.all()
+    serializer_class = StaticDeviceSerializer
