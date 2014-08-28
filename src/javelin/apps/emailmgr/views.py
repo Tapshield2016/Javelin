@@ -72,13 +72,23 @@ def email_make_primary(request):
 
     email -- (Required) The user's secondary email address
     """
-    email_to_make_primary = request.DATA.get('email', None)
+    f = forms.EmailField()
+    email = request.DATA.get('email', None)
+
     try:
-        EmailAddress.objects.get(user=request.user, email__iexact=email_to_make_primary.lower())
+        f.clean(email)
+    except ValidationError as e:
+        return Response({"message": "Enter a valid email address."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    email_to_make_primary = email.lower()
+
+
+    try:
+        email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_make_primary)
     except EmailAddress.DoesNotExist:
         return Response({"message": "Email could not be found."},
                         status=status.HTTP_404_NOT_FOUND)
-    email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_make_primary.lower())
     if email.is_active:
         if email.is_primary:
             return Response(UserSerializer(instance=request.user).data,
@@ -108,14 +118,24 @@ def email_send_activation(request):
 
     email -- (Required) The user's secondary email address
     """
-    email_to_activate = request.DATA.get('email', None)
+    f = forms.EmailField()
+    email = request.DATA.get('email', None)
+
     try:
-        EmailAddress.objects.get(user=request.user, email__iexact=email_to_activate.lower())
+        f.clean(email)
+    except ValidationError as e:
+        return Response({"message": "Enter a valid email address."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    email_to_activate = email.lower()
+
+
+    try:
+        email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_activate)
     except EmailAddress.DoesNotExist:
         return Response({"message": "Email could not be found."},
                         status=status.HTTP_404_NOT_FOUND)
 
-    email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_activate.lower())
     if email.is_active:
         return Response({"message": "Email already activated."},
                         status=status.HTTP_404_NOT_FOUND)
@@ -137,15 +157,24 @@ def email_check_activated(request):
 
     email -- (Required) The user's secondary email address
     """
-    email_to_check = request.DATA.get('email', None)
+    f = forms.EmailField()
+    email = request.DATA.get('email', None)
+
     try:
-        EmailAddress.objects.get(user=request.user, email__iexact=email_to_check.lower())
+        f.clean(email)
+    except ValidationError as e:
+        return Response({"message": "Enter a valid email address."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    email = email.lower()
+
+    try:
+        email_object = EmailAddress.objects.get(user=request.user, email__iexact=email)
     except EmailAddress.DoesNotExist:
         return Response({"message": "Email could not be found."},
                         status=status.HTTP_404_NOT_FOUND)
-    email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_check.lower())
 
-    if email.is_active:
+    if email_object.is_active:
         return Response(UserSerializer(instance=request.user).data,
                     status=status.HTTP_200_OK)
 
@@ -192,14 +221,24 @@ def email_delete(request):
     """
     Email needs to be removed from User's account, primary email address cannot be removed
     """
-    email_to_delete = request.DATA.get('email', None)
+    f = forms.EmailField()
+    email = request.DATA.get('email', None)
+
     try:
-        EmailAddress.objects.get(user=request.user, email__iexact=email_to_delete.lower())
+        f.clean(email)
+    except ValidationError as e:
+        return Response({"message": "Enter a valid email address."},
+                        status=status.HTTP_404_NOT_FOUND)
+
+    email_to_delete = email.lower()
+
+
+    try:
+        email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_delete)
     except EmailAddress.DoesNotExist:
         return Response({"message": "Email could not be found."},
                         status=status.HTTP_404_NOT_FOUND)
 
-    email = EmailAddress.objects.get(user=request.user, email__iexact=email_to_delete.lower())
     if email.email == request.user.email:
         return Response({"message": "Cannot remove primary email address."},
                         status=status.HTTP_404_NOT_FOUND)
@@ -213,6 +252,7 @@ def email_delete(request):
                         status=status.HTTP_200_OK)
 
 
+@api_view(['GET'])
 def email_list(request):
     """
     All email address associated with User account will be passed into the template as a list
