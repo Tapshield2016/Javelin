@@ -541,8 +541,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def create(self, request):
 
         request_data = request.DATA.copy()
-        if not request_data:
-            request_data = request.POST.copy()
         request_data['user'] = UserSerializer(request.user).data['url']
         agency_id = request_data.get('agency', None)
 
@@ -552,9 +550,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request_data['agency'] = AgencySerializer(agency).data['url']
 
-        # serializer = self.get_serializer(data=request_data, files=request.FILES)
-
-        serializer = StaticDeviceSerializer(request_data)
+        serializer = self.get_serializer(data=request_data, files=request.FILES)
 
         if serializer.is_valid():
 
