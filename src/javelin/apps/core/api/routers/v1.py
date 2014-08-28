@@ -2,7 +2,7 @@ from rest_framework import routers
 from django.conf.urls import patterns, include, url
 
 from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
-                                  AlertViewSet, AlertLocationViewSet, StaticDeviceDetail,
+                                  AlertViewSet, AlertLocationViewSet,
                                   ChatMessageViewSet, MassAlertViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
                                   EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
