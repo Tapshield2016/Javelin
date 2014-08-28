@@ -719,6 +719,9 @@ class StaticDevice(models.Model):
     longitude = models.FloatField(null=True, blank=True)
     location_point = db_models.PointField(geography=True,
                                           null=True, blank=True)
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              related_name="User",
+                              null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.latitude and self.longitude:

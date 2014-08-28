@@ -12,6 +12,7 @@ class Migration(SchemaMigration):
         db.create_table(u'core_staticdevice', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
             ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'StaticDevice', to=orm['core.Agency'], null=True, blank=True)),
+            ('owner', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'User', to=orm['core.AgencyUser'], null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.CharField')(max_length=255, unique=True)),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
@@ -260,6 +261,7 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'StaticDevice'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'agency': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'StaticDevice'", 'to': u"orm['core.Agency']", 'blank': 'True', 'null': 'True',}),
+            'owner': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Owner'", 'to': u"orm['core.AgencyUser']", 'blank': 'True', 'null': 'True',}),
             'uuid': ('django.db.models.fields.CharField', [], {'max_length': '255', 'unique': 'True'}),
             'type': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'description': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),

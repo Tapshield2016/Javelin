@@ -15,6 +15,7 @@ from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.contrib.sites.models import get_current_site
 
+from rest_framework import permissions
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
@@ -53,6 +54,22 @@ from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
 
 User = get_user_model()
+
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has an `owner` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `owner`.
+        return obj.owner == request.user
 
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
@@ -498,11 +515,11 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
 
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsOwnerOrReadOnly,)
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-    @group_required('Device Maker')
     def create(self, request):
 
         request_data = request.DATA.copy()
