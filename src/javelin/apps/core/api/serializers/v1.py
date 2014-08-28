@@ -197,6 +197,8 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
+    user_id = serializers.Field(source='uuid')
 
     class Meta:
         model = StaticDevice
+        lookup_field = 'user_id'

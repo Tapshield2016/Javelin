@@ -534,9 +534,9 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
-    queryset = StaticDevice.objects.select_related('agency').all()
+    # queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
-    filter_fields = ('agency',)
+    # filter_fields = ('agency',)
 
     def create(self, request):
 
@@ -608,7 +608,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 
 
-class StaticDeviceDetail(generics.RetrieveAPIView):
-    lookup_field = 'uuid'
-    queryset = StaticDevice.objects.all()
-    serializer_class = StaticDeviceSerializer
+# class StaticDeviceDetail(generics.RetrieveAPIView):
+#     lookup_field = 'uuid'
+#     queryset = StaticDevice.objects.all()
+#     serializer_class = StaticDeviceSerializer
