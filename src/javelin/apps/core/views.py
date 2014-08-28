@@ -496,10 +496,6 @@ def register_static_device(request):
     longitude -- (Required) Longitude coordinate value
     """
 
-    mutable = request._mutable
-    request._mutable = True
-    request['DATA'] = request.POST
-    request._mutable = mutable
     return StaticDeviceViewSet.create(StaticDeviceViewSet(), request)
 
     # if request.method == 'POST':
