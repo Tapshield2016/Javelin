@@ -550,7 +550,9 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request_data['agency'] = AgencySerializer(agency).data['url']
 
-        serializer = self.get_serializer(data=request_data, files=request.FILES)
+        # serializer = self.get_serializer(data=request_data, files=request.FILES)
+
+        serializer = StaticDeviceSerializer(request_data)
 
         if serializer.is_valid():
 
