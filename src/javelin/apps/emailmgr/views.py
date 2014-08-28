@@ -150,7 +150,7 @@ def email_send_activation(request):
 
 
 @api_view(['GET'])
-def email_check_activated(request):
+def email_check_activated(request, email=None):
     """
     User is logged in, has a second email that is added and
     wants to make check if it has been activated.
@@ -158,7 +158,6 @@ def email_check_activated(request):
     email -- (Required) The user's secondary email address
     """
     f = forms.EmailField()
-    email = request.DATA.get('email', None)
 
     try:
         f.clean(email)
