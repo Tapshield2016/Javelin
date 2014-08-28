@@ -503,7 +503,9 @@ def serialize_static_device_save(request):
 
     if not serializer.object.agency:
         serializer.object.delete()
-        serializer['errors'] = {'agency': [u'No agency could be found from the given parameters.'],}
+        mutable = serializer.errors._mutable
+        serializer.errors._mutable = True
+        serializer.errors = {'agency': [u'No agency could be found from the given parameters.'],}
         return serializer
 
     return serializer
