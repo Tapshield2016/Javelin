@@ -534,9 +534,9 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
-    queryset = StaticDevice.objects.select_related('agency').all()
+    # queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
-    filter_fields = ('agency',)
+    # filter_fields = ('agency',)
 
     def create(self, request):
 
