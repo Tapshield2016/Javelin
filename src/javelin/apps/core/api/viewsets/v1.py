@@ -566,6 +566,8 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
     def update(self, request, pk=None):
 
+        mutable = request.DATA._mutable
+        request.DATA._mutable = True
         request.DATA['owner'] = UserSerializer(request.user).data['url']
         agency_id = request.DATA.get('agency', None)
 
@@ -574,13 +576,16 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
             agency = get_agency_from_unknown(agency_id)
         if agency:
             request.DATA['agency'] = AgencySerializer(agency).data['url']
+
+        request.DATA._mutable = mutable
 
         return super(StaticDeviceViewSet, self).update(request, pk)
 
 
     def partial_update(self, request, pk=None):
 
-        # request_data = request.DATA.copy()
+        mutable = request.DATA._mutable
+        request.DATA._mutable = True
         request.DATA['owner'] = UserSerializer(request.user).data['url']
         agency_id = request.DATA.get('agency', None)
 
@@ -590,6 +595,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request.DATA['agency'] = AgencySerializer(agency).data['url']
 
-        # request.DATA = request_data
+        request.DATA._mutable = mutable
 
         return super(StaticDeviceViewSet, self).update(request, pk)
