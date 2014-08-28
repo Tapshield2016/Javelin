@@ -157,6 +157,9 @@ def email_check_activated(request, email=None):
 
     email -- (Required) The user's secondary email address
     """
+    email = request.DATA.get('email', None)
+    if not email:
+        email = request.GET.get('email', None)
     f = forms.EmailField()
 
     try:
