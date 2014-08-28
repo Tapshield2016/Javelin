@@ -581,6 +581,10 @@ def static_alert(request):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             device = serializer.object
 
+        form = StaticDeviceForm(data=request.POST, instance=device)
+        if form.is_valid():
+            form.save()
+
         if not device.agency:
             device.delete()
             response = HttpResponse(content="Could not find agency")
