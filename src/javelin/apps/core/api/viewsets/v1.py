@@ -76,23 +76,23 @@ class DeviceMakerOnly(permissions.BasePermission):
     """
     Only allows Device Maker group to view or edit.
     """
-    # def has_object_permission(self, request, view, obj):
-    #
-    #     device_maker_group = Group.objects.get(name='Device Maker')
-    #     for group in request.user.groups:
-    #         if group == device_maker_group:
-    #             return True
-    #
-    #     return False
+    def has_object_permission(self, request, view, obj):
 
-    def group_required(*group_names):
-        """Requires user membership in at least one of the groups passed in."""
-        def in_groups(self, request, view, obj):
-            if request.user.is_authenticated():
-                if bool(request.user.groups.filter(name__in=group_names)) | request.user.is_superuser:
-                    return True
+        device_maker_group = Group.objects.get(name='Device Maker')
+        if request.user.is_authenticated():
+            if bool(request.user.groups.filter(name__in=device_maker_group)) | request.user.is_superuser:
+                return True
             return False
-        return user_passes_test(in_groups)
+        return False
+
+    # def group_required(*group_names):
+    #     """Requires user membership in at least one of the groups passed in."""
+    #     def in_groups(self, request, view, obj):
+    #         if request.user.is_authenticated():
+    #             if bool(request.user.groups.filter(name__in=group_names)) | request.user.is_superuser:
+    #                 return True
+    #         return False
+    #     return user_passes_test(in_groups)
 
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
@@ -537,7 +537,7 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
 
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly.group_required('Device Maker'))
+    permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
