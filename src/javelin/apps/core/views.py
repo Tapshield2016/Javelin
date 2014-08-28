@@ -54,6 +54,9 @@ from api.serializers.v1 import (AgencySerializer, UserSerializer,
                                 EntourageMemberUpdateSerializer, StaticDeviceSerializer)
 from core.tasks import new_static_alert
 from core.utils import group_required
+from core.utils import get_agency_from_unknown
+from core.api.viewsets.v1 import StaticDeviceViewSet
+
 
 User = get_user_model()
 
@@ -493,33 +496,35 @@ def register_static_device(request):
     longitude -- (Required) Longitude coordinate value
     """
 
-    if request.method == 'POST':
-        uuid = request.POST.get('uuid')
+    return StaticDeviceViewSet.create(StaticDeviceViewSet(), request)
 
-        if not uuid:
-            response = HttpResponse(content="Must contain 'uuid' parameter")
-            response.status_code = 400
-            return response
-
-        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
-
-        form = StaticDeviceForm(request.POST, instance=current_device)
-        form.save()
-
-        if not current_device.agency:
-            current_device.delete()
-            response = HttpResponse(content="Could not find agency")
-            response.status_code = 404
-
-        else:
-            response = HttpResponse(content="OK")
-            response.status_code = 200
-
-    else:
-        response = HttpResponse(content="Request method not allowed")
-        response.status_code = 405
-
-    return response
+    # if request.method == 'POST':
+    #     uuid = request.POST.get('uuid')
+    #
+    #     if not uuid:
+    #         response = HttpResponse(content="Must contain 'uuid' parameter")
+    #         response.status_code = 400
+    #         return response
+    #
+    #     current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+    #
+    #     form = StaticDeviceForm(request.POST, instance=current_device)
+    #     form.save()
+    #
+    #     if not current_device.agency:
+    #         current_device.delete()
+    #         response = HttpResponse(content="Could not find agency")
+    #         response.status_code = 404
+    #
+    #     else:
+    #         response = HttpResponse(content="OK")
+    #         response.status_code = 200
+    #
+    # else:
+    #     response = HttpResponse(content="Request method not allowed")
+    #     response.status_code = 405
+    #
+    # return response
 
 @api_view(['POST'])
 @group_required('Device Maker',)
