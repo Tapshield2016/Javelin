@@ -537,6 +537,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def create(self, request):
 
         request_data = request.DATA.copy()
+        request_data['owner'] = UserSerializer(request.user).data['url']
         agency_id = request_data.get('agency', None)
 
         agency = None
@@ -544,8 +545,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
             agency = get_agency_from_unknown(agency_id)
         if agency:
             request_data['agency'] = AgencySerializer(agency).data['url']
-
-        request_data['owner'] = UserSerializer(request.user).data['url']
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
@@ -568,6 +567,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def update(self, request, pk=None):
 
         request_data = request.DATA.copy()
+        request_data['owner'] = UserSerializer(request.user).data['url']
         agency_id = request_data.get('agency', None)
 
         agency = None
@@ -584,6 +584,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def partial_update(self, request, pk=None):
 
         request_data = request.DATA.copy()
+        request_data['owner'] = UserSerializer(request.user).data['url']
         agency_id = request_data.get('agency', None)
 
         agency = None
