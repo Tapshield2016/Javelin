@@ -636,8 +636,15 @@ def static_disarm(request):
         if active_alerts:
             alert = active_alerts[0]
             alert.disarm()
-            response = HttpResponse(content="Disarmed")
-            response.status_code = 200
+            serializer = AlertSerializer(instance=alert)
+
+            headers = {}
+            try:
+                headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+            except (TypeError, KeyError):
+                pass
+            return Response(serializer.data, status=status.HTTP_200_OK,
+                            headers=headers)
 
         else:
             response = HttpResponse(content="Alert not found")
