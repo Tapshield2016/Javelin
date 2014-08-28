@@ -586,7 +586,7 @@ def static_alert(request):
 
         if not device:
             response = register_static_device(request)
-            if response.status != 201:
+            if response.status_code != 201:
                 return response
             serialized = StaticDeviceSerializer(data=response.content)
             device = serialized.object
