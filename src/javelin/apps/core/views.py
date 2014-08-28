@@ -577,24 +577,37 @@ def static_alert(request):
             response.status_code = 400
             return response
 
-        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+        try:
+            device = StaticDevice.get(uuid=uuid)
+        except:
+            pass
 
-        form = StaticDeviceForm(request.POST, instance=current_device)
-        form.save()
+        if not device:
+            response = register_static_device(request)
+            if response.status != 201:
+                return response
+            serialized = StaticDeviceSerializer(data=response.content)
+            device = serialized.object
 
-        if not current_device.agency:
-            current_device.delete()
+
+        # current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+        #
+        # form = StaticDeviceForm(request.POST, instance=current_device)
+        # form.save()
+
+        if not device.agency:
+            device.delete()
             response = HttpResponse(content="Could not find agency")
             response.status_code = 404
 
-        elif not current_device.location_point:
+        elif not device.location_point:
             response = HttpResponse(content="No location provided")
             response.status_code = 400
 
         else:
             response = HttpResponse(content="Created")
             response.status_code = 201
-            new_static_alert(current_device)
+            new_static_alert(device)
 
     else:
         response = HttpResponse(content="Request method not allowed")
