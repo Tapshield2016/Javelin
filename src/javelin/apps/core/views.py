@@ -577,8 +577,10 @@ def static_alert(request):
             response.status_code = 400
             return response
 
+        device = None
+
         try:
-            device = StaticDevice.get(uuid=uuid)
+            device = StaticDevice.objects.get(uuid=uuid)
         except:
             pass
 
