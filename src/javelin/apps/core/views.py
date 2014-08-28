@@ -561,6 +561,7 @@ def static_alert(request):
     """
 
     if request.method == 'POST':
+        request_post = request.POST.copy()
         uuid = request.POST.get('uuid')
 
         if not uuid:
@@ -582,7 +583,7 @@ def static_alert(request):
             device = serializer.object
 
         current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
-        form = StaticDeviceForm(request.POST, instance=current_device)
+        form = StaticDeviceForm(request_post, instance=current_device)
         if form.is_valid():
             form.save()
 
