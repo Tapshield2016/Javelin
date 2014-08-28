@@ -226,12 +226,12 @@ def new_static_alert(device):
     location_longitude = device.longitude
     alert_initiated_by = "H"
 
-    active_alerts = Alert.active.filter(hardware_device=device)
+    active_alerts = Alert.active.filter(static_device=device)
     if active_alerts:
         incoming_alert = active_alerts[0]
         incoming_alert.disarmed_time = None
     else:
-        incoming_alert = Alert(agency=device.agency, hardware_device=device,
+        incoming_alert = Alert(agency=device.agency, static_device=device,
                                initiated_by=alert_initiated_by)
         incoming_alert.save()
 

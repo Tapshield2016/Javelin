@@ -633,7 +633,7 @@ def static_disarm(request):
         # current_device, created = StaticDevice.objects.get (uuid=uuid)
         current_device = get_object_or_404(StaticDevice, uuid=uuid)
 
-        active_alerts = Alert.active.filter(hardware_device=current_device)
+        active_alerts = Alert.active.filter(static_device=current_device)
         if active_alerts:
             alert = active_alerts[0]
             alert.disarm()

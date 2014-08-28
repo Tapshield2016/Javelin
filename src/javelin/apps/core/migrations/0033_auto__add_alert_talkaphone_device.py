@@ -8,7 +8,7 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Alert.hardware_device'
+        # Adding field 'Alert.static_device'
         db.add_column(u'core_alert', 'static_device',
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                             related_name='static_device',
@@ -19,7 +19,7 @@ class Migration(SchemaMigration):
                                                                               to=orm['core.AgencyUser'])),
 
     def backwards(self, orm):
-        # Deleting field 'Alert.hardware_device'
+        # Deleting field 'Alert.static_device'
         db.delete_column(u'core_alert', 'static_device_id')
 
     models = {
@@ -131,7 +131,7 @@ class Migration(SchemaMigration):
             'status': ('django.db.models.fields.CharField', [], {'default': "'N'", 'max_length': '1'}),
             'user_notified_of_dispatcher_congestion': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'user_notified_of_receipt': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
-            'hardware_device': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'hardware_device'",'blank': 'True', 'null': 'True', 'to': u"orm['core.StaticDevice']"}),
+            'static_device': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'static_device'",'blank': 'True', 'null': 'True', 'to': u"orm['core.StaticDevice']"}),
         },
         u'core.alertlocation': {
             'Meta': {'ordering': "['-creation_date']", 'object_name': 'AlertLocation'},
