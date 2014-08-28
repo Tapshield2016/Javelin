@@ -33,4 +33,5 @@ urlpatterns = patterns('',
     url(r'^static-device/register/$', 'core.views.register_static_device'),
     url(r'^static-device/alert/$', 'core.views.static_alert'),
     url(r'^static-device/disarm/$', 'core.views.static_disarm'),
+    url(r'^static-device-detail/(?P<uuid>\w+)/$', 'core.api.viewsets.v1.StaticDeviceDetail.as_view()'),
 )
