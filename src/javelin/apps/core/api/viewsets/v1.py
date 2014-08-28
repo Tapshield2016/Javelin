@@ -564,7 +564,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def update(self, request, pk=None):
+    def update(self, request, *args, **kwargs):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
@@ -579,10 +579,10 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         request.DATA._mutable = mutable
 
-        return super(StaticDeviceViewSet, self).update(request, pk)
+        return super(StaticDeviceViewSet, self).update(request, *args, **kwargs)
 
 
-    def partial_update(self, request, pk=None):
+    def partial_update(self, request, *args, **kwargs):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
@@ -597,4 +597,4 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         request.DATA._mutable = mutable
 
-        return super(StaticDeviceViewSet, self).update(request, pk)
+        return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
