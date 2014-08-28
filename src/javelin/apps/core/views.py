@@ -581,11 +581,10 @@ def static_alert(request):
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             device = serializer.object
 
-        form = StaticDeviceForm(request.POST, instance=device)
+        current_device, created = StaticDevice.objects.get_or_create(uuid=uuid)
+        form = StaticDeviceForm(request.POST, instance=current_device)
         if form.is_valid():
             form.save()
-
-
 
         if not device.agency:
             device.delete()
