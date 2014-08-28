@@ -200,4 +200,4 @@ class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = StaticDevice
-        lookup_field='uuid',
+        lookup_field='uuid'
