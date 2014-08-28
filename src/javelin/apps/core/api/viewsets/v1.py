@@ -14,6 +14,7 @@ from django.contrib.gis.measure import D
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.contrib.sites.models import get_current_site
+from django.contrib.auth.decorators import user_passes_test
 
 from rest_framework import permissions
 from rest_framework import status, viewsets, ISO_8601
@@ -48,7 +49,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          DispatchCenter, Period,
                          ClosedDate, StaticDevice,)
 
-from core.utils import get_agency_from_unknown, group_required
+from core.utils import get_agency_from_unknown
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
@@ -70,6 +71,29 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
 
         # Instance must have an attribute named `owner`.
         return obj.owner == request.user
+
+class DeviceMakerOnly(permissions.BasePermission):
+    """
+    Only allows Device Maker group to view or edit.
+    """
+    def has_object_permission(self, request, view, obj):
+
+        device_maker_group = Group.objects.get(name='Device Maker')
+        for group in request.user.groups:
+            if group == device_maker_group:
+                return True
+
+        return False
+
+
+def group_required(*group_names):
+    """Requires user membership in at least one of the groups passed in."""
+    def in_groups(self, request, view, obj):
+        if request.user.is_authenticated():
+            if bool(request.user.groups.filter(name__in=group_names)) | request.user.is_superuser:
+                return True
+        return False
+    return user_passes_test(in_groups)
 
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
@@ -513,9 +537,9 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
 
-
+@group_required('Device Maker')
 class StaticDeviceViewSet(viewsets.ModelViewSet):
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly, )
     queryset = StaticDevice.objects.select_related('agency').all()
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
