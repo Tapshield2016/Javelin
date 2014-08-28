@@ -578,9 +578,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         request.data = request_data
 
-        pass
-
-        # return super(StaticDeviceViewSet, self).update(request, pk=None)
+        return super(viewsets.ModelViewSet, self).update(request, pk=None)
 
 
     def partial_update(self, request, pk=None):
@@ -596,6 +594,4 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         request.data = request_data
 
-        pass
-
-        # return super(StaticDeviceViewSet, self).partial_update(request, pk=None)
+        return super(viewsets.ModelViewSet, self).partial_update(request, pk)
