@@ -25,7 +25,3 @@ router_v1.register(r'closed-date', ClosedDateViewSet)
 router_v1.register(r'opening-hours', PeriodViewSet)
 router_v1.register(r'static-device', StaticDeviceViewSet)
 
-urlpatterns = patterns('',
-    url(r'^static-device-detail/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view()),
-)
-
