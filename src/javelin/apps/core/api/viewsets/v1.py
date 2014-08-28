@@ -86,15 +86,6 @@ class DeviceMakerOnly(permissions.BasePermission):
             return False
         return False
 
-    # def group_required(*group_names):
-    #     """Requires user membership in at least one of the groups passed in."""
-    #     def in_groups(self, request, view, obj):
-    #         if request.user.is_authenticated():
-    #             if bool(request.user.groups.filter(name__in=group_names)) | request.user.is_superuser:
-    #                 return True
-    #         return False
-    #     return user_passes_test(in_groups)
-
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
 
@@ -573,3 +564,34 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
                             headers=headers)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, pk=None):
+
+        request_data = request.DATA.copy()
+        agency_id = request_data.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request_data['agency'] = AgencySerializer(agency).data['url']
+
+        request.data = request_data
+
+        return super(StaticDeviceViewSet, self).update(self, request, pk=None)
+
+
+    def partial_update(self, request, pk=None):
+
+        request_data = request.DATA.copy()
+        agency_id = request_data.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request_data['agency'] = AgencySerializer(agency).data['url']
+
+        request.data = request_data
+
+        return super(StaticDeviceViewSet, self).partial_update(self, request, pk=None)
