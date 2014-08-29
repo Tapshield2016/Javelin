@@ -31,6 +31,7 @@ urlpatterns = patterns('',
     (r'^social-accounts/', include('allauth.urls')),
     url(r'^', include('shieldcommand.urls')),
 
+    (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
 )
 
 if settings.DEBUG:

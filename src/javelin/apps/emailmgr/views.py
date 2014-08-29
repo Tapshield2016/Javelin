@@ -42,13 +42,13 @@ def email_add(request):
         f.clean(email)
     except ValidationError as e:
         return Response({"message": "Enter a valid email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email = email.lower()
 
     if EmailAddress.objects.filter(user=request.user, email=email).exists():
         return Response({"message": "Email already in use."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email = EmailAddress(**{'user': request.user, 'email': email})
     email.save()
@@ -79,7 +79,7 @@ def email_make_primary(request):
         f.clean(email)
     except ValidationError as e:
         return Response({"message": "Enter a valid email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email_to_make_primary = email.lower()
 
@@ -105,7 +105,7 @@ def email_make_primary(request):
                         status=status.HTTP_200_OK)
 
     return Response({"message": "Email must first be activated."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -125,7 +125,7 @@ def email_send_activation(request):
         f.clean(email)
     except ValidationError as e:
         return Response({"message": "Enter a valid email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email_to_activate = email.lower()
 
@@ -138,7 +138,7 @@ def email_send_activation(request):
 
     if email.is_active:
         return Response({"message": "Email already activated."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
     else:
         send_activation(email, request.is_secure())
         email.is_activation_sent = True
@@ -166,7 +166,7 @@ def email_check_activated(request, email=None):
         f.clean(email)
     except ValidationError as e:
         return Response({"message": "Enter a valid email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email = email.lower()
 
@@ -181,7 +181,7 @@ def email_check_activated(request, email=None):
                     status=status.HTTP_200_OK)
 
     return Response({"message": "Email not yet activated."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
 
 def email_activate(request, identifier="somekey"):
@@ -230,7 +230,7 @@ def email_delete(request):
         f.clean(email)
     except ValidationError as e:
         return Response({"message": "Enter a valid email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
 
     email_to_delete = email.lower()
 
@@ -243,10 +243,10 @@ def email_delete(request):
 
     if email.email == request.user.email:
         return Response({"message": "Cannot remove primary email address."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
     elif email.user != request.user:
         return Response({"message": "Email address is not associated with this account."},
-                        status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_400_BAD_REQUEST)
     else:
         email.delete()
 
