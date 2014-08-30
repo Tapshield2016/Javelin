@@ -115,8 +115,8 @@ AWS_HEADERS = {
    'Cache-Control': 'max-age=86400',
 }
 AWS_S3_SECURE_URLS = False
-STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
+# STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+# MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
 
 
 
