@@ -103,24 +103,6 @@ SHIELD_COMMAND_API_VERSION = "v1"
 # compressor
 COMPRESS_ENABLED = False
 
-
-# django-storages
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
-AWS_SECRET_ACCESS_KEY = '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'
-AWS_STORAGE_BUCKET_NAME = 'dev.media.tapshield.com'
-AWS_HEADERS = {
-   'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
-   'Cache-Control': 'max-age=86400',
-}
-AWS_S3_SECURE_URLS = False
-# STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-# MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
-
-FILEBROWSER_MEDIA_ROOT = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-
-
 # Import local dev settings if file exists
 try:
     from local_settings import *
