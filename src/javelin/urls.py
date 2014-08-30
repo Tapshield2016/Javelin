@@ -1,11 +1,16 @@
 from django.conf import settings
 from django.conf.urls import patterns, include, url
+from filebrowser.sites import site
 
 from django.contrib import admin
 admin.autodiscover()
 
 
 urlpatterns = patterns('',
+
+    (r'^admin/filebrowser/', include(site.urls)),
+    (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+
     url(r'^accounts/password/reset/$',
         'django.contrib.auth.views.password_reset', 
         {'post_reset_redirect' : '/accounts/password/reset/done/'},
@@ -31,7 +36,6 @@ urlpatterns = patterns('',
     (r'^social-accounts/', include('allauth.urls')),
     url(r'^', include('shieldcommand.urls')),
 
-    (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
 )
 
 if settings.DEBUG:

@@ -116,6 +116,7 @@ TEMPLATE_DIRS = (
 
 INSTALLED_APPS = (
     'grappelli',
+    'filebrowser',
 
     'django.contrib.auth',
     'django.contrib.contenttypes',
