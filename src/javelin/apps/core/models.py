@@ -743,9 +743,9 @@ class StaticDevice(models.Model):
         return u'%s' % self.id
 
     def changeform_link(self):
-        if self.uuid:
+        if self.id:
             changeform_url = urlresolvers.reverse(
-                'admin:core_staticdevice_change', args=(self.uuid,)
+                'admin:core_staticdevice_change', args=(self.id,)
             )
             return u'<a href="%s" target="_blank">View more options</a>' % changeform_url
         return u''
