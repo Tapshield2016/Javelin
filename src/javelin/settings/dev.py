@@ -118,7 +118,7 @@ AWS_S3_SECURE_URLS = False
 # STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 # MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
 
-
+FILEBROWSER_MEDIA_ROOT = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 
 
 # Import local dev settings if file exists
