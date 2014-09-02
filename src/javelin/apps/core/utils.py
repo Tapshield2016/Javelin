@@ -2,14 +2,17 @@ import time
 import uuid
 import ast
 import re
+import random, string
 
 from django.conf import settings
 from rest_framework import permissions
 
 from core.aws.dynamodb import DynamoDBManager
-from core.models import Agency, AgencyUser
+from core.models import Agency, AgencyUser, Theme
 from core.tasks import notify_new_chat_message_available
 from django.contrib.auth.decorators import user_passes_test
+
+from django.contrib.contenttypes.models import ContentType
 
 
 def send_message_to_user_for_alert(alert, message):
@@ -66,3 +69,28 @@ def group_required(*group_names):
                 return True
         return False
     return user_passes_test(in_groups)
+
+
+def get_path(instance, filename):
+    ctype = ContentType.objects.get_for_model(instance)
+    model = ctype.model
+    app = ctype.app_label
+    extension = filename.split('.')[-1]
+    dir = "site"
+    if model == "job":
+        dir += "/pdf/job_attachment"
+    else:
+        dir += "/img/%s" % app
+        if model == "image_type_1":
+            dir += "/type1/%s" % instance.category
+        elif model == "image_type_2":
+            dir += "/type2"
+        elif model == "restaurant":
+            dir += "/logo"
+        else:
+            dir += "/%s" % model
+
+    chars = string.letters + string.digits
+    name = string.join(random.sample(chars, 8), '')
+
+    return "%s/%s.%s" % (dir, name, extension)

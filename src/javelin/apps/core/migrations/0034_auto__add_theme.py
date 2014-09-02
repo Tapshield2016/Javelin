@@ -15,10 +15,10 @@ class Migration(SchemaMigration):
             ('primary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
             ('secondary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
             ('alternate_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
-            ('logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='uploads', blank=True, null=True)),
-            ('alternate_logo', self.gf('django.db.models.fields.URLField')(blank=True, null=True)),
-            ('small_logo', self.gf('django.db.models.fields.URLField')(blank=True, null=True)),
-            ('shield_command_logo', self.gf('django.db.models.fields.files.ImageField')(upload_to='uploads', blank=True, null=True)),
+            ('logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('alternate_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('small_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('shield_command_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
         ))
         db.send_create_signal(u'core', ['Theme'])
 
@@ -275,10 +275,10 @@ class Migration(SchemaMigration):
             'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
             'secondary_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
             'alternate_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
-            'logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'uploads'", 'blank': 'True', 'null': 'True'}),
-            'alternate_logo': ('django.db.models.fields.URLField', [], {'blank': 'True', 'null': 'True'}),
-            'small_logo': ('django.db.models.fields.URLField', [], {'blank': 'True', 'null': 'True'}),
-            'shield_command_logo': ('django.db.models.fields.files.ImageField', [], {'upload_to': "'uploads'", 'blank': 'True', 'null': 'True'}),
+            'logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'alternate_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'small_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'shield_command_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
         },
     }
 

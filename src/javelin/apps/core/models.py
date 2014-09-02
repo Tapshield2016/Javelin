@@ -755,8 +755,13 @@ class StaticDevice(models.Model):
     changeform_link.short_description = 'Options'   # omit column header
 
 
+def file_path(self, filename):
+    url = "themes/%s/%s" % (self.name, filename)
+    return url
 
 class Theme(models.Model):
+
+    name = models.CharField(max_length=255)
 
     branding_theme = models.ForeignKey('Theme', related_name="Theme",
                                        null=True, blank=True)
@@ -768,15 +773,17 @@ class Theme(models.Model):
     alternate_color = models.CharField(max_length=8, null=True, blank=True,
                                        help_text="Alternate color, maybe something neutral such as white")
 
-    logo = S3EnabledImageField(upload_to='uploads', null=True, blank=True,
+    logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
                                help_text="Set the location of the standard agency logo.")
-    alternate_logo = models.URLField(null=True, blank=True,
-                                     help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
-    small_logo = models.URLField(null=True, blank=True,
-                                 help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
-    shield_command_logo = models.fields.files.ImageField(upload_to='uploads', null=True, blank=True,
-                                                         help_text="Standard or alternate logo specifically for use on Shield Command.")
+    alternate_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                         help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+    small_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                     help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+    shield_command_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                              help_text="Standard or alternate logo specifically for use on Shield Command.")
 
+    def __unicode__(self):
+        return u'%s' % self.name
 
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
