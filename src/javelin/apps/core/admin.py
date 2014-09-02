@@ -93,7 +93,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     inlines = [
         RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
-    readonly_fields = ['theme_link']
+    readonly_fields = ['theme_link',]
 
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
