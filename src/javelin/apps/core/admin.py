@@ -88,7 +88,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                 'fields': (['agency_info_url', 'agency_rss_url',]),
         }),
     )
-    readonly_fields = ['theme_logo',]
+    readonly_fields = ['theme_logo_url',]
     inlines = [
         RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
