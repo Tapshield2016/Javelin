@@ -178,9 +178,6 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(SocialCrimeReportSerializer, self).to_native(obj)
         if obj:
-            # if not obj.report_anonymous:
-            #     reporter_meta = ReporterSerializer(instance=obj.reporter)
-            #     ret['reporter_meta'] = reporter_meta.data
 
             if obj.viewed_by:
                 ret['dispatcher_name'] =\
