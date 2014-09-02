@@ -15,10 +15,10 @@ class Migration(SchemaMigration):
             ('primary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
             ('secondary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
             ('alternate_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
-            ('logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(blank=True, null=True)),
+            ('logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='uploads', blank=True, null=True)),
             ('alternate_logo', self.gf('django.db.models.fields.URLField')(blank=True, null=True)),
             ('small_logo', self.gf('django.db.models.fields.URLField')(blank=True, null=True)),
-            ('shield_command_logo', self.gf('django.db.models.fields.ImageField')(blank=True, null=True)),
+            ('shield_command_logo', self.gf('django.db.models.fields.ImageField')(upload_to='uploads', blank=True, null=True)),
         ))
         db.send_create_signal(u'core', ['Theme'])
 
@@ -267,6 +267,18 @@ class Migration(SchemaMigration):
             'latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
             'longitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
             'location_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+        },
+        u'core.theme': {
+            'Meta': {'object_name': 'StaticDevice'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'branding_theme': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Theme'", 'to': u"orm['core.Theme']", 'blank': 'True', 'null': 'True',}),
+            'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'secondary_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'alternate_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': 'uploads', 'blank': 'True', 'null': 'True'}),
+            'alternate_logo': ('django.db.models.fields.URLField', [], {'blank': 'True', 'null': 'True'}),
+            'small_logo': ('django.db.models.fields.URLField', [], {'blank': 'True', 'null': 'True'}),
+            'shield_command_logo': ('django.db.models.fields.ImageField', [], {'upload_to': 'uploads', 'blank': 'True', 'null': 'True'}),
         },
     }
 
