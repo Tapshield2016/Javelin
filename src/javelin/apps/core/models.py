@@ -31,6 +31,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
 
+from core.aws.s3_filefield import S3EnabledImageField
+
 
 def kilometers_between_coordinates(point1, point2):
 
@@ -751,6 +753,30 @@ class StaticDevice(models.Model):
         return u''
     changeform_link.allow_tags = True
     changeform_link.short_description = 'Options'   # omit column header
+
+
+
+class Theme(models.Model):
+
+    branding_theme = models.ForeignKey('Theme',
+                                       related_name="branding_theme",
+                                       null=True, blank=True)
+
+    primary_color = models.CharField(max_length=8, null=True, blank=True,
+                                     help_text="Primary color of an organization's logo or color scheme")
+    secondary_color = models.CharField(max_length=8, null=True, blank=True,
+                                       help_text="Secondary color of an organization's logo or color scheme")
+    alternate_color = models.CharField(max_length=8, null=True, blank=True,
+                                       help_text="Alternate color, maybe something neutral such as white")
+
+    logo = S3EnabledImageField(null=True, blank=True,
+                                      help_text="Set the location of the standard agency logo.")
+    alternate_logo = models.URLField(null=True, blank=True,
+                                     help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+    small_logo = models.URLField(null=True, blank=True,
+                                 help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+    shield_command_logo = models.ImageField(null=True, blank=True,
+                                            help_text="Standard or alternate logo specifically for use on Shield Command.")
 
 
 @receiver(post_save, sender=AgencyUser)

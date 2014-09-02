@@ -3,7 +3,7 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
-from core.models import (Agency, Alert, AlertLocation,
+from core.models import (Agency, Alert, AlertLocation, Theme,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
                          DispatchCenter, Period, ClosedDate, StaticDevice)
@@ -200,3 +200,9 @@ class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = StaticDevice
+
+
+class ThemeSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Theme

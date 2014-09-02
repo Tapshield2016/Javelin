@@ -38,7 +38,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      DispatchCenterSerializer,
                                      PeriodSerializer,
                                      ClosedDateSerializer,
-                                     StaticDeviceSerializer)
+                                     StaticDeviceSerializer, ThemeSerializer,)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -48,7 +48,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period,
-                         ClosedDate, StaticDevice,)
+                         ClosedDate, StaticDevice, Theme,)
 
 from core.utils import get_agency_from_unknown
 
@@ -530,6 +530,11 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     queryset = DispatchCenter.objects.select_related('agency').all()
     serializer_class = DispatchCenterSerializer
     filter_fields = ('agency',)
+
+
+class ThemeViewSet(viewsets.ModelViewSet):
+    queryset = Theme.objects.all()
+    serializer_class = ThemeSerializer
 
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
