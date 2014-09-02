@@ -775,8 +775,8 @@ class Theme(models.Model):
                                      help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
     small_logo = models.URLField(null=True, blank=True,
                                  help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
-    shield_command_logo = models.ImageField(upload_to='uploads', null=True, blank=True,
-                                            help_text="Standard or alternate logo specifically for use on Shield Command.")
+    shield_command_logo = models.fields.files.ImageField(upload_to='uploads', null=True, blank=True,
+                                                         help_text="Standard or alternate logo specifically for use on Shield Command.")
 
 
 @receiver(post_save, sender=AgencyUser)
