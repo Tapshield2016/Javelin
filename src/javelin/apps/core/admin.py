@@ -8,7 +8,7 @@ from emailmgr.models import EmailAddress
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    Period, ClosedDate, StaticDevice,)
+                    Period, ClosedDate, StaticDevice, Theme,)
 
 class EmailAddressInline(admin.StackedInline):
     model = EmailAddress
@@ -141,6 +141,9 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
 
+class ThemeAdmin(admin.ModelAdmin):
+    pass
+
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
 admin.site.register(Alert, AlertAdmin)
@@ -151,3 +154,4 @@ admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
 admin.site.register(DispatchCenter, DispatchCenterAdmin)
 admin.site.register(StaticDevice, StaticDeviceAdmin)
+admin.site.register(Theme, ThemeAdmin)
