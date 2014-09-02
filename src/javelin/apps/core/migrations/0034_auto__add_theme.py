@@ -11,6 +11,7 @@ class Migration(SchemaMigration):
         # Adding model 'Theme'
         db.create_table(u'core_theme', (
             (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
             ('branding_theme', self.gf('django.db.models.fields.related.ForeignKey')(related_name='Theme', to=orm['core.Theme'], null=True, blank=True)),
             ('primary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
             ('secondary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
@@ -271,6 +272,7 @@ class Migration(SchemaMigration):
         u'core.theme': {
             'Meta': {'object_name': 'Theme'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
             'branding_theme': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Theme'", 'to': u"orm['core.Theme']", 'blank': 'True', 'null': 'True',}),
             'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
             'secondary_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
