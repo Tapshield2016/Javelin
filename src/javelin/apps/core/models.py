@@ -167,7 +167,7 @@ class Agency(TimeStampedModel):
     agency_rss_url = models.CharField(max_length=255, null=True, blank=True,
                                        help_text="RSS feed for mass alerts already populated by the system in use")
     spot_crime_days_visible = models.PositiveIntegerField(default=1)
-    theme = models.ForeignKey(Theme, related_name='agency_theme', null=True, blank=True,
+    theme = models.ForeignKey('Theme', related_name='agency_theme', null=True, blank=True,
                               help_text="UI elements related to agency")
 
     objects = models.Manager()
