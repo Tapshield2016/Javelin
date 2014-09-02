@@ -67,8 +67,9 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(AgencySerializer, self).to_native(obj)
         if obj:
-            agency_theme = ThemeSerializer(instance=obj.theme)
-            ret['agency_theme'] = agency_theme.data
+            if obj.theme:
+                agency_theme = ThemeSerializer(instance=obj.theme)
+                ret['agency_theme'] = agency_theme.data
         return ret
 
 
