@@ -269,7 +269,7 @@ class Migration(SchemaMigration):
             'location_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
         },
         u'core.theme': {
-            'Meta': {'object_name': 'StaticDevice'},
+            'Meta': {'object_name': 'Theme'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'branding_theme': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Theme'", 'to': u"orm['core.Theme']", 'blank': 'True', 'null': 'True',}),
             'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
