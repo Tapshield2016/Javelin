@@ -2,6 +2,8 @@ import reversion
 
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
+from django.utils.safestring import mark_safe
+from django.core import urlresolvers
 
 from emailmgr.models import EmailAddress
 
@@ -88,10 +90,15 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                 'fields': (['agency_info_url', 'agency_rss_url',]),
         }),
     )
-    readonly_fields = ['theme_logo_url',]
     inlines = [
         RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
+    readonly_fields = ['theme_link']
+
+    def theme_link(self, obj):
+        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
+        return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.theme.name))
+    theme_link.short_description = 'Theme options'
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
