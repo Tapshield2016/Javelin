@@ -83,7 +83,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'default_map_zoom_level']),
         }),
         ('Agency Theme', {
-                'fields': (['theme', 'agency_logo', 'agency_alternate_logo',
+                'fields': (['theme', 'theme_link', 'agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
         }),
         ('Agency Optional Info', {
