@@ -758,8 +758,7 @@ class StaticDevice(models.Model):
 
 class Theme(models.Model):
 
-    branding_theme = models.ForeignKey('Theme',
-                                       related_name="Theme",
+    branding_theme = models.ForeignKey('Theme', related_name="Theme",
                                        null=True, blank=True)
 
     primary_color = models.CharField(max_length=8, null=True, blank=True,

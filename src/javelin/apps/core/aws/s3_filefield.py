@@ -59,6 +59,7 @@ class S3Storage(FileSystemStorage):
         else:
             key.set_contents_from_string(content)
 
+        key.set_acl('public-read')
         return name
 
     def delete(self, name):
