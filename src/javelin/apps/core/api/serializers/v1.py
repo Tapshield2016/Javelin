@@ -69,6 +69,8 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             if obj.theme:
                 agency_theme = ThemeSerializer(instance=obj.theme)
+                if agency_theme.branding_theme:
+                    agency_theme.data['branding_theme'] = ThemeSerializer(instance=agency_theme.branding_theme)
                 ret['agency_theme'] = agency_theme.data
         return ret
 
