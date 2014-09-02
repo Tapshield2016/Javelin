@@ -64,6 +64,13 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
 
+    def to_native(self, obj):
+        ret = super(AgencySerializer, self).to_native(obj)
+        if obj:
+            agency_theme = ThemeSerializer(instance=obj.theme)
+            ret['agency_theme'] = agency_theme.data
+        return ret
+
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
