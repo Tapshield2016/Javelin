@@ -221,6 +221,6 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             if obj.logo:
                 url = '%s%s' % (settings.AWS_S3_BUCKET_URL, obj.logo.name)
-                ret['logo_url'] = urllib.urlencode(url)
+                ret['logo_url'] = urllib.quote_plus(url)
 
         return ret
