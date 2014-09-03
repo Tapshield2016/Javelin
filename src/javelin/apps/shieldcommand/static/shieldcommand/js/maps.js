@@ -22,6 +22,7 @@ function initializeMap() {
 		animation: google.maps.Animation.DROP
 	};
 
+    //Accuracy bubble
 	circleOptions = {
 		strokeColor: '#41c4f2',
 		strokeOpacity: 0.8,
@@ -31,6 +32,8 @@ function initializeMap() {
 		map: googleMap
 	};
 
+    //If the agency uses the new "Region" model draw all regions
+    //Else draw old single boundaries polygon
     if (googleMapRegions.length > 0) {
 
         geofence = new google.maps.Polygon({
@@ -45,7 +48,7 @@ function initializeMap() {
         geofence.setMap(googleMap);
     }
     else if (googleMapAgencyBoundaries.length > 0) {
-        bermudaTriangle = new google.maps.Polygon({
+        geofence = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
             strokeColor: '#0ab60a',
             strokeOpacity: 0.9,
@@ -54,7 +57,7 @@ function initializeMap() {
             fillOpacity: 0.15
         });
 
-        bermudaTriangle.setMap(googleMap);        
+        geofence.setMap(googleMap);
     };
 }
 
@@ -98,6 +101,7 @@ function updateMarker(location) {
 	}
 }
 
+//Sets correct icon for alert, spotcrime, or social crime reports
 function getIconForLocation(location) {
 	var icon = 'NewUserPin.png';
 	
@@ -118,6 +122,7 @@ function getIconForLocation(location) {
 	return '/media/static/shieldcommand/img/' + icon;
 }
 
+//Set marker for active alert or crime tip
 function setMarker(location) {
     if (!location) {
         return;

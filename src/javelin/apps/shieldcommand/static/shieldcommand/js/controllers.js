@@ -697,7 +697,8 @@ angular.module('shieldCommand.controllers', [])
 			}
 		};    	
     });
-	
+
+//    Re-clicking crime tip closes the side profile panel
 	$scope.panelClicked = function(panel) {
 		if (panel != 'crimeTip')
 		{
@@ -708,9 +709,11 @@ angular.module('shieldCommand.controllers', [])
 		}
 	}
 
+//  Alert is clicked from list.  Needs to display marker, show profile, and load an chat messages.
   	$scope.alertClicked = function(alert, shouldToggleProfile) {
   		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
   		if (alert === alertService.activeAlert) {
+            //If alert clicked is already the active alert close the profile
   			if (shouldToggleProfile) {
 	  			$rootScope.$broadcast('toggleProfile');
   			}
@@ -719,6 +722,7 @@ angular.module('shieldCommand.controllers', [])
   		else {
   			clearTimeout($scope.chatUpdateTimeout);
   			if (alertService.activeAlert) {
+                //  If active alert already exists close the chat window before loading a new alert
 	  			$rootScope.$broadcast('closeChatWindowForAlert', alertService.activeAlert);
   			}
 	  		alertService.setActiveAlert(alert);
@@ -727,6 +731,7 @@ angular.module('shieldCommand.controllers', [])
 
 	  		$scope.markerSetForActiveAlert = false;	
 
+            //  Set the alert marker from location
 			if (alertService.activeAlert && !$scope.markerSetForActiveAlert) {
 				if (alertService.activeAlert.location) {
 					alertService.activeAlert.location.alertStatus = alertService.activeAlert.status;
@@ -741,7 +746,8 @@ angular.module('shieldCommand.controllers', [])
 			$rootScope.$broadcast('toggleProfileOpen');
   		}
   	};
-	
+
+//    Crime tip clicked from list. Toggle profile to show crime tip info. Dismiss any current active alerts
 	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
   		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
   		if (crimeTip === crimeTipService.activeCrimeTip) {
