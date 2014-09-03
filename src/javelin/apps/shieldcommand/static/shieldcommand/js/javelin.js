@@ -199,11 +199,11 @@
 			}
         }
 
-        if (!$.isEmptyObject(attributes.theme.url)) {
+        if (!$.isEmptyObject(attributes.theme)) {
 			this.theme = new Theme(attributes.theme);
 		};
 
-        if (!$.isEmptyObject(attributes.branding.url)) {
+        if (!$.isEmptyObject(attributes.branding)) {
 			this.branding = new Theme(attributes.branding);
 		};
 
@@ -228,11 +228,11 @@
         this.staticDevice = attributes.static_device;
 		this.staticDeviceMeta = null;
 
-		if (!$.isEmptyObject(attributes.agency_user_meta.url)) {
+		if (!$.isEmptyObject(attributes.agency_user_meta)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
 		};
 
-        if (!$.isEmptyObject(attributes.static_device_meta.url)) {
+        if (!$.isEmptyObject(attributes.static_device_meta)) {
 			this.staticDeviceMeta = new StaticDevice(attributes.static_device_meta);
 		};
 
