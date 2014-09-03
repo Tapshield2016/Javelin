@@ -213,3 +213,10 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Theme
+
+    def to_native(self, obj):
+        ret = super(ThemeSerializer, self).to_native(obj)
+        if obj:
+            if obj.logo:
+                ret['logo_url'] = obj.logo.url
+        return ret
