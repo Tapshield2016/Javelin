@@ -265,7 +265,9 @@
 				
 				<!-- profile -->
 				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
-					<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>
+					<!--<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>-->
+                    <p class="profile-title" ng-if="profileType == 'alert'">Profile</p>
+                    <p class="profile-title" ng-if="profileType == 'crimeTip'">Crime Tip</p>
                     <p class="profile-title" ng-if="profileType == 'staticAlert'">Static Device</p>
 					<div class="profile-content" ng-if="profileType == 'alert'">
 						<div class="profile-top-content">
