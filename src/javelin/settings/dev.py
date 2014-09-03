@@ -59,6 +59,8 @@ AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 DEFAULT_BUCKET = 'dev.media.tapshield.com'
 USE_AMAZON_S3 = True
 
+FILEBROWSER_MEDIA_ROOT = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+
 # AWS
 DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJJX2VM346XUKRROA'
 DYNAMO_DB_SECRET_ACCESS_KEY = '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'
