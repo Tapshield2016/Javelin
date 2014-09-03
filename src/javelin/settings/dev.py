@@ -59,7 +59,7 @@ AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 DEFAULT_BUCKET = 'dev.media.tapshield.com'
 USE_AMAZON_S3 = True
 
-FILEBROWSER_MEDIA_ROOT = 'http://s3.amazonaws.com/'
+FILEBROWSER_MEDIA_ROOT = 'http://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 FILEBROWSER_MEDIA_URL = '%s/' % AWS_STORAGE_BUCKET_NAME
 
 # AWS
