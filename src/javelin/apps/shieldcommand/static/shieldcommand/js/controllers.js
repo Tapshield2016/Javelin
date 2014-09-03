@@ -269,7 +269,12 @@ angular.module('shieldCommand.controllers', [])
 		if ($scope.profileType == 'alert' && $scope.activeAlert) {
 			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
-			$scope.activeAlert.location.title = $scope.activeAlert.agencyUserMeta.getFullName();
+			if (alertService.activeAlert.agencyUser) {
+                alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
+            }
+            else {
+                alertService.activeAlert.location.title = alertService.activeAlert.staticDeviceMeta.description;
+            }
 			setMarker($scope.activeAlert.location);
 			closeInfoWindow();
 		}
