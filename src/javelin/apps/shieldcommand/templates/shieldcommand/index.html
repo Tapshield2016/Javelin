@@ -328,6 +328,29 @@
 						<!-- /.modal-dialog --> 
 					</div>
 					<!-- /.modal -->
+                    <table class="table table-condensed" ng-if="profileType == 'staticAlert'">
+							<caption>Device info</caption>
+							<tr class="first">
+								<td>UUID</td>
+								<td>{{ (currentProfile) ? currentProfile.uuid : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Type</td>
+								<td>{{ (currentProfile) ? currentProfile.type : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Description</td>
+								<td>{{ (currentProfile) ? currentProfile.description : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Latitude</td>
+								<td>{{ (currentProfile) ? currentProfile.latitude : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Longitude</td>
+								<td>{{ (currentProfile) ? currentProfile.longitude : 'None' }}</td>
+							</tr>
+						</table>
 					<div class="profile-information" style="clear: both;">
 						<table class="table table-condensed" ng-if="profileType == 'alert'">
 							<tr class="first">
@@ -401,29 +424,6 @@
 							<tr>
 								<td>Email</td>
 								<td>{{ (currentProfile) ? currentProfile.email : '(anonymous)' }}</td>
-							</tr>
-						</table>
-                        <table class="table table-condensed" ng-if="profileType == 'staticAlert'">
-							<caption>Device info</caption>
-							<tr class="first">
-								<td>UUID</td>
-								<td>{{ (currentProfile) ? currentProfile.uuid : 'None' }}</td>
-							</tr>
-							<tr>
-								<td>Type</td>
-								<td>{{ (currentProfile) ? currentProfile.type : 'None' }}</td>
-							</tr>
-							<tr>
-								<td>Description</td>
-								<td>{{ (currentProfile) ? currentProfile.description : 'None' }}</td>
-							</tr>
-                            <tr>
-								<td>Latitude</td>
-								<td>{{ (currentProfile) ? currentProfile.latitude : 'None' }}</td>
-							</tr>
-                            <tr>
-								<td>Longitude</td>
-								<td>{{ (currentProfile) ? currentProfile.longitude : 'None' }}</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'alert'">
