@@ -169,6 +169,8 @@ class Agency(TimeStampedModel):
     spot_crime_days_visible = models.PositiveIntegerField(default=1)
     theme = models.ForeignKey('Theme', related_name='agency_theme', null=True, blank=True,
                               help_text="UI elements related to agency")
+    branding = models.ForeignKey('Theme', related_name="branding_theme", null=True, blank=True,
+                                 help_text="UI elements for OEM partners")
 
     objects = models.Manager()
     geo = db_models.GeoManager()
@@ -764,9 +766,6 @@ def file_path(self, filename):
 class Theme(models.Model):
 
     name = models.CharField(max_length=255)
-
-    branding_theme = models.ForeignKey('Theme', related_name="Theme",
-                                       null=True, blank=True)
 
     primary_color = models.CharField(max_length=8, null=True, blank=True,
                                      help_text="Primary color of an organization's logo or color scheme")

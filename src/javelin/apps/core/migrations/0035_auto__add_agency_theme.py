@@ -13,10 +13,15 @@ class Migration(SchemaMigration):
                       self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
                                                                             related_name='agency_theme',
                                                                             to=orm['core.Theme'])),
+        db.add_column(u'core_agency', 'branding',
+                      self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
+                                                                            related_name='agency_branding',
+                                                                            to=orm['core.Theme'])),
 
     def backwards(self, orm):
         # Deleting field 'Agency.theme'
         db.delete_column(u'core_agency', 'theme_id')
+        db.delete_column(u'core_agency', 'branding_id')
 
     models = {
         u'auth.group': {
@@ -78,6 +83,7 @@ class Migration(SchemaMigration):
             'spot_crime_days_visible': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
             'sns_primary_topic_arn': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
             'theme': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'agency_theme'", 'null': 'True', 'to': u"orm['core.Theme']"}),
+            'branding': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'agency_branding'", 'null': 'True', 'to': u"orm['core.Theme']"}),
         },
         u'core.agencyuser': {
             'Meta': {'object_name': 'AgencyUser'},
@@ -265,7 +271,6 @@ class Migration(SchemaMigration):
             'Meta': {'object_name': 'Theme'},
             u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
             'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
-            'branding_theme': ('django.db.models.fields.related.ForeignKey', [], {'related_name': "'Theme'", 'to': u"orm['core.Theme']", 'blank': 'True', 'null': 'True',}),
             'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
             'secondary_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
             'alternate_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),

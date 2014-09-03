@@ -83,7 +83,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'default_map_zoom_level']),
         }),
         ('Agency Theme', {
-                'fields': (['theme', 'theme_link', 'agency_logo', 'agency_alternate_logo',
+                'fields': (['theme', 'theme_link', 'branding', 'branding_link', 'agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
         }),
         ('Agency Optional Info', {
@@ -99,6 +99,11 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
         return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.theme.name))
     theme_link.short_description = 'Theme options'
+
+    def branding_link(self, obj):
+        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.branding.id,))
+        return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.branding.name))
+    branding_link.short_description = 'Theme options'
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
