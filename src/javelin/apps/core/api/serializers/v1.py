@@ -218,5 +218,5 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(ThemeSerializer, self).to_native(obj)
         if obj:
             if obj.logo:
-                ret['logo_url'] = obj.logo.url
+                ret['logo_url'] = obj.logo.path
         return ret
