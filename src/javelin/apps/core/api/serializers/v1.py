@@ -220,7 +220,7 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(ThemeSerializer, self).to_native(obj)
         if obj:
             if obj.logo:
-                url = '%s%s' % (settings.AWS_S3_BUCKET_URL, obj.logo.name)
-                ret['logo_url'] = urllib.quote_plus(url)
+                url = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(obj.logo.name))
+                ret['logo_url'] = url
 
         return ret
