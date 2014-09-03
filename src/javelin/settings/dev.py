@@ -51,6 +51,8 @@ AWS_HEADERS = {
    'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
    'Cache-Control': 'max-age=86400',
 }
+AWS_QUERYSTRING_AUTH = False
+# AWS_S3_BUCKET_URL = 'http://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 # AWS_S3_URL_PROTOCOL = 'https'
 # AWS_S3_SECURE_URLS = True
 #STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
