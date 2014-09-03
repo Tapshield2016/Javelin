@@ -8,7 +8,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    # (r'^admin/filebrowser/', include(site.urls)),
+    (r'^admin/filebrowser/', include(site.urls)),
     (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
 
     url(r'^accounts/password/reset/$',
