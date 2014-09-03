@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+import urllib
 
 from rest_framework import serializers
 
@@ -219,7 +220,7 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(ThemeSerializer, self).to_native(obj)
         if obj:
             if obj.logo:
-                string = '%s%s' % (settings.AWS_S3_BUCKET_URL, obj.logo.name)
-                ret['logo_url'] = string.replace(' ', '+')
+                url = '%s%s' % (settings.AWS_S3_BUCKET_URL, obj.logo.name)
+                ret['logo_url'] = urllib.urlencode(url)
 
         return ret
