@@ -147,8 +147,12 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(AlertSerializer, self).to_native(obj)
         if obj:
-            agency_user_meta = UserSerializer(instance=obj.agency_user)
-            ret['agency_user_meta'] = agency_user_meta.data
+            if obj.agency_user:
+                agency_user_meta = UserSerializer(instance=obj.agency_user)
+                ret['agency_user_meta'] = agency_user_meta.data
+            if obj.static_device:
+                static_device_meta = StaticDeviceSerializer(instance=obj.static_device)
+                ret['static_device_meta'] = static_device_meta.data
             ret['agency_dispatcher_name'] = None
             if obj.agency_dispatcher:
                 ret['agency_dispatcher_name'] =\

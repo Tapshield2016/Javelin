@@ -188,6 +188,8 @@
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
         this.spotCrimeDaysVisible = attributes.spot_crime_days_visible;
+        this.theme = null;
+        this.branding = null;
 
         if (attributes.region) {
             this.region = [];
@@ -196,6 +198,14 @@
 			    this.region.push(newRegion);
 			}
         }
+
+        if (!$.isEmptyObject(attributes.theme.url)) {
+			this.theme = new Theme(attributes.theme);
+		};
+
+        if (!$.isEmptyObject(attributes.branding.url)) {
+			this.branding = new Theme(attributes.branding);
+		};
 
 		return this;
 	}
@@ -215,9 +225,15 @@
 		this.type = 'alert';
 		this.location = null;
 		this.geocodedAddress = '';
+        this.staticDevice = attributes.static_device;
+		this.staticDeviceMeta = null;
 
 		if (!$.isEmptyObject(attributes.agency_user_meta.url)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
+		};
+
+        if (!$.isEmptyObject(attributes.static_device_meta.url)) {
+			this.staticDeviceMeta = new StaticDevice(attributes.static_device_meta);
 		};
 
 		if (!$.isEmptyObject(attributes.latest_location)) {
@@ -294,6 +310,30 @@
 		this.message = attributes.message;
 		this.messageID = attributes.message_id;
 		this.senderID = attributes.sender_id;
+		return this;
+	}
+
+    function StaticDevice(attributes) {
+        this.url = attributes.url;
+		this.uuid = attributes.uuid;
+		this.type = attributes.type;
+		this.description = attributes.description;
+		this.agency = attributes.agency;
+		this.latitude = attributes.latitude;
+        this.longitude = attributes.longitude;
+        this.user = attributes.user;
+		return this;
+	}
+
+    function Theme(attributes) {
+		this.name = attributes.name;
+		this.primaryColor = attributes.primary_color;
+		this.secondaryColor = attributes.secondary_color;
+		this.alternateColor = attributes.alternate_color;
+		this.logo = attributes.logo;
+        this.alternateLogo = attributes.alternate_logo;
+        this.smallLogo = attributes.small_logo;
+        this.shieldCommandLogo = attributes.shield_command_logo;
 		return this;
 	}
 
