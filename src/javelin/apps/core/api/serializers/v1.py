@@ -220,7 +220,6 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             if obj.logo:
                 string = '%s%s' % (settings.AWS_S3_BUCKET_URL, obj.logo.name)
-                string.replace(' ', '+')
-                ret['logo_url'] = string
+                ret['logo_url'] = string.replace(' ', '+')
 
         return ret
