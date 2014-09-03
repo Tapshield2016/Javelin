@@ -107,5 +107,7 @@ class S3EnabledImageField(models.ImageField):
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
-        return '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(self.get_prep_value(value)))
-        # return self.get_prep_value(value)
+        string = self.get_prep_value(value)
+        if string:
+            string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
+        return string

@@ -1,6 +1,5 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
-import urllib
 
 from rest_framework import serializers
 
@@ -8,8 +7,6 @@ from core.models import (Agency, Alert, AlertLocation, Theme,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
                          DispatchCenter, Period, ClosedDate, StaticDevice)
-
-from django.conf import settings
 
 from emailmgr.models import EmailAddress
 from emailmgr.serializers import EmailAddressGETSerializer
@@ -215,12 +212,3 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Theme
-
-    def to_native(self, obj):
-        ret = super(ThemeSerializer, self).to_native(obj)
-        if obj:
-            if obj.logo:
-                url = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(obj.logo.name))
-                ret['logo_url'] = url
-
-        return ret
