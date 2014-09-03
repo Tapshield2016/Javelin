@@ -105,6 +105,5 @@ class S3EnabledImageField(models.ImageField):
         super(S3EnabledImageField, self).__init__(verbose_name, name, width_field, height_field, **kwargs)
 
     def value_to_string(self, obj):
-        # value = self._get_val_from_obj(obj)
-        # return self.get_prep_value(value)
-        return super(S3EnabledImageField, self)._get_url()
+        value = self._get_val_from_obj(obj)
+        return self.get_prep_value(value)
