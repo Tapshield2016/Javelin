@@ -56,7 +56,12 @@ angular.module('shieldCommand.controllers', [])
 		
 		if (alertService.activeAlert)
 		{
-			$scope.profileType = 'alert';
+            if (alertService.activeAlert.staticDevice) {
+                $scope.profileType = 'staticAlert';
+            }
+            else {
+                $scope.profileType = 'alert';
+            }
 			$scope.activeAlert = alertService.activeAlert;
 			$scope.activeCrimeTip = null;
 		}
@@ -81,12 +86,17 @@ angular.module('shieldCommand.controllers', [])
 	$scope.updateProfile = function(callback) {
 		if ($scope.activeAlert)
 		{
-			alertService.getUserProfileForActiveAlert(function(profile) {
-				$scope.currentProfile = profile;
-				if (callback) {
-					callback(profile);
-				}
-			});
+            if ($scope.activeAlert.staticDevice) {
+                $scope.currentProfile = $scope.activeAlert.staticDeviceMeta;
+            }
+            else {
+                alertService.getUserProfileForActiveAlert(function(profile) {
+                    $scope.currentProfile = profile;
+                    if (callback) {
+					    callback(profile);
+				    }
+			    });
+            }
 		}
 		else if ($scope.activeCrimeTip)
 		{
@@ -269,15 +279,17 @@ angular.module('shieldCommand.controllers', [])
 		if ($scope.profileType == 'alert' && $scope.activeAlert) {
 			$scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
 			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
-			if (alertService.activeAlert.agencyUser) {
-                alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
-            }
-            else {
-                alertService.activeAlert.location.title = alertService.activeAlert.staticDeviceMeta.description;
-            }
+            alertService.activeAlert.location.title = alertService.activeAlert.agencyUserMeta.getFullName();
 			setMarker($scope.activeAlert.location);
 			closeInfoWindow();
 		}
+        else if ($scope.profileType == 'staticAlert' && $scope.activeAlert) {
+            $scope.activeAlert.location.alertStatus = $scope.activeAlert.status;
+			$scope.activeAlert.location.alertType = $scope.activeAlert.initiatedBy;
+            alertService.activeAlert.location.title = alertService.activeAlert.staticDeviceMeta.description;
+			setMarker($scope.activeAlert.location);
+			closeInfoWindow();
+        }
 		else if ($scope.profileType == 'crimeTip' && $scope.activeCrimeTip)
 		{
 			showCrimeMarker($scope.activeCrimeTip);

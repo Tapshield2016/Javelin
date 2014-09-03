@@ -266,6 +266,7 @@
 				<!-- profile -->
 				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
 					<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>
+                    <p class="profile-title" ng-if="profileType == 'staticAlert'">Static Device</p>
 					<div class="profile-content" ng-if="profileType == 'alert'">
 						<div class="profile-top-content">
 							<div class="profile-image-container"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
@@ -398,6 +399,29 @@
 							<tr>
 								<td>Email</td>
 								<td>{{ (currentProfile) ? currentProfile.email : '(anonymous)' }}</td>
+							</tr>
+						</table>
+                        <table class="table table-condensed" ng-if="profileType == 'staticAlert'">
+							<caption>Device info</caption>
+							<tr class="first">
+								<td>UUID</td>
+								<td>{{ (currentProfile) ? currentProfile.uuid : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Type</td>
+								<td>{{ (currentProfile) ? currentProfile.type : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Description</td>
+								<td>{{ (currentProfile) ? currentProfile.description : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Latitude</td>
+								<td>{{ (currentProfile) ? currentProfile.latitude : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Longitude</td>
+								<td>{{ (currentProfile) ? currentProfile.longitude : 'None' }}</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'alert'">
