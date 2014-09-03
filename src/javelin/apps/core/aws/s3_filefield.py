@@ -18,6 +18,7 @@ from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
+import urllib
 import os
 
 class S3Storage(FileSystemStorage):
@@ -106,4 +107,5 @@ class S3EnabledImageField(models.ImageField):
 
     def value_to_string(self, obj):
         value = self._get_val_from_obj(obj)
-        return self.get_prep_value(value)
+        return '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(self.get_prep_value(value)))
+        # return self.get_prep_value(value)
