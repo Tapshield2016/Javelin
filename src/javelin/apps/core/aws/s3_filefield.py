@@ -103,3 +103,8 @@ class S3EnabledImageField(models.ImageField):
                 self.bucket = self.connection.create_bucket(bucket)
             kwargs['storage'] = S3Storage(self.bucket)
         super(S3EnabledImageField, self).__init__(verbose_name, name, width_field, height_field, **kwargs)
+
+    def value_to_string(self, obj):
+        # value = self._get_val_from_obj(obj)
+        # return self.get_prep_value(value)
+        return obj.url
