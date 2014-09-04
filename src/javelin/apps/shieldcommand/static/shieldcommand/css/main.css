@@ -5271,7 +5271,7 @@ body {
 
 #logo {
   width: auto;
-  max-height: 10%;
+  max-height: 50px;
   margin-left: 50px; }
 
 #accordion {
