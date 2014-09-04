@@ -781,7 +781,7 @@ class Theme(models.Model):
     small_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
                                      help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
     shield_command_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True, max_height=50,
-                                              help_text="Standard or alternate logo specifically for use on Shield Command.")
+                                              help_text="Logo re-sized for Shield Command. 10% top and bottom padding recommended")
 
     def __unicode__(self):
         return u'%s' % self.name

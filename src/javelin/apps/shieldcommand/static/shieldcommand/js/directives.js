@@ -204,7 +204,8 @@ angular.module('shieldCommand.directives', [])
         }
    return {
       restrict: 'A',
-      template: '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">'
+      template: '{% if alert.agencyUser %}'
+                + '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">'
                 + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-click="toggleChat()"></i>'
                 + '   <div class="arrow-left hide"></div> <div class="chat-panel panel panel-default hide">'
                 + '        <div class="panel-heading">{{ truncateAgencyUserName(alert.agencyUserMeta.getFullName()) }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
@@ -220,7 +221,8 @@ angular.module('shieldCommand.directives', [])
                 + '            </div> '
                 + '        </div> '
                 + '    </div>'
-                + '</div>',
+                + '</div>'
+                + '{% endif %}',
       scope: {
         alert: "=",
       },
