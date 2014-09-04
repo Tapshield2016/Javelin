@@ -117,9 +117,6 @@ function getIconForLocation(location) {
 			
 			icon = location.type.toLowerCase() + '/' + 'pins_' + crimeType + '_icon.png';
 		}
-        else if (location.type == 'staticAlert') {
-            icon = 'static_marker.png'
-        }
     }
     
 	return '/media/static/shieldcommand/img/' + icon;
