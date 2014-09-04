@@ -32,7 +32,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
 
         # Deleting model 'Theme'
-        db.delete_table(u'core_theme')
+        # db.delete_table(u'core_theme')
 
         db.delete_column(u'core_alert', 'theme_id')
 
