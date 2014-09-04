@@ -508,11 +508,11 @@
 					</div>
 					<!-- /.profile-information -->
 					
-					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticDevice')" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticAlert')" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
 						<h5>Mark Alert As</h5>
 						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a> <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a> </div>
 					</div>
-					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticDevice')" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticAlert')" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Completed By: </h5>
 						<p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
 					</div>
