@@ -77,7 +77,8 @@ class S3Storage(FileSystemStorage):
         else:
             key.set_contents_from_string(content)
 
-        key.set_contents_from_string(key.get_contents_as_string(), {"Content-Type":"image/png"}, True)
+        name, extension = os.path.splitext(content.file.name)
+        key.set_contents_from_string(key.get_contents_as_string(), {"Content-Type":"image/%s" % extension}, True)
 
         key.set_acl('public-read')
 
@@ -114,13 +115,6 @@ class S3EnabledFileField(models.FileField):
                 self.bucket = self.connection.create_bucket(bucket)
             storage = S3Storage(self.bucket)
         super(S3EnabledFileField, self).__init__(verbose_name, name, upload_to, storage, **kwargs)
-
-# basewidth = 300
-# img = Image.open('somepic.jpg')
-# wpercent = (basewidth/float(img.size[0]))
-# hsize = int((float(img.size[1])*float(wpercent)))
-# img = img.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
-# img.save('sompic.jpg')
 
 class ResizedImageFieldFile(ImageField.attr_class):
 
