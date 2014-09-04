@@ -20,6 +20,23 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 import urllib
 import os
+try:
+    from PIL import Image
+except ImportError:
+    import Image
+from StringIO import StringIO
+
+from django.conf import settings
+from django.core.files.base import ContentFile
+
+try:
+    from sorl.thumbnail import ImageField
+except ImportError:
+    from django.db.models import ImageField
+
+
+# DEFAULT_SIZE = getattr(settings, 'DJANGORESIZED_DEFAULT_SIZE', [1920, 1080])
+DEFAULT_COLOR = (255, 255, 255, 0)
 
 class S3Storage(FileSystemStorage):
     def __init__(self, bucket=None, location=None, base_url=None):
@@ -95,8 +112,56 @@ class S3EnabledFileField(models.FileField):
             storage = S3Storage(self.bucket)
         super(S3EnabledFileField, self).__init__(verbose_name, name, upload_to, storage, **kwargs)
 
+# basewidth = 300
+# img = Image.open('somepic.jpg')
+# wpercent = (basewidth/float(img.size[0]))
+# hsize = int((float(img.size[1])*float(wpercent)))
+# img = img.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
+# img.save('sompic.jpg')
+
+class ResizedImageFieldFile(ImageField.attr_class):
+
+    def save(self, name, content, save=True):
+        new_content = StringIO()
+        content.file.seek(0)
+        # thumb = Image.open(content.file)
+        # thumb.size
+        # thumb.thumbnail((
+        #     self.field.max_width,
+        #     self.field.max_height
+        #     ), Image.ANTIALIAS)
+
+        # if self.field.use_thumbnail_aspect_ratio:
+        #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
+        #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
+        # else:
+
+        # img = thumb
+
+        img = Image.open(content.file)
+        ratio = min(self.field.max_width/img.size[0], self.field.max_height/img.size[1])
+        # wpercent = (self.field.max_width/float(img.size[0]))
+        # hsize = int((float(img.size[1])*float(wpercent)))
+        img = img.resize((ratio*img.size[0],ratio*img.size[1]), Image.ANTIALIAS)
+        # img.save('sompic.jpg')
+
+        img.save(new_content, format=img.format, **img.info)
+
+        new_content = ContentFile(new_content.getvalue())
+
+        super(ResizedImageFieldFile, self).save(name, new_content, save)
+
 class S3EnabledImageField(models.ImageField):
-    def __init__(self, bucket=settings.AWS_STORAGE_BUCKET_NAME, verbose_name=None, name=None, width_field=None, height_field=None, **kwargs):
+
+    attr_class = ResizedImageFieldFile
+
+    def __init__(self, bucket=settings.AWS_STORAGE_BUCKET_NAME, verbose_name=None, name=None, width_field=None, height_field=None, max_width=None, max_height=None, **kwargs):
+
+        self.max_width = kwargs.pop('max_width', max_width)
+        self.max_height = kwargs.pop('max_height', max_height)
+        # self.use_thumbnail_aspect_ratio = kwargs.pop('use_thumbnail_aspect_ratio', False)
+        # self.background_color = kwargs.pop('background_color', DEFAULT_COLOR)
+
         if settings.USE_AMAZON_S3:
             self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
             self.bucket = self.connection.get_bucket(bucket, validate=False)
