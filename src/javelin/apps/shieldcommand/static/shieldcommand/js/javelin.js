@@ -36,7 +36,7 @@
 	    'C': 'chat',
 	    'T': 'timer',
         'Y': 'yank',
-        'H': 'hardware',
+        'S': 'static',
 	}
 
 	Javelin.HAIR_COLOR_CHOICES = {
