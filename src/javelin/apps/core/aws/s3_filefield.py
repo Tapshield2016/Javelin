@@ -159,11 +159,11 @@ class ResizedImageFieldFile(ImageField.attr_class):
             self.field.max_height
             ), Image.ANTIALIAS)
 
-        if self.field.use_thumbnail_aspect_ratio:
-            img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
-            img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
-        else:
-            img = thumb
+        # if self.field.use_thumbnail_aspect_ratio:
+        #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
+        #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
+        # else:
+        img = thumb
 
         img.save(new_content, format=thumb.format, **img.info)
 
