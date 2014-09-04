@@ -840,6 +840,9 @@ angular.module('shieldCommand.controllers', [])
   	}
 
   	$scope.updateChatMessages = function () {
+        if (!alertService.activeAlert.agencyUser) {
+            return;
+        }
   		try {
   			if (!$scope.chatUpdateInProgress) {
   				$scope.chatUpdateInProgress = true;
