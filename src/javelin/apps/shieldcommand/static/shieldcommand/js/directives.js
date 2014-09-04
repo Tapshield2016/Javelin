@@ -202,7 +202,7 @@ angular.module('shieldCommand.directives', [])
 
    return {
       restrict: 'A',
-      template: '<div class="alert-option chat" ng-if="alert.agencyUser" ng-class="{newChat: alert.hasNewChatMessage}">' //When alert.staticDevice is not null it cancels out chat icon
+      template: '<div class="alert-option chat" ng-if="alert.agencyUser" ng-class="{newChat: alert.hasNewChatMessage}">'
                 + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-click="toggleChat()"></i>'
                 + '   <div class="arrow-left hide"></div> <div class="chat-panel panel panel-default hide">'
                 + '        <div class="panel-heading">{{ truncateAgencyUserName(alert.agencyUserMeta.getFullName()) }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
@@ -337,7 +337,7 @@ angular.module('shieldCommand.directives', [])
 
         scope.toggleChat = function() {
           var panel = element.find('.chat-panel');
-          if (panel.hasClass('hide')) {
+          if (panel.hasClass('hide') && scope.alert.agencyUser) {
             if (scope.adjustForProfile || $rootScope.profileIsOpen) {
               panel.css({
                 right: 250,

@@ -77,8 +77,9 @@ class S3Storage(FileSystemStorage):
         else:
             key.set_contents_from_string(content)
 
-        key.set_acl('public-read')
         key.set_contents_from_string(key.get_contents_as_string(), {"Content-Type":"image/png"}, True)
+
+        key.set_acl('public-read')
 
         return name
 
