@@ -35,8 +35,8 @@ DEFAULT_FROM_EMAIL = 'TapShield <noreply@tapshield.com>'
 # django-storages
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 #STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
-AWS_SECRET_ACCESS_KEY = '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'
+# AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
+# AWS_SECRET_ACCESS_KEY = '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'
 #AWS_STORAGE_BUCKET_NAME = 'static.tapshield.com'
 #AWS_HEADERS = {
 #    'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
@@ -45,6 +45,18 @@ AWS_SECRET_ACCESS_KEY = 'uBJ4myuho2eg+yYQp26ZEz34luh6AZ9UiWetAp91'
 #AWS_S3_SECURE_URLS = False
 #STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 #MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
+
+# django-storages
+AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'media.tapshield.com'
+AWS_HEADERS = {
+   'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
+   'Cache-Control': 'max-age=86400',
+}
+AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
+DEFAULT_BUCKET = AWS_STORAGE_BUCKET_NAME
+USE_AMAZON_S3 = True
 
 # AWS
 DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJ34SY3EAOK6STBBA'

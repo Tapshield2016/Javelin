@@ -37,13 +37,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'TapShield Dev <noreply@tapshield.com>'
 
-# Required settings:
-
-#	DEFAULT_BUCKET - String, represents the default bucket name to use if one isn't provided
-
 # django-storages
-# DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-# STATICFILES_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
 AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
 AWS_SECRET_ACCESS_KEY = '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'
 AWS_STORAGE_BUCKET_NAME = 'dev.media.tapshield.com'
@@ -52,11 +46,7 @@ AWS_HEADERS = {
    'Cache-Control': 'max-age=86400',
 }
 AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
-# AWS_S3_URL_PROTOCOL = 'https'
-# AWS_S3_SECURE_URLS = True
-#STATIC_URL = 'http://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
-#MEDIA_URL = 'http://%s/' % AWS_STORAGE_BUCKET_NAME
-DEFAULT_BUCKET = 'dev.media.tapshield.com'
+DEFAULT_BUCKET = AWS_STORAGE_BUCKET_NAME
 USE_AMAZON_S3 = True
 
 # AWS
