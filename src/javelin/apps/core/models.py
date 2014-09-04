@@ -392,11 +392,13 @@ class Alert(TimeStampedModel):
         if self.status == 'C':
             if not self.completed_time:
                 self.completed_time = datetime.now()
-            try:
-                profile = self.agency_user.get_profile()
-                profile.delete()
-            except UserProfile.DoesNotExist:
-                pass
+
+            if self.agency_user:
+                try:
+                    profile = self.agency_user.get_profile()
+                    profile.delete()
+                except UserProfile.DoesNotExist:
+                    pass
             self.store_chat_messages()
         elif self.status != 'N':
             if self.status == 'A':

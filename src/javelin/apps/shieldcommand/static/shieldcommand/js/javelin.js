@@ -432,7 +432,7 @@
 		});
 		request.done(function(data) {
 			callback(data);
-			if (!alert.disarmedTime) {
+			if (!alert.disarmedTime && !alert.staticDevice) {
 				Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
 					console.log(success);
 				})
