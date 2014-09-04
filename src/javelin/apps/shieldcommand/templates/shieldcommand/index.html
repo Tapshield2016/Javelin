@@ -27,12 +27,11 @@
 	<div class="container-full">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> </button>
-			<!--{% if agency.branding.shield_command_logo %}-->
-
-            <!--{% else %}-->
-                <!--<a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>-->
-			<!--{% endif %}-->
-            <a id="logo" href=""><img src="{{ agency.branding.shield_command_logo }}" /></a> </div>
+			{% if agency.branding.shield_command_logo %}
+			<a id="logo" href=""><img src="{{ agency.branding.shield_command_logo.url }}" /></a> </div>
+            {% else %}
+                <a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>
+			{% endif %}
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav pull-right">
 				{% if agency.display_command_alert %}
