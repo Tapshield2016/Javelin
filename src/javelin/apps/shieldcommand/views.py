@@ -6,7 +6,7 @@ from django.http import Http404
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from core.api.serializers.v1 import UserSerializer
+from core.api.serializers.v1 import UserSerializer, ThemeSerializer
 
 
 @login_required(login_url='shieldcommand-login')
@@ -20,7 +20,7 @@ def index(request):
     agency_boundaries_coords = []
     multi_region_boundaries = []
     user = UserSerializer(request.user)
-    region = agency.region
+    branding = ThemeSerializer(agency.branding)
 
     if agency.region:
         for region in agency.region.all():
@@ -45,5 +45,6 @@ def index(request):
                                "api_version":\
                                    settings.SHIELD_COMMAND_API_VERSION,
                                "region_boundaries": multi_region_boundaries,
-                               "user": user.data},
+                               "user": user.data,
+                               "branding": branding.data},
                               context_instance=RequestContext(request))
