@@ -199,6 +199,9 @@ angular.module('shieldCommand.directives', [])
 }])
 
 .directive('alertChatWindow', ['$rootScope', 'alertService', function($rootScope, alertService) {
+        if (alertService.activeAlert.agencyUser == null) {
+            return;
+        }
    return {
       restrict: 'A',
       template: '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">'
@@ -361,5 +364,5 @@ angular.module('shieldCommand.directives', [])
           };
         }
       }
-   } 
+   }
 }]);
