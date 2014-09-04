@@ -103,7 +103,7 @@ function updateMarker(location) {
 
 //Sets correct icon for alert, spotcrime, or social crime reports
 function getIconForLocation(location) {
-	var icon = 'StaticUserPin.png';
+	var icon = 'NewUserPin.png';
 	
     if (location)
 	{
