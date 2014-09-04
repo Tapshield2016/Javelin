@@ -125,11 +125,13 @@ class AlertLocationInline(admin.StackedInline):
 
 
 class AlertAdmin(reversion.VersionAdmin):
-    list_display = ('agency_user', 'creation_date', 'last_modified')
+    list_display = ('__unicode__', 'agency__name', 'status', 'creation_date', 'last_modified')
     list_filter = ('agency', 'status')
     inlines = [
         AlertLocationInline,
     ]
+    list_select_related = ('agency',)
+    search_fields = ['__unicode__', 'agency__name',]
 
 
 class MassAlertAdmin(admin.ModelAdmin):

@@ -388,6 +388,12 @@ class Alert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+
+    def __unicode__(self):
+        if self.static_device:
+            return u"%s" % self.static_device.uuid
+        return u"%s" % self.agency_user.username
+
     @reversion.create_revision()
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
