@@ -117,10 +117,6 @@ class ResizedImageFieldFile(ImageField.attr_class):
 
     def save(self, name, content, save=True):
 
-        filename = None
-        if hasattr(content, 'temporary_file_path'):
-            filename = content.temporary_file_path()
-
         new_content = StringIO()
         content.file.seek(0)
         thumb = Image.open(content.file)
@@ -134,8 +130,6 @@ class ResizedImageFieldFile(ImageField.attr_class):
         img.save(new_content, format=thumb.format, **img.info)
 
         new_content = ContentFile(new_content.getvalue())
-        if filename:
-            new_content['temporary_file_path'] = filename
 
         super(ResizedImageFieldFile, self).save(name, new_content, save)
 
