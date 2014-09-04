@@ -131,7 +131,7 @@ class AlertAdmin(reversion.VersionAdmin):
         AlertLocationInline,
     ]
     list_select_related = ('agency',)
-    search_fields = ['__unicode__', 'agency__name',]
+    search_fields = ['agency_user__username', 'agency__name', 'static_device__uuid',]
 
 
 class MassAlertAdmin(admin.ModelAdmin):
