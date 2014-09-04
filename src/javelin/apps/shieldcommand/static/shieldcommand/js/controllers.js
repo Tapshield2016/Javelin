@@ -643,7 +643,12 @@ angular.module('shieldCommand.controllers', [])
 							if (updatedAlerts[i].location) {
 								updatedAlerts[i].location.alertStatus = updatedAlerts[i].status;
 								updatedAlerts[i].location.alertType = updatedAlerts[i].initiatedBy;
-								updatedAlerts[i].location.title = updatedAlerts[i].agencyUserMeta.getFullName();
+                                if (updatedAlerts[i].agencyUser) {
+                                    updatedAlerts[i].location.title = updatedAlerts[i].agencyUserMeta.getFullName();
+                                }
+                                else {
+                                    updatedAlerts[i].location.title = updatedAlerts[i].staticDeviceMeta.description;
+                                }
 								$scope.currentActiveLocation = updatedAlerts[i].location;
 								updateDisplay();
 							}
