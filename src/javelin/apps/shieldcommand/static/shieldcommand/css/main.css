@@ -5270,6 +5270,8 @@ body {
   border-top: 0px solid #DDDDDD; }
 
 #logo {
+  width: auto;
+  max-height: 100%;
   margin-left: 50px; }
 
 #accordion {
