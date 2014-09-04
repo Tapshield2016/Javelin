@@ -122,34 +122,6 @@ class S3EnabledFileField(models.FileField):
 class ResizedImageFieldFile(ImageField.attr_class):
 
     def save(self, name, content, save=True):
-        # new_content = StringIO()
-        # content.file.seek(0)
-        # # thumb = Image.open(content.file)
-        # # thumb.size
-        #
-        #
-        # # if self.field.use_thumbnail_aspect_ratio:
-        # #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
-        # #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
-        # # else:
-        #
-        # # img = thumb
-        #
-        # img = Image.open(content.file)
-        # ratio = min(self.field.max_width/img.size[0], self.field.max_height/img.size[1])
-        # # wpercent = (self.field.max_width/float(img.size[0]))
-        # # hsize = int((float(img.size[1])*float(wpercent)))
-        # img = img.resize((ratio*img.size[0],ratio*img.size[1]), Image.ANTIALIAS)
-        # # img.save('sompic.jpg')
-        #
-        # img.thumbnail((
-        #     ratio*img.size[0],
-        #     ratio*img.size[1]
-        #     ), Image.ANTIALIAS)
-        #
-        # img.save(new_content, format=img.format, **img.info)
-        #
-        # new_content = ContentFile(new_content.getvalue())
 
         new_content = StringIO()
         content.file.seek(0)
@@ -159,10 +131,6 @@ class ResizedImageFieldFile(ImageField.attr_class):
             self.field.max_height
             ), Image.ANTIALIAS)
 
-        # if self.field.use_thumbnail_aspect_ratio:
-        #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
-        #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
-        # else:
         img = thumb
 
         img.save(new_content, format=thumb.format, **img.info)
@@ -179,8 +147,11 @@ class S3EnabledImageField(models.ImageField):
 
         self.max_width = kwargs.pop('max_width', max_width)
         self.max_height = kwargs.pop('max_height', max_height)
-        # self.use_thumbnail_aspect_ratio = kwargs.pop('use_thumbnail_aspect_ratio', False)
-        # self.background_color = kwargs.pop('background_color', DEFAULT_COLOR)
+
+        if not self.max_width:
+            self.max_width = 100000
+        if not self.max_width:
+            self.max_height = 100000
 
         if settings.USE_AMAZON_S3:
             self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
