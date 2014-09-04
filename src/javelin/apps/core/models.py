@@ -33,6 +33,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
 
 from core.aws.s3_filefield import S3EnabledImageField
 
+from pygeocoder import Geocoder
+
 
 def kilometers_between_coordinates(point1, point2):
 
@@ -739,6 +741,9 @@ class StaticDevice(models.Model):
                 agency = closest_agency(self.location_point)
                 if agency:
                     self.agency = agency
+            if not self.description:
+                results = Geocoder.reverse_geocode(self.latitude, self.longitude)
+                self.description = results[0]
         if not self.type:
             self.type = "Static Device"
 
