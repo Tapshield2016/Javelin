@@ -147,7 +147,7 @@ class S3EnabledImageField(models.ImageField):
 
         if not self.max_width:
             self.max_width = 100000
-        if not self.max_width:
+        if not self.max_height:
             self.max_height = 100000
 
         if settings.USE_AMAZON_S3:
