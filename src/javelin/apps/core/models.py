@@ -390,9 +390,12 @@ class Alert(TimeStampedModel):
 
 
     def __unicode__(self):
+        string = None
         if self.static_device:
-            return u"%s" % self.static_device.uuid
-        return u"%s" % self.agency_user.email
+            string = u"%s" % self.static_device.uuid
+        if self.agency_user:
+            string = u"%s" % self.agency_user.email
+        return string
 
     @reversion.create_revision()
     def save(self, *args, **kwargs):
