@@ -715,7 +715,7 @@ class StaticDevice(models.Model):
 
     uuid = models.SlugField(max_length=255, unique=True,
                             help_text="Unique identifier (e.g. serial number)")
-    type = models.CharField(max_length=255, blank=True, default="Static Device",
+    type = models.CharField(max_length=255, null=True, blank=True, default="Static Device",
                             help_text="Model number or device type")
     description = models.CharField(max_length=255, null=True, blank=True,
                                    help_text="Human readable identifier denoting location "
@@ -739,6 +739,8 @@ class StaticDevice(models.Model):
                 agency = closest_agency(self.location_point)
                 if agency:
                     self.agency = agency
+        if not self.type:
+            self.type = "Static Device"
 
         super(StaticDevice, self).save(*args, **kwargs)
 
