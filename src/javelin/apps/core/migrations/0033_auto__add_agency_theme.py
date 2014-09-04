@@ -23,10 +23,20 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'core', ['Theme'])
 
+        db.add_column(u'core_agency',
+                      'theme', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, related_name='agency_theme', to=orm['core.Theme'])),
+        db.add_column(u'core_agency',
+                      'branding', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, related_name='agency_branding', to=orm['core.Theme'])),
+
+
     def backwards(self, orm):
 
         # Deleting model 'Theme'
         db.delete_table(u'core_theme')
+
+        db.delete_column(u'core_alert', 'theme_id')
+
+        db.delete_column(u'core_alert', 'branding_id')
 
     models = {
         u'auth.group': {
