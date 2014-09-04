@@ -123,7 +123,7 @@
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.uuid : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -148,7 +148,7 @@
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.uuid : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -173,7 +173,7 @@
 											<div class="alert-contact-info">
                                                 <!--<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}-->
 												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.uuid : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
