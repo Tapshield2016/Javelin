@@ -7,10 +7,6 @@ from django.db import models
 
 class Migration(SchemaMigration):
 
-    depends_on = (
-        ("core", "0031_auto__add_agency__spot_crime_days_visible"),
-    )
-
     def forwards(self, orm):
         # Adding model 'StaticDevice'
         db.create_table(u'core_staticdevice', (
@@ -26,10 +22,21 @@ class Migration(SchemaMigration):
         ))
         db.send_create_signal(u'core', ['StaticDevice'])
 
+        db.add_column(u'core_alert', 'static_device',
+                      self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
+                                                                            related_name='static_device',
+                                                                            to=orm['core.StaticDevice'])),
+        db.alter_column(u'core_alert', 'agency_user_id',
+                        self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
+                                                                              related_name='alert_agency_user',
+                                                                              to=orm['core.AgencyUser'])),
+
 
     def backwards(self, orm):
         # Deleting model 'StaticDevice'
         db.delete_table(u'core_staticdevice')
+
+        db.delete_column(u'core_alert', 'static_device_id')
 
 
     models = {

@@ -8,19 +8,25 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
-        # Adding field 'Alert.static_device'
-        db.add_column(u'core_alert', 'static_device',
-                      self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
-                                                                            related_name='static_device',
-                                                                            to=orm['core.StaticDevice'])),
-        db.alter_column(u'core_alert', 'agency_user_id',
-                        self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True,
-                                                                              related_name='alert_agency_user',
-                                                                              to=orm['core.AgencyUser'])),
+        db.create_table(u'core_theme', (
+            (u'id', self.gf('django.db.models.fields.AutoField')(primary_key=True)),
+            ('name', self.gf('django.db.models.fields.CharField')(max_length=255)),
+            ('primary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
+            ('secondary_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
+            ('alternate_color', self.gf('django.db.models.fields.CharField')(max_length=8, null=True, blank=True)),
+            ('logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('alternate_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('small_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('shield_command_logo', self.gf('core.aws.s3_filefield.S3EnabledImageField')(upload_to='file_path', blank=True, null=True)),
+            ('theme', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, related_name='agency_theme', to=orm['core.Theme'])),
+            ('branding', self.gf('django.db.models.fields.related.ForeignKey')(null=True, blank=True, related_name='agency_branding', to=orm['core.Theme'])),
+        ))
+        db.send_create_signal(u'core', ['Theme'])
 
     def backwards(self, orm):
-        # Deleting field 'Alert.static_device'
-        db.delete_column(u'core_alert', 'static_device_id')
+
+        # Deleting model 'Theme'
+        db.delete_table(u'core_theme')
 
     models = {
         u'auth.group': {
@@ -80,7 +86,9 @@ class Migration(SchemaMigration):
             'require_domain_emails': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'show_agency_name_in_app_navbar': ('django.db.models.fields.BooleanField', [], {'default': 'False'}),
             'spot_crime_days_visible': ('django.db.models.fields.PositiveIntegerField', [], {'default': '1'}),
-            'sns_primary_topic_arn': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'})
+            'sns_primary_topic_arn': ('django.db.models.fields.CharField', [], {'max_length': '255', 'null': 'True', 'blank': 'True'}),
+            'theme': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'agency_theme'", 'null': 'True', 'to': u"orm['core.Theme']"}),
+            'branding': ('django.db.models.fields.related.ForeignKey', [], {'blank': 'True', 'related_name': "'agency_branding'", 'null': 'True', 'to': u"orm['core.Theme']"}),
         },
         u'core.agencyuser': {
             'Meta': {'object_name': 'AgencyUser'},
@@ -263,6 +271,18 @@ class Migration(SchemaMigration):
             'latitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
             'longitude': ('django.db.models.fields.FloatField', [], {'blank': 'True', 'null': 'True'}),
             'location_point': ('django.contrib.gis.db.models.fields.PointField', [], {'blank': 'True', 'null': 'True', 'geography': 'True'}),
+        },
+        u'core.theme': {
+            'Meta': {'object_name': 'Theme'},
+            u'id': ('django.db.models.fields.AutoField', [], {'primary_key': 'True'}),
+            'name': ('django.db.models.fields.CharField', [], {'max_length': '255'}),
+            'primary_color': ('django.db.models.fields.SlugField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'secondary_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'alternate_color': ('django.db.models.fields.CharField', [], {'max_length': '8', 'null': 'True', 'blank': 'True'}),
+            'logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'alternate_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'small_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
+            'shield_command_logo': ('core.aws.s3_filefield.S3EnabledImageField', [], {'upload_to': "'file_path'", 'blank': 'True', 'null': 'True'}),
         },
     }
 
