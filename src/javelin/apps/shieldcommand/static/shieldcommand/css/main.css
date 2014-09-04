@@ -5270,7 +5270,7 @@ body {
   border-top: 0px solid #DDDDDD; }
 
 #logo {
-  margin-top: 50px; }
+  margin-left: 50px; }
 
 #accordion {
   height: 100%; }
@@ -5412,6 +5412,17 @@ body {
 
 .alert-type.static-alert-type {
   background: #41c4f2; }
+
+.crimetip-type {
+  width: 24px;
+  height: 60px;
+  float: left;
+  margin-right: 12px;
+  line-height: 60px;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+}
 
 .alert-option {
   width: 24px;
