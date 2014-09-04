@@ -122,32 +122,50 @@ class S3EnabledFileField(models.FileField):
 class ResizedImageFieldFile(ImageField.attr_class):
 
     def save(self, name, content, save=True):
+        # new_content = StringIO()
+        # content.file.seek(0)
+        # # thumb = Image.open(content.file)
+        # # thumb.size
+        #
+        #
+        # # if self.field.use_thumbnail_aspect_ratio:
+        # #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
+        # #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
+        # # else:
+        #
+        # # img = thumb
+        #
+        # img = Image.open(content.file)
+        # ratio = min(self.field.max_width/img.size[0], self.field.max_height/img.size[1])
+        # # wpercent = (self.field.max_width/float(img.size[0]))
+        # # hsize = int((float(img.size[1])*float(wpercent)))
+        # img = img.resize((ratio*img.size[0],ratio*img.size[1]), Image.ANTIALIAS)
+        # # img.save('sompic.jpg')
+        #
+        # img.thumbnail((
+        #     ratio*img.size[0],
+        #     ratio*img.size[1]
+        #     ), Image.ANTIALIAS)
+        #
+        # img.save(new_content, format=img.format, **img.info)
+        #
+        # new_content = ContentFile(new_content.getvalue())
+
         new_content = StringIO()
         content.file.seek(0)
-        # thumb = Image.open(content.file)
-        # thumb.size
-
-
-        # if self.field.use_thumbnail_aspect_ratio:
-        #     img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
-        #     img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
-        # else:
-
-        # img = thumb
-
-        img = Image.open(content.file)
-        ratio = min(1000/img.size[0], 50/img.size[1])
-        # wpercent = (self.field.max_width/float(img.size[0]))
-        # hsize = int((float(img.size[1])*float(wpercent)))
-        # img = img.resize((ratio*img.size[0],ratio*img.size[1]), Image.ANTIALIAS)
-        # img.save('sompic.jpg')
-
-        img.thumbnail((
-            ratio*img.size[0],
-            ratio*img.size[1]
+        thumb = Image.open(content.file)
+        thumb.thumbnail((
+            self.field.max_width,
+            self.field.max_height
             ), Image.ANTIALIAS)
 
-        img.save(new_content, format=img.format, **img.info)
+        if self.field.use_thumbnail_aspect_ratio:
+            img = Image.new("RGBA", (self.field.max_width, self.field.max_height), self.field.background_color)
+            img.paste(thumb, ((self.field.max_width - thumb.size[0]) / 2, (self.field.max_height - thumb.size[1]) / 2))
+        else:
+            img = thumb
+
+        img.save(new_content, format=thumb.format, **img.info)
 
         new_content = ContentFile(new_content.getvalue())
 
