@@ -76,10 +76,7 @@ class S3Storage(FileSystemStorage):
             key.set_contents_from_file(content)
         else:
             key.set_contents_from_string(content)
-
-        name, extension = os.path.splitext(content.file.name)
-        key.set_contents_from_string(key.get_contents_as_string(), {"Content-Type":"image/%s" % extension}, True)
-
+        # key.set_contents_from_string(key.get_contents_as_string(), {"Content-Type":"image/png"}, True)
         key.set_acl('public-read')
 
         return name
