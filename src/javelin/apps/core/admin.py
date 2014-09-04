@@ -125,7 +125,7 @@ class AlertLocationInline(admin.StackedInline):
 
 
 class AlertAdmin(reversion.VersionAdmin):
-    list_display = ('__unicode__', 'agency__name', 'status', 'creation_date', 'last_modified')
+    list_display = ('__unicode__', 'agency', 'status', 'creation_date', 'last_modified')
     list_filter = ('agency', 'status')
     inlines = [
         AlertLocationInline,
