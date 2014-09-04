@@ -14,7 +14,7 @@ class Migration(SchemaMigration):
             ('agency', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'StaticDevice', to=orm['core.Agency'], null=True, blank=True)),
             ('user', self.gf('django.db.models.fields.related.ForeignKey')(related_name = 'User', to=orm['core.AgencyUser'], null=True, blank=True)),
             ('uuid', self.gf('django.db.models.fields.SlugField')(max_length=255, unique=True)),
-            ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+            ('type', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True, default="Static Device")),
             ('description', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
             ('latitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
             ('longitude', self.gf('django.db.models.fields.FloatField')(null=True, blank=True)),
