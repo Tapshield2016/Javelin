@@ -5269,7 +5269,7 @@ body {
 .table > tbody > tr:first-child > td {
   border-top: 0px solid #DDDDDD; }
 
-#logo {
+.logo {
   width: auto;
   max-height: 50%;
   margin-left: 50px; }
