@@ -131,7 +131,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
+									<div class="alert-option accept" ng-class=""><i class="{{ alert.staticDevice ? alert.staticDeviceMeta.description : 'icon-accept_bubble' }}" ng-click="acceptClicked(alert)"></i></div>
 								</li>
 							</ul>
 						</div>
@@ -156,7 +156,7 @@
 											</div>
 										</div>
 									</div>
-									<div class="alert-option accept" ng-class=""><i class="icon-accept_bubble" ng-click="acceptClicked(alert)"></i></div>
+									<div class="alert-option accept" ng-class=""><i class="{{ alert.staticDevice ? alert.staticDeviceMeta.description : 'icon-accept_bubble' }}" ng-click="acceptClicked(alert)"></i></div>
 								</li>
 							</ul>
 						</div>
