@@ -136,7 +136,7 @@ class ResizedImageFieldFile(ImageField.attr_class):
         # img = thumb
 
         img = Image.open(content.file)
-        ratio = min(self.field.max_width/img.size[0], self.field.max_height/img.size[1])
+        ratio = min(1000/img.size[0], 50/img.size[1])
         # wpercent = (self.field.max_width/float(img.size[0]))
         # hsize = int((float(img.size[1])*float(wpercent)))
         # img = img.resize((ratio*img.size[0],ratio*img.size[1]), Image.ANTIALIAS)
@@ -159,8 +159,8 @@ class S3EnabledImageField(models.ImageField):
 
     def __init__(self, bucket=settings.AWS_STORAGE_BUCKET_NAME, verbose_name=None, name=None, width_field=None, height_field=None, max_width=None, max_height=None, **kwargs):
 
-        self.max_width = max_width #kwargs.pop('max_width', max_width)
-        self.max_height = max_height #kwargs.pop('max_height', max_height)
+        self.max_width = kwargs.pop('max_width', max_width)
+        self.max_height = kwargs.pop('max_height', max_height)
         # self.use_thumbnail_aspect_ratio = kwargs.pop('use_thumbnail_aspect_ratio', False)
         # self.background_color = kwargs.pop('background_color', DEFAULT_COLOR)
 
