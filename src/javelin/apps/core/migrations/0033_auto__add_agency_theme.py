@@ -34,9 +34,9 @@ class Migration(SchemaMigration):
         # Deleting model 'Theme'
         # db.delete_table(u'core_theme')
 
-        db.delete_column(u'core_alert', 'theme_id')
+        db.delete_column(u'core_agency', 'theme_id')
 
-        db.delete_column(u'core_alert', 'branding_id')
+        db.delete_column(u'core_agency', 'branding_id')
 
     models = {
         u'auth.group': {
