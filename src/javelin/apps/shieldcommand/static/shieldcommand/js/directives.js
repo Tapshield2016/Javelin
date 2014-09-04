@@ -202,8 +202,8 @@ angular.module('shieldCommand.directives', [])
 
    return {
       restrict: 'A',
-      template: '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">' //When alert.staticDevice is not null it cancels out chat icon
-                + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble{{ alert.staticDevice }}" ng-click="toggleChat()"></i>'
+      template: '<div class="alert-option chat" ng-if="alert.agencyUser" ng-class="{newChat: alert.hasNewChatMessage}">' //When alert.staticDevice is not null it cancels out chat icon
+                + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-click="toggleChat()"></i>'
                 + '   <div class="arrow-left hide"></div> <div class="chat-panel panel panel-default hide">'
                 + '        <div class="panel-heading">{{ truncateAgencyUserName(alert.agencyUserMeta.getFullName()) }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
                 + '        <div class="panel-body">'
