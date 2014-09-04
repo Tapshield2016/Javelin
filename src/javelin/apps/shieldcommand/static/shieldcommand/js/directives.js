@@ -199,9 +199,7 @@ angular.module('shieldCommand.directives', [])
 }])
 
 .directive('alertChatWindow', ['$rootScope', 'alertService', function($rootScope, alertService) {
-        if (alertService.activeAlert.agencyUser == null) {
-            return;
-        }
+        
    return {
       restrict: 'A',
       template: '{% if alert.agencyUser %}'
