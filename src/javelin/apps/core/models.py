@@ -745,7 +745,7 @@ class StaticDevice(models.Model):
                 results = Geocoder.reverse_geocode(self.latitude, self.longitude)
                 top_result = results[0]
                 if top_result:
-                    self.description = top_result
+                    self.description = top_result.formatted_address
         if not self.type:
             self.type = "Static Device"
 
