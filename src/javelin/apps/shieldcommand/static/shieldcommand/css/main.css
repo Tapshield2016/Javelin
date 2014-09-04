@@ -5269,9 +5269,9 @@ body {
 .table > tbody > tr:first-child > td {
   border-top: 0px solid #DDDDDD; }
 
-.logo {
-  width: auto;
-  max-height: 50%;
+#logo {
+  /*width: auto;*/
+  max-height: 50px;
   margin-left: 50px; }
 
 #accordion {
