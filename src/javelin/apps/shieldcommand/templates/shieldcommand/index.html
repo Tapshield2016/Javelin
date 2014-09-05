@@ -98,8 +98,8 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'Static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
-                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'Static'"><img src="BlueLightWhite.png" alt="" /></i> </div>
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'static'"><img src="BlueLightWhite.png" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
