@@ -154,7 +154,7 @@ function addressForLocation(location, callback) {
          div.style.top = position.y + 'px';
          div.style.display = 'block';
          div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
-         this.span_.innerHTML = this.get('text').toString();
+//         this.span_.innerHTML = this.get('text').toString();
     };
 
 function updateMarker(location) {
