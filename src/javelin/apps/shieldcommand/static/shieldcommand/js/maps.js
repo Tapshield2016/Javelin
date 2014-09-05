@@ -200,7 +200,8 @@ function addCrimeMarkers(crimes) {
 			map: map,
 			title: crime.title,
 			icon: getIconForLocation(crime),
-			animation: google.maps.Animation.DROP
+			animation: google.maps.Animation.DROP,
+            optimized: false
         });
 
 		if ( ! crimeMarkers[crime.type])
