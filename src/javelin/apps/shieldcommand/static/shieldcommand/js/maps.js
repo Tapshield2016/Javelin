@@ -32,6 +32,16 @@ function initializeMap() {
 		map: googleMap
 	};
 
+    //White static device bubble
+	whiteCircleOptions = {
+		strokeColor: '#ffffff',
+		strokeOpacity: 0.8,
+		strokeWeight: 2,
+		fillColor: '#ffffff',
+		fillOpacity: 0.35,
+		map: googleMap
+	};
+
     //If the agency uses the new "Region" model draw all regions
     //Else draw old single boundaries polygon
     if (googleMapRegions.length > 0) {
@@ -142,6 +152,11 @@ function setMarker(location) {
 		googleMapAccuracyCircle.setCenter(alert_location);
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
+    else if (location.type == 'alert') {
+        googleMapAccuracyCircle.setOptions(whiteCircleOptions);
+		googleMapAccuracyCircle.setCenter(alert_location);
+    	googleMapAccuracyCircle.setRadius(25);
+    }
 	
     googleMap.setZoom(17);
     googleMap.setCenter(googleMapMarker.getPosition());
