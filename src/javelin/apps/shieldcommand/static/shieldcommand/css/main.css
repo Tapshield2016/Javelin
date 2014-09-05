@@ -5738,7 +5738,13 @@ body {
  }
 
 
- .pin {
+#holder {
+    margin-top: 20px;
+    margin-left: 30px;
+    position: absolute;
+}
+
+.pin {
   width: 30px;
   height: 30px;
   border-radius: 50% 50% 50% 0;
@@ -5765,31 +5771,31 @@ body {
   animation-duration: 1s;
 }
 
-.pulse {
-  background: #d6d4d4;
-  border-radius: 50%;
-  height: 14px;
-  width: 14px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  margin: 11px 0px 0px -12px;
-  transform: rotateX(55deg);
-  z-index: -2;
-}
-.pulse:after {
-  content: "";
-  border-radius: 50%;
-  height: 40px;
-  width: 40px;
-  position: absolute;
-  margin: -13px 0 0 -13px;
-  animation: pulsate 1s ease-out;
-  animation-iteration-count: infinite;
-  opacity: 0;
-  box-shadow: 0 0 1px 2px #00cae9;
-  animation-delay: 1.1s;
-}
+/*.pulse {*/
+  /*background: #d6d4d4;*/
+  /*border-radius: 50%;*/
+  /*height: 14px;*/
+  /*width: 14px;*/
+  /*position: absolute;*/
+  /*left: 50%;*/
+  /*top: 50%;*/
+  /*margin: 11px 0px 0px -12px;*/
+  /*transform: rotateX(55deg);*/
+  /*z-index: -2;*/
+/*}*/
+/*.pulse:after {*/
+  /*content: "";*/
+  /*border-radius: 50%;*/
+  /*height: 40px;*/
+  /*width: 40px;*/
+  /*position: absolute;*/
+  /*margin: -13px 0 0 -13px;*/
+  /*animation: pulsate 1s ease-out;*/
+  /*animation-iteration-count: infinite;*/
+  /*opacity: 0;*/
+  /*box-shadow: 0 0 1px 2px #00cae9;*/
+  /*animation-delay: 1.1s;*/
+/*}*/
 
 @keyframes pulsate {
   0% {
@@ -5826,3 +5832,86 @@ body {
     transform: translateY(0) rotate(-45deg);
   }
 }
+
+
+#holder {
+		margin-top: 20px;
+		margin-left: 30px;
+		position: relative;
+		background: #45453f;
+	}
+	.pulse {
+		width: 10px;
+		height: 10px;
+		border: 5px solid #f7f14c;
+		-webkit-border-radius: 30px;
+		-moz-border-radius: 30px;
+		border-radius: 30px;
+		background-color: #716f42;
+		z-index: 10;
+		position: absolute;
+	}
+	.dot {
+		border: 10px solid #fff601;
+		background: transparent;
+		-webkit-border-radius: 60px;
+		-moz-border-radius: 60px;
+		border-radius: 60px;
+		height: 50px;
+		width: 50px;
+		-webkit-animation: pulse 3s ease-out;
+		-moz-animation: pulse 3s ease-out;
+		animation: pulse 3s ease-out;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation-iteration-count: infinite;
+		animation-iteration-count: infinite;
+		position: absolute;
+		top: -25px;
+		left: -25px;
+		z-index: 1;
+		opacity: 0;
+	}
+	@-moz-keyframes pulse {
+	 0% {
+	   	-moz-transform: scale(0);
+	   	opacity: 0.0;
+	 }
+	 25% {
+	   	-moz-transform: scale(0);
+	   	opacity: 0.1;
+	 }
+	 50% {
+	   	-moz-transform: scale(0.1);
+	   	opacity: 0.3;
+	 }
+	 75% {
+	   	-moz-transform: scale(0.5);
+	   	opacity: 0.5;
+	 }
+	 100% {
+	   	-moz-transform: scale(1);
+	   	opacity: 0.0;
+	 }
+	}
+	@-webkit-keyframes "pulse" {
+	 0% {
+	    -webkit-transform: scale(0);
+	   	opacity: 0.0;
+	 }
+	 25% {
+	    -webkit-transform: scale(0);
+	   	opacity: 0.1;
+	 }
+	 50% {
+	    -webkit-transform: scale(0.1);
+	   	opacity: 0.3;
+	 }
+	 75% {
+	    -webkit-transform: scale(0.5);
+	   	opacity: 0.5;
+	 }
+	 100% {
+	    -webkit-transform: scale(1);
+	   	opacity: 0.0;
+	 }
+	}
