@@ -5758,9 +5758,7 @@ body {
     width: 50px;
     position: absolute;
     transform: rotateX(55deg);
-    background-color: #716f42;
-    top: -100px;
-    left: -100px;
+    background: transparent;
 	}
 	.pulse {
 		border: 10px solid #5bc0de;

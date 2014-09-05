@@ -136,7 +136,7 @@ function addressForLocation(location, callback) {
          var position = projection.fromLatLngToDivPixel(this.get('position'));
          var div = this.div_;
          div.style.left = position.x-centerX + 'px';
-         div.style.top = position.y-10-centerY + 'px';
+         div.style.top = position.y-topPadding-centerY + 'px';
          div.style.display = 'block';
          div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
 //         this.span_.innerHTML = this.get('text').toString();
