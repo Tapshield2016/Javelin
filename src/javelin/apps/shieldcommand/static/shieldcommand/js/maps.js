@@ -143,16 +143,16 @@ function addressForLocation(location, callback) {
 
         var color;
 
-        if (location.alertType == "emergency") {
+        if (alertType == "emergency") {
             color ='#d2322d';
         }
-        else if (location.alertType == "chat") {
+        else if (alertType == "chat") {
             color ='orange';
         }
-        else if (location.alertType == "timer") {
+        else if (alertType == "timer") {
             color ='yellow';
         }
-        else if (location.alertType == "static") {
+        else if (alertType == "static") {
             color ='#5bc0de';
         }
 
