@@ -147,13 +147,13 @@ function addressForLocation(location, callback) {
             color ='#d2322d';
         }
         else if (location.alertType == "chat") {
-            color ='#d2322d';
+            color ='orange';
         }
         else if (location.alertType == "timer") {
-            color ='#d2322d';
+            color ='yellow';
         }
         else if (location.alertType == "static") {
-            color ='#d2322d';
+            color ='#5bc0de';
         }
 
         if (this.div_) {
