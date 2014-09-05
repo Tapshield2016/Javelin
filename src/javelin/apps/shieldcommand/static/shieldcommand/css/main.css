@@ -5759,6 +5759,8 @@ body {
     position: absolute;
     transform: rotateX(55deg);
     background-color: #716f42;
+    top: 25px;
+    left: 25px;
 	}
 	.pulse {
 		border: 10px solid #5bc0de;
