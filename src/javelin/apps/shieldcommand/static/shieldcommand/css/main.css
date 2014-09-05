@@ -5840,7 +5840,7 @@ body {
 		position: relative;
 		background: #45453f;
 	}
-	.pulse {
+	.dot {
 		width: 10px;
 		height: 10px;
 		border: 5px solid #f7f14c;
@@ -5851,7 +5851,7 @@ body {
 		z-index: 10;
 		position: absolute;
 	}
-	.dot {
+	.pulse {
 		border: 10px solid #fff601;
 		background: transparent;
 		-webkit-border-radius: 60px;
