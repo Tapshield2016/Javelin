@@ -33,16 +33,6 @@ function initializeMap() {
 		map: googleMap
 	};
 
-    //White static device bubble
-	whiteCircleOptions = {
-		strokeColor: '#ffffff',
-		strokeOpacity: 0.8,
-		strokeWeight: 2,
-		fillColor: '#ffffff',
-		fillOpacity: 0.35,
-		map: googleMap
-	};
-
     //If the agency uses the new "Region" model draw all regions
     //Else draw old single boundaries polygon
     if (googleMapRegions.length > 0) {
@@ -102,15 +92,15 @@ function addressForLocation(location, callback) {
 
          // Here go the label styles
          var div = this.div_ = document.createElement('div');
-         div.className = 'pulse';
+         div.className = 'holder';
 
 //         var span = this.span_ = document.createElement('span');
 //         span.className = 'pin bounce';
 //         div.appendChild(span);
 //
-//         var span = this.span_ = document.createElement('span');
-//         span.className = 'pulse';
-//         div.appendChild(span);
+         var span = this.span_ = document.createElement('span');
+         span.className = 'pulse';
+         div.appendChild(span);
 
 //         var span = this.span_ = document.createElement('span');
 //         span.className = 'maps-label';
@@ -225,9 +215,7 @@ function setMarker(location) {
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
     else if (location.type == 'alert') {
-        googleMapAccuracyCircle.setOptions(whiteCircleOptions);
-		googleMapAccuracyCircle.setCenter(alert_location);
-    	googleMapAccuracyCircle.setRadius(1);
+        googleMapAccuracyCircle.setMap(null);
     }
 	
     googleMap.setZoom(17);

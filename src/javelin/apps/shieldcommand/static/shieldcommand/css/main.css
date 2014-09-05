@@ -5835,10 +5835,8 @@ body {
 
 
 #holder {
-		margin-top: -20px;
-		margin-left: -20px;
 		position: absolute;
-		/*background: #45453f;*/
+        transform: rotateX(55deg);
 	}
 	.dot {
 		width: 10px;
@@ -5870,7 +5868,6 @@ body {
 		left: -25px;
 		z-index: 1;
 		opacity: 0;
-        transform: rotateX(55deg);
 	}
 	@-moz-keyframes pulse {
 	 0% {
