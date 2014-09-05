@@ -139,7 +139,23 @@ function addressForLocation(location, callback) {
         }
     };
 
-    PinAnimation.prototype.color = function(color) {
+    PinAnimation.prototype.colorForType = function(alertType) {
+
+        var color;
+
+        if (location.alertType == "emergency") {
+            color ='#d2322d';
+        }
+        else if (location.alertType == "chat") {
+            color ='#d2322d';
+        }
+        else if (location.alertType == "timer") {
+            color ='#d2322d';
+        }
+        else if (location.alertType == "static") {
+            color ='#d2322d';
+        }
+
         if (this.div_) {
             this.span_.style.border = '10px solid '+ color;
         }
@@ -226,9 +242,7 @@ function setMarker(location) {
         animatedOverlay.bindTo('position', googleMapMarker, 'position');
         animatedOverlay.show();
 
-        if (location.alertType == "emergency") {
-            animatedOverlay.color('#d2322d')
-        }
+        animatedOverlay.colorForType(location.alertType)
     }
 	
 	if (location.accuracy)
