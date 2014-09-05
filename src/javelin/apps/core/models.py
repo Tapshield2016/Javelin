@@ -756,7 +756,7 @@ class StaticDevice(models.Model):
                 if top_result:
                     self.description = top_result.route
         if not self.type:
-            self.type = "Static Device"
+            self.type = "Emergency Phone"
 
         super(StaticDevice, self).save(*args, **kwargs)
 
