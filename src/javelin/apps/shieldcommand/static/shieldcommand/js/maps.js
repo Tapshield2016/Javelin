@@ -75,7 +75,7 @@ function clearActiveAlertMarker() {
 }
 
 function clearActiveCrimeTipMarker() {
-    hideCrimeMarkers(crimeMarkers['crimeTip']);
+    hideCrimeMarkers();
 }
 
 function addressForLocation(location, callback) {
