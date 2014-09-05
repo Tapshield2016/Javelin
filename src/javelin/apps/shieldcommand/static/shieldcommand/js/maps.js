@@ -217,6 +217,7 @@ function setMarker(location) {
         }
         animatedOverlay.set('zIndex', 1234);
         animatedOverlay.bindTo('position', googleMapMarker, 'position');
+        animatedOverlay.show();
     }
 	
 	if (location.accuracy)
