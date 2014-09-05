@@ -141,7 +141,7 @@ function addressForLocation(location, callback) {
 
     PinAnimation.prototype.color = function(color) {
         if (this.div_) {
-            this.span_.style.border = color;
+            this.span_.style.border = '10px solid '+ color;
         }
     };
 
