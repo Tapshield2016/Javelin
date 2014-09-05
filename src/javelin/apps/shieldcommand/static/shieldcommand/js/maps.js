@@ -17,14 +17,9 @@ function initializeMap() {
 
     googleMap = new google.maps.Map(map_canvas, googleMapOptions);
 
-    var animatedContent = '<div class='pin bounce'></div>' +
-                        '<div class='pulse'></div>';
-
 	markerOptions = {
-
 		map: googleMap,
-		animation: google.maps.Animation.DROP,
-        content: animatedContent
+		animation: google.maps.Animation.DROP
 	};
 
     //Accuracy bubble
@@ -39,10 +34,10 @@ function initializeMap() {
 
     //White static device bubble
 	whiteCircleOptions = {
-		strokeColor: '#e64b4b',
+		strokeColor: '#ffffff',
 		strokeOpacity: 0.8,
 		strokeWeight: 2,
-		fillColor: '#e64b4b',
+		fillColor: '#ffffff',
 		fillOpacity: 0.35,
 		map: googleMap
 	};
@@ -160,7 +155,7 @@ function setMarker(location) {
     else if (location.type == 'alert') {
         googleMapAccuracyCircle.setOptions(whiteCircleOptions);
 		googleMapAccuracyCircle.setCenter(alert_location);
-    	googleMapAccuracyCircle.setRadius(25);
+    	googleMapAccuracyCircle.setRadius(1);
     }
 	
     googleMap.setZoom(17);
