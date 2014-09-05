@@ -139,7 +139,7 @@ function addressForLocation(location, callback) {
          div.style.left = position.x-centerX + 'px';
          div.style.top = position.y-topPadding-centerY + 'px';
          div.style.display = 'block';
-         div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
+//         div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
 //         this.span_.innerHTML = this.get('text').toString();
     };
 
