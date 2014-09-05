@@ -5744,8 +5744,6 @@ body {
     width: 50px;
     position: absolute;
     transform: rotateX(55deg);
-    top: -25px;
-    left: -25px;
     background-color: #716f42;
 	}
 	.dot {
