@@ -111,10 +111,10 @@ function addressForLocation(location, callback) {
          span.className = 'pulse';
          div.appendChild(span);
 
-         var span = this.span_ = document.createElement('span');
-         span.className = 'maps-label';
-         span.style.cssText = 'margin-left: -70%; padding-top: 20px; white-space: nowrap;';
-         div.appendChild(span);
+//         var span = this.span_ = document.createElement('span');
+//         span.className = 'maps-label';
+//         span.style.cssText = 'margin-left: -70%; padding-top: 20px; white-space: nowrap;';
+//         div.appendChild(span);
     };
 
     Label.prototype = new google.maps.OverlayView;
