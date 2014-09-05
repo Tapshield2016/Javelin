@@ -34,10 +34,10 @@ function initializeMap() {
 
     //White static device bubble
 	whiteCircleOptions = {
-		strokeColor: '#ffffff',
+		strokeColor: '#e64b4b',
 		strokeOpacity: 0.8,
 		strokeWeight: 2,
-		fillColor: '#ffffff',
+		fillColor: '#e64b4b',
 		fillOpacity: 0.35,
 		map: googleMap
 	};
