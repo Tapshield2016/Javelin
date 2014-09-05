@@ -11,7 +11,7 @@ var crimeMarkers = [];
 var spotCrimes = [];
 var infoWindow = null;
 var markerZIndex = 1;
-var label;
+var animatedOverlay;
 
 function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
@@ -71,7 +71,7 @@ function setMapCenterToDefault() {
 function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
-    label = null;
+    animatedOverlay.hide();
 }
 
 function addressForLocation(location, callback) {
@@ -88,7 +88,7 @@ function addressForLocation(location, callback) {
 }
 
 // Define the animated overlay, derived from google.maps.OverlayView
-    function Label(opt_options) {
+    function PinAnimation(opt_options) {
         this.setValues(opt_options);
         var div = this.div_ = document.createElement('div');
         div.id = 'holder';
@@ -98,13 +98,13 @@ function addressForLocation(location, callback) {
         div.appendChild(span);
     };
 
-    Label.prototype = new google.maps.OverlayView;
+    PinAnimation.prototype = new google.maps.OverlayView;
 
-    Label.prototype.onAdd = function() {
+    PinAnimation.prototype.onAdd = function() {
          var pane = this.getPanes().overlayImage;
          pane.appendChild(this.div_);
 
-         // Ensures the label is redrawn if the text or position is changed.
+         // Ensures the PinAnimation is redrawn if the text or position is changed.
          var me = this;
          this.listeners_ = [
               google.maps.event.addListener(this, 'position_changed',
@@ -117,17 +117,29 @@ function addressForLocation(location, callback) {
     };
 
     // Implement onRemove
-    Label.prototype.onRemove = function() {
+    PinAnimation.prototype.onRemove = function() {
          this.div_.parentNode.removeChild(this.div_);
 
-         // Label is removed from the map, stop updating its position/text.
+         // PinAnimation is removed from the map, stop updating its position/text.
          for (var i = 0, I = this.listeners_.length; i < I; ++i) {
               google.maps.event.removeListener(this.listeners_[i]);
          }
     };
 
+    // Set the visibility to 'hidden' or 'visible'.
+    PinAnimation.prototype.hide = function() {
+        if (this.div_) {
+            this.div_.style.visibility = 'hidden';
+        }
+    };
+    PinAnimation.prototype.show = function() {
+        if (this.div_) {
+            this.div_.style.visibility = 'visible';
+        }
+    };
+
     // Implement draw
-    Label.prototype.draw = function() {
+    PinAnimation.prototype.draw = function() {
         var topPadding = 0;
         var sizeHeight = 50
         var sizeWidth = sizeHeight;
@@ -140,7 +152,7 @@ function addressForLocation(location, callback) {
          div.style.left = position.x-centerX + 'px';
          div.style.top = position.y-topPadding-centerY + 'px';
          div.style.display = 'block';
-//         div.style.zIndex = this.get('zIndex'); //ALLOW LABEL TO OVERLAY MARKER
+//         div.style.zIndex = this.get('zIndex'); //ALLOW PinAnimation TO OVERLAY MARKER
 //         this.span_.innerHTML = this.get('text').toString();
     };
 
@@ -198,13 +210,13 @@ function setMarker(location) {
 
     if (location.type == 'alert') {
 
-        if (!label) {
-            label = new Label({
+        if (!animatedOverlay) {
+            animatedOverlay = new PinAnimation({
                 map: googleMap
             });
         }
-        label.set('zIndex', 1234);
-        label.bindTo('position', googleMapMarker, 'position');
+        animatedOverlay.set('zIndex', 1234);
+        animatedOverlay.bindTo('position', googleMapMarker, 'position');
     }
 	
 	if (location.accuracy)
