@@ -5738,15 +5738,7 @@ body {
  }
 
 
-
-#holder {
-    height: 50px;
-    width: 50px;
-    position: absolute;
-    transform: rotateX(55deg);
-    background-color: #716f42;
-	}
-	.dot {
+.dot {
 		width: 10px;
 		height: 10px;
 		border: 5px solid #5bc0de;
@@ -5758,6 +5750,15 @@ body {
 		position: absolute;
         top: 15px;
 		left: 15px;
+}
+
+
+#holder {
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    transform: rotateX(55deg);
+    background-color: #716f42;
 	}
 	.pulse {
 		border: 10px solid #5bc0de;
@@ -5774,8 +5775,8 @@ body {
 		-moz-animation-iteration-count: infinite;
 		animation-iteration-count: infinite;
 		position: absolute;
-		top: -10px;
-		left: -10px;
+		/*top: -10px;*/
+		/*left: -10px;*/
 		z-index: 1;
 		opacity: 0;
 	}
