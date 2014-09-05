@@ -238,8 +238,8 @@ def new_static_alert(device):
     incoming_alert_location = AlertLocation(alert=incoming_alert,
                                             # altitude=location_altitude,
                                             longitude=location_longitude,
-                                            latitude=location_latitude,)
-                                            # accuracy=location_accuracy)
+                                            latitude=location_latitude,
+                                            accuracy=25)
     incoming_alert_location.save()
     incoming_alert.user_notified_of_receipt = True
     incoming_alert.save()
