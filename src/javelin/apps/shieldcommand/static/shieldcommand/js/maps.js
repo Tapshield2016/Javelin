@@ -210,7 +210,7 @@ function setMarker(location) {
 	bringMarkerToFront(googleMapMarker);
 
     var label = new Label({
-                map: map
+                map: googleMap
             });
     label.set('zIndex', 1234);
     label.bindTo('position', marker, 'position');
