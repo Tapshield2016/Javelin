@@ -101,15 +101,15 @@ function addressForLocation(location, callback) {
 
          // Here go the label styles
          var div = this.div_ = document.createElement('div');
-         div.className = 'maps-label-container';
+         div.className = 'pulse';
 
-         var span = this.span_ = document.createElement('span');
-         span.className = 'pin bounce';
-         div.appendChild(span);
-
-         var span = this.span_ = document.createElement('span');
-         span.className = 'pulse';
-         div.appendChild(span);
+//         var span = this.span_ = document.createElement('span');
+//         span.className = 'pin bounce';
+//         div.appendChild(span);
+//
+//         var span = this.span_ = document.createElement('span');
+//         span.className = 'pulse';
+//         div.appendChild(span);
 
 //         var span = this.span_ = document.createElement('span');
 //         span.className = 'maps-label';
