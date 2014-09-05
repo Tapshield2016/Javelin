@@ -61,10 +61,6 @@ function initializeMap() {
 
         geofence.setMap(googleMap);
     };
-
-    label = new Label({
-            map: googleMap
-        });
 }
 
 function setMapCenterToDefault() {
@@ -200,6 +196,12 @@ function setMarker(location) {
 	bringMarkerToFront(googleMapMarker);
 
     if (location.type == 'alert') {
+
+        if (!label) {
+            label = new Label({
+                map: googleMap
+            });
+        }
         label.set('zIndex', 1234);
         label.bindTo('position', googleMapMarker, 'position');
     }
