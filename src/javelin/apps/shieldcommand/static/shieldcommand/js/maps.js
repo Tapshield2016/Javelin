@@ -74,6 +74,10 @@ function clearActiveAlertMarker() {
 
 }
 
+function clearActiveCrimeTipMarker() {
+    hideCrimeMarkers(crimeMarkers['crimeTip']);
+}
+
 function addressForLocation(location, callback) {
     if (!location) {
         callback(null);
@@ -198,7 +202,7 @@ function setMarker(location) {
 
     if (location.type == 'alert') {
 
-        hideCrimeMarkers(crimeMarkers);
+        clearActiveCrimeTipMarker()
 
         if (!label) {
             label = new Label({
