@@ -214,7 +214,7 @@ function setMarker(location) {
             map: googleMap
         });
         label.set('zIndex', 1234);
-        label.bindTo('position', marker, 'position');
+        label.bindTo('position', googleMapMarker, 'position');
     }
 	
 	if (location.accuracy)
