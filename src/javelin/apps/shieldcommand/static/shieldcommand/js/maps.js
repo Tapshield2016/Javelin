@@ -21,7 +21,7 @@ function initializeMap() {
 	markerOptions = {
 		map: googleMap,
 		animation: google.maps.Animation.DROP,
-        optimized: false
+//        optimized: false
 	};
 
     //Accuracy bubble
@@ -237,7 +237,7 @@ function zoomToCrime(crime)
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 	{
-		//clearActiveAlertMarker();
+		clearActiveAlertMarker();
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
