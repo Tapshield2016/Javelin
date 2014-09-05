@@ -126,7 +126,7 @@ function addressForLocation(location, callback) {
 
     // Implement draw
     Label.prototype.draw = function() {
-        var topPadding = 10;
+        var topPadding = 0;
         var sizeHeight = 50
         var sizeWidth = sizeHeight;
         var centerX = sizeWidth/2;
