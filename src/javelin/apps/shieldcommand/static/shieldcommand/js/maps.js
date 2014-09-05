@@ -11,6 +11,7 @@ var crimeMarkers = [];
 var spotCrimes = [];
 var infoWindow = null;
 var markerZIndex = 1;
+var label;
 
 function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
@@ -60,6 +61,10 @@ function initializeMap() {
 
         geofence.setMap(googleMap);
     };
+
+    label = new Label({
+            map: googleMap
+        });
 }
 
 function setMapCenterToDefault() {
@@ -195,9 +200,6 @@ function setMarker(location) {
 	bringMarkerToFront(googleMapMarker);
 
     if (location.type == 'alert') {
-        var label = new Label({
-            map: googleMap
-        });
         label.set('zIndex', 1234);
         label.bindTo('position', googleMapMarker, 'position');
     }
