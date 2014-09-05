@@ -17,9 +17,14 @@ function initializeMap() {
 
     googleMap = new google.maps.Map(map_canvas, googleMapOptions);
 
+    var animatedContent = '<div class='pin bounce'></div>' +
+                        '<div class='pulse'></div>';
+
 	markerOptions = {
+
 		map: googleMap,
-		animation: google.maps.Animation.DROP
+		animation: google.maps.Animation.DROP,
+        content: animatedContent
 	};
 
     //Accuracy bubble
