@@ -111,10 +111,10 @@ function addressForLocation(location, callback) {
          span.className = 'pulse';
          div.appendChild(span);
 
-         var span = this.span_ = document.createElement('span');
-         span.className = 'maps-label';
-         span.style.cssText = 'margin-left: -70%; padding-top: 20px; white-space: nowrap;';
-         div.appendChild(span);
+//         var span = this.span_ = document.createElement('span');
+//         span.className = 'maps-label';
+//         span.style.cssText = 'margin-left: -70%; padding-top: 20px; white-space: nowrap;';
+//         div.appendChild(span);
     };
 
     Label.prototype = new google.maps.OverlayView;
@@ -124,15 +124,15 @@ function addressForLocation(location, callback) {
          pane.appendChild(this.div_);
 
          // Ensures the label is redrawn if the text or position is changed.
-         var me = this;
-         this.listeners_ = [
-              google.maps.event.addListener(this, 'position_changed',
-                   function() { me.draw(); }),
-              google.maps.event.addListener(this, 'text_changed',
-                   function() { me.draw(); }),
-              google.maps.event.addListener(this, 'zindex_changed',
-                   function() { me.draw(); })
-         ];
+//         var me = this;
+//         this.listeners_ = [
+//              google.maps.event.addListener(this, 'position_changed',
+//                   function() { me.draw(); }),
+//              google.maps.event.addListener(this, 'text_changed',
+//                   function() { me.draw(); }),
+//              google.maps.event.addListener(this, 'zindex_changed',
+//                   function() { me.draw(); })
+//         ];
     };
 
     // Implement onRemove
