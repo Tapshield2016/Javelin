@@ -440,7 +440,7 @@ angular.module('shieldCommand.controllers', [])
 			if ($scope.currentActiveLocation.type == 'alert')
 			{
                 var crimeTips = [];
-		        crimeTips.push($scope.activeCrimeTip);
+		        crimeTips.push(crimeTipService.activeCrimeTip);
 		        hideCrimeMarkers(crimeTips);
 				updateMarker($scope.currentActiveLocation);
 				crimeTipService.activeCrimeTip = null;
