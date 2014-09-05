@@ -71,6 +71,7 @@ function setMapCenterToDefault() {
 function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
+
 }
 
 function addressForLocation(location, callback) {
@@ -196,6 +197,8 @@ function setMarker(location) {
 	bringMarkerToFront(googleMapMarker);
 
     if (location.type == 'alert') {
+
+        hideCrimeMarkers(crimeMarkers);
 
         if (!label) {
             label = new Label({
