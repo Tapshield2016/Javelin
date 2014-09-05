@@ -226,7 +226,7 @@ function setMarker(location) {
         animatedOverlay.bindTo('position', googleMapMarker, 'position');
         animatedOverlay.show();
 
-        if (location.alertType == "Emergency") {
+        if (location.alertType == "emergency") {
             animatedOverlay.color('#d2322d')
         }
     }
@@ -458,15 +458,14 @@ function hideCrimeMarkers(crimes)
 	{
 		var crime = crimes[i];
 
+        if (!crime) {
+			continue;
+		}
+
         if (crime.showPin) {
             crime.showPin = false;
         }
-		
-		if ( ! crime)
-		{
-			continue;
-		}
-		
+
 		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 		{
 			crimeMarkers[crime.type][crime.object_id].setMap(null);
