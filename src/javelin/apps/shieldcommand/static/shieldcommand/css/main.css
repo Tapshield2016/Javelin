@@ -5852,8 +5852,6 @@ body {
 		position: absolute;
 	}
 	.pulse {
-        margin-top: -10px;
-		margin-left: -10px;
 		border: 10px solid #5bc0de;
 		background: transparent;
 		-webkit-border-radius: 60px;
