@@ -71,7 +71,7 @@ function setMapCenterToDefault() {
 function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
-
+    label = null;
 }
 
 function addressForLocation(location, callback) {
