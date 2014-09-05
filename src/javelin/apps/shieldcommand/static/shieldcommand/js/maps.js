@@ -87,20 +87,18 @@ function addressForLocation(location, callback) {
 
 // Define the animated overlay, derived from google.maps.OverlayView
     function Label(opt_options) {
-         // Initialization
-         this.setValues(opt_options);
-
-         // Here go the label styles
-         var div = this.div_ = document.createElement('div');
-         div.className = 'holder';
+        this.setValues(opt_options);
+        var div = this.div_ = document.createElement('div');
+        div.id = 'holder';
+        div.className = 'pulse';
 
 //         var span = this.span_ = document.createElement('span');
 //         span.className = 'pin bounce';
 //         div.appendChild(span);
 //
-         var span = this.span_ = document.createElement('span');
-         span.className = 'pulse';
-         div.appendChild(span);
+//         var span = this.span_ = document.createElement('span');
+//         span.className = 'pulse';
+//         div.appendChild(span);
 
 //         var span = this.span_ = document.createElement('span');
 //         span.className = 'maps-label';

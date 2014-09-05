@@ -5835,8 +5835,6 @@ body {
 
 
 #holder {
-        height: 50px;
-		width: 50px;
 		position: absolute;
         transform: rotateX(55deg);
 	}
