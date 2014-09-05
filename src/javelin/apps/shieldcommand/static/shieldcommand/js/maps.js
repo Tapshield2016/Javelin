@@ -74,10 +74,6 @@ function clearActiveAlertMarker() {
 
 }
 
-function clearActiveCrimeTipMarker() {
-    hideCrimeMarkers();
-}
-
 function addressForLocation(location, callback) {
     if (!location) {
         callback(null);
@@ -201,8 +197,6 @@ function setMarker(location) {
 	bringMarkerToFront(googleMapMarker);
 
     if (location.type == 'alert') {
-
-        clearActiveCrimeTipMarker()
 
         if (!label) {
             label = new Label({
