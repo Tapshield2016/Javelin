@@ -109,9 +109,8 @@ function getIconForLocation(location) {
 	{
 		if (location.type == 'alert')
 		{
-//        	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
-		    icon = 'bluelightanimated.gif'
-        }
+        	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
+		}
 		else if (location.type == 'crimeTip' || location.type == 'spotCrime')
 		{
 			var crimeType = location.reportType ? location.reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
@@ -200,8 +199,7 @@ function addCrimeMarkers(crimes) {
 			map: map,
 			title: crime.title,
 			icon: getIconForLocation(crime),
-			animation: google.maps.Animation.DROP,
-            optimized: false
+			animation: google.maps.Animation.DROP
         });
 
 		if ( ! crimeMarkers[crime.type])
