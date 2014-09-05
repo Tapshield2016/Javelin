@@ -19,7 +19,8 @@ function initializeMap() {
 
 	markerOptions = {
 		map: googleMap,
-		animation: google.maps.Animation.DROP
+		animation: google.maps.Animation.DROP,
+        optimized: false
 	};
 
     //Accuracy bubble
