@@ -95,6 +95,7 @@ function addressForLocation(location, callback) {
 
         var span = this.span_ = document.createElement('span');
         span.className = 'pulse';
+        span.id = "animatedPin";
         div.appendChild(span);
     };
 
@@ -135,6 +136,12 @@ function addressForLocation(location, callback) {
     PinAnimation.prototype.show = function() {
         if (this.div_) {
             this.div_.style.visibility = 'visible';
+        }
+    };
+
+    PinAnimation.prototype.color = function(color) {
+        if (this.div_) {
+            this.span_.style.border = color;
         }
     };
 
@@ -218,6 +225,10 @@ function setMarker(location) {
         animatedOverlay.set('zIndex', 1234);
         animatedOverlay.bindTo('position', googleMapMarker, 'position');
         animatedOverlay.show();
+
+        if (location.alertType == "Emergency") {
+            animatedOverlay.color('#d2322d')
+        }
     }
 	
 	if (location.accuracy)
