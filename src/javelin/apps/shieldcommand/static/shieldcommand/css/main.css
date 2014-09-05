@@ -5835,15 +5835,15 @@ body {
 
 
 #holder {
-		margin-top: 20px;
-		margin-left: 30px;
-		position: relative;
-		background: #45453f;
+		margin-top: -20px;
+		margin-left: -20px;
+		position: absolute;
+		/*background: #45453f;*/
 	}
 	.dot {
 		width: 10px;
 		height: 10px;
-		border: 5px solid #f7f14c;
+		border: 5px solid #5bc0de;
 		-webkit-border-radius: 30px;
 		-moz-border-radius: 30px;
 		border-radius: 30px;
@@ -5852,6 +5852,8 @@ body {
 		position: absolute;
 	}
 	.pulse {
+        margin-top: -10px;
+		margin-left: -10px;
 		border: 10px solid #5bc0de;
 		background: transparent;
 		-webkit-border-radius: 60px;
