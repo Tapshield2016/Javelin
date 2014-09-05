@@ -144,7 +144,7 @@ function setMarker(location) {
     googleMapMarker.setIcon(getIconForLocation(location));
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setMap(googleMap);
-    googleMapMarker.setHTML = '<div class="pulse"></div>'
+    googleMapMarker.setHTML = '<div class="pin bounce"></div><div class="pulse"></div>'
 	bringMarkerToFront(googleMapMarker);
 	
 	if (location.accuracy)
