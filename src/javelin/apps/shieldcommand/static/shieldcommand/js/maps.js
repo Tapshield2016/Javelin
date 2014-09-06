@@ -103,7 +103,7 @@ function addressForLocation(location, callback) {
     PinAnimation.prototype = new google.maps.OverlayView;
 
     PinAnimation.prototype.onAdd = function() {
-         var pane = this.getPanes().overlayImage;
+         var pane = this.getPanes().overlayShadow;
          pane.appendChild(this.div_);
 
          // Ensures the PinAnimation is redrawn if the text or position is changed.
