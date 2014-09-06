@@ -187,13 +187,13 @@ class S3URLField(models.URLField):
 
         parsed = urlparse(value)
         parsed_bucket = urlparse(settings.AWS_S3_BUCKET_URL)
-        parsed.scheme = 'https'
+        parsed[0] = 'https'
 
         if parsed.netloc == parsed_bucket.netloc:
             return parsed.geturl()
 
-        parsed.netloc = parsed_bucket.netloc
-        parsed.path = parsed_bucket.path + parsed.path
+        parsed[1] = parsed_bucket.netloc
+        parsed[2] = parsed_bucket.path + parsed.path
 
         return parsed.geturl()
 
