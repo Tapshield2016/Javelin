@@ -22,7 +22,7 @@ import urllib
 import os
 import re
 from django.core.exceptions import ValidationError
-from urlparse import urlparse, urljoin
+from urlparse import urlparse, urlunparse
 
 try:
     from PIL import Image
@@ -186,5 +186,12 @@ class S3URLField(models.URLField):
     def make_secure(self, value):
 
         parsed = urlparse(value)
-        return urljoin(settings.AWS_S3_BUCKET_URL, parsed.path)
+        parsed_bucket = urlparse(settings.AWS_S3_BUCKET_URL)
+
+        new_path = parsed_bucket.path + parsed.path
+
+        if parsed.netloc == parsed_bucket.netloc:
+            new_path = parsed.path
+
+        return urlunparse(('https', parsed_bucket.netloc, new_path, parsed.params, parsed.query, parsed.fragment))
 
