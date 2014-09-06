@@ -185,13 +185,13 @@ class S3URLField(models.URLField):
 
     def make_secure(self, value):
 
-        parsed = urlparse(value)
-        parsed_bucket = urlparse(settings.AWS_S3_BUCKET_URL)
+        url = urlparse(value)
+        bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
-        new_path = urljoin(parsed_bucket.path, parsed.path.lstrip("/"))
+        new_path = urljoin(url.netloc.rstrip(bucket.netloc), url.path.lstrip("/"))
 
-        if parsed.netloc == parsed_bucket.netloc:
-            new_path = parsed.path
+        if url.netloc == bucket.netloc:
+            new_path = url.path
 
-        return urlunparse(('https', parsed_bucket.netloc, new_path, parsed.params, parsed.query, parsed.fragment))
+        return urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
 
