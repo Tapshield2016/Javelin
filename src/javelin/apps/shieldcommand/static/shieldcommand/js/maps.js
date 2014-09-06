@@ -71,7 +71,7 @@ function setMapCenterToDefault() {
 function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
-    animatedOverlay.hide();
+    animatedOverlay.setMap(null);
 }
 
 function addressForLocation(location, callback) {
@@ -160,6 +160,13 @@ function addressForLocation(location, callback) {
             this.span_.style.border = '10px solid '+ color;
         }
     };
+
+    // Explicitly call setMap on this overlay.
+//    PinAnimation.prototype.removeFromMap = function() {
+//
+//        this.setMap(null);
+//    }
+
 
     // Implement draw
     PinAnimation.prototype.draw = function() {
