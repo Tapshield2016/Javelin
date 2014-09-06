@@ -72,6 +72,7 @@ function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
     animatedOverlay.setMap(null);
+    animatedOverlay = null;
 }
 
 function addressForLocation(location, callback) {
