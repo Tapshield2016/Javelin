@@ -31,7 +31,7 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
 
-from core.aws.s3_filefield import S3EnabledImageField
+from core.aws.s3_filefield import S3EnabledImageField, S3URLField
 
 from pygeocoder import Geocoder
 
@@ -653,8 +653,8 @@ class UserProfile(models.Model):
                          null=True, blank=True)
     profile_image = models.ImageField(upload_to='images/profiles',
                                       null=True, blank=True)
-    profile_image_url = models.CharField(max_length=255, null=True, blank=True,
-                                         help_text="Location of asset on S3")
+    profile_image_url = S3URLField(null=True, blank=True,
+                                   help_text="Location of asset on S3")
 
 
 class ChatMessage(TimeStampedModel):

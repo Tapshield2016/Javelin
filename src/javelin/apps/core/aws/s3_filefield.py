@@ -20,6 +20,10 @@ from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 import urllib
 import os
+import re
+from django.core.exceptions import ValidationError
+from urlparse import urlparse
+
 try:
     from PIL import Image
 except ImportError:
@@ -113,6 +117,7 @@ class S3EnabledFileField(models.FileField):
             storage = S3Storage(self.bucket)
         super(S3EnabledFileField, self).__init__(verbose_name, name, upload_to, storage, **kwargs)
 
+
 class ResizedImageFieldFile(ImageField.attr_class):
 
     def save(self, name, content, save=True):
@@ -132,6 +137,7 @@ class ResizedImageFieldFile(ImageField.attr_class):
         new_content = ContentFile(new_content.getvalue())
 
         super(ResizedImageFieldFile, self).save(name, new_content, save)
+
 
 class S3EnabledImageField(models.ImageField):
 
@@ -161,3 +167,33 @@ class S3EnabledImageField(models.ImageField):
         if string:
             string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
         return string
+
+
+class S3URLField(models.URLField):
+
+    def from_db_value(self, value, connection):
+        if value is None:
+            return value
+        return self.make_secure(value)
+
+    def to_python(self, value):
+
+        if value is None:
+            return value
+
+        return self.make_secure(value)
+
+    def make_secure(self, value):
+
+        parsed = urlparse(value)
+        parsed_bucket = urlparse(settings.AWS_S3_BUCKET_URL)
+        parsed.scheme = 'https'
+
+        if parsed.netloc == parsed_bucket.netloc:
+            return parsed.geturl()
+
+        parsed.netloc = parsed_bucket.netloc
+        parsed.path = parsed_bucket.path + parsed.path
+
+        return parsed.geturl()
+
