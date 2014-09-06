@@ -22,7 +22,7 @@ import urllib
 import os
 import re
 from django.core.exceptions import ValidationError
-from urlparse import urlparse, urlunparse
+from urlparse import urlparse, urlunparse, urljoin
 
 try:
     from PIL import Image
@@ -188,7 +188,7 @@ class S3URLField(models.URLField):
         parsed = urlparse(value)
         parsed_bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
-        new_path = parsed_bucket.path + parsed.path
+        new_path = urljoin(parsed_bucket.path, parsed.path)
 
         if parsed.netloc == parsed_bucket.netloc:
             new_path = parsed.path
