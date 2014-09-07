@@ -200,7 +200,7 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-creationDate'" ng-class="selectedClass(crimeTip)">
 									<div id="crimeTip-{{ crimeTip.object_id }}" class="alert-container" ng-click="crimeTipClicked(crimeTip)" style="opacity: {{ crimeTip.viewedTime ? 0.5 : crimeTip.flaggedSpam ? 0.2 : 1.0 }}">
-										<div class="crimetip-type" ng-if="crimeTip.reportIcon != 'crimeTip.reportIcon'"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
+										<div class="crimetip-type" ng-if="crimeTip.reportIcon"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ crimeTip.reportType }} <span class="badge-disarmed badge-viewed" ng-class="crimeTip.viewedTime ? '' : 'hidden'">viewed</span><span class="badge-disarmed badge-spam" ng-class="crimeTip.flaggedSpam ? '' : 'hidden'">spam</span></div>
