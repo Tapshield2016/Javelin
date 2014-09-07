@@ -188,7 +188,7 @@ class S3URLField(models.URLField):
         url = urlparse(value)
         bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
-        new_path = urljoin(url.netloc.rstrip(bucket.netloc)+"/", url.path.lstrip("/"))
+        new_path = urljoin(url.netloc.replace(bucket.netloc, "/"), url.path.lstrip("/"))
 
         if url.netloc == bucket.netloc:
             new_path = url.path
