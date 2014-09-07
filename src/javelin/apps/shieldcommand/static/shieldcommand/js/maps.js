@@ -402,8 +402,10 @@ function spotCrimePinClicked(evt)
 				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
-				'<p style="margin-top: 10px; margin-left: auto; margin-right: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
-				'</div>';
+                '<div class="button-holder">' +
+				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'</div>' +
+                '</div>';
 				
 				infoWindow = new google.maps.InfoWindow({
 					content: infoContent

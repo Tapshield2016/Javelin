@@ -5822,3 +5822,12 @@ body {
 	   	opacity: 0.0;
 	 }
 	}
+
+
+.button-holder {
+
+    margin-top: 10px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 70%;
+}
