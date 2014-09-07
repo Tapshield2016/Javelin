@@ -184,11 +184,20 @@ class S3URLField(models.URLField):
         return self.make_secure(value)
 
     def make_secure(self, value):
+        """
+        # Example:
+        url = http://dev.media.tapshield.com.s3.amazonaws.com/profile-images/418E5812-5F68-4E8C-BFC8-3A0C605C4336.jpg
+        bucket = https://s3.amazonaws.com/dev.media.tapshield.com/
+        "dev.media.tapshield.com.s3.amazonaws.com".replace(s3.amazonaws.com, "") = "dev.media.tapshield.com."
+        "dev.media.tapshield.com.".rstrip(".")+"/" = "dev.media.tapshield.com/"
+        urljoin("dev.media.tapshield.com/" + "/profile-images/418E5812-5F68-4E8C-BFC8-3A0C605C4336.jpg".lstrip("/"))
+        new_path = dev.media.tapshield.com/profile-images/418E5812-5F68-4E8C-BFC8-3A0C605C4336.jpg
+        """
 
         url = urlparse(value)
         bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
-        new_path = urljoin(url.netloc.replace(bucket.netloc, "/"), url.path.lstrip("/"))
+        new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
 
         if url.netloc == bucket.netloc:
             new_path = url.path
