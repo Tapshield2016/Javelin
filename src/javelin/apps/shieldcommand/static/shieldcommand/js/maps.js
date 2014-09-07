@@ -403,7 +403,7 @@ function spotCrimePinClicked(evt)
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
 //                '<div class="button-holder">' +
-				'<p style="margin-top: 10px; width: 25%; margin-left: auto; margin-right: auto;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'<p style="margin-top: 10px; width: 25%; margin-left: auto; margin-right: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 //				'</div>' +
                 '</div>';
 				
