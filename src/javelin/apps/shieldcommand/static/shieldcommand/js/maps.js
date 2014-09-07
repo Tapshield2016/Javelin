@@ -396,8 +396,8 @@ function spotCrimePinClicked(evt)
 				console.log(date.toISOString());
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
-				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '' +
-				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p></h4>' +
+				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
+				'<p style="margin-left: 50%;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'<div id="' + contentID + '">' +
 				'<table class="table table-condensed">' +
 				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
