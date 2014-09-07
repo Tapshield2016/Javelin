@@ -397,13 +397,13 @@ function spotCrimePinClicked(evt)
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
 				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
+				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'<div id="' + contentID + '">' +
 				'<table class="table table-condensed">' +
 				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
 //                '<div class="button-holder">' +
-				'<p style="margin-top: 10px; width: 50px; margin-left: auto; margin-right: 10%;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 //				'</div>' +
                 '</div>';
 				
