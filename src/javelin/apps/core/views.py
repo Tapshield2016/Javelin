@@ -542,17 +542,10 @@ def register_static_device(request):
 
     else:
 
-        agency = get_agency_from_unknown("TapShield")
-        data = {'uuid': "talkaphone", 'agency': agency}
-        serializer = StaticDeviceSerializer(data=data)
-
-        if not serializer.is_valid():
-            return serializer
-
-        serializer.save()
+        current_device, created = StaticDevice.objects.get_or_create(uuid="talkaphone")
 
 
-        return serializer
+        return StaticDeviceSerializer(instance=current_device).data
 
         # response = HttpResponse(content="Request method not allowed")
         # response.status_code = 405
