@@ -656,7 +656,7 @@ def static_disarm(request):
     return response
 
 
-def static_device_form_upload(request):
+def static_device_form(request):
     if request.method == 'GET':
         form = StaticDeviceForm()
     else:
@@ -666,10 +666,10 @@ def static_device_form_upload(request):
         # If data is valid, proceeds to create a new post and redirect the user
         if form.is_valid():
             content = form.cleaned_data['content']
-            post = StaticDevice.objects.create(content=content)
-            return HttpResponseRedirect(reverse('post_detail',
-                                                kwargs={'post_id': post.id}))
+            device = StaticDevice.objects.create(content=content)
+            return HttpResponseRedirect(reverse('device_detail',
+                                                kwargs={'device_id': device.id}))
 
-    return render(request, 'post/post_form_upload.html', {
+    return render(request, 'core/forms/static_device_form.html', {
         'form': form,
     })
