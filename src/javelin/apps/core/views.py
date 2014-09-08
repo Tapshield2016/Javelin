@@ -667,7 +667,7 @@ def static_device_form(request):
         if form.is_valid():
             device = form.save()
             return HttpResponseRedirect(reverse('core_static_device_details',
-                                                args={'device_id': device.id}))
+                                                args=(device.id,))
             # return HttpResponseRedirect("%s%d" % (reverse('core_static_device_details'), device.id))
 
     return render(request, 'core/forms/static_device_form.html', {
