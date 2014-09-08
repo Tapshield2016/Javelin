@@ -509,14 +509,6 @@ def serialize_static_device_save(request):
     return serializer
 
 
-
-@csrf_exempt
-def nc_alert(request):
-
-    uri = request.build_absolute_uri()
-
-
-
 @api_view(['POST'])
 @group_required('Device Maker',)
 def register_static_device(request):
@@ -662,3 +654,22 @@ def static_disarm(request):
         response.status_code = 405
 
     return response
+
+
+def static_device_form_upload(request):
+    if request.method == 'GET':
+        form = StaticDeviceForm()
+    else:
+        # A POST request: Handle Form Upload
+        form = StaticDeviceForm(request.POST) # Bind data from request.POST into a PostForm
+
+        # If data is valid, proceeds to create a new post and redirect the user
+        if form.is_valid():
+            content = form.cleaned_data['content']
+            post = StaticDevice.objects.create(content=content)
+            return HttpResponseRedirect(reverse('post_detail',
+                                                kwargs={'post_id': post.id}))
+
+    return render(request, 'post/post_form_upload.html', {
+        'form': form,
+    })
