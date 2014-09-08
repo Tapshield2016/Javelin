@@ -213,7 +213,14 @@ function getIconForLocation(location) {
 		if (location.type == 'alert')
 		{
         	icon = location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
-		    return '/media/static/shieldcommand/img/userpin/' + icon;
+
+            var image = {
+                url: '/media/static/shieldcommand/img/userpin/' + icon,
+                size: new google.maps.Size(28, 50),
+                origin: new google.maps.Point(0,0),
+                anchor: new google.maps.Point(14, 25)
+            };
+		    return image;
         }
 		else if (location.type == 'crimeTip' || location.type == 'spotCrime')
 		{
