@@ -25,7 +25,7 @@ function initializeMap() {
 	};
 
     //Accuracy bubble
-	circleOptions = {
+	googleAccuracyCircleOptions = {
 		strokeColor: '#41c4f2',
 		strokeOpacity: 0.8,
 		strokeWeight: 2,
@@ -159,8 +159,8 @@ function addressForLocation(location, callback) {
             this.span_.style.border = '10px solid '+ color;
         }
 
-        circleOptions.setStrokeColor(color);
-        circleOptions.setFillColor(color);
+        googleAccuracyCircleOptions.setStrokeColor(color);
+        googleAccuracyCircleOptions.setFillColor(color);
     };
 
     // Implement draw
@@ -248,7 +248,7 @@ function setMarker(location) {
 	
 	if (location.accuracy)
 	{
-    	googleMapAccuracyCircle.setOptions(circleOptions);
+    	googleMapAccuracyCircle.setOptions(googleAccuracyCircleOptions);
 		googleMapAccuracyCircle.setCenter(alert_location);
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
