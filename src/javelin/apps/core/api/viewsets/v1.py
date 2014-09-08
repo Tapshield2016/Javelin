@@ -18,6 +18,7 @@ from django.contrib.auth.decorators import user_passes_test
 
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
+from rest_framework.settings import api_settings
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status, viewsets, ISO_8601
@@ -622,7 +623,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         response = HttpResponse(content="Created")
         response.status_code = 201
-        alert = new_static_alert(self)
+        alert = new_static_alert(self.object)
         serializer = AlertSerializer(instance=alert)
 
         headers = {}
