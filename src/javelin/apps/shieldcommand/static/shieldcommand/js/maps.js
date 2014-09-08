@@ -113,7 +113,6 @@ function addressForLocation(location, callback) {
          this.listeners_ = [
               google.maps.event.addListener(this, 'position_changed',
                    function() { me.draw(); }),
-              google.maps.event.addListener(this
          ];
     };
 
