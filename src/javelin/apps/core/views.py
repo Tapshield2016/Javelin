@@ -546,9 +546,9 @@ def register_static_device(request):
         response = HttpResponse(content="Request method not allowed")
         response.status_code = 201
 
-        serializer = StaticDeviceSerializer(instance=current_device).data
+        serialized = StaticDeviceSerializer(instance=current_device).data
 
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serialized, status=status.HTTP_201_CREATED)
 
         # response = HttpResponse(content="Request method not allowed")
         # response.status_code = 405
