@@ -542,7 +542,8 @@ def register_static_device(request):
 
     else:
 
-        data = {'uuid': "talkaphone", 'agency': get_agency_from_unknown("TapShield")}
+        agency = get_agency_from_unknown("TapShield")
+        data = {'uuid': "talkaphone", 'agency': agency}
         serializer = StaticDeviceSerializer(data=data)
 
         if not serializer.is_valid():
