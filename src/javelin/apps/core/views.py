@@ -510,9 +510,9 @@ def serialize_static_device_save(request):
 
 
 
-# @csrf_exempt
-@api_view(['POST'])
-@group_required('Device Maker',)
+@csrf_exempt
+# @api_view(['POST'])
+# @group_required('Device Maker',)
 def register_static_device(request):
 
     """Registers new Static devices with the API
@@ -541,6 +541,7 @@ def register_static_device(request):
                         headers=headers)
 
     else:
+        
         response = HttpResponse(content="Request method not allowed")
         response.status_code = 405
 
