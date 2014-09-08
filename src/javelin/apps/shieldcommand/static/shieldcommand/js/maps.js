@@ -212,7 +212,7 @@ function getIconForLocation(location) {
 		}
     }
     
-	return '/media/static/shieldcommand/img/' + icon;
+	return '/media/static/shieldcommand/img/userpin/' + icon;
 }
 
 //Set marker for active alert or crime tip
