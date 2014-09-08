@@ -159,8 +159,15 @@ function addressForLocation(location, callback) {
             this.span_.style.border = '10px solid '+ color;
         }
 
-        googleAccuracyCircleOptions['setStrokeColor'] = color;
-        googleAccuracyCircleOptions['setFillColor'] = color;
+        //Accuracy bubble color change
+	    googleAccuracyCircleOptions = {
+	    	strokeColor: color,
+	    	strokeOpacity: 0.8,
+	    	strokeWeight: 2,
+	    	fillColor: color,
+	    	fillOpacity: 0.35,
+	    	map: googleMap
+	    };
     };
 
     // Implement draw
