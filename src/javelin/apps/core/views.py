@@ -541,9 +541,20 @@ def register_static_device(request):
                         headers=headers)
 
     else:
-        
-        response = HttpResponse(content="Request method not allowed")
-        response.status_code = 405
+
+        data = {'uuid': "talkaphone", 'agency': get_agency_from_unknown("TapShield")}
+        serializer = StaticDeviceSerializer(data=data)
+
+        if not serializer.is_valid():
+            return serializer
+
+        serializer.save()
+
+
+        return serializer
+
+        # response = HttpResponse(content="Request method not allowed")
+        # response.status_code = 405
 
     return response
 
