@@ -543,9 +543,12 @@ def register_static_device(request):
     else:
 
         current_device, created = StaticDevice.objects.get_or_create(uuid="talkaphone")
+        response = HttpResponse(content="Request method not allowed")
+        response.status_code = 201
 
+        serializer = StaticDeviceSerializer(instance=current_device).data
 
-        return StaticDeviceSerializer(instance=current_device).data
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         # response = HttpResponse(content="Request method not allowed")
         # response.status_code = 405
