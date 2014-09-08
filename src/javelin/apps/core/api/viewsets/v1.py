@@ -617,6 +617,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 
     @csrf_exempt
+    @action(methods=['get'])
     def alert(self, request, pk=None):
 
         response = HttpResponse(content="Created")
