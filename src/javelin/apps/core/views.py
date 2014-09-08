@@ -666,9 +666,9 @@ def static_device_form(request):
         # If data is valid, proceeds to create a new post and redirect the user
         if form.is_valid():
             device = form.save()
-            return HttpResponseRedirect(reverse('core_static_device_details',
-                                                kwargs={'device_id': device.id}))
-            # return HttpResponseRedirect("api/static-device/%d" % (reverse('core_static_device_form'), device.id))
+            # return HttpResponseRedirect(reverse('core_static_device_details',
+            #                                     kwargs={'device_id': device.id}))
+            return HttpResponseRedirect("%s%d" % (reverse('core_static_device_details'), device.id))
 
     return render(request, 'core/forms/static_device_form.html', {
         'form': form,
