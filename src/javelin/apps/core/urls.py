@@ -18,7 +18,7 @@ urlpatterns = patterns('',
     url(r'^agency-settings/$', 'core.views.agency_settings_form',
         name='core_agency_settings'),
     url(r'^static-device-form/$', 'core.views.static_device_form',
-        name='core_agency_settings'),
+        name='core_static_device_form'),
 
     # Social login
     url(r'^create-facebook-user/$', 'core.views.create_facebook_user',),
