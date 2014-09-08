@@ -158,6 +158,9 @@ function addressForLocation(location, callback) {
         if (this.div_) {
             this.span_.style.border = '10px solid '+ color;
         }
+
+        circleOptions.setStrokeColor(color);
+        circleOptions.setFillColor(color);
     };
 
     // Implement draw
