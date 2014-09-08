@@ -99,7 +99,6 @@ function addressForLocation(location, callback) {
 
         var span = this.span_ = document.createElement('span');
         span.className = 'pulse';
-        span.id = "animatedPin";
         div.appendChild(span);
     };
 
@@ -114,10 +113,7 @@ function addressForLocation(location, callback) {
          this.listeners_ = [
               google.maps.event.addListener(this, 'position_changed',
                    function() { me.draw(); }),
-              google.maps.event.addListener(this, 'text_changed',
-                   function() { me.draw(); }),
-              google.maps.event.addListener(this, 'zindex_changed',
-                   function() { me.draw(); })
+              google.maps.event.addListener(this
          ];
     };
 
@@ -165,13 +161,6 @@ function addressForLocation(location, callback) {
         }
     };
 
-    // Explicitly call setMap on this overlay.
-//    PinAnimation.prototype.removeFromMap = function() {
-//
-//        this.setMap(null);
-//    }
-
-
     // Implement draw
     PinAnimation.prototype.draw = function() {
         var topPadding = 0;
@@ -183,11 +172,10 @@ function addressForLocation(location, callback) {
          var projection = this.getProjection();
          var position = projection.fromLatLngToDivPixel(this.get('position'));
          var div = this.div_;
+        //Adjust overlay position to be centered over the point
          div.style.left = position.x-centerX + 'px';
          div.style.top = position.y-topPadding-centerY + 'px';
          div.style.display = 'block';
-//         div.style.zIndex = this.get('zIndex'); //ALLOW PinAnimation TO OVERLAY MARKER
-//         this.span_.innerHTML = this.get('text').toString();
     };
 
 function updateMarker(location) {
@@ -249,7 +237,6 @@ function setMarker(location) {
                 map: googleMap
             });
         }
-        animatedOverlay.set('zIndex', 1234);
         animatedOverlay.bindTo('position', googleMapMarker, 'position');
         animatedOverlay.show();
 
@@ -396,16 +383,14 @@ function spotCrimePinClicked(evt)
 				console.log(date.toISOString());
 				var titleID = 'sc-title-' + spotCrimeID;
 				var contentID = 'sc-content-' + spotCrimeID;
-				var infoContent = '<h4 style="margin-top: 0; width: 50%;">' + marker.title + '</h4>' +
-				'<p style="margin-left: 50%;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				var infoContent = '<h4 style="margin-top: 0">' + marker.title + '</h4>' +
 				'<div id="' + contentID + '">' +
 				'<table class="table table-condensed">' +
 				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
-//                '<div class="button-holder">' +
-//				'</div>' +
-                '</div>';
+				'<p style="margin-top: 10px"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'</div>';
 				
 				infoWindow = new google.maps.InfoWindow({
 					content: infoContent

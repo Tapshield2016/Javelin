@@ -112,7 +112,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
                     'user_logged_in_via_social')
     list_filter = ('agency', 'groups', 'device_type',)
     list_select_related = ('agency',)
-    search_fields = ['email', 'first_name', 'last_name']
+    search_fields = ['username', 'email', 'first_name', 'last_name']
     inlines = [
         EmailAddressInline,
         EntourageMemberInline,

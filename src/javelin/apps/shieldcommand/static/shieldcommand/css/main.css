@@ -5800,7 +5800,7 @@ body {
 	   	opacity: 0.0;
 	 }
 	}
-	@-webkit-keyframes "pulse" {
+	@-webkit-keyframes pulse {
 	 0% {
 	    -webkit-transform: scale(0);
 	   	opacity: 0.0;
@@ -5822,12 +5822,3 @@ body {
 	   	opacity: 0.0;
 	 }
 	}
-
-
-.button-holder {
-
-    margin-top: 10px;
-    margin-left: auto;
-    margin-right: auto;
-    /*width: 70%;*/
-}
