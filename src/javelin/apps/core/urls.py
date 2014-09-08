@@ -36,5 +36,6 @@ urlpatterns = patterns('',
     url(r'^static-device/register/$', 'core.views.register_static_device'),
     url(r'^static-device/alert/$', 'core.views.static_alert'),
     url(r'^static-device/disarm/$', 'core.views.static_disarm'),
-    url(r'^static-device/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view()),
+    url(r'^static-device/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view(),
+        name='core_static_device_details'),
 )
