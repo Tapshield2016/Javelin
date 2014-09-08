@@ -623,7 +623,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         response = HttpResponse(content="Created")
         response.status_code = 201
-        alert = new_static_alert(self.object)
+        alert = new_static_alert(self.get_object())
         serializer = AlertSerializer(instance=alert)
 
         headers = {}
