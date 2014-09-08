@@ -202,7 +202,7 @@ function getIconForLocation(location) {
 	{
 		if (location.type == 'alert')
 		{
-        	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
+        	icon = location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
 		}
 		else if (location.type == 'crimeTip' || location.type == 'spotCrime')
 		{
