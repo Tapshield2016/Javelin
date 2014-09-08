@@ -162,10 +162,10 @@ function addressForLocation(location, callback) {
         //Accuracy bubble color change
 	    googleAccuracyCircleOptions = {
 	    	strokeColor: color,
-	    	strokeOpacity: 0.8,
+	    	strokeOpacity: 0.6,
 	    	strokeWeight: 2,
 	    	fillColor: color,
-	    	fillOpacity: 0.35,
+	    	fillOpacity: 0.25,
 	    	map: googleMap
 	    };
     };
