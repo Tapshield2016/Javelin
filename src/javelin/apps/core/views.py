@@ -511,8 +511,14 @@ def serialize_static_device_save(request):
 
 
 @csrf_exempt
-# @api_view(['POST'])
-# @group_required('Device Maker',)
+def nc_alert(request):
+
+    uri = request.build_absolute_uri()
+
+
+
+@api_view(['POST'])
+@group_required('Device Maker',)
 def register_static_device(request):
 
     """Registers new Static devices with the API
@@ -542,14 +548,8 @@ def register_static_device(request):
 
     else:
 
-        current_device, created = StaticDevice.objects.get_or_create(uuid="talkaphone")
-
-        serialized = StaticDeviceSerializer(instance=current_device).data
-
-        # return Response(serialized, status=status.HTTP_201_CREATED)
-
-        response = HttpResponse(content="Device Created")
-        response.status_code = 200
+        response = HttpResponse(content="Request method not allowed")
+        response.status_code = 405
 
     return response
 

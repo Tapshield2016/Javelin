@@ -16,6 +16,8 @@ from django.http import HttpResponse
 from django.contrib.sites.models import get_current_site
 from django.contrib.auth.decorators import user_passes_test
 
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework import status, viewsets, ISO_8601
@@ -54,6 +56,7 @@ from core.utils import get_agency_from_unknown
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
                         publish_to_device, notify_new_chat_message_available)
+from core.tasks import new_static_alert
 
 User = get_user_model()
 
@@ -537,6 +540,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
     serializer_class = ThemeSerializer
 
 
+
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
     queryset = StaticDevice.objects.all()
@@ -611,6 +615,22 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         request.DATA._mutable = mutable
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
+
+    @csrf_exempt
+    def alert(self, request, pk=None):
+
+        response = HttpResponse(content="Created")
+        response.status_code = 201
+        alert = new_static_alert(self)
+        serializer = AlertSerializer(instance=alert)
+
+        headers = {}
+        try:
+            headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+        except (TypeError, KeyError):
+            pass
+        return Response(serializer.data, status=status.HTTP_201_CREATED,
+                        headers=headers)
 
 
 class StaticDeviceDetail(generics.RetrieveAPIView):
