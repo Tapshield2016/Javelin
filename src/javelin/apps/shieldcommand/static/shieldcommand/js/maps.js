@@ -214,11 +214,16 @@ function getIconForLocation(location) {
 		{
         	icon = location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
 
+            var anchor = null;
+            if (location.alertType != "static") {
+                    anchor = new google.maps.Point(14, 25);
+            }
+
             var image = {
                 url: '/media/static/shieldcommand/img/userpin/' + icon,
                 size: new google.maps.Size(28, 50),
                 origin: new google.maps.Point(0,0),
-                anchor: new google.maps.Point(14, 25)
+                anchor: anchor
             };
 		    return image;
         }
