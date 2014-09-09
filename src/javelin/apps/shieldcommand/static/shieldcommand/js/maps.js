@@ -214,7 +214,7 @@ function getIconForLocation(location) {
 		{
         	icon = location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
 
-            if (location.alertType == "Static") {
+            if (location.alertType == "static") {
                 return icon;
             }
             var image = {
