@@ -505,7 +505,7 @@ class ChatMessageViewSet(viewsets.ModelViewSet):
 
 
 class MassAlertViewSet(viewsets.ModelViewSet):
-    queryset = MassAlert.objects.select_related('agency').all()
+    queryset = MassAlert.objects.select_related('agency').all().order_by('last_modified')
     serializer_class = MassAlertSerializer
     filter_fields = ('agency', 'agency_dispatcher',)
 
