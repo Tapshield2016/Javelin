@@ -734,14 +734,19 @@ class StaticDevice(models.Model):
                                              "(e.g. building, street, landmark, etc.)")
     agency = models.ForeignKey('Agency',
                                related_name="StaticDevice",
-                               null=True, blank=True)
+                               null=True, blank=True,
+                               help_text="Who should receive the alert?")
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     location_point = db_models.PointField(geography=True,
-                                          null=True, blank=True)
+                                          null=True, blank=True,
+                                          help_text="Coordinate point used by geoDjango for querying"
+                                                    "Note: The Lat Long is reversed to conform to a coordinate plane")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                               related_name="User",
-                              null=True, blank=True)
+                              null=True, blank=True,
+                              help_text="Will be used in the future to limit edit/updated permissions "
+                                        "to a particular authorization token")
 
     def save(self, *args, **kwargs):
         if self.latitude and self.longitude:
