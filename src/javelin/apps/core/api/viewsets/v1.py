@@ -21,6 +21,7 @@ from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from rest_framework.settings import api_settings
 from rest_framework import generics
 from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
@@ -633,8 +634,11 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED,
                         headers=headers)
 
-@csrf_exempt
+
+
 class StaticDeviceDetail(generics.RetrieveAPIView):
+    permission_classes = (AllowAny,)
     lookup_field = 'uuid'
     queryset = StaticDevice.objects.all()
     serializer_class = StaticDeviceSerializer
+
