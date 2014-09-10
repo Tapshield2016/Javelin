@@ -633,7 +633,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED,
                         headers=headers)
 
-
+@csrf_exempt
 class StaticDeviceDetail(generics.RetrieveAPIView):
     lookup_field = 'uuid'
     queryset = StaticDevice.objects.all()
