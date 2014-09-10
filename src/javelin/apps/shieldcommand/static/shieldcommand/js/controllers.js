@@ -811,6 +811,9 @@ angular.module('shieldCommand.controllers', [])
 
   	$scope.initChatMessagesForActiveAlert = function() {
 		$scope.chatUpdateInProgress = false;
+        if (!alertService.activeAlert.agencyUser) {
+            return;
+        }
   		try {
 	  		if (alertService.activeAlert.object_id in $rootScope.chats) {
 				alertService.activeAlert.chatMessages = $rootScope.chats[alertService.activeAlert.object_id].messages;
@@ -843,6 +846,10 @@ angular.module('shieldCommand.controllers', [])
   	}
 
   	$scope.updateChatMessages = function () {
+        if (!alertService.activeAlert.agencyUser) {
+            $scope.chatUpdateInProgress = false;
+            return;
+        }
   		try {
   			if (!$scope.chatUpdateInProgress) {
   				$scope.chatUpdateInProgress = true;
