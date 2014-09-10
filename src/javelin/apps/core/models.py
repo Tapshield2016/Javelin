@@ -730,18 +730,19 @@ class StaticDevice(models.Model):
     type = models.CharField(max_length=255, null=True, blank=True, default="Emergency Phone",
                             help_text="Model number or device type")
     description = models.CharField(max_length=255, null=True, blank=True,
-                                   help_text="Human readable identifier denoting location "
+                                   help_text="(Auto-set if left empty by lat & lon Google Maps geocoder) "
+                                             "Human readable identifier denoting location "
                                              "(e.g. building, street, landmark, etc.)")
     agency = models.ForeignKey('Agency',
                                related_name="StaticDevice",
                                null=True, blank=True,
-                               help_text="Who should receive the alert?")
+                               help_text="(Auto-set if left empty by lat & lon to nearest within 10 miles) Who should receive the alert?")
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     location_point = db_models.PointField(geography=True,
                                           null=True, blank=True,
-                                          help_text="Coordinate point used by geoDjango for querying"
-                                                    "Note: The Lat Long is reversed to conform to a coordinate plane")
+                                          help_text="(Auto-set by lat & lon) Coordinate point used by geoDjango for querying"
+                                                    "Note: The lat & lon is reversed to conform to a coordinate plane")
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                               related_name="User",
                               null=True, blank=True,
