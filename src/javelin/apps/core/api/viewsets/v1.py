@@ -47,7 +47,6 @@ from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period,
@@ -505,7 +504,7 @@ class ChatMessageViewSet(viewsets.ModelViewSet):
 
 
 class MassAlertViewSet(viewsets.ModelViewSet):
-    queryset = MassAlert.objects.select_related().all()
+    queryset = MassAlert.objects.select_related('agency').all()
     serializer_class = MassAlertSerializer
     filter_fields = ('agency', 'agency_dispatcher',)
 

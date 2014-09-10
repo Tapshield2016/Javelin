@@ -386,7 +386,7 @@ class Alert(TimeStampedModel):
     initiated_by_timer = InitiatedByTimerAlertManager()
 
     class Meta:
-        ordering = ['-creation_date']
+        ordering = ['creation_date']
 
 
     def __unicode__(self):
@@ -473,7 +473,7 @@ class AlertLocation(TimeStampedModel):
     longitude = models.FloatField(null=True, blank=True)    
 
     class Meta:
-        ordering = ['-creation_date']
+        ordering = ['creation_date']
 
     def save(self, *args, **kwargs):
         super(AlertLocation, self).save(*args, **kwargs)
@@ -519,7 +519,7 @@ class MassAlert(TimeStampedModel):
                                    choices=MASS_ALERT_TYPE)
 
     class Meta:
-        ordering = ['-creation_date']
+        ordering = ['creation_date']
 
     def __unicode__(self):
         return u"%s" % self.message
