@@ -428,6 +428,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.currentActiveLocation = null;
 	$scope.crimeTips = [];
 	$scope.crimeTipsLength = 0;
+    $scope.unviewedCrimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
 
@@ -541,6 +542,7 @@ angular.module('shieldCommand.controllers', [])
 	
 	$scope.$watch('crimeTipsLength', function(newLength, oldLength) {
 		if (newLength > oldLength) {
+
 			newCrimeTipSound.play();
 			var $crimeTipPanel = $('#crimeTipListLink');
 			var bgColor = $crimeTipPanel.css('background-color');
@@ -593,6 +595,13 @@ angular.module('shieldCommand.controllers', [])
 
         if ($scope.crimeTips) {
             $scope.crimeTipsLength = $scope.crimeTips.length;
+            var count = 0;
+            for (var i=0; i<$scope.crimeTips.length; i++) {
+                if (!$scope.crimeTips[i].viewedBy && !$scope.crimeTips[i].flaggedSpam) {
+                    count++;
+                }
+            }
+            $scope.unviewedCrimeTipsLength = count;
         }
 
 		/* Don't call apply if we're already in the middle of a digest... */
