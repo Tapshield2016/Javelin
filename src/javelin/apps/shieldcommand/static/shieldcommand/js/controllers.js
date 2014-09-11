@@ -247,7 +247,7 @@ angular.module('shieldCommand.controllers', [])
 		});
 	}
 
-    $scope.resetAll = function() {
+    $scope.$on('resetAll', function () {
 		$scope.toggle();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
@@ -741,7 +741,7 @@ angular.module('shieldCommand.controllers', [])
 //    ip closes the side profile panelRe-clicking crime t
 	$scope.panelClicked = function(panel) {
 
-        $scope.resetAll();
+        $rootScope.$broadcast('resetAll');
 
 //		if (panel != 'crimeTip')
 //		{
