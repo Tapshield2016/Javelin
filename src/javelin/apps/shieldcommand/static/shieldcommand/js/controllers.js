@@ -941,10 +941,11 @@ angular.module('shieldCommand.controllers', [])
 		else {
 			$scope.alertClicked(alert);
 		}
-//        $timeout(function() {
-//        })
-		setTimeout(function() {
+        setTimeout(function() {
             $('.accordion-default').click();
+		});
+		setTimeout(function() {
+//            $('.accordion-default').click();
 			$('#chat-icon-' + alert.object_id).click();
 		}, 1000);
   	};
