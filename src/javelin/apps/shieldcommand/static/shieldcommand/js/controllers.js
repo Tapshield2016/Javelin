@@ -566,6 +566,9 @@ angular.module('shieldCommand.controllers', [])
 				}
 			}, 300);
 		}
+        else {
+            updateDisplay();
+        }
 	});
 	
 	$scope.$watch('crimeTipsVisible', function(visible, oldValue) {
