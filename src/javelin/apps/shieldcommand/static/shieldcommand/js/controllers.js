@@ -429,7 +429,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.chatUpdateTimeout = null;
 	$scope.chatUpdateInProgress = false;
 	$scope.newAlertSoundInterval = null;
-    $scope.newAlertTipFlashInterval = null;
+    $scope.newAlertFlashInterval = null;
     $scope.newCrimeTipSoundInterval = null;
     $scope.newCrimeTipFlashInterval = null;
 	$scope.newAlertDocumentTitleInterval = null;
@@ -530,12 +530,12 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > 0) {
-            $scope.flashPanel($('#newAlertListLink'), $scope.newCrimeTipFlashInterval);
+            $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
             if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
 		        newAlertSound.play();
 				$scope.newAlertSoundInterval = setInterval(function () {
 					newAlertSound.play();
-                    $scope.flashPanel($('#newAlertListLink'), $scope.newCrimeTipFlashInterval);
+                    $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
 				}, 2000);
 			}
 			else {
@@ -545,7 +545,7 @@ angular.module('shieldCommand.controllers', [])
 		else if (newLength == 0) {
 			newAlertSound.stop();
 			clearInterval($scope.newAlertSoundInterval);
-            clearInterval($scope.newCrimeTipFlashInterval);
+            clearInterval($scope.newAlertFlashInterval);
 		}
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
@@ -558,13 +558,13 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
 
 		if (newLength > 0) {
-            $scope.flashPanel($('#crimeTipListLink'), $scope.newCrimeTipFlashInterval);
+            $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
             if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
 
                 newCrimeTipSound.play();
                 $scope.newCrimeTipSoundInterval = setInterval(function () {
 					newCrimeTipSound.play();
-                    $scope.flashPanel($('#crimeTipListLink'), $scope.newCrimeTipFlashInterval);
+                    $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
 				}, 2000);
             }
             else {
@@ -583,14 +583,10 @@ angular.module('shieldCommand.controllers', [])
         clearInterval($scope.newCrimeTipFlashInterval);
     }
 
-    $scope.flashPanel = function ($panel, $flashInterval) {
-
-        if ($flashInterval) {
-            return;
-        }
+    $scope.flashPanel = function ($panel) {
 
 		var bgColor = $panel.css('background-color');
-		$flashInterval = setInterval(function() {
+		return setInterval(function() {
 			if ($panel.css('background-color') == bgColor)
 			{
 				$panel.css('background-color', '#3AA1D3');
