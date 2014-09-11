@@ -223,7 +223,7 @@ angular.module('shieldCommand.controllers', [])
 	}
 	
 	$scope.markCrimeTipViewed = function() {
-		$scope.toggle();
+		$scope.close();
 		var crimeTips = [];
         $scope.activeCrimeTip.viewedBy = Javelin.activeAgencyUser.url;
         $scope.activeCrimeTip.viewedByName = Javelin.activeAgencyUser.getFullName();
@@ -242,8 +242,11 @@ angular.module('shieldCommand.controllers', [])
 	}
 	
 	$scope.markCrimeTipSpam = function() {
-		$scope.toggle();
+		$scope.close();
 		var crimeTips = [];
+        $scope.activeCrimeTip.flaggedBy = Javelin.activeAgencyUser.url;
+        $scope.activeCrimeTip.flaggedByName = Javelin.activeAgencyUser.getFullName();
+        $scope.activeCrimeTip.flaggedSpam = true;
 		crimeTips.push($scope.activeCrimeTip);
 		hideCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
@@ -550,17 +553,17 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
 
 		if (newLength > 0) {
-            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
+            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
+
                 newCrimeTipSound.play();
-                $scope.flashPanel($('#crimeTipListLink'));
                 $scope.newCrimeTipSoundInterval = setInterval(function () {
 					newCrimeTipSound.play();
 				}, 2000);
             }
             else {
                 newCrimeTipSound.play();
-                $scope.flashPanel($('#crimeTipListLink'));
             }
+            $scope.flashPanel($('#crimeTipListLink'));
 		}
         else if (newLength == 0) {
 			newCrimeTipSound.stop();
