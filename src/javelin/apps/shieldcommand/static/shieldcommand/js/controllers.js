@@ -255,7 +255,6 @@ angular.module('shieldCommand.controllers', [])
 	}
 
     $scope.$on('resetAll', function () {
-		$scope.toggle();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
 		hideCrimeMarkers(crimeTips);
