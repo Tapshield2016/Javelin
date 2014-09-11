@@ -530,12 +530,13 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > 0) {
-            $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
+            if (!$scope.newAlertFlashInterval) {
+                $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
+            }
             if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
 		        newAlertSound.play();
 				$scope.newAlertSoundInterval = setInterval(function () {
 					newAlertSound.play();
-                    $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
 				}, 2000);
 			}
 			else {
@@ -558,13 +559,15 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
 
 		if (newLength > 0) {
-            $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
+            if (!$scope.newCrimeTipFlashInterval) {
+                $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
+            }
+
             if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
 
                 newCrimeTipSound.play();
                 $scope.newCrimeTipSoundInterval = setInterval(function () {
 					newCrimeTipSound.play();
-                    $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
 				}, 2000);
             }
             else {
