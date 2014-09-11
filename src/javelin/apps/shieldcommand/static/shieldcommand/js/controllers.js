@@ -257,7 +257,7 @@ angular.module('shieldCommand.controllers', [])
         $scope.activeAlert = null;
         alertService.activeAlert = null;
         $rootScope.$broadcast('toggleProfile');
-	}
+	});
 
 
 	$scope.getAge = function(dateString) {
