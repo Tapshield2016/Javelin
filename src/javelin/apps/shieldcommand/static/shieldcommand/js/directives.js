@@ -281,8 +281,8 @@ angular.module('shieldCommand.directives', [])
             };
             var panel = element.find('.chat-panel');
             if (panel.hasClass('hide')) {
-              scope.alert.hasNewChatMessage = true;
-		$rootScope.$apply();
+                scope.alert.hasNewChatMessage = true;
+                $rootScope.$apply();
             }
           }
         });
