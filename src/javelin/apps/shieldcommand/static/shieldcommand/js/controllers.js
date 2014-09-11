@@ -568,10 +568,15 @@ angular.module('shieldCommand.controllers', [])
             $scope.flashPanel($('#crimeTipListLink'));
 		}
         else if (newLength == 0) {
-			newCrimeTipSound.stop();
-			clearInterval($scope.newCrimeTipSoundInterval);
+			$scope.stopCrimeTipSound();
 		}
 	});
+
+    $scope.stopCrimeTipSound = function () {
+
+        newCrimeTipSound.stop();
+        clearInterval($scope.newCrimeTipSoundInterval);
+    }
 
     $scope.flashPanel = function ($panel) {
 		var bgColor = $panel.css('background-color');
@@ -854,6 +859,7 @@ angular.module('shieldCommand.controllers', [])
 
 //    Crime tip clicked from list. Toggle profile to show crime tip info. Dismiss any current active alerts
 	$scope.crimeTipClicked = function(crimeTip, shouldToggleProfile) {
+        $scope.stopCrimeTipSound();
   		shouldToggleProfile = typeof shouldToggleProfile !== 'undefined' ? shouldToggleProfile : true;
   		if (crimeTip === crimeTipService.activeCrimeTip) {
   			if (shouldToggleProfile) {
