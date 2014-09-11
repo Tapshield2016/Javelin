@@ -540,7 +540,7 @@ angular.module('shieldCommand.controllers', [])
 		}
 	});
 	
-	$scope.$watch('crimeTipsLength', function(newLength, oldLength) {
+	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
 		if (newLength > oldLength) {
 
 			newCrimeTipSound.play();
@@ -560,7 +560,7 @@ angular.module('shieldCommand.controllers', [])
 				
 				flashes++;
 				
-				if (flashes == 6)
+				if (flashes == 8)
 				{
 					clearInterval(i);
 				}
