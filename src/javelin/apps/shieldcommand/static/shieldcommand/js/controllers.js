@@ -942,9 +942,9 @@ angular.module('shieldCommand.controllers', [])
 			$scope.alertClicked(alert);
 		}
 //        $timeout(function() {
-        $('.accordion-default').click();
 //        })
 		setTimeout(function() {
+            $('.accordion-default').click();
 			$('#chat-icon-' + alert.object_id).click();
 		}, 1000);
   	};
