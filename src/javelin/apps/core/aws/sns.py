@@ -60,7 +60,7 @@ class SNSManager(object):
             msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
         else:
             msg_json = """{"default": "%s"}""" % message_body
-        return msg_json
+        return """{"APNS":"{\"aps\":{\"alert\":\"adfla\",\"badge\":\"5\",\"sound\":\"default\"}}"}"""
 
     # location reporting
     def get_location_report_topic_message_json(self):
