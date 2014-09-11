@@ -553,7 +553,6 @@ angular.module('shieldCommand.controllers', [])
                 $scope.flashPanel($('#crimeTipListLink'));
                 $scope.newCrimeTipSoundInterval = setInterval(function () {
 					newCrimeTipSound.play();
-                    $scope.flashPanel($('#crimeTipListLink'));
 				}, 2000);
             }
             else {
