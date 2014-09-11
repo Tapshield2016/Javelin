@@ -584,8 +584,12 @@ angular.module('shieldCommand.controllers', [])
     }
 
     $scope.flashPanel = function ($panel, $flashInterval) {
+
+        if ($flashInterval) {
+            return;
+        }
+
 		var bgColor = $panel.css('background-color');
-        clearInterval($flashInterval);
 		$flashInterval = setInterval(function() {
 			if ($panel.css('background-color') == bgColor)
 			{
