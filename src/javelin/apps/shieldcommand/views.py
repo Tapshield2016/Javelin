@@ -48,5 +48,5 @@ def index(request):
                                "region_boundaries": multi_region_boundaries,
                                "user": user.data,
                                "branding": branding.data,
-                              "theme": theme.data},
+                               "theme": theme.data},
                               context_instance=RequestContext(request))
