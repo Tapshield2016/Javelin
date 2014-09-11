@@ -27,6 +27,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.activeCrimeTip = null;
 	$scope.profileType = null;
 	$scope.isProfileVisible = false;
+    $scope.isAcceptingAlert = false;
 	$scope.updateTimeout = null;
 	$rootScope.profileIsOpen = false;
 	$scope.spotCrimes = [];
@@ -255,7 +256,17 @@ angular.module('shieldCommand.controllers', [])
 		});
 	}
 
+    $scope.$on('acceptingAlert', function () {
+        $scope.isAcceptingAlert = true;
+	});
+
     $scope.$on('resetAll', function () {
+
+        if ($scope.isAcceptingAlert) {
+            $scope.isAcceptingAlert = false;
+            return;
+        }
+
         $scope.close();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
@@ -945,6 +956,7 @@ angular.module('shieldCommand.controllers', [])
   	$scope.acceptClicked = function(alert) {
   		var acceptedFromNew = (alert.status == 'N');
   		var acceptedFromPending = (alert.status == 'P');
+        $rootScope.$broadcast('acceptingAlert');
   		alert.status = 'A';
   		for (var i = 0; i < $scope.alerts.length; i++) {
   			if ($scope.alerts[i].object_id == alert.object_id) {
