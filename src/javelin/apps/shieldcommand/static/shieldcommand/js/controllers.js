@@ -945,7 +945,6 @@ angular.module('shieldCommand.controllers', [])
             $('.accordion-default').click();
 		});
 		setTimeout(function() {
-//            $('.accordion-default').click();
 			$('#chat-icon-' + alert.object_id).click();
 		}, 1000);
   	};

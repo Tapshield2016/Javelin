@@ -21,6 +21,7 @@ def index(request):
     multi_region_boundaries = []
     user = UserSerializer(request.user)
     branding = ThemeSerializer(agency.branding)
+    theme = ThemeSerializer(agency.theme)
 
     if agency.region:
         for region in agency.region.all():
@@ -46,5 +47,6 @@ def index(request):
                                    settings.SHIELD_COMMAND_API_VERSION,
                                "region_boundaries": multi_region_boundaries,
                                "user": user.data,
-                               "branding": branding.data},
+                               "branding": branding.data,
+                              "theme": theme.data},
                               context_instance=RequestContext(request))
