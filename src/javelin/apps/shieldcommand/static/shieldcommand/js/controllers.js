@@ -547,6 +547,7 @@ angular.module('shieldCommand.controllers', [])
 			newAlertSound.stop();
 			clearInterval($scope.newAlertSoundInterval);
             clearInterval($scope.newAlertFlashInterval);
+            $('#newAlertListLink').css('background-color', 'whitesmoke');
 		}
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
@@ -584,6 +585,7 @@ angular.module('shieldCommand.controllers', [])
         newCrimeTipSound.stop();
         clearInterval($scope.newCrimeTipSoundInterval);
         clearInterval($scope.newCrimeTipFlashInterval);
+        $('#crimeTipListLink').css('background-color', 'whitesmoke');
     }
 
     $scope.flashPanel = function ($panel) {
