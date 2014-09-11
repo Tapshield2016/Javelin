@@ -247,6 +247,18 @@ angular.module('shieldCommand.controllers', [])
 		});
 	}
 
+    $scope.resetAll = function() {
+		$scope.toggle();
+		var crimeTips = [];
+		crimeTips.push($scope.activeCrimeTip);
+		hideCrimeMarkers(crimeTips);
+		clearActiveAlertMarker();
+		$scope.returnToGeofenceCenter();
+        $scope.activeAlert = null;
+        alertService.activeAlert = null;
+        $rootScope.$broadcast('toggleProfile');
+	}
+
 
 	$scope.getAge = function(dateString) {
 		if (!dateString) {
@@ -726,15 +738,18 @@ angular.module('shieldCommand.controllers', [])
 		};    	
     });
 
-//    Re-clicking crime tip closes the side profile panel
+//    ip closes the side profile panelRe-clicking crime t
 	$scope.panelClicked = function(panel) {
-		if (panel != 'crimeTip')
-		{
-			if (crimeTipService.activeCrimeTip && $rootScope.profileIsOpen)
-			{
-				$rootScope.$broadcast('toggleProfile');
-			}
-		}
+
+        $scope.resetAll();
+
+//		if (panel != 'crimeTip')
+//		{
+//			if (crimeTipService.activeCrimeTip && $rootScope.profileIsOpen)
+//			{
+//				$rootScope.$broadcast('toggleProfile');
+//			}
+//		}
 	}
 
 //  Alert is clicked from list.  Needs to display marker, show profile, and load an chat messages.
