@@ -530,10 +530,11 @@ angular.module('shieldCommand.controllers', [])
 
 	$scope.$watch('newAlertsLength', function(newLength, oldLength) {
 		if (newLength > 0) {
-            if (!$scope.newAlertFlashInterval) {
-                $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
-            }
-            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
+            clearInterval($scope.newAlertFlashInterval);
+            $scope.newAlertFlashInterval = $scope.flashPanel($('#newAlertListLink'));
+
+            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
+                clearInterval($scope.newAlertSoundInterval);
 		        newAlertSound.play();
 				$scope.newAlertSoundInterval = setInterval(function () {
 					newAlertSound.play();
@@ -560,12 +561,11 @@ angular.module('shieldCommand.controllers', [])
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
 
 		if (newLength > 0) {
-            if (!$scope.newCrimeTipFlashInterval) {
-                $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
-            }
+            clearInterval($scope.newCrimeTipFlashInterval);
+            $scope.newCrimeTipFlashInterval = $scope.flashPanel($('#crimeTipListLink'));
 
-            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound && oldLength == 0) {
-
+            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
+                clearInterval($scope.newCrimeTipSoundInterval);
                 newCrimeTipSound.play();
                 $scope.newCrimeTipSoundInterval = setInterval(function () {
 					newCrimeTipSound.play();
