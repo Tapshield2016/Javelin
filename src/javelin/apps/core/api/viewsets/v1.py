@@ -55,8 +55,7 @@ from core.models import (Agency, Alert, AlertLocation,
 
 from core.utils import get_agency_from_unknown
 
-from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                        publish_to_device, notify_new_chat_message_available)
+from core.tasks import (create_user_device_endpoint, publish_to_agency_topic, notify_new_chat_message_available)
 from core.tasks import new_static_alert
 
 User = get_user_model()
