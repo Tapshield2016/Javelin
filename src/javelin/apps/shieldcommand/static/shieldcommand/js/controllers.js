@@ -545,7 +545,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 	
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
-		if (newLength > oldLength) {
+		if (newLength > 0) {
 
 			newCrimeTipSound.play();
 			var $crimeTipPanel = $('#crimeTipListLink');
