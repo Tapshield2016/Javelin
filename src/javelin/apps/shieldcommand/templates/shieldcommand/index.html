@@ -204,7 +204,7 @@
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ crimeTip.reportType }} <span class="badge-disarmed badge-viewed" ng-class="crimeTip.viewedTime ? '' : 'hidden'">viewed</span><span class="badge-disarmed badge-spam" ng-class="crimeTip.flaggedSpam ? '' : 'hidden'">spam</span></div>
-												<div class="contact-number">{{ crimeTip.lastModified | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-number">{{ crimeTip.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
