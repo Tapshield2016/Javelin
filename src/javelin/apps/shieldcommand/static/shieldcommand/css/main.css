@@ -5272,6 +5272,10 @@ body {
 #logo {
   margin-left: 50px; }
 
+#theme-logo {
+    margin-left: 50px;
+}
+
 #accordion {
   height: 100%; }
 
