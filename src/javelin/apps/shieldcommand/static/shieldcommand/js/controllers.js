@@ -436,6 +436,10 @@ angular.module('shieldCommand.controllers', [])
 		updateDisplay();
 	});
 
+    $rootScope.$on('crimeTipMarkedChange', function() {
+        updateDisplay();
+	});
+
 	$scope.$on('profileWasUpdated', function() {
 		updateDisplay();
 	});
@@ -566,9 +570,6 @@ angular.module('shieldCommand.controllers', [])
 				}
 			}, 300);
 		}
-        else {
-            updateDisplay();
-        }
 	});
 	
 	$scope.$watch('crimeTipsVisible', function(visible, oldValue) {
