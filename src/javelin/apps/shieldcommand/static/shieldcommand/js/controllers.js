@@ -429,7 +429,9 @@ angular.module('shieldCommand.controllers', [])
 	$scope.chatUpdateTimeout = null;
 	$scope.chatUpdateInProgress = false;
 	$scope.newAlertSoundInterval = null;
+    $scope.newAlertTipFlashInterval = null;
     $scope.newCrimeTipSoundInterval = null;
+    $scope.newCrimeTipFlashInterval = null;
 	$scope.newAlertDocumentTitleInterval = null;
 	$scope.currentActiveLocation = null;
 	$scope.crimeTips = [];
@@ -537,11 +539,12 @@ angular.module('shieldCommand.controllers', [])
 			else {
 				newAlertSound.play();
 			}
-            $scope.flashPanel($('#newAlertListLink'));
+            $scope.flashPanel($('#newAlertListLink'), $scope.newCrimeTipFlashInterval);
 		}
 		else if (newLength == 0) {
 			newAlertSound.stop();
 			clearInterval($scope.newAlertSoundInterval);
+            clearInterval($scope.newCrimeTipFlashInterval);
 		}
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
@@ -565,7 +568,7 @@ angular.module('shieldCommand.controllers', [])
             else {
                 newCrimeTipSound.play();
             }
-            $scope.flashPanel($('#crimeTipListLink'));
+            $scope.flashPanel($('#crimeTipListLink'), $scope.newCrimeTipFlashInterval);
 		}
         else if (newLength == 0) {
 			$scope.stopCrimeTipSound();
@@ -576,13 +579,13 @@ angular.module('shieldCommand.controllers', [])
 
         newCrimeTipSound.stop();
         clearInterval($scope.newCrimeTipSoundInterval);
+        clearInterval($scope.newCrimeTipFlashInterval);
     }
 
-    $scope.flashPanel = function ($panel) {
+    $scope.flashPanel = function ($panel, $flashInterval) {
 		var bgColor = $panel.css('background-color');
-		var flashes = 0;
-
-		var i = setInterval(function() {
+        clearInterval($flashInterval);
+		$flashInterval = setInterval(function() {
 			if ($panel.css('background-color') == bgColor)
 			{
 				$panel.css('background-color', '#3AA1D3');
@@ -592,12 +595,6 @@ angular.module('shieldCommand.controllers', [])
 				$panel.css('background-color', bgColor);
 			}
 
-			flashes++;
-
-			if (flashes == 8)
-			{
-				clearInterval(i);
-			}
 		}, 300);
     }
 	
