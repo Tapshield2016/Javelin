@@ -46,6 +46,7 @@ angular.module('shieldCommand.controllers', [])
 
     $scope.close = function() {
 		if ($scope.isProfileVisible) {
+            $scope.isProfileVisible = !$scope.isProfileVisible;
 			$rootScope.$broadcast('profileWasClosed');
 			$rootScope.profileIsOpen = false;
 		}
@@ -255,7 +256,7 @@ angular.module('shieldCommand.controllers', [])
 	}
 
     $scope.$on('resetAll', function () {
-//        $scope.toggle();
+        $scope.close();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
 		hideCrimeMarkers(crimeTips);
