@@ -424,6 +424,7 @@ angular.module('shieldCommand.controllers', [])
 	$scope.chatUpdateTimeout = null;
 	$scope.chatUpdateInProgress = false;
 	$scope.newAlertSoundInterval = null;
+    $scope.newCrimeTipSoundInterval = null;
 	$scope.newAlertDocumentTitleInterval = null;
 	$scope.currentActiveLocation = null;
 	$scope.crimeTips = [];
@@ -545,32 +546,49 @@ angular.module('shieldCommand.controllers', [])
 	});
 	
 	$scope.$watch('unviewedCrimeTipsLength', function(newLength, oldLength) {
-		if (newLength > 0) {
 
-			newCrimeTipSound.play();
-			var $crimeTipPanel = $('#crimeTipListLink');
-			var bgColor = $crimeTipPanel.css('background-color');
-			var flashes = 0;
-			
-			var i = setInterval(function() {
-				if ($crimeTipPanel.css('background-color') == bgColor)
-				{
-					$crimeTipPanel.css('background-color', '#3AA1D3');
-				}
-				else
-				{
-					$crimeTipPanel.css('background-color', bgColor);
-				}
-				
-				flashes++;
-				
-				if (flashes == 8)
-				{
-					clearInterval(i);
-				}
-			}, 300);
+		if (newLength > 0) {
+            if (alertService.activeAgency() && alertService.activeAgency().loopAlertSound) {
+                newCrimeTipSound.play();
+                $scope.flashPanel($('#crimeTipListLink'));
+                $scope.newCrimeTipSoundInterval = setInterval(function () {
+					newCrimeTipSound.play();
+                    $scope.flashPanel($('#crimeTipListLink'));
+				}, 2000);
+            }
+            else {
+                newCrimeTipSound.play();
+                $scope.flashPanel($('#crimeTipListLink'));
+            }
+		}
+        else if (newLength == 0) {
+			newCrimeTipSound.stop();
+			clearInterval($scope.newCrimeTipSoundInterval);
 		}
 	});
+
+    $scope.flashPanel = function ($panel) {
+		var bgColor = $panel.css('background-color');
+		var flashes = 0;
+
+		var i = setInterval(function() {
+			if ($panel.css('background-color') == bgColor)
+			{
+				$panel.css('background-color', '#3AA1D3');
+			}
+			else
+			{
+				$panel.css('background-color', bgColor);
+			}
+
+			flashes++;
+
+			if (flashes == 8)
+			{
+				clearInterval(i);
+			}
+		}, 300);
+    }
 	
 	$scope.$watch('crimeTipsVisible', function(visible, oldValue) {
 		if (visible == false && oldValue == true)
