@@ -59,7 +59,8 @@ class SNSManager(object):
         elif endpoint == settings.SNS_APP_ENDPOINTS["A"]:
             msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
         else:
-            msg_json = """{"default": "%s"}""" % message_body
+            msg_json = """{"%s": "{\"aps\":{\"alert\":\"adfla\",\"badge\":\"5\",\"sound\":\"default\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
+
         return msg_json
 
     # location reporting
