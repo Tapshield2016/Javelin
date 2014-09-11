@@ -941,9 +941,9 @@ angular.module('shieldCommand.controllers', [])
 		else {
 			$scope.alertClicked(alert);
 		}
-        $timeout(function() {
-            $('.accordion-default').click();
-        })
+//        $timeout(function() {
+        $('.accordion-default').click();
+//        })
 		setTimeout(function() {
 			$('#chat-icon-' + alert.object_id).click();
 		}, 1000);
