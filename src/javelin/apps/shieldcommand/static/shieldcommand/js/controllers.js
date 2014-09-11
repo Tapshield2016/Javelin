@@ -255,6 +255,7 @@ angular.module('shieldCommand.controllers', [])
 	}
 
     $scope.$on('resetAll', function () {
+        $scope.close();
 		var crimeTips = [];
 		crimeTips.push($scope.activeCrimeTip);
 		hideCrimeMarkers(crimeTips);
@@ -262,7 +263,6 @@ angular.module('shieldCommand.controllers', [])
 		$scope.returnToGeofenceCenter();
         $scope.activeAlert = null;
         alertService.activeAlert = null;
-        $scope.close();
 	});
 
 
