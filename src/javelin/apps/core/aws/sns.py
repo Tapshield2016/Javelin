@@ -54,7 +54,7 @@ class SNSManager(object):
     def get_message_json(self, endpoint, message_body, alert_type, alert_id):
         if endpoint == settings.SNS_APP_ENDPOINTS["I"]:
             # msg_json = """{"%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 5}}"}""" % (endpoint, message_body, alert_type, alert_id)
-            msg_json = """{"%s": "{\"aps\":{\"alert\":{\"body\":\"%s\",\"alert_type\":\"%s\",\"alert_id\":\"%s\"},\"badge\":5,\"sound\":\"default\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
+            msg_json = """{"%s": "{\"aps\":{\"alert\":\"adfla\",\"badge\":\"5\",\"sound\":\"default\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
 
         elif endpoint == settings.SNS_APP_ENDPOINTS["A"]:
             msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}"}""" % (endpoint, message_body, alert_type, alert_id)
