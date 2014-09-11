@@ -44,6 +44,13 @@ angular.module('shieldCommand.controllers', [])
 		}
 	}
 
+    $scope.close = function() {
+		if ($scope.isProfileVisible) {
+			$rootScope.$broadcast('profileWasClosed');
+			$rootScope.profileIsOpen = false;
+		}
+	}
+
 	$scope.$on('toggleProfile', function() {
 		$scope.toggle();
 	});
@@ -256,7 +263,7 @@ angular.module('shieldCommand.controllers', [])
 		$scope.returnToGeofenceCenter();
         $scope.activeAlert = null;
         alertService.activeAlert = null;
-        $rootScope.$broadcast('toggleProfile');
+        $scope.close();
 	});
 
 
@@ -738,7 +745,7 @@ angular.module('shieldCommand.controllers', [])
 		};    	
     });
 
-//    ip closes the side profile panelRe-clicking crime t
+        //Accordian button clicked
 	$scope.panelClicked = function(panel) {
 
         $rootScope.$broadcast('resetAll');
