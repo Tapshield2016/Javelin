@@ -225,6 +225,8 @@ angular.module('shieldCommand.controllers', [])
 	$scope.markCrimeTipViewed = function() {
 		$scope.toggle();
 		var crimeTips = [];
+        $scope.activeCrimeTip.viewedBy = Javelin.activeAgencyUser.url;
+        $scope.activeCrimeTip.viewedByName = Javelin.activeAgencyUser.getFullName();
 		crimeTips.push($scope.activeCrimeTip);
 		hideCrimeMarkers(crimeTips);
 		clearActiveAlertMarker();
@@ -636,7 +638,7 @@ angular.module('shieldCommand.controllers', [])
 			}
 		}
 
-		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0) {
+		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0 || $scope.unviewedCrimeTipsLength > 0) {
 				if (!$scope.newAlertDocumentTitleInterval) {
 					$scope.newAlertDocumentTitleInterval = setInterval(function () {
 						$scope.setDocumentTitle();
@@ -660,9 +662,9 @@ angular.module('shieldCommand.controllers', [])
   	};
 
   	$scope.setDocumentTitle = function() {
-  		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0) {
+  		if ($scope.newAlertsLength > 0 || $scope.pendingAlertsLength > 0 || $scope.unviewedCrimeTipsLength > 0) {
   			if (document.title === "Shield Command") {
-  				document.title = "(" + ($scope.newAlertsLength + $scope.pendingAlertsLength) + ") - Shield Command";
+  				document.title = "(" + ($scope.newAlertsLength + $scope.pendingAlertsLength +$scope.unviewedCrimeTipsLength) + ") - Shield Command";
   			}
   			else {
   				document.title = "Shield Command";
