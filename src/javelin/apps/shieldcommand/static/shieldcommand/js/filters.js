@@ -40,9 +40,16 @@ angular.module('shieldCommand.filters', [])
 		for (var i = 0; i < alerts.length; i++) {
 			if (statuses.indexOf(alerts[i].status) > -1) {
 				var alert_type = alerts[i].initiatedBy;
+                var title;
+                if (agency[i].agencyUser) {
+                    title = agency[i].agencyUserMeta.getFullName();
+                }
+                else {
+                    title = agency[i].staticDeviceMeta.description;
+                }
 				var location_info = { alertType: alerts[i].initiatedBy,
 									  alertID: alerts[i].object_id,
-									  title: alerts[i].agencyUserMeta.getFullName(),
+									  title: title,
 									  location: null }
 				if (alerts[i].status == 'A') {
 					if (alerts[i].agencyDispatcher && alerts[i].agencyDispatcher.indexOf(Javelin.activeAgencyUser.url) !== -1) {
