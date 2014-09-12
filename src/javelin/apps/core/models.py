@@ -205,7 +205,7 @@ class Agency(TimeStampedModel):
                                              self.agency_center_latitude)
 
         if self.agency_radius==0 and self.agency_boundaries:
-            radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))
+            radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))+.5
             self.agency_radius = round(radius,2)
 
         if not self.chat_autoresponder_message:
@@ -313,7 +313,7 @@ class Region(models.Model):
                                       self.center_latitude)
 
         if self.radius==0 and self.boundaries:
-            radius = radius_from_center(self.center_point, eval(self.boundaries))
+            radius = radius_from_center(self.center_point, eval(self.boundaries))+.5
             self.radius = round(radius,2)
 
         super(Region, self).save(*args, **kwargs)
