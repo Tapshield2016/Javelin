@@ -204,7 +204,7 @@ function updateMarker(location) {
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
 
-    var currentBounds = map.getBounds()
+    var currentBounds = googleMap.getBounds()
     if (!currentBounds.contains(alert_location)) {
         googleMap.setCenter(googleMapMarker.getPosition());
     }
