@@ -642,7 +642,9 @@ angular.module('shieldCommand.controllers', [])
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-			$scope.$apply();
+            setTimeout(function() {
+                $scope.$apply();
+            });
 		}
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
