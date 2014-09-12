@@ -553,7 +553,9 @@ angular.module('shieldCommand.controllers', [])
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
 			if ($('#collapseTwo.in').length == 0) {
-				$('.panel-new-alerts').click();
+                setTimeout(function() {
+                    $('.panel-new-alerts').click();
+		        });
 			}
 		}
 	});
@@ -642,14 +644,14 @@ angular.module('shieldCommand.controllers', [])
 
 		/* Don't call apply if we're already in the middle of a digest... */
 		if ($scope.$root.$$phase != '$apply' && $scope.$root.$$phase != '$digest') {
-            setTimeout(function() {
-                $scope.$apply();
-            });
+			$scope.$apply();
 		}
 
 		if ($scope.myAlertsLength == 0 && $scope.newAlertsLength > 0) {
 			if ($('#collapseTwo.in').length == 0) {
-				$('.panel-new-alerts').click();
+                setTimeout(function() {
+                    $('.panel-new-alerts').click();
+                });
 			}
 		}
 
@@ -791,7 +793,9 @@ angular.module('shieldCommand.controllers', [])
 				}
 
 				if (!(container[0] == currentlyOpen[0])) {
-					container.prevAll('.panel-heading').click();
+                    setTimeout(function() {
+					    container.prevAll('.panel-heading').click();
+                    });
 				}
 
 				var scrollTo = $("#" + alertID);
