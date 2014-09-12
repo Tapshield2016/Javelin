@@ -394,7 +394,7 @@
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
 		Javelin.client.add('crimetips', {url: 'social-crime-reports'});
-        Javelin.client.crimeTips.add('mark_viewed');
+        Javelin.client.crimetips.add('mark_viewed');
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
