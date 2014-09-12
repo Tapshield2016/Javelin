@@ -191,17 +191,23 @@ function updateMarker(location) {
     if (!location) {
         return;
     }
+
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
+
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
 	bringMarkerToFront(googleMapMarker);
 	
-	if (location.accuracy)
-	{
+	if (location.accuracy) {
     	googleMapAccuracyCircle.setCenter(alert_location);
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
+
+    var currentBounds = map.getBounds()
+    if (!currentBounds.contains(alert_location)) {
+        googleMap.setCenter(googleMapMarker.getPosition());
+    }
 }
 
 //Sets correct icon for alert, spotcrime, or social crime reports
