@@ -1,3 +1,4 @@
+import string
 import random
 import reversion
 from django.core import urlresolvers
@@ -566,6 +567,8 @@ class AgencyUser(AbstractUser):
             return u"%s" % self.username
 
     def save(self, *args, **kwargs):
+        if not self.has_usable_password():
+            self.password = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)])
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
