@@ -568,7 +568,7 @@ class AgencyUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.has_usable_password():
-            self.password = ''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)])
+            self.set_password(''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)]));
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
