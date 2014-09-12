@@ -1,6 +1,7 @@
 import re
 import time
 import uuid
+import datetime
 
 import django_filters
 from django_twilio.client import twilio_client
@@ -17,6 +18,7 @@ from django.contrib.sites.models import get_current_site
 from django.contrib.auth.decorators import user_passes_test
 
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.core.exceptions import PermissionDenied
 
 from rest_framework.settings import api_settings
 from rest_framework import generics
@@ -55,7 +57,8 @@ from core.models import (Agency, Alert, AlertLocation,
 
 from core.utils import get_agency_from_unknown
 
-from core.tasks import (create_user_device_endpoint, publish_to_agency_topic, notify_new_chat_message_available)
+from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
+                        notify_new_chat_message_available, notify_crime_tip_marked_viewed)
 from core.tasks import new_static_alert
 
 User = get_user_model()
@@ -344,6 +347,34 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = SocialCrimeReport.objects.none()
         return qs
+
+    @action()
+    def mark_viewed(self, request, pk=None):
+
+        if not request.user.is_superuser:
+            if request.user.groups.filter(name='Dispatchers').count() == 0:
+                raise PermissionDenied
+
+        report = self.get_object()
+        if report.viewed_by:
+            return Response({'message': 'Report was already marked viewed'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        report.viewed_by = request.user
+        report.viewed_time = datetime.datetime.now()
+        report.save()
+
+        message = "%s dispatcher %s viewed your report. Thank you!"\
+                        % (request.user.agency.name, request.user.first_name)
+
+        reporter = report.reporter
+        notify_crime_tip_marked_viewed.delay(\
+            message, report.id,
+            reporter.device_type,
+            reporter.device_endpoint_arn)
+
+        return Response(SocialCrimeReportSerializer(instance=report).data, status=status.HTTP_200_OK)
+
 
 
 class AgencyViewSet(viewsets.ModelViewSet):

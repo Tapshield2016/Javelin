@@ -394,6 +394,7 @@
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
 		Javelin.client.add('crimetips', {url: 'social-crime-reports'});
+        Javelin.client.crimeTips.add('mark_viewed');
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
@@ -813,16 +814,32 @@
 	}
 	
 	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
-		var now = new Date();
-		var old = new Date("March 25, 1981 11:33:00");
-		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
-			viewed_time: now.toISOString(),
-			viewed_by: Javelin.activeAgencyUser.url,
-			last_modified: old.toISOString(),
-		});
+
+        var request = Javelin.client.crimetips.mark_viewed.create(crimeTip.object_id);
 		request.done(function(data) {
+			if (request.status == 200) {
+				callback(data);
+			}
+			else {
+				callback(data);
+			}
+		});
+		request.fail(function(data) {
 			callback(data);
-		})
+		});
+
+
+//        send_mass_alert
+//		var now = new Date();
+//		var old = new Date("March 25, 1981 11:33:00");
+//		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+//			viewed_time: now.toISOString(),
+//			viewed_by: Javelin.activeAgencyUser.url,
+//			last_modified: old.toISOString(),
+//		});
+//		request.done(function(data) {
+//			callback(data);
+//		})
 	}
 	
 	Javelin.markCrimeTipSpam = function(crimeTip, callback) {

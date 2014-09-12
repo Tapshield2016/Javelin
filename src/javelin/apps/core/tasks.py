@@ -195,6 +195,16 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
 
 
 @task
+def notify_crime_tip_marked_viewed(message, crime_tip_id,
+                                   device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "mass-alert", crime_tip_id)
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
 def delete_file_from_s3(url):
     s3 = S3Manager()
     s3.delete_file(url)
