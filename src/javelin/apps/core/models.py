@@ -693,11 +693,11 @@ class SocialCrimeReport(TimeStampedModel):
                                  related_name="reporter")
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
-    report_audio_url = models.S3URLField(null=True, blank=True,
+    report_audio_url = S3URLField(null=True, blank=True,
                                          help_text="Location of asset on S3")
-    report_image_url = models.S3URLField(null=True, blank=True,
+    report_image_url = S3URLField(null=True, blank=True,
                                          help_text="Location of asset on S3")
-    report_video_url = models.S3URLField(null=True, blank=True,
+    report_video_url = S3URLField(null=True, blank=True,
                                          help_text="Location of asset on S3")
     report_latitude = models.FloatField()
     report_longitude = models.FloatField()
