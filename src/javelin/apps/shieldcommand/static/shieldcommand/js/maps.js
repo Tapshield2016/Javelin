@@ -12,11 +12,13 @@ var spotCrimes = [];
 var infoWindow = null;
 var markerZIndex = 1;
 var animatedOverlay;
+var markerCluster;
 
 function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
 
     googleMap = new google.maps.Map(map_canvas, googleMapOptions);
+//    document.querySelector('google-map-markerclusterer').map = googleMap;
 
 	markerOptions = {
 		map: googleMap,
@@ -61,6 +63,9 @@ function initializeMap() {
 
         geofence.setMap(googleMap);
     };
+
+    var mcOptions = {gridSize: 50, maxZoom: 15, zoomOnClick: true};
+    markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
 }
 
 function setMapCenterToDefault() {
@@ -351,8 +356,11 @@ function addCrimeMarkers(crimes) {
 		}
 		else if (crime.type == 'spotCrime')
 		{
+
 			spotCrimes[crime.object_id] = crime;
 			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+
+            markerCluster.addMarker(marker);
 
 //            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
 //            google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
