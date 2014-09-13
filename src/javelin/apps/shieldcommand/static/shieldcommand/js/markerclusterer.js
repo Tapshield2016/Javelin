@@ -1240,7 +1240,7 @@ ClusterIcon.prototype.createCss = function(pos) {
   }
 
   var txtColor = this.textColor_ ? this.textColor_ : 'red';
-  var txtSize = this.textSize_ ? this.textSize_ : 11;
+  var txtSize = this.textSize_ ? this.textSize_ : 10;
 
   style.push('cursor:pointer; top:' + pos.y + 'px; left:' +
       pos.x + 'px; color:' + txtColor + '; position:absolute; font-size:' +
