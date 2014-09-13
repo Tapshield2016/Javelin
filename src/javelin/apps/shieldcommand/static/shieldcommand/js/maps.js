@@ -63,7 +63,7 @@ function initializeMap() {
         geofence.setMap(googleMap);
     };
 
-    var mcOptions = {gridSize: 50, maxZoom: 15, zoomOnClick: true};
+    var mcOptions = {gridSize: 50, maxZoom: 17, zoomOnClick: true};
     markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
 }
 
