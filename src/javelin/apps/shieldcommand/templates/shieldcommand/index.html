@@ -10,7 +10,6 @@
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
 <script src="https://maps.googleapis.com/maps/api/js?client=gme-tapshieldllc&v=3.17"></script>
 <link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
-<link rel="import" href="{{ STATIC_URL }}shieldcommand/bower_components/markerclusterer/google-map-markerclusterer.html">
 </head><body>
 
 <!-- Preloader -->
@@ -552,6 +551,11 @@
 <script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
+{% endcompress %}
+
+<link rel="import" href="{{ STATIC_URL }}shieldcommand/bower_components/markerclusterer/google-map-markerclusterer.html">
+
+{% compress js %}
 <script src="{{ STATIC_URL }}shieldcommand/js/maps.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
@@ -571,6 +575,8 @@
 <script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
 {% endcompress %}
+
+
 <script>
             {% if agency_boundaries %}
                 googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
