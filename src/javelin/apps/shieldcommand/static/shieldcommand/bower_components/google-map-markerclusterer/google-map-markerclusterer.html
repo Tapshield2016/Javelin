@@ -263,12 +263,12 @@ It is also possible to embed another `custom element` inside a `<google-map-over
 
 
 <!--
-The `google-map-clustericon` is an internal element that is used by `google-map-markerclusterer`.
+The `google-map-clustericon` is an internal element that is used by `google-map-google-map-markerclusterer`.
 By default it wraps a `<google-map-defaulticon>` element.
 
 
 @element google-map-clustericon
-@blurb Default icon container for google-map-markerclusterer
+@blurb Default icon container for google-map-google-map-markerclusterer
 @status alpha
 @url github.io
 -->
@@ -422,22 +422,22 @@ By default it wraps a `<google-map-defaulticon>` element.
 
 
 <!--
-The `google-map-markerclusterer` element is a port of markercluster-plus to polymer.
+The `google-map-google-map-markerclusterer` element is a port of markercluster-plus to polymer.
 It helps to cluster markers on a google-map together
 
 ##### Example
 
-    <google-map-markerclusterer></google-map-markerclusterer>
+    <google-map-google-map-markerclusterer></google-map-google-map-markerclusterer>
 
 ##### Example -  custom cluster marker
 
-    <google-map-markerclusterer>
+    <google-map-google-map-markerclusterer>
       <google-map-clustericon>
         <my-custom-clustericon></my-custom-clustericon>
       </google-map-clustericon>
-    </google-map-markerclusterer>
+    </google-map-google-map-markerclusterer>
 
-@element google-map-markerclusterer
+@element google-map-google-map-markerclusterer
 @blurb Element for providing clustering functionality for markers on google maps.
 @status alpha
 @url github.io
@@ -845,7 +845,7 @@ It helps to cluster markers on a google-map together
         // Cancel previous batch processing if we're working on the first batch:
         if (iFirst === 0) {
           /**
-           * This event is fired when the google-map-markerclusterer begins clustering markers.
+           * This event is fired when the google-map-google-map-markerclusterer begins clustering markers.
            *
            * @event clusteringbegin
            */
@@ -888,7 +888,7 @@ It helps to cluster markers on a google-map together
           delete this.timerRefStatic;
 
           /**
-           * This event is fired when the google-map-markerclusterer stops  clustering markers.
+           * This event is fired when the google-map-google-map-markerclusterer stops  clustering markers.
            *
            * @event clusterend
            */
@@ -1009,9 +1009,9 @@ It helps to cluster markers on a google-map together
 
 <!--
 The `<google-map-overlayview-marker>`can be used as a replacement for
-`<google-map-marker>` together with the `<google-map-markerclusterer>`.
+`<google-map-marker>` together with the `<google-map-google-map-markerclusterer>`.
 It inherits from `<google-map-overlayview>` but adds  the two methods `getPosition()`
-and `getDraggable()` to the base class because they are used by the markerclusterer.
+and `getDraggable()` to the base class because they are used by the google-map-markerclusterer.
 
 ##### Example
 

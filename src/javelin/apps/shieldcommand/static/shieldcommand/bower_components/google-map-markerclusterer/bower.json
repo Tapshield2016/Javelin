@@ -1,5 +1,5 @@
 {
-  "name": "google-map-markerclusterer",
+  "name": "google-map-google-map-markerclusterer",
   "private": false,
   "dependencies": {
     "polymer": "Polymer/polymer#master",
@@ -16,7 +16,7 @@
     "web-components"
   ],
   "license": "MIT",
-  "homepage": "https://github.com/timeu/google-map-markerclusterer",
+  "homepage": "https://github.com/timeu/google-map-google-map-markerclusterer",
   "ignore": [
     "**/.*",
     "node_modules",

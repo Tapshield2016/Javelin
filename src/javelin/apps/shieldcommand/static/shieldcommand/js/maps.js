@@ -18,7 +18,7 @@ function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
 
     googleMap = new google.maps.Map(map_canvas, googleMapOptions);
-//    document.querySelector('google-map-markerclusterer').map = googleMap;
+//    document.querySelector('google-map-google-map-markerclusterer').map = googleMap;
 
 	markerOptions = {
 		map: googleMap,
