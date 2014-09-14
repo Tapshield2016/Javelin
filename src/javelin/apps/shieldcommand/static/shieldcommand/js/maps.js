@@ -63,7 +63,26 @@ function initializeMap() {
         geofence.setMap(googleMap);
     };
 
-    var mcOptions = {gridSize: 50, maxZoom: 13, zoomOnClick: true};
+//         'styles': (object) An object that has style properties:
+//         'url': (string) The image url.
+//         'height': (number) The image height.
+//         'width': (number) The image width.
+//         'anchor': (Array) The anchor position of the label text.
+//         'textColor': (string) The text color.
+//         'textSize': (number) The text size.
+//         'backgroundPosition': (string) The position of the backgound x, y.
+
+    var style = new ClusterIcon({
+        url: '/media/static/shieldcommand/img/'+'pins_cluster_red.png',
+        height: 40,
+        width: 30,
+        anchor: (10,15),
+        textColor: '#d2322d',
+        textSize: 10
+//        backgroundPosition: position
+    });
+
+    var mcOptions = {gridSize: 50, maxZoom: 13, zoomOnClick: true, styles:style};
     markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
 }
 
