@@ -73,7 +73,7 @@ function initializeMap() {
 //         'backgroundPosition': (string) The position of the backgound x, y.
 
     var style = [{
-        url: '/media/static/shieldcommand/img/'+'pins_cluster_red.png',
+        url: '/media/static/shieldcommand/img/spotcrime/'+'pins_cluster_red.png',
         height: 40,
         width: 30,
         anchor: [10,15],
