@@ -16,7 +16,7 @@
     Javelin.lastCheckedAlertsTimestamp = null;
 	Javelin.activeCrimeTip = null;
 	Javelin.activeCrimeTipUser = null;
-	Javelin.lastCheckedCrimeTipsTimestamp = new Date("March 25, 1981 11:33:00");
+	Javelin.lastCheckedCrimeTipsTimestamp = null;
 	Javelin.spotCrimeURL = 'https://api.spotcrime.com/crimes.json';
 	Javelin.spotCrimeDetailURL = 'https://api.spotcrime.com/crimes/<CDID>.json';
 	Javelin.spotCrimeKey = '246c313f9889be187cfbca0c3f5a09f9e4a5d8224edbf86ad795c72b0561';
