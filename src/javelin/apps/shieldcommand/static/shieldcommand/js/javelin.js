@@ -701,10 +701,10 @@
  				    	newCrimeTip.showPin = true;
  				    }
 
- 				    if (newCrimeTipDate < past24 && (newCrimeTip.flaggedSpam || newCrimeTip.viewedTime))
-					{
-						continue;
-					}
+// 				    if (newCrimeTipDate < past24 && (newCrimeTip.flaggedSpam || newCrimeTip.viewedTime))
+//					{
+//						continue;
+//					}
 					
 					retrievedCrimeTips.push(newCrimeTip);
 
