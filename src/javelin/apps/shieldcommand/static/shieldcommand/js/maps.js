@@ -63,15 +63,6 @@ function initializeMap() {
         geofence.setMap(googleMap);
     };
 
-//         'styles': (object) An object that has style properties:
-//         'url': (string) The image url.
-//         'height': (number) The image height.
-//         'width': (number) The image width.
-//         'anchor': (Array) The anchor position of the label text.
-//         'textColor': (string) The text color.
-//         'textSize': (number) The text size.
-//         'backgroundPosition': (string) The position of the backgound x, y.
-
     var x = 8;
     var y = 0;
     var style = [{
@@ -531,7 +522,7 @@ function hideCrimeMarkers(crimes)
             crime.showPin = false;
         }
 
-		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
+		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id] && crime.type != 'spotCrime')
 		{
 			crimeMarkers[crime.type][crime.object_id].setMap(null);
 		}
