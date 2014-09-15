@@ -151,7 +151,7 @@ class UserProfileAdmin(admin.ModelAdmin):
 class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
 
     list_display = ('reporter', 'report_type', 'last_modified',
-                    'report_anonymous', 'flagged_spam', 'flagged_by_dispatcher')
+                    'report_anonymous', 'flagged_spam', 'flagged_by_dispatcher','viewed_time','viewed_by',)
     list_filter = ('report_anonymous', 'flagged_spam', 'report_type')
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
