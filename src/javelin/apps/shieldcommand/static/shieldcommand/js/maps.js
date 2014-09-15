@@ -72,12 +72,12 @@ function initializeMap() {
 //         'textSize': (number) The text size.
 //         'backgroundPosition': (string) The position of the backgound x, y.
 
-    var x = 0;
-    var y = 5;
+    var x = 5;
+    var y = 0;
     var style = [{
         url: '/media/static/shieldcommand/img/spotcrime/'+'pins_cluster_red.png',
-        height: 40,
-        width: 30,
+        height: 40+y,
+        width: 30+y,
         anchor: [x,y],
         textColor: '#d2322d',
         textSize: 10
