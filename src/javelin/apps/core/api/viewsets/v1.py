@@ -283,7 +283,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     filter_class = SocialCrimeReportModifiedSinceFilterBackend
 
     def get_queryset(self):
-        qs = SocialCrimeReport.objects.select_related('reporter').all()
+        qs = SocialCrimeReport.objects.all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
         distance_within =\
@@ -292,7 +292,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
             qs = SocialCrimeReport.objects\
-                .select_related('reporter')\
+                .all()\
                 .filter(report_point__dwithin=(point, D(mi=dwithin)))\
                 .distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
