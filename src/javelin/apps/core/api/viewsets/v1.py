@@ -328,7 +328,7 @@ class SocialCrimeReportModifiedSinceFilterBackend(django_filters.FilterSet):
 class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     model = SocialCrimeReport
     serializer_class = SocialCrimeReportSerializer
-    filter_class = SocialCrimeReportModifiedSinceFilterBackend
+    # filter_class = SocialCrimeReportModifiedSinceFilterBackend
 
     def get_queryset(self):
         qs = SocialCrimeReport.objects.all()
