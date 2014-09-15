@@ -339,10 +339,9 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = SocialCrimeReport.objects\
-                .all()\
+            qs = SocialCrimeReport.objects.all()\
                 .filter(report_point__dwithin=(point, D(mi=dwithin)))\
-                .distance(point).order_by('last_modified')
+                .distance(point)
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = SocialCrimeReport.objects.none()
