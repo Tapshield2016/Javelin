@@ -1222,7 +1222,7 @@ ClusterIcon.prototype.createCss = function(pos) {
     if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
         this.anchor_[0] < this.height_) {
       style.push('height:' + (this.height_ - this.anchor_[0]) +
-          'px; padding-top:' + this.anchor_[0] + 'px;');
+          'px; padding-top:' + this.anchor_[0]-5 + 'px;');
     } else {
       style.push('height:' + this.height_ + 'px; line-height:' + this.height_ +
           'px;');
@@ -1240,11 +1240,11 @@ ClusterIcon.prototype.createCss = function(pos) {
   }
 
   var txtColor = this.textColor_ ? this.textColor_ : 'red';
-  var txtSize = this.textSize_ ? this.textSize_ : 10;
+  var txtSize = this.textSize_ ? this.textSize_ : 11;
 
   style.push('cursor:pointer; top:' + pos.y + 'px; left:' +
       pos.x + 'px; color:' + txtColor + '; position:absolute; font-size:' +
-      txtSize + 'px; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; font-weight:normal');
+      txtSize + 'px; font-family:"Helvetica Neue", Helvetica, Arial, sans-serif; font-weight:bold');
   return style.join('');
 };
 
