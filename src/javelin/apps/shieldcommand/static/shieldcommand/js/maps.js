@@ -72,7 +72,7 @@ function initializeMap() {
 //         'textSize': (number) The text size.
 //         'backgroundPosition': (string) The position of the backgound x, y.
 
-    var x = 0;
+    var x = -10;
     var y = 0;
     var style = [{
         url: '/media/static/shieldcommand/img/spotcrime/'+'pins_cluster_red.png',

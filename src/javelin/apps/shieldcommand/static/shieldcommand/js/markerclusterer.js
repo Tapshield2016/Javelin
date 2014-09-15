@@ -1222,7 +1222,7 @@ ClusterIcon.prototype.createCss = function(pos) {
     if (typeof this.anchor_[0] === 'number' && this.anchor_[0] > 0 &&
         this.anchor_[0] < this.height_) {
       style.push('height:' + (this.height_ - this.anchor_[0]) +
-          'px; padding-top:' + this.anchor_[0]-5 + 'px;');
+          'px; padding-top:' + this.anchor_[0] + 'px;');
     } else {
       style.push('height:' + this.height_ + 'px; line-height:' + this.height_ +
           'px;');
