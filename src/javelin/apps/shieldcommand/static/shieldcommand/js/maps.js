@@ -11,6 +11,8 @@ var crimeMarkers = [];
 var spotCrimes = [];
 var infoWindow = null;
 var markerZIndex = 1;
+var animatedOverlay;
+var markerCluster;
 
 function initializeMap() {
     var map_canvas = document.getElementById('map-canvas');
@@ -20,9 +22,11 @@ function initializeMap() {
 	markerOptions = {
 		map: googleMap,
 		animation: google.maps.Animation.DROP
+//        optimized: false
 	};
 
-	circleOptions = {
+    //Accuracy bubble
+	googleAccuracyCircleOptions = {
 		strokeColor: '#41c4f2',
 		strokeOpacity: 0.8,
 		strokeWeight: 2,
@@ -31,6 +35,8 @@ function initializeMap() {
 		map: googleMap
 	};
 
+    //If the agency uses the new "Region" model draw all regions
+    //Else draw old single boundaries polygon
     if (googleMapRegions.length > 0) {
 
         geofence = new google.maps.Polygon({
@@ -45,7 +51,7 @@ function initializeMap() {
         geofence.setMap(googleMap);
     }
     else if (googleMapAgencyBoundaries.length > 0) {
-        bermudaTriangle = new google.maps.Polygon({
+        geofence = new google.maps.Polygon({
             paths: googleMapAgencyBoundaries,
             strokeColor: '#0ab60a',
             strokeOpacity: 0.9,
@@ -54,8 +60,22 @@ function initializeMap() {
             fillOpacity: 0.15
         });
 
-        bermudaTriangle.setMap(googleMap);        
+        geofence.setMap(googleMap);
     };
+
+    var x = 8;
+    var y = 0;
+    var style = [{
+        url: '/media/static/shieldcommand/img/spotcrime/'+'pins_cluster_red.png',
+        height: 40+x,
+        width: 30,
+        anchor: [x,y],
+        textColor: '#d2322d',
+        textSize: 10
+    }];
+
+    var mcOptions = {gridSize: 50, maxZoom: 14, zoomOnClick: true, styles:style};
+    markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
 }
 
 function setMapCenterToDefault() {
@@ -66,6 +86,11 @@ function setMapCenterToDefault() {
 function clearActiveAlertMarker() {
     googleMapMarker.setMap(null);
     googleMapAccuracyCircle.setMap(null);
+
+    if (animatedOverlay) {
+        animatedOverlay.setMap(null);
+        animatedOverlay = null;
+    }
 }
 
 function addressForLocation(location, callback) {
@@ -81,23 +106,126 @@ function addressForLocation(location, callback) {
     });
 }
 
+// Define the animated overlay, derived from google.maps.OverlayView
+    function PinAnimation(opt_options) {
+        this.setValues(opt_options);
+        var div = this.div_ = document.createElement('div');
+        div.id = 'holder';
+
+        var span = this.span_ = document.createElement('span');
+        span.className = 'pulse';
+        div.appendChild(span);
+    };
+
+    PinAnimation.prototype = new google.maps.OverlayView;
+
+    PinAnimation.prototype.onAdd = function() {
+         var pane = this.getPanes().overlayShadow;
+         pane.appendChild(this.div_);
+
+         // Ensures the PinAnimation is redrawn if the text or position is changed.
+         var me = this;
+         this.listeners_ = [
+              google.maps.event.addListener(this, 'position_changed',
+                   function() { me.draw(); }),
+         ];
+    };
+
+    // Implement onRemove
+    PinAnimation.prototype.onRemove = function() {
+         this.div_.parentNode.removeChild(this.div_);
+
+         // PinAnimation is removed from the map, stop updating its position/text.
+         for (var i = 0, I = this.listeners_.length; i < I; ++i) {
+              google.maps.event.removeListener(this.listeners_[i]);
+         }
+    };
+
+    // Set the visibility to 'hidden' or 'visible'.
+    PinAnimation.prototype.hide = function() {
+        if (this.div_) {
+            this.div_.style.visibility = 'hidden';
+        }
+    };
+    PinAnimation.prototype.show = function() {
+        if (this.div_) {
+            this.div_.style.visibility = 'visible';
+        }
+    };
+
+    PinAnimation.prototype.colorForType = function(alertType) {
+
+        var color;
+
+        if (alertType == "emergency") {
+            color ='#d2322d';
+        }
+        else if (alertType == "chat") {
+            color ='orange';
+        }
+        else if (alertType == "timer") {
+            color ='yellow';
+        }
+        else if (alertType == "static") {
+            color ='#5bc0de';
+        }
+
+        if (this.div_) {
+            this.span_.style.border = '10px solid '+ color;
+        }
+
+        //Accuracy bubble color change
+	    googleAccuracyCircleOptions = {
+	    	strokeColor: color,
+	    	strokeOpacity: 0.6,
+	    	strokeWeight: 2,
+	    	fillColor: color,
+	    	fillOpacity: 0.25,
+	    	map: googleMap
+	    };
+    };
+
+    // Implement draw
+    PinAnimation.prototype.draw = function() {
+        var topPadding = 0;
+        var sizeHeight = 50
+        var sizeWidth = sizeHeight;
+        var centerX = sizeWidth/2;
+        var centerY = sizeHeight/2;
+
+         var projection = this.getProjection();
+         var position = projection.fromLatLngToDivPixel(this.get('position'));
+         var div = this.div_;
+        //Adjust overlay position to be centered over the point
+         div.style.left = position.x-centerX + 'px';
+         div.style.top = position.y-topPadding-centerY + 'px';
+         div.style.display = 'block';
+    };
+
 function updateMarker(location) {
     if (!location) {
         return;
     }
+
     alert_location = new google.maps.LatLng(location.latitude, location.longitude);
+
     googleMapMarker.setPosition(alert_location);
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
 	bringMarkerToFront(googleMapMarker);
 	
-	if (location.accuracy)
-	{
+	if (location.accuracy) {
     	googleMapAccuracyCircle.setCenter(alert_location);
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
+
+    var currentBounds = googleMap.getBounds()
+    if (!currentBounds.contains(alert_location)) {
+        googleMap.setCenter(googleMapMarker.getPosition());
+    }
 }
 
+//Sets correct icon for alert, spotcrime, or social crime reports
 function getIconForLocation(location) {
 	var icon = 'NewUserPin.png';
 	
@@ -105,8 +233,19 @@ function getIconForLocation(location) {
 	{
 		if (location.type == 'alert')
 		{
-        	icon = location.alertStatus != 'N' && location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon; 
-		}
+        	icon = location.alertType ? location.alertType.charAt(0).toUpperCase() + location.alertType.substr(1).toLowerCase() + 'UserPin.png' : icon;
+
+//            if (location.alertType == "static") {
+//                return '/media/static/shieldcommand/img/userpin/' + icon;
+//            }
+//            var image = {
+//                url: '/media/static/shieldcommand/img/userpin/' + icon,
+//                size: new google.maps.Size(28, 50),
+//                origin: new google.maps.Point(0,0),
+//                anchor: new google.maps.Point(14, 25)
+//            };
+//		    return image;
+        }
 		else if (location.type == 'crimeTip' || location.type == 'spotCrime')
 		{
 			var crimeType = location.reportType ? location.reportType.toLowerCase().replace(/[\s\/]/g, '') : 'other';
@@ -118,6 +257,7 @@ function getIconForLocation(location) {
 	return '/media/static/shieldcommand/img/' + icon;
 }
 
+//Set marker for active alert or crime tip
 function setMarker(location) {
     if (!location) {
         return;
@@ -130,13 +270,29 @@ function setMarker(location) {
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setMap(googleMap);
 	bringMarkerToFront(googleMapMarker);
+
+    if (location.type == 'alert') {
+
+        if (!animatedOverlay) {
+            animatedOverlay = new PinAnimation({
+                map: googleMap
+            });
+        }
+        animatedOverlay.bindTo('position', googleMapMarker, 'position');
+        animatedOverlay.show();
+
+        animatedOverlay.colorForType(location.alertType)
+    }
 	
 	if (location.accuracy)
 	{
-    	googleMapAccuracyCircle.setOptions(circleOptions);
+    	googleMapAccuracyCircle.setOptions(googleAccuracyCircleOptions);
 		googleMapAccuracyCircle.setCenter(alert_location);
     	googleMapAccuracyCircle.setRadius(location.accuracy);
 	}
+    else if (location.type == 'alert') {
+        googleMapAccuracyCircle.setMap(null);
+    }
 	
     googleMap.setZoom(17);
     googleMap.setCenter(googleMapMarker.getPosition());
@@ -159,7 +315,7 @@ function zoomToCrime(crime)
 	
 	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
 	{
-		//clearActiveAlertMarker();
+		clearActiveAlertMarker();
 		bringMarkerToFront(crimeMarkers[crime.type][crime.object_id]);
 	}
 	
@@ -210,8 +366,11 @@ function addCrimeMarkers(crimes) {
 		}
 		else if (crime.type == 'spotCrime')
 		{
+
 			spotCrimes[crime.object_id] = crime;
 			google.maps.event.addListener(marker, 'click', spotCrimePinClicked);
+
+            markerCluster.addMarker(marker);
 
 //            google.maps.event.addListener(marker, 'mouseover', spotCrimePinClicked);
 //            google.maps.event.addListener(marker, 'mouseout', closeInfoWindow);
@@ -274,7 +433,7 @@ function spotCrimePinClicked(evt)
 				'<tr><td><strong>Date</td><td>' + date.toLocaleDateString() + " " + date.toLocaleTimeString(navigator.language, {hour: '2-digit', minute:'2-digit'}) + '</td></tr>' +
 				'<tr><td><strong>Address</td><td>' + spotCrime.address + '</td></tr>' +
 				'</table>' +
-				'<p style="margin-top: 10px;"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
+				'<p style="margin-top: 10px"><a class="btn btn-info" href="' + spotCrime.link + '" target="_blank">More Info</a></p>' +
 				'</div>';
 				
 				infoWindow = new google.maps.InfoWindow({
@@ -327,7 +486,7 @@ function showCrimeMarker(crime) {
 		return;
 	}
 
-	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
+	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id] && crime.type != 'spotCrime') {
 		crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
 	}
 }
@@ -355,16 +514,15 @@ function hideCrimeMarkers(crimes)
 	{
 		var crime = crimes[i];
 
+        if (!crime) {
+			continue;
+		}
+
         if (crime.showPin) {
             crime.showPin = false;
         }
-		
-		if ( ! crime)
-		{
-			continue;
-		}
-		
-		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id])
+
+		if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id] && crime.type != 'spotCrime')
 		{
 			crimeMarkers[crime.type][crime.object_id].setMap(null);
 		}

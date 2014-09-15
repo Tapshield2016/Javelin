@@ -5048,7 +5048,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.icon-checkmark, .icon-userzoom, .icon-accept_bubble, .icon-chat_bubble, .icon-emergency_type, .icon-timer_type, .icon-chat_type, .icon-view, .icon-geofence {
+.icon-checkmark, .icon-userzoom, .icon-accept_bubble, .icon-chat_bubble, .icon-emergency_type, .icon-timer_type, .icon-chat_type, .icon-static_type, .icon-view, .icon-geofence {
   font-family: 'icomoon';
   speak: none;
   font-style: normal;
@@ -5078,6 +5078,9 @@ html {
 
 .icon-chat_type:before {
   content: "\e008"; }
+
+.icon-static_type:before {
+  content: "\e009"; }
 
 .icon-view:before {
   content: "\e001"; }
@@ -5269,6 +5272,10 @@ body {
 #logo {
   margin-left: 50px; }
 
+#theme-logo {
+    margin-left: 50px;
+}
+
 #accordion {
   height: 100%; }
 
@@ -5406,6 +5413,21 @@ body {
 
 .alert-type.timer-alert-type {
   background: #f8ee5b; }
+
+.alert-type.static-alert-type {
+  background: #41c4f2; }
+
+.crimetip-type {
+  width: 24px;
+  height: 60px;
+  float: left;
+  margin-right: 12px;
+  margin-left: 12px;
+  line-height: 60px;
+  text-align: center;
+  color: #fff;
+  font-size: 20px;
+}
 
 .alert-option {
   width: 24px;
@@ -5718,3 +5740,89 @@ body {
  i[class*='icon-'] {
 	 font-style: normal !important;
  }
+
+
+.dot {
+		width: 10px;
+		height: 10px;
+		border: 5px solid #5bc0de;
+		-webkit-border-radius: 30px;
+		-moz-border-radius: 30px;
+		border-radius: 30px;
+		background-color: #716f42;
+		z-index: 10;
+		position: absolute;
+        top: 15px;
+		left: 15px;
+}
+
+
+#holder {
+    height: 50px;
+    width: 50px;
+    position: absolute;
+    transform: rotateX(55deg);
+    background: transparent;
+	}
+	.pulse {
+		border: 10px solid #5bc0de;
+		background: transparent;
+		-webkit-border-radius: 50%;
+		-moz-border-radius: 50%;
+		border-radius: 50%;
+		height: 50px;
+		width: 50px;
+		-webkit-animation: pulse 1s ease-out;
+		-moz-animation: pulse 1s ease-out;
+		animation: pulse 1s ease-out;
+		-webkit-animation-iteration-count: infinite;
+		-moz-animation-iteration-count: infinite;
+		animation-iteration-count: infinite;
+		position: absolute;
+		z-index: 1;
+		opacity: 0;
+	}
+	@-moz-keyframes pulse {
+	 0% {
+	   	-moz-transform: scale(0);
+	   	opacity: 0.0;
+	 }
+	 25% {
+	   	-moz-transform: scale(0);
+	   	opacity: 0.1;
+	 }
+	 50% {
+	   	-moz-transform: scale(0.1);
+	   	opacity: 0.3;
+	 }
+	 75% {
+	   	-moz-transform: scale(0.5);
+	   	opacity: 0.5;
+	 }
+	 100% {
+	   	-moz-transform: scale(1);
+	   	opacity: 0.0;
+	 }
+	}
+	@-webkit-keyframes pulse {
+	 0% {
+	    -webkit-transform: scale(0);
+	   	opacity: 0.0;
+	 }
+	 25% {
+	    -webkit-transform: scale(0);
+	   	opacity: 0.1;
+	 }
+	 50% {
+	    -webkit-transform: scale(0.1);
+	   	opacity: 0.3;
+	 }
+	 75% {
+	    -webkit-transform: scale(0.5);
+	   	opacity: 0.5;
+	 }
+	 100% {
+	    -webkit-transform: scale(1);
+	   	opacity: 0.0;
+	 }
+	}

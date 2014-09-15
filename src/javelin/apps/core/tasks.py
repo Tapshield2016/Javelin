@@ -10,7 +10,7 @@ from django.contrib.auth import get_user_model
 from core.aws.s3 import S3Manager
 from core.aws.sns import SNSManager
 from core.aws.sqs import SQSManager
-from core.models import Agency, AgencyUser, Alert, AlertLocation
+from core.models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice
 from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
@@ -195,6 +195,16 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
 
 
 @task
+def notify_crime_tip_marked_viewed(message, crime_tip_id,
+                                   device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "crime-tip", crime_tip_id)
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
 def delete_file_from_s3(url):
     s3 = S3Manager()
     s3.delete_file(url)
@@ -213,3 +223,35 @@ def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
                                        agency.chat_autoresponder_message)
         alert.user_notified_of_dispatcher_congestion = True
         alert.save()
+
+
+@task
+def new_static_alert(device):
+
+    """
+    Starts an alert using the stationary device coordinates
+    """
+
+    location_latitude = device.latitude
+    location_longitude = device.longitude
+    alert_initiated_by = "S"
+
+    active_alerts = Alert.active.filter(static_device=device)
+    if active_alerts:
+        incoming_alert = active_alerts[0]
+        incoming_alert.disarmed_time = None
+    else:
+        incoming_alert = Alert(agency=device.agency, static_device=device,
+                               initiated_by=alert_initiated_by)
+        incoming_alert.save()
+
+    incoming_alert_location = AlertLocation(alert=incoming_alert,
+                                            # altitude=location_altitude,
+                                            longitude=location_longitude,
+                                            latitude=location_latitude,)
+                                            # accuracy=location_accuracy)
+    incoming_alert_location.save()
+    incoming_alert.user_notified_of_receipt = True
+    incoming_alert.save()
+
+    return incoming_alert

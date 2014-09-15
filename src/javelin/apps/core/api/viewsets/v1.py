@@ -1,6 +1,7 @@
 import re
 import time
 import uuid
+import datetime
 
 import django_filters
 from django_twilio.client import twilio_client
@@ -12,7 +13,17 @@ from django.contrib.auth.models import Group
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
+from django.http import HttpResponse
+from django.contrib.sites.models import get_current_site
+from django.contrib.auth.decorators import user_passes_test
 
+from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.core.exceptions import PermissionDenied
+
+from rest_framework.settings import api_settings
+from rest_framework import generics
+from rest_framework import permissions
+from rest_framework.permissions import AllowAny
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import action
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
@@ -32,25 +43,62 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
                                      PeriodSerializer,
-                                     ClosedDateSerializer)
+                                     ClosedDateSerializer,
+                                     StaticDeviceSerializer, ThemeSerializer,)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
 from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period,
-                         ClosedDate)
+                         ClosedDate, StaticDevice, Theme,)
+
+from core.utils import get_agency_from_unknown
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                        publish_to_device, notify_new_chat_message_available)
+                        notify_new_chat_message_available, notify_crime_tip_marked_viewed)
+from core.tasks import new_static_alert
 
 User = get_user_model()
 
 
+class IsOwnerOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has a `user` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `user`.
+        return obj.user == request.user
+
+class DeviceMakerOnly(permissions.BasePermission):
+    """
+    Only allows Device Maker group to view or edit.
+    """
+    def has_object_permission(self, request, view, obj):
+
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        permitted_groups = []
+        permitted_groups.append(Group.objects.get(name='Device Maker'))
+        if request.user.is_authenticated():
+            if bool(request.user.groups.filter(name__in=permitted_groups)) | request.user.is_superuser:
+                return True
+            return False
+        return False
+
+
 class EntourageMemberViewSet(viewsets.ModelViewSet):
+
     queryset = EntourageMember.objects.select_related('user').all()
     model = EntourageMember
     filter_fields = ('user',)
@@ -300,6 +348,34 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             qs = SocialCrimeReport.objects.none()
         return qs
 
+    @action()
+    def mark_viewed(self, request, pk=None):
+
+        if not request.user.is_superuser:
+            if request.user.groups.filter(name='Dispatchers').count() == 0:
+                raise PermissionDenied
+
+        report = self.get_object()
+        if report.viewed_by:
+            return Response({'message': 'Report was already marked viewed'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        report.viewed_by = request.user
+        report.viewed_time = datetime.datetime.now()
+        report.save()
+
+        message = "%s dispatcher %s viewed your report. Thank you!"\
+                        % (request.user.agency.name, request.user.first_name)
+
+        reporter = report.reporter
+        notify_crime_tip_marked_viewed.delay(\
+            message, report.id,
+            reporter.device_type,
+            reporter.device_endpoint_arn)
+
+        return Response(SocialCrimeReportSerializer(instance=report).data, status=status.HTTP_200_OK)
+
+
 
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
@@ -459,9 +535,10 @@ class ChatMessageViewSet(viewsets.ModelViewSet):
 
 
 class MassAlertViewSet(viewsets.ModelViewSet):
-    queryset = MassAlert.objects.select_related().all()
+    queryset = MassAlert.objects.select_related('agency').all()
     serializer_class = MassAlertSerializer
     filter_fields = ('agency', 'agency_dispatcher',)
+    ordering = ('-creation_date',)
 
 
 class UserProfileViewSet(viewsets.ModelViewSet):
@@ -488,3 +565,111 @@ class DispatchCenterViewSet(viewsets.ModelViewSet):
     queryset = DispatchCenter.objects.select_related('agency').all()
     serializer_class = DispatchCenterSerializer
     filter_fields = ('agency',)
+
+
+class ThemeViewSet(viewsets.ModelViewSet):
+    queryset = Theme.objects.all()
+    serializer_class = ThemeSerializer
+
+
+
+class StaticDeviceViewSet(viewsets.ModelViewSet):
+    permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
+    queryset = StaticDevice.objects.all()
+    serializer_class = StaticDeviceSerializer
+    filter_fields = ('agency',)
+
+    def create(self, request):
+
+        request_data = request.DATA.copy()
+        request_data['user'] = UserSerializer(request.user).data['url']
+        agency_id = request_data.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request_data['agency'] = AgencySerializer(agency).data['url']
+
+        serializer = self.get_serializer(data=request_data, files=request.FILES)
+
+        if serializer.is_valid():
+
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+
+            if not self.object.agency:
+                self.object.delete()
+                return Response("Could not find agency or agency not provided", status=status.HTTP_400_BAD_REQUEST)
+
+            headers = self.get_success_headers(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def update(self, request, *args, **kwargs):
+
+        mutable = request.DATA._mutable
+        request.DATA._mutable = True
+        request.DATA['user'] = UserSerializer(request.user).data['url']
+        agency_id = request.DATA.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request.DATA['agency'] = AgencySerializer(agency).data['url']
+        else:
+            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
+
+        request.DATA._mutable = mutable
+
+        return super(StaticDeviceViewSet, self).update(request, *args, **kwargs)
+
+
+    def partial_update(self, request, *args, **kwargs):
+
+        mutable = request.DATA._mutable
+        request.DATA._mutable = True
+        request.DATA['user'] = UserSerializer(request.user).data['url']
+        agency_id = request.DATA.get('agency', None)
+
+        agency = None
+        if agency_id:
+            agency = get_agency_from_unknown(agency_id)
+        if agency:
+            request.DATA['agency'] = AgencySerializer(agency).data['url']
+        else:
+            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
+
+        request.DATA._mutable = mutable
+
+        return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
+
+    # @csrf_exempt
+    # @action(methods=['get'])
+    # def alert(self, request, pk=None):
+    #
+    #     response = HttpResponse(content="Created")
+    #     response.status_code = 201
+    #     alert = new_static_alert(self.get_object())
+    #     serializer = AlertSerializer(instance=alert)
+    #
+    #     headers = {}
+    #     try:
+    #         headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+    #     except (TypeError, KeyError):
+    #         pass
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED,
+    #                     headers=headers)
+
+
+
+class StaticDeviceDetail(generics.RetrieveAPIView):
+    permission_classes = (AllowAny,)
+    lookup_field = 'uuid'
+    queryset = StaticDevice.objects.all()
+    serializer_class = StaticDeviceSerializer
+

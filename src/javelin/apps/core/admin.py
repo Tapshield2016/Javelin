@@ -2,12 +2,19 @@ import reversion
 
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
+from django.utils.safestring import mark_safe
+from django.core import urlresolvers
+
+from emailmgr.models import EmailAddress
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    Period, ClosedDate,)
+                    Period, ClosedDate, StaticDevice, Theme,)
 
+class EmailAddressInline(admin.StackedInline):
+    model = EmailAddress
+    extra = 0
 
 class EntourageMemberAdmin(admin.ModelAdmin):
     pass
@@ -24,18 +31,32 @@ class ClosedDateInline(admin.StackedInline):
     model = ClosedDate
     extra = 0
 
-class DispatchCenterAdmin(admin.ModelAdmin):
-    inlines = [ClosedDateInline, PeriodInline]
-
 class RegionInline(admin.StackedInline):
     model = Region
     extra = 0
+
+class DispatchCenterAdmin(admin.ModelAdmin):
+    inlines = [ClosedDateInline, PeriodInline]
 
 class DispatchCenterInline(admin.StackedInline):
     model = DispatchCenter
     extra = 0
     fields = ('name', 'phone_number', 'changeform_link')
-    readonly_fields = ('changeform_link', )
+    readonly_fields = ('changeform_link',)
+
+class StaticDeviceAdmin(geo_admin.OSMGeoAdmin):
+    model = StaticDevice
+    list_display = ('__unicode__', 'uuid', 'type', 'description')
+    list_filter = ('agency',)
+    list_select_related = ('agency',)
+    search_fields = ['agency__name', 'uuid', 'description', 'type',]
+
+class StaticDeviceInline(admin.StackedInline):
+
+    model = StaticDevice
+    extra = 0
+    fields = ('uuid', 'type', 'description', 'changeform_link')
+    readonly_fields = ('changeform_link',)
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
@@ -62,7 +83,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'default_map_zoom_level']),
         }),
         ('Agency Theme', {
-                'fields': (['agency_logo', 'agency_alternate_logo',
+                'fields': (['theme', 'theme_link', 'branding', 'branding_link', 'agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
         }),
         ('Agency Optional Info', {
@@ -70,8 +91,19 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenterInline,
+        RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
+    readonly_fields = ['theme_link', 'branding_link',]
+
+    def theme_link(self, obj):
+        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
+        return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.theme.name))
+    theme_link.short_description = 'Theme options'
+
+    def branding_link(self, obj):
+        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.branding.id,))
+        return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.branding.name))
+    branding_link.short_description = 'Theme options'
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
@@ -80,8 +112,9 @@ class AgencyUserAdmin(admin.ModelAdmin):
                     'user_logged_in_via_social')
     list_filter = ('agency', 'groups', 'device_type',)
     list_select_related = ('agency',)
-    search_fields = ['email', 'first_name', 'last_name']
+    search_fields = ['username', 'email', 'first_name', 'last_name']
     inlines = [
+        EmailAddressInline,
         EntourageMemberInline,
     ]
 
@@ -92,11 +125,13 @@ class AlertLocationInline(admin.StackedInline):
 
 
 class AlertAdmin(reversion.VersionAdmin):
-    list_display = ('agency_user', 'creation_date', 'last_modified')
+    list_display = ('__unicode__', 'agency', 'status', 'creation_date', 'last_modified')
     list_filter = ('agency', 'status')
     inlines = [
         AlertLocationInline,
     ]
+    list_select_related = ('agency',)
+    search_fields = ['agency_user__username', 'agency__name', 'static_device__uuid',]
 
 
 class MassAlertAdmin(admin.ModelAdmin):
@@ -121,6 +156,8 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
 
+class ThemeAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
@@ -131,3 +168,5 @@ admin.site.register(UserProfile, UserProfileAdmin)
 admin.site.register(SocialCrimeReport, SocialCrimeReportAdmin)
 admin.site.register(EntourageMember, EntourageMemberAdmin)
 admin.site.register(DispatchCenter, DispatchCenterAdmin)
+admin.site.register(StaticDevice, StaticDeviceAdmin)
+admin.site.register(Theme, ThemeAdmin)

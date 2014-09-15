@@ -35,6 +35,8 @@
 	    'E': 'emergency',
 	    'C': 'chat',
 	    'T': 'timer',
+        'Y': 'yank',
+        'S': 'static',
 	}
 
 	Javelin.HAIR_COLOR_CHOICES = {
@@ -186,6 +188,8 @@
 		this.displayCommandAlert = attributes.display_command_alert;
 		this.loopAlertSound = attributes.loop_alert_sound;
         this.spotCrimeDaysVisible = attributes.spot_crime_days_visible;
+        this.theme = null;
+        this.branding = null;
 
         if (attributes.region) {
             this.region = [];
@@ -194,6 +198,14 @@
 			    this.region.push(newRegion);
 			}
         }
+
+        if (!$.isEmptyObject(attributes.theme)) {
+			this.theme = new Theme(attributes.theme);
+		};
+
+        if (!$.isEmptyObject(attributes.branding)) {
+			this.branding = new Theme(attributes.branding);
+		};
 
 		return this;
 	}
@@ -213,9 +225,15 @@
 		this.type = 'alert';
 		this.location = null;
 		this.geocodedAddress = '';
+        this.staticDevice = attributes.static_device;
+		this.staticDeviceMeta = null;
 
 		if (!$.isEmptyObject(attributes.agency_user_meta)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
+		};
+
+        if (!$.isEmptyObject(attributes.static_device_meta)) {
+			this.staticDeviceMeta = new StaticDevice(attributes.static_device_meta);
 		};
 
 		if (!$.isEmptyObject(attributes.latest_location)) {
@@ -295,6 +313,30 @@
 		return this;
 	}
 
+    function StaticDevice(attributes) {
+        this.url = attributes.url;
+		this.uuid = attributes.uuid;
+		this.type = attributes.type;
+		this.description = attributes.description;
+		this.agency = attributes.agency;
+		this.latitude = attributes.latitude;
+        this.longitude = attributes.longitude;
+        this.user = attributes.user;
+		return this;
+	}
+
+    function Theme(attributes) {
+		this.name = attributes.name;
+		this.primaryColor = attributes.primary_color;
+		this.secondaryColor = attributes.secondary_color;
+		this.alternateColor = attributes.alternate_color;
+		this.logo = attributes.logo;
+        this.alternateLogo = attributes.alternate_logo;
+        this.smallLogo = attributes.small_logo;
+        this.shieldCommandLogo = attributes.shield_command_logo;
+		return this;
+	}
+
 	function getTimestamp(seconds) {
 		seconds = seconds || true;
 		timestamp = Number(new Date());
@@ -352,6 +394,7 @@
 		Javelin.client.add('users');
 		Javelin.client.add('userprofiles', {url: 'user-profiles'});
 		Javelin.client.add('crimetips', {url: 'social-crime-reports'});
+        Javelin.client.crimetips.add('mark_viewed');
 
 		Javelin.getAgency(agencyID, function(agency) {
 			Javelin.activeAgency = agency;
@@ -390,7 +433,7 @@
 		});
 		request.done(function(data) {
 			callback(data);
-			if (!alert.disarmedTime) {
+			if (!alert.disarmedTime && !alert.staticDevice) {
 				Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
 					console.log(success);
 				})
@@ -771,16 +814,32 @@
 	}
 	
 	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
-		var now = new Date();
-		var old = new Date("March 25, 1981 11:33:00");
-		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
-			viewed_time: now.toISOString(),
-			viewed_by: Javelin.activeAgencyUser.url,
-			last_modified: old.toISOString(),
-		});
+
+        var request = Javelin.client.crimetips.mark_viewed.create(crimeTip.object_id);
 		request.done(function(data) {
+			if (request.status == 200) {
+				callback(data);
+			}
+			else {
+				callback(data);
+			}
+		});
+		request.fail(function(data) {
 			callback(data);
-		})
+		});
+
+
+//        send_mass_alert
+//		var now = new Date();
+//		var old = new Date("March 25, 1981 11:33:00");
+//		var request = Javelin.client.crimetips.patch(crimeTip.object_id, {
+//			viewed_time: now.toISOString(),
+//			viewed_by: Javelin.activeAgencyUser.url,
+//			last_modified: old.toISOString(),
+//		});
+//		request.done(function(data) {
+//			callback(data);
+//		})
 	}
 	
 	Javelin.markCrimeTipSpam = function(crimeTip, callback) {

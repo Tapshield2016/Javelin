@@ -31,7 +31,7 @@ $('#agencySettingsForm').on('submit', function(event) {
   <div class="modal-content">
     <div class="modal-header">
       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-      <h4 class="modal-title" id="agencySettingsModalLabel">Organization Settings</h4>
+      <h4 class="modal-title" id="agencySettingsModalLabel">{{ form.instance.name }} Settings</h4>
     </div>
     <div class="modal-body">
 	<form action="{% url 'core_agency_settings' %}" method="POST" class="form" role="form" data-form-async data-target="#agencySettingsModal" id="agencySettingsForm">{% csrf_token %}
