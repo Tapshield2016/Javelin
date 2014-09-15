@@ -171,8 +171,8 @@ def publish_to_device(device_endpoint_arn, message):
 def notify_alert_completed(message, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "chat-message-available", "alert-completed")
+    msg = sns.get_message_json(app_endpoint, message, "chat-message-available",
+                               "alert-completed", "Alert Completed")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -180,7 +180,8 @@ def notify_alert_completed(message, device_type, device_endpoint_arn):
 def notify_alert_received(alert_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, "The authorities have been notified of your emergency, and help is on the way!", "alert-received", alert_id)
+    msg = sns.get_message_json(app_endpoint, "The authorities have been notified of your emergency, and help is on the way!",
+                               "alert-received", alert_id, "Alert Received")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -190,17 +191,17 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, chat_message,
-                               "chat-message-available", chat_message_id)
+                               "chat-message-available", chat_message_id, "New Message")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
 @task
-def notify_crime_tip_marked_viewed(message, crime_tip_id,
+def notify_crime_report_marked_viewed(message, crime_report_id,
                                    device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "crime-tip", crime_tip_id)
+                               "crime-report", crime_report_id, "Crime Report Viewed")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
