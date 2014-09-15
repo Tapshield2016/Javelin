@@ -486,7 +486,7 @@ function showCrimeMarker(crime) {
 		return;
 	}
 
-	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id]) {
+	if (crimeMarkers[crime.type] && crimeMarkers[crime.type][crime.object_id] && crime.type != 'spotCrime') {
 		crimeMarkers[crime.type][crime.object_id].setMap(googleMap);
 	}
 }
