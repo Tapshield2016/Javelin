@@ -657,19 +657,24 @@ def static_disarm(request):
 
 
 def static_device_form(request):
-    if request.method == 'GET':
-        form = StaticDeviceForm()
-    else:
-        # A POST request: Handle Form Upload
-        form = StaticDeviceForm(request.POST) # Bind data from request.POST into a PostForm
 
-        # If data is valid, proceeds to create a new post and redirect the user
-        if form.is_valid():
-            device = form.save()
-            return HttpResponseRedirect(reverse('core_static_device_details',
-                                                args=(device.uuid,)))
-            # return HttpResponseRedirect("%s%d" % (reverse('core_static_device_details'), device.id))
+    response = HttpResponse(content="Not available at this time")
+    response.status_code = 404
+    return  response
 
-    return render(request, 'core/forms/static_device_form.html', {
-        'form': form,
-    })
+    # if request.method == 'GET':
+    #     form = StaticDeviceForm()
+    # else:
+    #     # A POST request: Handle Form Upload
+    #     form = StaticDeviceForm(request.POST) # Bind data from request.POST into a PostForm
+    #
+    #     # If data is valid, proceeds to create a new post and redirect the user
+    #     if form.is_valid():
+    #         device = form.save()
+    #         return HttpResponseRedirect(reverse('core_static_device_details',
+    #                                             args=(device.uuid,)))
+    #         # return HttpResponseRedirect("%s%d" % (reverse('core_static_device_details'), device.id))
+
+    # return render(request, 'core/forms/static_device_form.html', {
+    #     'form': form,
+    # })

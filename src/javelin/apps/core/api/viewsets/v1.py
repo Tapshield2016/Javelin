@@ -648,22 +648,22 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 
-    @csrf_exempt
-    @action(methods=['get'])
-    def alert(self, request, pk=None):
-
-        response = HttpResponse(content="Created")
-        response.status_code = 201
-        alert = new_static_alert(self.get_object())
-        serializer = AlertSerializer(instance=alert)
-
-        headers = {}
-        try:
-            headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
-        except (TypeError, KeyError):
-            pass
-        return Response(serializer.data, status=status.HTTP_201_CREATED,
-                        headers=headers)
+    # @csrf_exempt
+    # @action(methods=['get'])
+    # def alert(self, request, pk=None):
+    #
+    #     response = HttpResponse(content="Created")
+    #     response.status_code = 201
+    #     alert = new_static_alert(self.get_object())
+    #     serializer = AlertSerializer(instance=alert)
+    #
+    #     headers = {}
+    #     try:
+    #         headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+    #     except (TypeError, KeyError):
+    #         pass
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED,
+    #                     headers=headers)
 
 
 
