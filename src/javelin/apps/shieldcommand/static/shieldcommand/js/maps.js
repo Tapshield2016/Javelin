@@ -75,7 +75,7 @@ function initializeMap() {
     var style = [{
         url: '/media/static/shieldcommand/img/spotcrime/'+'pins_cluster_red.png',
         height: 40,
-        width: 30,
+        width: 50,
         anchor: [10,15],
         textColor: '#d2322d',
         textSize: 10
