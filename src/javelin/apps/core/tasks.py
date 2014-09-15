@@ -200,7 +200,7 @@ def notify_crime_tip_marked_viewed(message, crime_tip_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "mass-alert", crime_tip_id)
+                               "crime-tip", crime_tip_id)
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
