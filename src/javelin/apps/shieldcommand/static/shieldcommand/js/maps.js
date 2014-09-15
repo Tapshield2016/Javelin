@@ -72,15 +72,14 @@ function initializeMap() {
 //         'textSize': (number) The text size.
 //         'backgroundPosition': (string) The position of the backgound x, y.
 
-    var style = new ClusterIcon({
+    var style = [{
         url: '/media/static/shieldcommand/img/'+'pins_cluster_red.png',
         height: 40,
         width: 30,
-        anchor: (10,15),
+        anchor: [10,15],
         textColor: '#d2322d',
         textSize: 10
-//        backgroundPosition: position
-    });
+    }];
 
     var mcOptions = {gridSize: 50, maxZoom: 13, zoomOnClick: true, styles:style};
     markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
