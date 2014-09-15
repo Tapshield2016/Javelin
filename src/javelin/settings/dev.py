@@ -37,6 +37,18 @@ INTERNAL_IPS = ('127.0.0.1',)
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'TapShield Dev <noreply@tapshield.com>'
 
+# django-storages
+AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'dev.media.tapshield.com'
+AWS_HEADERS = {
+   'Expires': 'Thu, 15 Apr 2030 20:00:00 GMT',
+   'Cache-Control': 'max-age=86400',
+}
+AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
+DEFAULT_BUCKET = AWS_STORAGE_BUCKET_NAME
+USE_AMAZON_S3 = True
+
 # AWS
 DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJJX2VM346XUKRROA'
 DYNAMO_DB_SECRET_ACCESS_KEY = '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'

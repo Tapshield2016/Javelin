@@ -1,11 +1,12 @@
 from rest_framework import routers
+from django.conf.urls import patterns, include, url
 
 from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
-                                  AlertViewSet, AlertLocationViewSet,
+                                  AlertViewSet, AlertLocationViewSet, ThemeViewSet,
                                   ChatMessageViewSet, MassAlertViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
                                   EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
-                                  ClosedDateViewSet, PeriodViewSet)
+                                  ClosedDateViewSet, PeriodViewSet, StaticDeviceViewSet)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)
@@ -22,3 +23,6 @@ router_v1.register(r'region', RegionViewSet)
 router_v1.register(r'dispatch-center', DispatchCenterViewSet)
 router_v1.register(r'closed-date', ClosedDateViewSet)
 router_v1.register(r'opening-hours', PeriodViewSet)
+router_v1.register(r'static-device', StaticDeviceViewSet)
+router_v1.register(r'theme', ThemeViewSet)
+

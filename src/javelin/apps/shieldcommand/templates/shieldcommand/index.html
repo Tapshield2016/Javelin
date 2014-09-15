@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}shieldcommand/css/main.css">
 {% endcompress %}
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/modernizr/modernizr.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="https://maps.googleapis.com/maps/api/js?client=gme-tapshieldllc&v=3.17"></script>
 <link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
 </head><body>
 
@@ -27,7 +27,11 @@
 	<div class="container-full">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> </button>
-			<a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>
+			{% if agency.branding.shield_command_logo %}
+			    <a id="logo" href=""><img src="{{ branding.shield_command_logo }}" /></a> </div>
+            {% else %}
+                <a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>
+			{% endif %}
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav pull-right">
 				{% if agency.display_command_alert %}
@@ -40,7 +44,7 @@
 						<li role="presentation"><a href="">(877) 553-9049</a></li>
 						<li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
 						<li role="presentation" class="divider"></li>
-						<li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">Organization Settings</a></li>
+						<li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">{{ agency.name }} Settings</a></li>
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
 					</ul>
@@ -94,11 +98,12 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'static'"><img src="/media/static/shieldcommand/img/whitelight.png" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.type : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -109,7 +114,7 @@
 					</div>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" ng-click="panelClicked('newAlerts')">
+					<div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" id="newAlertListLink" ng-click="panelClicked('newAlerts')">
 						<h4 class="panel-title"> New Alerts ({{ newAlertsLength }}) </h4>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse">
@@ -119,11 +124,12 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
-										<div class="alert-contact">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'static'"><img src="/media/static/shieldcommand/img/whitelight.png" alt="" /></i> </div>
+                                        <div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.type : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -144,11 +150,12 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
-										<div class="alert-contact">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'static'"><img src="/media/static/shieldcommand/img/whitelight.png" alt="" /></i> </div>
+                                        <div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.type : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -168,11 +175,12 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
-										<div class="alert-type {{ alert.initiatedBy }}-alert-type"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
-										<div class="alert-contact">
+										<div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy != 'static'"> <i class="icon-{{ alert.initiatedBy }}_type"></i> </div>
+                                        <div class="alert-type {{ alert.initiatedBy }}-alert-type" ng-if="alert.initiatedBy == 'static'"><img src="/media/static/shieldcommand/img/whitelight.png" alt="" /></i> </div>
+                                        <div class="alert-contact">
 											<div class="alert-contact-info">
-												<div class="contact-name">{{ alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
-												<div class="contact-number">{{ alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-name">{{ alert.staticDevice ? alert.staticDeviceMeta.description : alert.agencyUserMeta.getFullName() }} <span ng-show="alert.disarmedTime" class="badge-disarmed">disarmed</span></div>
+												<div class="contact-number">{{ alert.staticDevice ? alert.staticDeviceMeta.type : alert.agencyUserMeta.phoneNumber }} &nbsp; - &nbsp; {{ alert.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
@@ -184,7 +192,7 @@
 				</div>
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink" ng-click="panelClicked('crimeTip')">
-						<h4 class="panel-title"> Crime Tips ({{ crimeTipsLength }}) </h4>
+						<h4 class="panel-title"> Crime Tips ({{ unviewedCrimeTipsLength }}) </h4>
 					</div>
 					<div id="collapseFive" class="panel-collapse collapse">
 						<div class="panel-body accordion-panel-body" id="crimeTipList"> 
@@ -192,15 +200,14 @@
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-creationDate'" ng-class="selectedClass(crimeTip)">
 									<div id="crimeTip-{{ crimeTip.object_id }}" class="alert-container" ng-click="crimeTipClicked(crimeTip)" style="opacity: {{ crimeTip.viewedTime ? 0.5 : crimeTip.flaggedSpam ? 0.2 : 1.0 }}">
-										<div class="alert-type crimetip {{ crimeTip.reportType }}-crimetip-type"> <i class="icon-{{ crimeTip.reportType }}_type"><img src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
+										<div class="crimetip-type"><img ng-src="{{ crimeTip.reportIcon }}" alt="" /></i> </div>
 										<div class="alert-contact">
 											<div class="alert-contact-info">
 												<div class="contact-name">{{ crimeTip.reportType }} <span class="badge-disarmed badge-viewed" ng-class="crimeTip.viewedTime ? '' : 'hidden'">viewed</span><span class="badge-disarmed badge-spam" ng-class="crimeTip.flaggedSpam ? '' : 'hidden'">spam</span></div>
-												<div class="contact-number">{{ crimeTip.lastModified | date:'MM-dd HH:mm:ss' }}</div>
+												<div class="contact-number">{{ crimeTip.creationDate | date:'MM-dd HH:mm:ss' }}</div>
 											</div>
 										</div>
 									</div>
-									<!--<div alert-chat-window alert="alert"></div>--> 
 								</li>
 							</ul>
 						</div>
@@ -265,7 +272,10 @@
 				
 				<!-- profile -->
 				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
-					<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>
+					<!--<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>-->
+                    <p class="profile-title" ng-if="profileType == 'alert'">Profile</p>
+                    <p class="profile-title" ng-if="profileType == 'crimeTip'">Crime Tip</p>
+                    <p class="profile-title" ng-if="profileType == 'staticAlert'">Static Device</p>
 					<div class="profile-content" ng-if="profileType == 'alert'">
 						<div class="profile-top-content">
 							<div class="profile-image-container"> <a href="#" data-toggle="modal" data-target="#profileImage"><img ng-src="{{ getProfileImage() }}" class="img-rounded profile-image" /></a> </div>
@@ -346,6 +356,29 @@
 							<tr>
 								<td>Address</td>
 								<td>{{ currentProfile.address }}</td>
+							</tr>
+						</table>
+                        <table class="table table-condensed" ng-if="profileType == 'staticAlert'">
+						<caption style="border-top: 0;">Device info</caption>
+							<tr class="first">
+								<td>UUID</td>
+								<td>{{ (currentProfile) ? currentProfile.uuid : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Type</td>
+								<td>{{ (currentProfile) ? currentProfile.type : 'None' }}</td>
+							</tr>
+							<tr>
+								<td>Description</td>
+								<td>{{ (currentProfile) ? currentProfile.description : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Latitude</td>
+								<td>{{ (currentProfile) ? currentProfile.latitude : 'None' }}</td>
+							</tr>
+                            <tr>
+								<td>Longitude</td>
+								<td>{{ (currentProfile) ? currentProfile.longitude : 'None' }}</td>
 							</tr>
 						</table>
 						<table class="table table-condensed" ng-if="profileType == 'crimeTip'">
@@ -479,11 +512,11 @@
 					</div>
 					<!-- /.profile-information -->
 					
-					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticAlert')" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
 						<h5>Mark Alert As</h5>
 						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a> <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a> </div>
 					</div>
-					<div class="profile-buttons" ng-if="profileType == 'alert'" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
+					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticAlert')" ng-class="(shouldDisplayCompletedBy()) ? 'col-md-3' : 'hidden'">
 						<h5>Completed By: </h5>
 						<p>{{ activeAlert.agencyDispatcherName }} - {{ activeAlert.completedTime | date:'MM-dd HH:mm:ss' }}</p>
 					</div>
@@ -517,6 +550,7 @@
 <script src="{{ STATIC_URL }}shieldcommand/js/jquery.rest.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/javelin.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/main.js"></script>
+<script src="{{ STATIC_URL }}shieldcommand/js/markerclusterer.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/maps.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/alert.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/bower_components/sass-bootstrap/js/dropdown.js"></script>
@@ -536,6 +570,8 @@
 <script src="{{ STATIC_URL }}shieldcommand/js/filters.js"></script>
 <script src="{{ STATIC_URL }}shieldcommand/js/directives.js"></script>
 {% endcompress %}
+
+
 <script>
             {% if agency_boundaries %}
                 googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];

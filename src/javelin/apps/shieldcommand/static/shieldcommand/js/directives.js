@@ -199,10 +199,11 @@ angular.module('shieldCommand.directives', [])
 }])
 
 .directive('alertChatWindow', ['$rootScope', 'alertService', function($rootScope, alertService) {
+
    return {
       restrict: 'A',
       template: '<div class="alert-option chat" ng-class="{newChat: alert.hasNewChatMessage}">'
-                + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-click="toggleChat()"></i>'
+                + '    <i id="chat-icon-{{ alert.object_id }}" class="icon-chat_bubble" ng-if="alert.agencyUser" ng-click="toggleChat()"></i>'
                 + '   <div class="arrow-left hide"></div> <div class="chat-panel panel panel-default hide">'
                 + '        <div class="panel-heading">{{ truncateAgencyUserName(alert.agencyUserMeta.getFullName()) }}<span class="glyphicon glyphicon-remove pull-right" ng-click="closeChat()"></span></div>'
                 + '        <div class="panel-body">'
@@ -280,8 +281,8 @@ angular.module('shieldCommand.directives', [])
             };
             var panel = element.find('.chat-panel');
             if (panel.hasClass('hide')) {
-              scope.alert.hasNewChatMessage = true;
-		$rootScope.$apply();
+                scope.alert.hasNewChatMessage = true;
+                $rootScope.$apply();
             }
           }
         });
@@ -336,7 +337,7 @@ angular.module('shieldCommand.directives', [])
 
         scope.toggleChat = function() {
           var panel = element.find('.chat-panel');
-          if (panel.hasClass('hide')) {
+          if (panel.hasClass('hide') && scope.alert.agencyUser) {
             if (scope.adjustForProfile || $rootScope.profileIsOpen) {
               panel.css({
                 right: 250,
@@ -361,5 +362,5 @@ angular.module('shieldCommand.directives', [])
           };
         }
       }
-   } 
+   }
 }]);

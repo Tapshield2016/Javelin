@@ -3,13 +3,12 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
-from core.models import (Agency, Alert, AlertLocation,
+from core.models import (Agency, Alert, AlertLocation, Theme,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, Period, ClosedDate,)
+                         DispatchCenter, Period, ClosedDate, StaticDevice)
 
 from emailmgr.models import EmailAddress
-
 from emailmgr.serializers import EmailAddressGETSerializer
 
 User = get_user_model()
@@ -63,6 +62,17 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
+
+    def to_native(self, obj):
+        ret = super(AgencySerializer, self).to_native(obj)
+        if obj:
+            if obj.theme:
+                agency_theme = ThemeSerializer(instance=obj.theme)
+                ret['theme'] = agency_theme.data
+            if obj.branding:
+                branding_theme = ThemeSerializer(instance=obj.branding)
+                ret['branding'] = branding_theme.data
+        return ret
 
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -137,8 +147,12 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(AlertSerializer, self).to_native(obj)
         if obj:
-            agency_user_meta = UserSerializer(instance=obj.agency_user)
-            ret['agency_user_meta'] = agency_user_meta.data
+            if obj.agency_user:
+                agency_user_meta = UserSerializer(instance=obj.agency_user)
+                ret['agency_user_meta'] = agency_user_meta.data
+            if obj.static_device:
+                static_device_meta = StaticDeviceSerializer(instance=obj.static_device)
+                ret['static_device_meta'] = static_device_meta.data
             ret['agency_dispatcher_name'] = None
             if obj.agency_dispatcher:
                 ret['agency_dispatcher_name'] =\
@@ -178,9 +192,6 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(SocialCrimeReportSerializer, self).to_native(obj)
         if obj:
-            # if not obj.report_anonymous:
-            #     reporter_meta = ReporterSerializer(instance=obj.reporter)
-            #     ret['reporter_meta'] = reporter_meta.data
 
             if obj.viewed_by:
                 ret['dispatcher_name'] =\
@@ -194,3 +205,15 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
+
+
+class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = StaticDevice
+
+
+class ThemeSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Theme

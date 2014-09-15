@@ -1,3 +1,4 @@
+import string
 import random
 import reversion
 from django.core import urlresolvers
@@ -11,6 +12,7 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.gis.db import models as db_models
 from django.contrib.gis.geos import Point
+from django.contrib.gis.measure import D
 from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
@@ -29,6 +31,10 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       InitiatedByTimerAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager)
+
+from core.aws.s3_filefield import S3EnabledImageField, S3URLField
+
+from pygeocoder import Geocoder
 
 
 def kilometers_between_coordinates(point1, point2):
@@ -164,6 +170,10 @@ class Agency(TimeStampedModel):
     agency_rss_url = models.CharField(max_length=255, null=True, blank=True,
                                        help_text="RSS feed for mass alerts already populated by the system in use")
     spot_crime_days_visible = models.PositiveIntegerField(default=1)
+    theme = models.ForeignKey('Theme', related_name='agency_theme', null=True, blank=True,
+                              help_text="UI elements related to agency")
+    branding = models.ForeignKey('Theme', related_name="branding_theme", null=True, blank=True,
+                                 help_text="UI elements for OEM partners")
 
     objects = models.Manager()
     geo = db_models.GeoManager()
@@ -196,7 +206,7 @@ class Agency(TimeStampedModel):
                                              self.agency_center_latitude)
 
         if self.agency_radius==0 and self.agency_boundaries:
-            radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))
+            radius = radius_from_center(self.agency_center_point, eval(self.agency_boundaries))+.5
             self.agency_radius = round(radius,2)
 
         if not self.chat_autoresponder_message:
@@ -257,10 +267,10 @@ class DispatchCenter(models.Model):
             changeform_url = urlresolvers.reverse(
                 'admin:core_dispatchcenter_change', args=(self.id,)
             )
-            return u'<a href="%s" target="_blank">Change Schedule</a>' % changeform_url
+            return u'<a href="%s" target="_blank">View Schedule</a>' % changeform_url
         return u''
     changeform_link.allow_tags = True
-    changeform_link.short_description = ''   # omit column header
+    changeform_link.short_description = 'Schedule'   # omit column header
 
 class Region(models.Model):
 
@@ -304,7 +314,7 @@ class Region(models.Model):
                                       self.center_latitude)
 
         if self.radius==0 and self.boundaries:
-            radius = radius_from_center(self.center_point, eval(self.boundaries))
+            radius = radius_from_center(self.center_point, eval(self.boundaries))+.5
             self.radius = round(radius,2)
 
         super(Region, self).save(*args, **kwargs)
@@ -324,6 +334,7 @@ class Alert(TimeStampedModel):
         ('E', 'Emergency'),
         ('T', 'Timer'),
         ('Y', 'Yank'),
+        ('S', 'Static'),
     )
 
     ALERT_CATEGORY = (
@@ -339,7 +350,11 @@ class Alert(TimeStampedModel):
 
     agency = models.ForeignKey('Agency')
     agency_user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                    related_name="alert_agency_user")
+                                    related_name="alert_agency_user",
+                                    blank=True, null=True)
+    static_device = models.ForeignKey('StaticDevice',
+                                        related_name="static_device",
+                                        blank=True, null=True)
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name="alert_agency_dispatcher",
@@ -374,17 +389,28 @@ class Alert(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+
+    def __unicode__(self):
+        string = None
+        if self.static_device:
+            string = u"%s" % self.static_device.uuid
+        if self.agency_user:
+            string = u"%s" % self.agency_user.email
+        return string
+
     @reversion.create_revision()
     def save(self, *args, **kwargs):
         super(Alert, self).save(*args, **kwargs)
         if self.status == 'C':
             if not self.completed_time:
                 self.completed_time = datetime.now()
-            try:
-                profile = self.agency_user.get_profile()
-                profile.delete()
-            except UserProfile.DoesNotExist:
-                pass
+
+            if self.agency_user:
+                try:
+                    profile = self.agency_user.get_profile()
+                    profile.delete()
+                except UserProfile.DoesNotExist:
+                    pass
             self.store_chat_messages()
         elif self.status != 'N':
             if self.status == 'A':
@@ -402,6 +428,10 @@ class Alert(TimeStampedModel):
 
     def store_chat_messages(self):
         from aws.dynamodb import DynamoDBManager
+
+        if not self.agency_user:
+            return
+
         db = DynamoDBManager()
         messages = db.get_messages_for_alert(self.pk)
         senders = {self.agency_user.pk: self.agency_user}
@@ -537,6 +567,8 @@ class AgencyUser(AbstractUser):
             return u"%s" % self.username
 
     def save(self, *args, **kwargs):
+        if not self.has_usable_password():
+            self.set_password(''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)]));
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
@@ -624,8 +656,8 @@ class UserProfile(models.Model):
                          null=True, blank=True)
     profile_image = models.ImageField(upload_to='images/profiles',
                                       null=True, blank=True)
-    profile_image_url = models.CharField(max_length=255, null=True, blank=True,
-                                         help_text="Location of asset on S3")
+    profile_image_url = S3URLField(null=True, blank=True,
+                                   help_text="Location of asset on S3")
 
 
 class ChatMessage(TimeStampedModel):
@@ -664,12 +696,12 @@ class SocialCrimeReport(TimeStampedModel):
                                  related_name="reporter")
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
-    report_audio_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Location of asset on S3")
-    report_image_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Location of asset on S3")
-    report_video_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="Location of asset on S3")
+    report_audio_url = S3URLField(null=True, blank=True,
+                                         help_text="Location of asset on S3")
+    report_image_url = S3URLField(null=True, blank=True,
+                                         help_text="Location of asset on S3")
+    report_video_url = S3URLField(null=True, blank=True,
+                                         help_text="Location of asset on S3")
     report_latitude = models.FloatField()
     report_longitude = models.FloatField()
     report_point = db_models.PointField(geography=True,
@@ -693,6 +725,96 @@ class SocialCrimeReport(TimeStampedModel):
                                       self.report_latitude)
         super(SocialCrimeReport, self).save(*args, **kwargs)
 
+
+class StaticDevice(models.Model):
+
+    uuid = models.SlugField(max_length=255, unique=True,
+                            help_text="Unique identifier (e.g. serial number)")
+    type = models.CharField(max_length=255, null=True, blank=True, default="Emergency Phone",
+                            help_text="Model number or device type")
+    description = models.CharField(max_length=255, null=True, blank=True,
+                                   help_text="(Auto-set if left empty by lat & lon Google Maps geocoder) "
+                                             "Human readable identifier denoting location "
+                                             "(e.g. building, street, landmark, etc.)")
+    agency = models.ForeignKey('Agency',
+                               related_name="StaticDevice",
+                               null=True, blank=True,
+                               help_text="(Auto-set if left empty by lat & lon to nearest within 10 miles) Who should receive the alert?")
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    location_point = db_models.PointField(geography=True,
+                                          null=True, blank=True,
+                                          help_text="(Auto-set by lat & lon) Coordinate point used by geoDjango for querying"
+                                                    "Note: The lat & lon is reversed to conform to a coordinate plane")
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                              related_name="User",
+                              null=True, blank=True,
+                              help_text="Will be used in the future to limit edit/updated permissions "
+                                        "to a particular authorization token")
+
+    def save(self, *args, **kwargs):
+        if self.latitude and self.longitude:
+            self.location_point = Point(self.longitude,
+                                      self.latitude)
+            if not self.agency:
+                agency = closest_agency(self.location_point)
+                if agency:
+                    self.agency = agency
+            if not self.description:
+                results = Geocoder.reverse_geocode(self.latitude, self.longitude)
+                top_result = results[0]
+                if top_result:
+                    self.description = top_result.route
+        if not self.type:
+            self.type = "Emergency Phone"
+
+        super(StaticDevice, self).save(*args, **kwargs)
+
+    def __unicode__(self):
+        if self.agency and self.uuid:
+            return u'%s - %s' % (self.agency.name, self.uuid)
+        elif self.uuid:
+            return u'%s' % self.uuid
+
+        return u'%s' % self.id
+
+    def changeform_link(self):
+        if self.id:
+            changeform_url = urlresolvers.reverse(
+                'admin:core_staticdevice_change', args=(self.id,)
+            )
+            return u'<a href="%s" target="_blank">View more options</a>' % changeform_url
+        return u''
+    changeform_link.allow_tags = True
+    changeform_link.short_description = 'Options'   # omit column header
+
+
+def file_path(self, filename):
+    url = "themes/%s/%s" % (self.name, filename)
+    return url
+
+class Theme(models.Model):
+
+    name = models.CharField(max_length=255)
+
+    primary_color = models.CharField(max_length=8, null=True, blank=True,
+                                     help_text="Primary color of an organization's logo or color scheme")
+    secondary_color = models.CharField(max_length=8, null=True, blank=True,
+                                       help_text="Secondary color of an organization's logo or color scheme")
+    alternate_color = models.CharField(max_length=8, null=True, blank=True,
+                                       help_text="Alternate color, maybe something neutral such as white")
+
+    logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                               help_text="Set the location of the standard agency logo.")
+    alternate_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                         help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+    small_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                     help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+    shield_command_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True, max_height=50,
+                                              help_text="Logo re-sized for Shield Command. 10% top and bottom padding recommended")
+
+    def __unicode__(self):
+        return u'%s' % self.name
 
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
@@ -774,3 +896,17 @@ def set_email_verified(sender, user, request, **kwargs):
     user.email_verified = True
     user.save()
 user_activated.connect(set_email_verified)
+
+
+def closest_agency(point):
+
+    dwithin = 20
+    qs = Agency.geo.select_related('agency_point_of_contact')\
+                .filter(agency_center_point__dwithin=(point,
+                                                      D(mi=dwithin)))\
+                .distance(point).order_by('distance')
+
+    if qs:
+        return qs[0]
+
+    return None
