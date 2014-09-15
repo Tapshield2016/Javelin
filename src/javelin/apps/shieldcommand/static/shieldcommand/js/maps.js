@@ -74,7 +74,7 @@ function initializeMap() {
         textSize: 10
     }];
 
-    var mcOptions = {gridSize: 50, maxZoom: 15, zoomOnClick: true, styles:style};
+    var mcOptions = {gridSize: 50, maxZoom: 17, zoomOnClick: true, styles:style};
     markerCluster = new MarkerClusterer(googleMap, [], mcOptions);
 }
 
