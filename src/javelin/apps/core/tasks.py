@@ -36,12 +36,11 @@ def new_alert(message):
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
-        agency = message['agency']
 
-        if not agency:
-            agency = user.agency
-        else:
-            agency = Agency.objects.get(pk=agency)
+        agency = user.agency
+
+        if 'agency' in message:
+            agency = Agency.objects.get(pk=message['agency'])
 
         active_alerts = Alert.active.filter(agency_user=user)
         if active_alerts:
