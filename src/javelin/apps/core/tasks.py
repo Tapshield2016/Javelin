@@ -25,7 +25,8 @@ def new_alert(message):
        u'location_altitude': 0,
        u'location_longitude': -122.0312186,
        u'location_accuracy': 5,
-       u'user': u'ben@benboyd.us'}
+       u'user': u'ben@benboyd.us'
+       u'agency': 1}
     """
     message_valid = False
     if 'user' in message:
@@ -35,13 +36,19 @@ def new_alert(message):
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
+        agency = message['agency']
+
+        if not agency:
+            agency = user.agency
+        else:
+            agency = Agency.objects.get(pk=agency)
 
         active_alerts = Alert.active.filter(agency_user=user)
         if active_alerts:
             incoming_alert = active_alerts[0]
             incoming_alert.disarmed_time = None
         else:
-            incoming_alert = Alert(agency=user.agency, agency_user=user,
+            incoming_alert = Alert(agency=agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
             incoming_alert.save()
 
