@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from celery import task
 
@@ -44,9 +45,19 @@ def new_alert(message):
 
         active_alerts = Alert.active.filter(agency_user=user)
         if active_alerts:
-            incoming_alert = active_alerts[0]
-            incoming_alert.disarmed_time = None
-        else:
+            past_alert = active_alerts[0]
+
+            if past_alert.accepted_time <= (datetime.now() - datetime.timedelta(hours=1)):
+                past_alert.status = 'C'
+                past_alert.save()
+            elif past_alert.agency != agency:
+                past_alert.status = 'C'
+                past_alert.save()
+            else:
+                incoming_alert = past_alert
+                incoming_alert.disarmed_time = None
+
+        if not incoming_alert:
             incoming_alert = Alert(agency=agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
             incoming_alert.save()
