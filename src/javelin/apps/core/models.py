@@ -339,6 +339,7 @@ class Alert(TimeStampedModel):
         ('C', 'Completed'),
         ('N', 'New'),
         ('P', 'Pending'),
+        ('U', 'Unavailable'),
     )
 
     ALERT_INITIATED_BY_CHOICES = (
