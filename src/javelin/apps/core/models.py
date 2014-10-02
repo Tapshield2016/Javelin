@@ -197,6 +197,9 @@ class Agency(TimeStampedModel):
     def __unicode__(self):
         return self.name
 
+    def get_absolute_url(self):
+        return "/api/v1/users/%i/" % self.id
+
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
