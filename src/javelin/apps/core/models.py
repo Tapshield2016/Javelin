@@ -344,7 +344,7 @@ class Alert(TimeStampedModel):
 
     ALERT_INITIATED_BY_CHOICES = (
         ('N', '911'), #Red
-        ('E', 'Police/Security'), #Orange
+        ('E', 'Call'), #Orange
         ('T', 'Timer'), #Yellow
         ('Y', 'Yank'), #Yellow
         ('C', 'Chat'), #Green
