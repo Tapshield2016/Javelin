@@ -1,5 +1,6 @@
 import re
 from datetime import datetime, timedelta
+from django.utils.timezone import utc
 
 from celery import task
 
@@ -53,13 +54,13 @@ def new_alert(message):
             if past_alert.agency != agency:
                 past_alert.status = "C"
                 past_alert.save()
-            # elif past_alert.accepted_time:
-            #     if (datetime.now() - past_alert.accepted_time) > timedelta(hours = 1):
-            #         past_alert.status = "C"
-            #         past_alert.save()
-            #     else:
-            #         incoming_alert = past_alert
-            #         incoming_alert.disarmed_time = None
+            elif past_alert.accepted_time:
+                if (datetime.utcnow().replace(tzinfo=utc) - past_alert.accepted_time) > timedelta(hours = 1):
+                    past_alert.status = "C"
+                    past_alert.save()
+                else:
+                    incoming_alert = past_alert
+                    incoming_alert.disarmed_time = None
             else:
                 incoming_alert = past_alert
                 incoming_alert.disarmed_time = None
