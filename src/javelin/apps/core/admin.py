@@ -62,23 +62,18 @@ class StaticDeviceInline(admin.StackedInline):
     readonly_fields = ('changeform_link',)
 
 
-class MyFormSet(BaseInlineFormSet):
+class AgencyDispatchersSet(BaseInlineFormSet):
     def get_queryset(self):
         if not hasattr(self, '_queryset'):
-            qs = super(MyFormSet, self).get_queryset().filter(groups=Group.objects.get(name='Dispatchers'))
+            qs = super(AgencyDispatchersSet, self).get_queryset().filter(groups=Group.objects.get(name='Dispatchers'))
             self._queryset = qs
         return self._queryset
-
-# class AgencyUserInlineForm(forms.ModelForm):
-#     def __init__(self, *args, **kwargs):
-#         super(AgencyUserInlineForm, self).__init__(*args, **kwargs)
-#         self.fields['groups'].queryset = AgencyUser.objects.filter(
-#             group='Dispatchers')
 
 class AgencyUserInline(admin.StackedInline):
     model = AgencyUser
     extra = 0
-    formset = MyFormSet
+    formset = AgencyDispatchersSet
+    verbose_name = "Dispatchers"
     fields = ('first_name', 'last_name', 'username', 'groups')
 
     # def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
