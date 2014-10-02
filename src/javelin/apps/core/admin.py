@@ -118,6 +118,11 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     ]
     readonly_fields = ['theme_link', 'branding_link',]
 
+    def get_form(self, request, obj=None, **kwargs):
+        # just save obj reference for future processing in Inline
+        request._obj_ = obj
+        return super(AgencyAdmin, self).get_form(request, obj, **kwargs)
+
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
         return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.theme.name))
