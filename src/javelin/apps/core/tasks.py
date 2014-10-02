@@ -1,5 +1,5 @@
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from celery import task
 
@@ -50,11 +50,10 @@ def new_alert(message):
         if active_alerts:
             past_alert = active_alerts[0]
 
-            # if past_alert.accepted_time < (datetime.now() - datetime.timedelta(hours=1)):
-            #     past_alert.status = "C"
-            #     past_alert.save()
-            # el
-            if past_alert.agency != agency:
+            if (datetime.now() - past_alert.accepted_time) > timedelta(hours = 1):
+                past_alert.status = "C"
+                past_alert.save()
+            elif past_alert.agency != agency:
                 past_alert.status = "C"
                 past_alert.save()
             else:
