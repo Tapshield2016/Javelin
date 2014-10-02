@@ -44,10 +44,13 @@ def new_alert(message):
             agency = Agency.objects.get(pk=message['agency'])
 
         active_alerts = Alert.active.filter(agency_user=user)
+
+        incoming_alert = None
+
         if active_alerts:
             past_alert = active_alerts[0]
 
-            if past_alert.accepted_time <= (datetime.now() - datetime.timedelta(hours=1)):
+            if past_alert.accepted_time < (datetime.now() - datetime.timedelta(hours=1)):
                 past_alert.status = "C"
                 past_alert.save()
             elif past_alert.agency != agency:
