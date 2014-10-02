@@ -1,5 +1,6 @@
 import reversion
 
+from django.forms.models import BaseInlineFormSet
 from django import forms
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
@@ -60,6 +61,13 @@ class StaticDeviceInline(admin.StackedInline):
     readonly_fields = ('changeform_link',)
 
 
+class MyFormSet(BaseInlineFormSet):
+    def get_queryset(self):
+        if not hasattr(self, '_queryset'):
+            qs = super(MyFormSet, self).get_queryset().filter(group='Dispatchers')
+            self._queryset = qs
+        return self._queryset
+
 # class AgencyUserInlineForm(forms.ModelForm):
 #     def __init__(self, *args, **kwargs):
 #         super(AgencyUserInlineForm, self).__init__(*args, **kwargs)
@@ -69,12 +77,13 @@ class StaticDeviceInline(admin.StackedInline):
 class AgencyUserInline(admin.StackedInline):
     model = AgencyUser
     extra = 0
+    formset = MyFormSet
     fields = ('first_name', 'last_name', 'username', 'groups')
 
-    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
-        field = super(AgencyUserInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-        field.queryset = field.queryset.filter(groups='Dispatchers')
-        return field
+    # def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+    #     field = super(AgencyUserInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+    #     field.queryset = field.queryset.filter(groups='Dispatchers')
+    #     return field
 
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
@@ -117,11 +126,6 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         RegionInline, DispatchCenterInline, AgencyUserInline, StaticDeviceInline,
     ]
     readonly_fields = ['theme_link', 'branding_link',]
-
-    def get_form(self, request, obj=None, **kwargs):
-        # just save obj reference for future processing in Inline
-        request._obj_ = obj
-        return super(AgencyAdmin, self).get_form(request, obj, **kwargs)
 
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
