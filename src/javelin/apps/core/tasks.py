@@ -55,6 +55,7 @@ def new_alert(message):
                 past_alert.save()
             elif past_alert.accepted_time:
                 if (datetime.now() - past_alert.accepted_time) > timedelta(hours = 1):
+                    past_alert.status = "C"
                     past_alert.save()
             else:
                 incoming_alert = past_alert
