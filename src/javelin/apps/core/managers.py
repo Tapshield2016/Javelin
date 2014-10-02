@@ -4,13 +4,13 @@ from django.db import models
 class ActiveAlertManager(models.Manager):
     def get_queryset(self):
         return super(ActiveAlertManager, self)\
-            .get_queryset().exclude(status__in=('D', 'C'))
+            .get_queryset().exclude(status__in=('D', 'C', 'U',))
 
 
 class InactiveAlertManager(models.Manager):
     def get_queryset(self):
         return super(InactiveAlertManager, self)\
-            .get_queryset().filter(status__in=('D', 'C'))
+            .get_queryset().filter(status__in=('D', 'C',))
 
 
 class WaitingForActionAlertManager(models.Manager):
