@@ -64,7 +64,7 @@ class StaticDeviceInline(admin.StackedInline):
 class MyFormSet(BaseInlineFormSet):
     def get_queryset(self):
         if not hasattr(self, '_queryset'):
-            qs = super(MyFormSet, self).get_queryset().filter(group='Dispatchers')
+            qs = super(MyFormSet, self).get_queryset().filter(groups='Dispatchers')
             self._queryset = qs
         return self._queryset
 
