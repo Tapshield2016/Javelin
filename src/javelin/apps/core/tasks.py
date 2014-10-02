@@ -48,10 +48,10 @@ def new_alert(message):
             past_alert = active_alerts[0]
 
             if past_alert.accepted_time <= (datetime.now() - datetime.timedelta(hours=1)):
-                past_alert.status = 'C'
+                past_alert.status = "C"
                 past_alert.save()
             elif past_alert.agency != agency:
-                past_alert.status = 'C'
+                past_alert.status = "C"
                 past_alert.save()
             else:
                 incoming_alert = past_alert
