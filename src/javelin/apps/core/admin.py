@@ -73,7 +73,8 @@ class AgencyUserInline(admin.StackedInline):
     model = AgencyUser
     extra = 0
     formset = AgencyDispatchersSet
-    verbose_name = "Dispatchers"
+    verbose_name = "Dispatcher"
+    verbose_name_plural = "Dispatchers"
     fields = ('first_name', 'last_name', 'username', 'groups')
 
     # def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
