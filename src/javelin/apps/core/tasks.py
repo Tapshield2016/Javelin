@@ -46,19 +46,6 @@ def new_alert(message):
 
         active_alerts = Alert.active.filter(agency_user=user)
 
-        if alert_initiated_by == "N" and not agency.emergency_call_available:
-            alert_initiated_by = "U"
-        elif alert_initiated_by == "E" and not agency.alert_available:
-            alert_initiated_by = "U"
-        elif alert_initiated_by == "T" and not agency.entourage_available:
-            alert_initiated_by = "U"
-        elif alert_initiated_by == "Y" and not agency.yank_available:
-            alert_initiated_by = "U"
-        elif alert_initiated_by == "C" and not agency.chat_available:
-            alert_initiated_by = "U"
-        elif alert_initiated_by == "S" and not agency.static_device_available:
-            alert_initiated_by = "U"
-
         incoming_alert = None
 
         if active_alerts:
@@ -94,7 +81,20 @@ def new_alert(message):
         message_valid = True
         serialized = AlertSerializer(instance=incoming_alert)
 
-        if alert_initiated_by != "U":
+        if alert_initiated_by == "N" and not agency.emergency_call_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "E" and not agency.alert_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "T" and not agency.entourage_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "Y" and not agency.yank_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "C" and not agency.chat_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "S" and not agency.static_device_available:
+            incoming_alert.status = "U"
+
+        if incoming_alert.status != "U":
             notify_alert_received.delay(serialized.data['url'],
                                     user.device_type,
                                     user.device_endpoint_arn)
