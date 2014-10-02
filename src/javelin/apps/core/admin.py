@@ -1,5 +1,6 @@
 import reversion
 
+from django import forms
 from django.contrib import admin
 from django.contrib.gis import admin as geo_admin
 from django.utils.safestring import mark_safe
@@ -59,6 +60,23 @@ class StaticDeviceInline(admin.StackedInline):
     readonly_fields = ('changeform_link',)
 
 
+# class AgencyUserInlineForm(forms.ModelForm):
+#     def __init__(self, *args, **kwargs):
+#         super(AgencyUserInlineForm, self).__init__(*args, **kwargs)
+#         self.fields['groups'].queryset = AgencyUser.objects.filter(
+#             group='Dispatchers')
+
+class AgencyUserInline(admin.StackedInline):
+    model = AgencyUser
+    extra = 0
+    fields = ('first_name', 'last_name', 'username')
+
+    def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
+        field = super(AgencyUserInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
+        field.queryset = field.queryset.filter(groups='Dispatchers')
+        return field
+
+
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
         ('General Settings', {
@@ -96,7 +114,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenterInline, StaticDeviceInline,
+        RegionInline, DispatchCenterInline, AgencyUserInline, StaticDeviceInline,
     ]
     readonly_fields = ['theme_link', 'branding_link',]
 
