@@ -69,7 +69,7 @@ class StaticDeviceInline(admin.StackedInline):
 class AgencyUserInline(admin.StackedInline):
     model = AgencyUser
     extra = 0
-    fields = ('first_name', 'last_name', 'username')
+    fields = ('first_name', 'last_name', 'username', 'groups')
 
     def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
         field = super(AgencyUserInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
