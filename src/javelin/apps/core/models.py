@@ -197,9 +197,6 @@ class Agency(TimeStampedModel):
     def __unicode__(self):
         return self.name
 
-    def get_absolute_url(self):
-        return "/api/v1/users/%i/" % self.id
-
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
@@ -581,6 +578,10 @@ class AgencyUser(AbstractUser):
             return u"%s" % self.email
         elif self.username:
             return u"%s" % self.username
+
+
+    def get_absolute_url(self):
+        return "/api/v1/users/%i/" % self.id
 
     def save(self, *args, **kwargs):
         if not self.has_usable_password():
