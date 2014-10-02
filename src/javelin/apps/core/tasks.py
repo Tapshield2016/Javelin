@@ -50,11 +50,12 @@ def new_alert(message):
 
         if active_alerts:
             past_alert = active_alerts[0]
-
+            #complete past alerts that are no longer relevant
             if past_alert.agency != agency:
                 past_alert.status = "C"
                 past_alert.save()
             elif past_alert.accepted_time:
+                #Time zone aware comparison required
                 if (datetime.utcnow().replace(tzinfo=utc) - past_alert.accepted_time) > timedelta(hours = 1):
                     past_alert.status = "C"
                     past_alert.save()

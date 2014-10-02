@@ -175,6 +175,18 @@ class Agency(TimeStampedModel):
     branding = models.ForeignKey('Theme', related_name="branding_theme", null=True, blank=True,
                                  help_text="UI elements for OEM partners")
 
+    #standard items
+    crime_reports_available = models.BooleanField(default=True)
+
+    #premium items
+    emergency_call_available = models.BooleanField(default=False)
+    alert_available = models.BooleanField(default=False)
+    chat_available = models.BooleanField(default=False)
+    yank_available = models.BooleanField(default=False)
+    entourage_available = models.BooleanField(default=False)
+    static_device_available = models.BooleanField(default=False)
+    mass_alert_available = models.BooleanField(default=False)
+
     objects = models.Manager()
     geo = db_models.GeoManager()
 
@@ -330,11 +342,12 @@ class Alert(TimeStampedModel):
     )
 
     ALERT_INITIATED_BY_CHOICES = (
-        ('C', 'Chat'),
-        ('E', 'Emergency'),
-        ('T', 'Timer'),
-        ('Y', 'Yank'),
-        ('S', 'Static'),
+        ('N', '911'), #Red
+        ('E', 'Police/Security'), #Orange
+        ('T', 'Timer'), #Yellow
+        ('Y', 'Yank'), #Yellow
+        ('C', 'Chat'), #Green
+        ('S', 'Static'), #Blue
     )
 
     ALERT_CATEGORY = (
