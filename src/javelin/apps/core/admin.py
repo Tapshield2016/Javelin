@@ -91,7 +91,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
         ('Available Services', {
                 'fields': (['crime_reports_available', 'emergency_call_available', 'alert_available',
-                            'chat_available', 'yank_available', 'entourage_available,',
+                            'chat_available', 'yank_available', 'entourage_available',
                             'static_device_available', 'mass_alert_available',]),
         }),
     )
