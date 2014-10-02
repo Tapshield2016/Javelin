@@ -50,7 +50,7 @@ def new_alert(message):
         if active_alerts:
             past_alert = active_alerts[0]
 
-            if (datetime.now() - past_alert.accepted_time) > timedelta(hours = 1):
+            if past_alert.accepted_time:
                 past_alert.status = "C"
                 past_alert.save()
             elif past_alert.agency != agency:
