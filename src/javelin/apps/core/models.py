@@ -715,7 +715,11 @@ class ChatMessage(TimeStampedModel):
         ordering = ['message_sent_time']
 
     def __unicode__(self):
-        return u"%s - %s..." % (self.sender.first_name, self.message[:50])
+
+        if self.message.__len__() < 50:
+            return u"%s - %s" % (self.sender.username, self.message)
+
+        return u"%s - %s..." % (self.sender.username, self.message[:50])
 
 
 class SocialCrimeReport(TimeStampedModel):
