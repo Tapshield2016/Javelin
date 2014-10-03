@@ -188,7 +188,7 @@ class ChatMessageAdmin(admin.ModelAdmin):
 
 
 class UserProfileAdmin(admin.ModelAdmin):
-    pass
+    search_fields = ['__unicode__',]
 
 
 class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
