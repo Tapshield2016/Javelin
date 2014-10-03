@@ -177,10 +177,11 @@ class Agency(TimeStampedModel):
 
 
     #Is account ready to be searched
-    hidden = models.BooleanField(default=True)
+    hidden = models.BooleanField(default=True, help_text="Hide organization from query list. Apps will no be "
+                                                         "able to add until visible")
 
     #Mark all premium items True
-    full_version = models.BooleanField(default=False)
+    full_version = models.BooleanField(default=False, help_text="When checked all services will be made available")
 
     #standard items
     crime_reports_available = models.BooleanField(default=True)
