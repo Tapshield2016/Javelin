@@ -125,13 +125,15 @@ class Agency(TimeStampedModel):
     agency_point_of_contact =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name='agency_point_of_contact',
-                          null=True, blank=True)
+                          null=True, blank=True, help_text="This will be the person with full account access. "
+                                                           "Edit all settings, change/add payment, add/remove dispatchers, etc.")
     dispatcher_phone_number = models.CharField(max_length=24)
     dispatcher_secondary_phone_number = models.CharField(max_length=24,
-                                                         null=True, blank=True)
+                                                         null=True, blank=True,
+                                                         help_text="Defaults to 911 within apps unless specified")
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
-    agency_boundaries = models.TextField(null=True, blank=True)
+    agency_boundaries = models.TextField(null=True, blank=True, help_text="For multiple boundaries use Regions")
     agency_center_from_boundaries = models.BooleanField(default=False)
     agency_center_latitude = models.FloatField()
     agency_center_longitude = models.FloatField()

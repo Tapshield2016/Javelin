@@ -93,6 +93,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
         ('Required Fields', {
                 'fields': (['name', 'domain',
+                            'require_domain_emails',
                             'dispatcher_phone_number',
                             'dispatcher_secondary_phone_number',
                             'alert_mode_name',])
@@ -113,8 +114,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         ('General Settings', {
                 'fields': (['dispatcher_schedule_start',
                             'dispatcher_schedule_end',
-                            'alert_completed_message', 'sns_primary_topic_arn',
-                            'require_domain_emails', 'display_command_alert',
+                            'alert_completed_message', 'sns_primary_topic_arn', 'display_command_alert',
                             'loop_alert_sound',
                             'launch_call_to_dispatcher_on_alert',
                             'show_agency_name_in_app_navbar',
