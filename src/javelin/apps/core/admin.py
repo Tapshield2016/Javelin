@@ -88,12 +88,31 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         ('Publish', {
                 'fields': (['hidden',]),
         }),
-        ('General Settings', {
-                'fields': (['name', 'domain', 'agency_point_of_contact',
+        ('Account Administrator', {
+                'fields': (['agency_point_of_contact',])
+        }),
+        ('Required Fields', {
+                'fields': (['name', 'domain',
                             'dispatcher_phone_number',
                             'dispatcher_secondary_phone_number',
-                            'dispatcher_schedule_start',
-                            'dispatcher_schedule_end', 'alert_mode_name',
+                            'alert_mode_name',])
+        }),
+        ('Payment Level', {
+                'fields': (['full_version',]),
+        }),
+        ('Available Services', {
+                'fields': (['crime_reports_available', 'emergency_call_available', 'alert_available',
+                            'chat_available', 'yank_available', 'entourage_available',
+                            'static_device_available', 'mass_alert_available',]),
+        }),
+        ('Location and Boundaries', {
+                'fields': (['agency_boundaries', 'agency_center_from_boundaries', 'agency_center_latitude',
+                            'agency_center_longitude', 'agency_center_point', 'agency_radius',
+                            'default_map_zoom_level']),
+        }),
+        ('General Settings', {
+                'fields': (['dispatcher_schedule_start',
+                            'dispatcher_schedule_end',
                             'alert_completed_message', 'sns_primary_topic_arn',
                             'require_domain_emails', 'display_command_alert',
                             'loop_alert_sound',
@@ -104,25 +123,12 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'enable_user_location_requests',
                             'spot_crime_days_visible',])
         }),
-        ('Agency Location and Boundaries', {
-                'fields': (['agency_boundaries', 'agency_center_from_boundaries', 'agency_center_latitude',
-                            'agency_center_longitude', 'agency_center_point', 'agency_radius',
-                            'default_map_zoom_level']),
-        }),
-        ('Agency Theme', {
+        ('Theme', {
                 'fields': (['theme', 'theme_link', 'branding', 'branding_link', 'agency_logo', 'agency_alternate_logo',
                             'agency_small_logo', 'agency_theme']),
         }),
-        ('Agency Optional Info', {
+        ('Optional Info', {
                 'fields': (['agency_info_url', 'agency_rss_url',]),
-        }),
-        ('Payment Level', {
-                'fields': (['full_version',]),
-        }),
-        ('Available Services', {
-                'fields': (['crime_reports_available', 'emergency_call_available', 'alert_available',
-                            'chat_available', 'yank_available', 'entourage_available',
-                            'static_device_available', 'mass_alert_available',]),
         }),
     )
     inlines = [
