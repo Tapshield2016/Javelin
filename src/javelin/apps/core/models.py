@@ -697,6 +697,9 @@ class UserProfile(models.Model):
     profile_image_url = S3URLField(null=True, blank=True,
                                    help_text="Location of asset on S3")
 
+    def __unicode__(self):
+        return self.user.username
+
 
 class ChatMessage(TimeStampedModel):
     alert = models.ForeignKey('Alert')
