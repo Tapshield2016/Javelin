@@ -717,9 +717,9 @@ class ChatMessage(TimeStampedModel):
     def __unicode__(self):
 
         if self.message.__len__() < 50:
-            return u"%s - %s" % (self.sender.username, self.message)
+            return u"%s" % self.message
 
-        return u"%s - %s..." % (self.sender.username, self.message[:50])
+        return u"%s..." % self.message[:50]
 
 
 class SocialCrimeReport(TimeStampedModel):

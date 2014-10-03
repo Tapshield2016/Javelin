@@ -185,7 +185,7 @@ class MassAlertAdmin(admin.ModelAdmin):
 
 
 class ChatMessageAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'sender', 'message_sent_time',)
+    list_display = ('sender', '__unicode__', 'message_sent_time',)
     search_fields = ['sender__username', 'alert__id', 'alert__agency__name',]
 
 
