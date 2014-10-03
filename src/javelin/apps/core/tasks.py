@@ -69,17 +69,7 @@ def new_alert(message):
         if not incoming_alert:
             incoming_alert = Alert(agency=agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
-            incoming_alert.save()
 
-        incoming_alert_location = AlertLocation(alert=incoming_alert,
-                                                altitude=location_altitude,
-                                                longitude=location_longitude,
-                                                latitude=location_latitude,
-                                                accuracy=location_accuracy)
-        incoming_alert_location.save()
-
-        message_valid = True
-        serialized = AlertSerializer(instance=incoming_alert)
 
         if alert_initiated_by == "N" and not agency.emergency_call_available:
             incoming_alert.status = "U"
@@ -93,6 +83,20 @@ def new_alert(message):
             incoming_alert.status = "U"
         elif alert_initiated_by == "S" and not agency.static_device_available:
             incoming_alert.status = "U"
+
+        incoming_alert.save()
+
+        incoming_alert_location = AlertLocation(alert=incoming_alert,
+                                                altitude=location_altitude,
+                                                longitude=location_longitude,
+                                                latitude=location_latitude,
+                                                accuracy=location_accuracy)
+        incoming_alert_location.save()
+
+        message_valid = True
+        serialized = AlertSerializer(instance=incoming_alert)
+
+
 
         if incoming_alert.status != "U":
             notify_alert_received.delay(serialized.data['url'],

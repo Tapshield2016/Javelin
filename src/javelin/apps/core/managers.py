@@ -75,3 +75,21 @@ class InitiatedByTimerAlertManager(models.Manager):
     def get_queryset(self):
         return super(InitiatedByTimerAlertManager, self)\
             .get_queryset().filter(initiated_by='T')
+
+
+class InitiatedByYankAlertManager(models.Manager):
+    def get_queryset(self):
+        return super(InitiatedByYankAlertManager, self)\
+            .get_queryset().filter(initiated_by='Y')
+
+
+class InitiatedBy911AlertManager(models.Manager):
+    def get_queryset(self):
+        return super(InitiatedBy911AlertManager, self)\
+            .get_queryset().filter(initiated_by='N')
+
+
+class InitiatedByStaticDeviceAlertManager(models.Manager):
+    def get_queryset(self):
+        return super(InitiatedBy911AlertManager, self)\
+            .get_queryset().filter(initiated_by='S')

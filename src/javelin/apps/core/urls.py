@@ -38,4 +38,7 @@ urlpatterns = patterns('',
     url(r'^static-device/disarm/$', 'core.views.static_disarm'),
     url(r'^static-device/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view(),
         name='core_static_device_details'),
+
+    # Alert
+    url(r'^alert/active-alert/$', 'core.views.find_active_alert'),
 )

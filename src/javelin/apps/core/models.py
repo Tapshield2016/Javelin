@@ -175,6 +175,13 @@ class Agency(TimeStampedModel):
     branding = models.ForeignKey('Theme', related_name="branding_theme", null=True, blank=True,
                                  help_text="UI elements for OEM partners")
 
+
+    #Is account ready to be searched
+    hidden = models.BooleanField(default=True)
+
+    #Mark all premium items True
+    full_version = models.BooleanField(default=False)
+
     #standard items
     crime_reports_available = models.BooleanField(default=True)
 
@@ -200,6 +207,16 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
+
+        if self.full_version:
+            self.crime_reports_available = True
+            self.emergency_call_available = True
+            self.alert_available = True
+            self.chat_available = True
+            self.yank_available = True
+            self.entourage_available = True
+            self.static_device_available = True
+            self.mass_alert_available = True
 
         boundaries = None
 

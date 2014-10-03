@@ -396,7 +396,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
-        return qs
+        return qs.exclude(hidden=True)
 
     @action()
     def send_mass_alert(self, request, pk=None):

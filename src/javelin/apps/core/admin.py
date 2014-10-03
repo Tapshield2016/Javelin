@@ -85,6 +85,9 @@ class AgencyUserInline(admin.StackedInline):
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
+        ('Publish', {
+                'fields': (['hidden',]),
+        }),
         ('General Settings', {
                 'fields': (['name', 'domain', 'agency_point_of_contact',
                             'dispatcher_phone_number',
@@ -112,6 +115,9 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         }),
         ('Agency Optional Info', {
                 'fields': (['agency_info_url', 'agency_rss_url',]),
+        }),
+        ('Payment Level', {
+                'fields': (['full_version',]),
         }),
         ('Available Services', {
                 'fields': (['crime_reports_available', 'emergency_call_available', 'alert_available',

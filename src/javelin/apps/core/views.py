@@ -660,7 +660,7 @@ def static_device_form(request):
 
     response = HttpResponse(content="Not available at this time")
     response.status_code = 404
-    return  response
+    return response
 
     # if request.method == 'GET':
     #     form = StaticDeviceForm()
@@ -678,3 +678,17 @@ def static_device_form(request):
     # return render(request, 'core/forms/static_device_form.html', {
     #     'form': form,
     # })
+
+
+@api_view(['GET'])
+def find_active_alert(request):
+
+    active_alerts = Alert.active.filter(agency_user=request.user)
+
+    if not active_alerts:
+        response = HttpResponse(content="No active alert found")
+        response.status_code = 404
+        return response
+
+    return Response(AlertSerializer(instance=active_alerts[0]).data,
+                        status=status.HTTP_200_OK)
