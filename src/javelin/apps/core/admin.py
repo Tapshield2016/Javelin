@@ -135,6 +135,8 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         RegionInline, DispatchCenterInline, AgencyUserInline, StaticDeviceInline,
     ]
     readonly_fields = ['theme_link', 'branding_link',]
+    search_fields = ['name', 'agency_point_of_contact', 'domain',]
+    list_display = ('__unicode__', 'full_version', 'domain', 'require_domain_emails', 'agency_point_of_contact', 'hidden',)
 
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
