@@ -20,7 +20,8 @@ class EmailAddressInline(admin.StackedInline):
     extra = 0
 
 class EntourageMemberAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('__unicode__', 'name', 'phone_number', 'email_address')
+    search_fields = ['user__username', 'name', 'phone_number', 'email_address',]
 
 class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
@@ -135,7 +136,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         RegionInline, DispatchCenterInline, AgencyUserInline, StaticDeviceInline,
     ]
     readonly_fields = ['theme_link', 'branding_link',]
-    search_fields = ['name', 'agency_point_of_contact', 'domain',]
+    search_fields = ['name', 'agency_point_of_contact__username', 'domain',]
     list_display = ('__unicode__', 'full_version', 'domain', 'require_domain_emails', 'agency_point_of_contact', 'hidden',)
 
     def theme_link(self, obj):
@@ -184,7 +185,8 @@ class MassAlertAdmin(admin.ModelAdmin):
 
 
 class ChatMessageAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('__unicode__', 'alert__agency', 'alert__id', 'sender__username', 'message_sent_time',)
+    search_fields = ['sender__username', 'alert__id', 'alert__agency',]
 
 
 class UserProfileAdmin(admin.ModelAdmin):

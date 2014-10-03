@@ -629,6 +629,9 @@ class EntourageMember(models.Model):
     phone_number = models.CharField(max_length=24, null=True, blank=True)
     email_address = models.EmailField(max_length=254, null=True, blank=True)
 
+    def __unicode__(self):
+        return u"%s - %s" % (self.user.username, self.name)
+
 
 class UserProfile(models.Model):
     GENDER_CHOICES = (
