@@ -88,7 +88,7 @@
 		<!-- sidebar -->
 		<div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
 			<div class="panel-group" id="accordion">
-				<div class="panel panel-default" ng-if="agency.noAlerts">
+				<div class="panel panel-default" ng-if="{{agency.noAlerts}}">
 					<div class="panel-heading accordion-panel-heading accordion-default" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" ng-click="panelClicked('myAlerts')">
 						<h4 class="panel-title"> My Alerts ({{ myAlertsLength }}) </h4>
 					</div>
