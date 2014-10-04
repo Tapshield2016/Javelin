@@ -5318,8 +5318,9 @@ body {
   margin: 0px;
   padding: 0px 0px 0px 0px;
   overflow-x: hidden;
-  overflow-y: auto;
-  background: #f7f6f6; }
+  overflow-y: auto; }
+  /*background: #f7f6f6; */
+/*}*/
 
 .sidebar li {
   margin: 0px;
