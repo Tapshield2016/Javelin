@@ -100,7 +100,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
                             'alert_mode_name',])
         }),
         ('Payment Level', {
-                'fields': (['full_version',]),
+                'fields': (['full_version', 'no_alerts',]),
         }),
         ('Available Services', {
                 'fields': (['crime_reports_available', 'emergency_call_available', 'alert_available',
