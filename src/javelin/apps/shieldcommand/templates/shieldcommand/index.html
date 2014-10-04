@@ -88,6 +88,7 @@
 		<!-- sidebar -->
 		<div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
 			<div class="panel-group" id="accordion">
+                {% if not agency.no_alerts %}
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading accordion-default" data-toggle="collapse" data-parent="#accordion" data-target="#collapseOne" ng-click="panelClicked('myAlerts')">
 						<h4 class="panel-title"> My Alerts ({{ myAlertsLength }}) </h4>
@@ -114,7 +115,7 @@
 					</div>
 				</div>
 				<div class="panel panel-default">
-					<div class="panel-heading accordion-panel-heading panel-new-alerts" ng-if="!agency.noAlerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" id="newAlertListLink" ng-click="panelClicked('newAlerts')">
+					<div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" id="newAlertListLink" ng-click="panelClicked('newAlerts')">
 						<h4 class="panel-title"> New Alerts ({{ newAlertsLength }}) </h4>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse">
@@ -190,6 +191,7 @@
 						</div>
 					</div>
 				</div>
+                {% endif %}
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink" ng-click="panelClicked('crimeTip')">
 						<h4 class="panel-title"> Crime Tips ({{ unviewedCrimeTipsLength }}) </h4>
