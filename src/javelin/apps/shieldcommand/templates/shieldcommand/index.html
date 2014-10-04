@@ -113,8 +113,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="panel panel-default" ng-if="alertsAvailable" >
-					<div class="panel-heading accordion-panel-heading panel-new-alerts" ng-if="alertsAvailable" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" id="newAlertListLink" ng-click="panelClicked('newAlerts')">
+				<div class="panel panel-default" ng-if="alertsAvailable">
+					<div class="panel-heading accordion-panel-heading panel-new-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseTwo" id="newAlertListLink" ng-click="panelClicked('newAlerts')">
 						<h4 class="panel-title"> New Alerts ({{ newAlertsLength }}) </h4>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse">
@@ -139,8 +139,8 @@
 						</div>
 					</div>
 				</div>
-				<div class="panel panel-default" ng-if="agency.noAlerts">
-					<div class="panel-heading accordion-panel-heading panel-pending-alerts" ng-if="agency.noAlerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" ng-click="panelClicked('pendingAlerts')">
+				<div class="panel panel-default" ng-if="alertsAvailable">
+					<div class="panel-heading accordion-panel-heading panel-pending-alerts" data-toggle="collapse" data-parent="#accordion" data-target="#collapseThree" ng-click="panelClicked('pendingAlerts')">
 						<h4 class="panel-title"> Pending Alerts ({{ pendingAlertsLength }}) </h4>
 					</div>
 					<div id="collapseThree" class="panel-collapse collapse">
@@ -165,7 +165,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="panel panel-default" ng-if="agency.noAlerts">
+				<div class="panel panel-default" ng-if="alertsAvailable">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFour" ng-click="panelClicked('completedAlerts')">
 						<h4 class="panel-title"> Past Alerts ({{ completedAlertsLength }}) </h4>
 					</div>

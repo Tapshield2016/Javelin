@@ -615,7 +615,10 @@ angular.module('shieldCommand.controllers', [])
 	});
 
   	function updateAlerts(alerts) {
-        $scope.alertsAvailable = !alertService.activeAgency().noAlerts
+        var agency = alertService.activeAgency()
+        if (agency) {
+            $scope.alertsAvailable = !agency.noAlerts
+        }
 		$scope.alerts = alerts;
 		$rootScope.alerts = $scope.alerts;
 		updateDisplay();
