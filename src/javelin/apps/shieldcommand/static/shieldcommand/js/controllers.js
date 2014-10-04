@@ -439,7 +439,7 @@ angular.module('shieldCommand.controllers', [])
     $scope.unviewedCrimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
-    $scope.alertsAvailable = true;
+    $scope.alertsAvailable = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
