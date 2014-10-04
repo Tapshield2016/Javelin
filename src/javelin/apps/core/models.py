@@ -230,6 +230,8 @@ class Agency(TimeStampedModel):
                 and not self.entourage_available\
                 and not self.static_device_available:
             self.no_alerts = True
+        else:
+            self.no_alerts = False
 
         boundaries = None
 
