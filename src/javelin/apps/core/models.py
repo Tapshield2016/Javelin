@@ -184,6 +184,8 @@ class Agency(TimeStampedModel):
 
     #Mark all premium items True
     full_version = models.BooleanField(default=False, help_text="When checked all services will be made available")
+    no_alerts = models.BooleanField(default=False, help_text="Auto-checked when no alert types are "
+                                                             "available for internal use")
 
     #standard items
     crime_reports_available = models.BooleanField(default=True)
@@ -220,6 +222,14 @@ class Agency(TimeStampedModel):
             self.entourage_available = True
             self.static_device_available = True
             self.mass_alert_available = True
+
+        if not self.emergency_call_available\
+                and not self.alert_available\
+                and not self.chat_available \
+                and not self.yank_available \
+                and not self.entourage_available\
+                and not self.static_device_available:
+            self.no_alerts = True
 
         boundaries = None
 

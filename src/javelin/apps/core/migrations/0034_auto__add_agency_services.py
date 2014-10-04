@@ -13,6 +13,8 @@ class Migration(SchemaMigration):
         db.add_column(u'core_agency',
                       'full_version', self.gf('django.db.models.fields.BooleanField')(default=False)),
         db.add_column(u'core_agency',
+                      'no_alerts', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        db.add_column(u'core_agency',
                       'crime_reports_available', self.gf('django.db.models.fields.BooleanField')(default=True)),
         db.add_column(u'core_agency',
                       'emergency_call_available', self.gf('django.db.models.fields.BooleanField')(default=False)),
@@ -32,6 +34,7 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         db.delete_column(u'core_agency', 'hidden')
         db.delete_column(u'core_agency', 'full_version')
+        db.delete_column(u'core_agency', 'no_alerts')
         db.delete_column(u'core_agency', 'crime_reports_available')
         db.delete_column(u'core_agency', 'emergency_call_available')
         db.delete_column(u'core_agency', 'alert_available')
