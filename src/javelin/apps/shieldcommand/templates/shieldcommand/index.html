@@ -84,7 +84,6 @@
 	</div>
 	<!-- /.modal -->
 
-    {% if not agency.no_alerts %}
 	<div class="row full-height"> 
 		<!-- sidebar -->
 		<div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
@@ -191,12 +190,6 @@
 						</div>
 					</div>
 				</div>
-    {% else %}
-    <div class="row full-height">
-	<!-- sidebar -->
-	    <div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
-	        <div class="panel-group" id="accordion">
-    {% endif %}
 				<div class="panel panel-default">
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink" ng-click="panelClicked('crimeTip')">
 						<h4 class="panel-title"> Crime Tips ({{ unviewedCrimeTipsLength }}) </h4>
