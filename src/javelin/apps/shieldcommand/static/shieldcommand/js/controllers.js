@@ -439,7 +439,7 @@ angular.module('shieldCommand.controllers', [])
     $scope.unviewedCrimeTipsLength = 0;
 	$scope.crimeTipUpdateInterval = 20;
 	$scope.markerSetForActiveCrimeTip = false;
-    $scope.alertsAvailable = !alertService.activeAgency().noAlerts;
+    $scope.alertsAvailable = false;
 
 	$scope.$on('alertMarkedChange', function() {
 		updateDisplay();
@@ -615,6 +615,7 @@ angular.module('shieldCommand.controllers', [])
 	});
 
   	function updateAlerts(alerts) {
+        $scope.alertsAvailable = !alertService.activeAgency().noAlerts
 		$scope.alerts = alerts;
 		$rootScope.alerts = $scope.alerts;
 		updateDisplay();
