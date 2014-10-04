@@ -190,6 +190,7 @@
         this.spotCrimeDaysVisible = attributes.spot_crime_days_visible;
         this.theme = null;
         this.branding = null;
+        this.noAlerts = attributes.no_alerts;
 
         if (attributes.region) {
             this.region = [];
