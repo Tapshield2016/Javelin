@@ -194,7 +194,8 @@
 					<div class="panel-heading accordion-panel-heading" data-toggle="collapse" data-parent="#accordion" data-target="#collapseFive" id="crimeTipListLink" ng-click="panelClicked('crimeTip')">
 						<h4 class="panel-title"> Crime Tips ({{ unviewedCrimeTipsLength }}) </h4>
 					</div>
-					<div id="collapseFive" class="panel-collapse collapse in">
+					<div id="collapseFive" class="panel-collapse collapse" ng-if="alertsAvailable">
+                    <div id="collapseFive" class="panel-collapse collapse in" ng-if="!alertsAvailable">
 						<div class="panel-body accordion-panel-body" id="crimeTipList"> 
 							<!-- Crime Tips -->
 							<ul class="alerts-list">
