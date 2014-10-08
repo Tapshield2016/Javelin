@@ -418,6 +418,8 @@ class Alert(TimeStampedModel):
     user_notified_of_dispatcher_congestion = models.BooleanField(default=False, help_text="If an organization has the chat auto-responder functionality enabled, this flag is to indicate if the user has been sent the auto-responder message.")
     notes = models.TextField(null=True, blank=True)
 
+    call_length = models.PositiveSmallIntegerField(null=True, blank=True)
+
     objects = models.Manager()
     active = ActiveAlertManager()
     inactive = InactiveAlertManager()
