@@ -523,6 +523,27 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
     serializer_class = AlertLocationSerializer
     filter_fields = ('alert',)
 
+    def create(self, request):
+
+        active_alerts = Alert.active.filter(agency_user=request.user)
+
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+
+            if not active_alerts:
+                return Response(serializer.data, status=status.HTTP_404_NOT_FOUND,
+                            headers=headers)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 class ChatMessageViewSet(viewsets.ModelViewSet):
     queryset = ChatMessage.objects.select_related().all()

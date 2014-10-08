@@ -53,6 +53,7 @@ from models import (Agency, EntourageMember, StaticDevice, Alert)
 from forms import (AgencySettingsForm, StaticDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
                                 EntourageMemberUpdateSerializer, StaticDeviceSerializer)
+
 from core.tasks import new_static_alert
 from core.utils import group_required
 from core.utils import get_agency_from_unknown
@@ -678,6 +679,28 @@ def static_device_form(request):
     # return render(request, 'core/forms/static_device_form.html', {
     #     'form': form,
     # })
+
+
+
+@api_view(['POST'])
+def create_alert(request):
+
+    from tasks import new_alert
+
+    request.DATA['user'] = request.user
+    alert_ok = new_alert(request.DATA)
+    active_alerts = Alert.active.filter(agency_user=request.user)
+
+    if (alert_ok):
+        if active_alerts:
+            return Response(AlertSerializer(instance=active_alerts[0]).data,
+                            status=status.HTTP_201_CREATED)
+        else:
+            return Response("Could not find active alert",
+                            status=status.HTTP_404_NOT_FOUND)
+
+    return Response("Failed to create alert",
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['GET'])

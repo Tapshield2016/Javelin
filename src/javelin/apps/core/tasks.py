@@ -97,8 +97,7 @@ def new_alert(message):
         serialized = AlertSerializer(instance=incoming_alert)
 
 
-
-        if incoming_alert.status != "U":
+        if incoming_alert.status != "U" and incoming_alert.alert_initiated_by != "C":
             notify_alert_received.delay(serialized.data['url'],
                                     user.device_type,
                                     user.device_endpoint_arn)
