@@ -17,7 +17,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
-from tasks import new_alert
+from tasks import create_alert_from_message
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
@@ -691,18 +691,15 @@ def create_alert(request):
 
     if request_data:
         # request_data['user'] = request.user.username
-        alert_ok = new_alert(request_data)
+        created = create_alert_from_message(request_data)
         active_alerts = Alert.active.filter(agency_user=request.user)
-        if (alert_ok):
-            return Response({"message": "created"},
+        if (created):
+            if active_alerts:
+                return Response(AlertSerializer(instance=active_alerts[0]).data,
                             status=status.HTTP_201_CREATED)
-
-            # if active_alerts:
-            #     return Response(AlertSerializer(instance=active_alerts[0]).data,
-            #                 status=status.HTTP_201_CREATED)
-            # else:
-            #     return Response({"message": "Could not find active alert"},
-            #                 status=status.HTTP_404_NOT_FOUND)
+            else:
+                return Response({"message": "Could not find active alert"},
+                            status=status.HTTP_404_NOT_FOUND)
 
     return Response({"message": "Failed to create alert"},
                             status=status.HTTP_400_BAD_REQUEST)

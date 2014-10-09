@@ -17,19 +17,8 @@ from core.api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
 
+def create_alert_from_message(message):
 
-@task
-def new_alert(message):
-    """
-    We expect to see a message that's something like this:
-
-      {u'location_latitude': 37.33233141,
-       u'location_altitude': 0,
-       u'location_longitude': -122.0312186,
-       u'location_accuracy': 5,
-       u'user': u'ben@benboyd.us'
-       u'agency': 1}
-    """
     message_valid = False
     if 'user' in message:
         user = AgencyUser.objects.get(username=message['user'])
@@ -111,6 +100,20 @@ def new_alert(message):
         pass
 
     return message_valid
+
+@task
+def new_alert(message):
+    """
+    We expect to see a message that's something like this:
+
+      {u'location_latitude': 37.33233141,
+       u'location_altitude': 0,
+       u'location_longitude': -122.0312186,
+       u'location_accuracy': 5,
+       u'user': u'ben@benboyd.us'
+       u'agency': 1}
+    """
+    return create_alert_from_message(message)
 
 
 @task
