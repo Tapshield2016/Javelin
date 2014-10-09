@@ -69,7 +69,8 @@ def new_alert(message):
         if not incoming_alert:
             incoming_alert = Alert(agency=agency, agency_user=user,
                                    initiated_by=alert_initiated_by)
-
+        else:
+            incoming_alert.initiated_by = alert_initiated_by
 
         if alert_initiated_by == "N" and not agency.emergency_call_available:
             incoming_alert.status = "U"
