@@ -692,15 +692,17 @@ def create_alert(request):
     if request_data:
         # request_data['user'] = request.user.username
         alert_ok = new_alert(request_data)
-        # alert_ok = None
         active_alerts = Alert.active.filter(agency_user=request.user)
         if (alert_ok):
-            if active_alerts:
-                return Response(AlertSerializer(instance=active_alerts[0]).data,
+            return Response({"message": "created"},
                             status=status.HTTP_201_CREATED)
-            else:
-                return Response({"message": "Could not find active alert"},
-                            status=status.HTTP_404_NOT_FOUND)
+
+            # if active_alerts:
+            #     return Response(AlertSerializer(instance=active_alerts[0]).data,
+            #                 status=status.HTTP_201_CREATED)
+            # else:
+            #     return Response({"message": "Could not find active alert"},
+            #                 status=status.HTTP_404_NOT_FOUND)
 
     return Response({"message": "Failed to create alert"},
                             status=status.HTTP_400_BAD_REQUEST)
