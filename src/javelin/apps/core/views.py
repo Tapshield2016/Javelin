@@ -698,10 +698,10 @@ def create_alert(request):
                 return Response(AlertSerializer(instance=active_alerts[0]).data,
                             status=status.HTTP_201_CREATED)
             else:
-                return Response("Could not find active alert",
+                return Response({"message": "Could not find active alert"},
                             status=status.HTTP_404_NOT_FOUND)
 
-    return Response("Failed to create alert",
+    return Response({"message": "Failed to create alert"},
                             status=status.HTTP_400_BAD_REQUEST)
 
 
