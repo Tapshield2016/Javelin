@@ -17,6 +17,8 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
+from tasks import new_alert
+
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
 from allauth.socialaccount.providers.google.provider import GoogleProvider
@@ -685,18 +687,18 @@ def static_device_form(request):
 @api_view(['POST'])
 def create_alert(request):
 
-    from tasks import new_alert
+    request_data = request.DATA.copy()
 
-    request.DATA['user'] = request.user.username
-    alert_ok = new_alert(request.DATA)
-    active_alerts = Alert.active.filter(agency_user=request.user)
-
-    if (alert_ok):
-        if active_alerts:
-            return Response(AlertSerializer(instance=active_alerts[0]).data,
+    if request_data:
+        request.DATA['user'] = request.user.username
+        alert_ok = new_alert(request.DATA)
+        active_alerts = Alert.active.filter(agency_user=request.user)
+        if (alert_ok):
+            if active_alerts:
+                return Response(AlertSerializer(instance=active_alerts[0]).data,
                             status=status.HTTP_201_CREATED)
-        else:
-            return Response("Could not find active alert",
+            else:
+                return Response("Could not find active alert",
                             status=status.HTTP_404_NOT_FOUND)
 
     return Response("Failed to create alert",
