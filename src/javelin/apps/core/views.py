@@ -690,7 +690,7 @@ def create_alert(request):
     request_data = request.DATA.copy()
 
     if request_data:
-        # request_data['user'] = request.user.username
+        request_data['user'] = request.user.username
         created = new_alert(request_data)
         active_alerts = Alert.active.filter(agency_user=request.user)
         if (created):
