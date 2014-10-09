@@ -687,7 +687,7 @@ def create_alert(request):
 
     from tasks import new_alert
 
-    request.DATA['user'] = request.user
+    request.DATA['user'] = request.user.username
     alert_ok = new_alert(request.DATA)
     active_alerts = Alert.active.filter(agency_user=request.user)
 

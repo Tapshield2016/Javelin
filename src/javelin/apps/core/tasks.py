@@ -32,7 +32,7 @@ def new_alert(message):
     """
     message_valid = False
     if 'user' in message:
-        user = AgencyUser.objects.get(email=message['user'])
+        user = AgencyUser.objects.get(username=message['user'])
         location_latitude = message['location_latitude']
         location_longitude = message['location_longitude']
         location_altitude = message['location_altitude']
