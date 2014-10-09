@@ -17,7 +17,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
-from tasks import create_alert_from_message
+from tasks import new_alert
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
@@ -691,7 +691,7 @@ def create_alert(request):
 
     if request_data:
         # request_data['user'] = request.user.username
-        created = create_alert_from_message(request_data)
+        created = new_alert(request_data)
         active_alerts = Alert.active.filter(agency_user=request.user)
         if (created):
             if active_alerts:
