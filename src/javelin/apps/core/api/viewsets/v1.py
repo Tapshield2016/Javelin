@@ -456,8 +456,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         if not alert.agency_dispatcher == request.user:
             raise PermissionDenied
 
-        alert.status = "C"
-        alert.completed_time = datetime.now()
+        alert.status = 'C'
         alert.save()
         serialized = AlertSerializer(alert)
 
