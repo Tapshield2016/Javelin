@@ -144,7 +144,7 @@ class Agency(TimeStampedModel):
     alert_mode_name = models.CharField(max_length=24, default="Emergency",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
     alert_received_message = models.CharField(max_length=255, default="The authorities have been notified.")
-    alert_completed_message = models.TextField(null=True, blank=False,
+    alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. "
                                                        "Your alert session was completed by dispatcher.")
     sns_primary_topic_arn = models.CharField(max_length=255,
@@ -213,6 +213,9 @@ class Agency(TimeStampedModel):
     def save(self, *args, **kwargs):
         from tasks import (create_agency_topic,
                            notify_waiting_users_of_congestion)
+
+        if not self.alert_completed_message:
+            self.alert_completed_message = Agency._meta.get_field_by_name('alert_completed_message').default
 
         if self.full_version:
             self.crime_reports_available = True
