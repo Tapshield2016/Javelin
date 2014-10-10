@@ -458,6 +458,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         alert.status = "C"
         alert.completed_time = datetime.now()
+        alert.save()
         serialized = AlertSerializer(alert)
 
         if not alert.agency_user:
@@ -468,7 +469,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         dynamo_db = DynamoDBManager()
         dynamo_db.save_item_to_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
                                      {'alert_id': int(pk),
-                                      'sender_id': 0,
+                                      'sender_id': int(0),
                                       'message': "Dispatcher has ended this chat session",
                                       'timestamp': time.time(),
                                       'message_id': message_id})
