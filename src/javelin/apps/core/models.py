@@ -215,7 +215,7 @@ class Agency(TimeStampedModel):
                            notify_waiting_users_of_congestion)
 
         if not self.alert_completed_message:
-            self.alert_completed_message = Agency._meta.get_field_by_name('alert_completed_message').default
+            self.alert_completed_message = Agency._meta.get_field('alert_completed_message').get_default()
 
         if self.full_version:
             self.crime_reports_available = True
