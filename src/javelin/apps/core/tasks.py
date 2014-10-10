@@ -213,11 +213,11 @@ def publish_to_device(device_endpoint_arn, message):
 
 
 @task
-def notify_alert_completed(message, device_type, device_endpoint_arn):
+def notify_alert_completed(message, alert_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message, "chat-message-available",
-                               "alert-completed", "Alert Completed")
+    msg = sns.get_message_json(app_endpoint, message, "alert-completed",
+                               alert_id, "Alert Completed")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 

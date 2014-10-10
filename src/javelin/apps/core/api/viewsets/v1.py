@@ -479,7 +479,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         if not request.user.id == alert.agency_user.id:
             user = alert.agency_user
-            notify_alert_completed.delay(push_notification_message, user.device_type, user.device_endpoint_arn)
+            notify_alert_completed.delay(push_notification_message, serialized.data['url'], user.device_type, user.device_endpoint_arn)
 
         return Response(serialized.data)
 
