@@ -58,7 +58,8 @@ from core.models import (Agency, Alert, AlertLocation,
 from core.utils import get_agency_from_unknown
 
 from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                        notify_new_chat_message_available, notify_crime_report_marked_viewed)
+                        notify_new_chat_message_available, notify_crime_report_marked_viewed,
+                        notify_alert_completed)
 from core.tasks import new_static_alert
 
 User = get_user_model()
@@ -443,6 +444,40 @@ class AlertViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
     filter_class = AlertsModifiedSinceFilterBackend
+
+    @action()
+    def complete(self, request, pk=None):
+        """
+        Set a alert completed.
+        This will send a completion message to the user and disarm
+        """
+        alert = self.get_object()
+
+        if not alert.agency_dispatcher == request.user:
+            raise PermissionDenied
+
+        alert.status = "C"
+        alert.completed_time = datetime.now()
+        serialized = AlertSerializer(alert)
+
+        if not alert.agency_user:
+            return Response(serialized.data)
+
+        message = "Dispatcher has ended this chat session"
+        message_id = str(uuid.uuid1())
+        dynamo_db = DynamoDBManager()
+        dynamo_db.save_item_to_table(settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
+                                     {'alert_id': int(pk),
+                                      'sender_id': 0,
+                                      'message': "Dispatcher has ended this chat session",
+                                      'timestamp': time.time(),
+                                      'message_id': message_id})
+
+        if not request.user.id == alert.agency_user.id:
+            user = alert.agency_user
+            notify_alert_completed.delay(alert.agency.alert_completed_message, user.device_type, user.device_endpoint_arn)
+
+        return Response(serialized.data)
 
     @action()
     def disarm(self, request, pk=None):

@@ -387,6 +387,7 @@
         Javelin.client.add('region', {url: 'region'});
 
 		Javelin.client.add('alerts');
+        Javelin.client.alerts.add('complete');
 		Javelin.client.alerts.add('send_message');
 		Javelin.client.alerts.add('messages');
 		Javelin.client.alerts.add('messages_since');
@@ -429,22 +430,15 @@
 	}
 
 	Javelin.markAlertAsCompleted = function(alert, callback) {
-		var request = Javelin.client.alerts.patch(alert.object_id, {
-			status: 'C'
-		});
+		var request = Javelin.client.alerts.complete.create(alert.object_id);
 		request.done(function(data) {
 			callback(data);
-			if (!alert.disarmedTime && !alert.staticDevice) {
-				Javelin.sendChatMessageForAlert(alert, Javelin.activeAgency.alertCompletedMessage, function(success) {
-					console.log(success);
-				})
-			}
 		})
 	}
 
 	Javelin.markAlertAsPending = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
-			status: 'P',
+			status: 'P'
 		});
 		request.done(function(data) {
 			callback(data);
