@@ -474,7 +474,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                                       'message_id': message_id})
 
         push_notification_message = alert.agency.alert_completed_message
-        push_notification_message.replace("<first_name>", request.user.first_name)
+        push_notification_message = push_notification_message.replace("<first_name>", request.user.first_name)
 
         if alert.initiated_by == "C":
             push_notification_message = "Dispatcher has ended your chat session"
