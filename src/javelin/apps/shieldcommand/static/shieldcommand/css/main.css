@@ -5412,19 +5412,19 @@ body {
   font-size: 20px; }
 
 .alert-type.emergency-alert-type {
-  background: #f05045; }
+  background: #E46F61; }
 
 .alert-type.call-alert-type {
-  background: #ec852b; }
+  background: #ffa700; }
 
 .alert-type.timer-alert-type {
-  background: #f8ee5b; }
+  background: #fed048; }
 
 .alert-type.yank-alert-type {
-  background: #f8ee5b; }
+  background: #fed048; }
 
 .alert-type.chat-alert-type {
-  background: lightgreen; }
+  background: #8CC474; }
 
 .alert-type.static-alert-type {
   background: #41c4f2; }

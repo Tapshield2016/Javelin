@@ -158,19 +158,19 @@ function addressForLocation(location, callback) {
         var color;
 
         if (alertType == "emergency") {
-            color ='#d2322d';
+            color ='#E46F61';
         }
         else if (alertType == "call") {
-            color ='orange';
+            color ='#ffa700';
         }
         else if (alertType == "timer" || alertType == "yank") {
-            color ='yellow';
+            color ='#fed048';
         }
         else if (alertType == "static") {
             color ='#5bc0de';
         }
         else if (alertType == "chat") {
-            color = 'lightgreen';
+            color = '#8CC474';
         }
 
         if (this.div_) {
