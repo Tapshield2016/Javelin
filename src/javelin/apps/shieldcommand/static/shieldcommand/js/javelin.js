@@ -229,6 +229,7 @@
 		this.geocodedAddress = '';
         this.staticDevice = attributes.static_device;
 		this.staticDeviceMeta = null;
+        this.callLength = attributes.call_length;
 
 		if (!$.isEmptyObject(attributes.agency_user_meta)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
@@ -244,7 +245,7 @@
 
 		this.hasNewChatMessage = false;
 		this.chatMessages = [];
-		
+
 		return this;
 	}
 
