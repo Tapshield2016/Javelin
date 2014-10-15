@@ -160,14 +160,17 @@ function addressForLocation(location, callback) {
         if (alertType == "emergency") {
             color ='#d2322d';
         }
-        else if (alertType == "chat") {
+        else if (alertType == "call") {
             color ='orange';
         }
-        else if (alertType == "timer") {
+        else if (alertType == "timer" || alertType == "yank") {
             color ='yellow';
         }
         else if (alertType == "static") {
             color ='#5bc0de';
+        }
+        else if (alertType == "chat") {
+            color = 'lightgreen';
         }
 
         if (this.div_) {
