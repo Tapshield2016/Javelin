@@ -164,7 +164,7 @@ function addressForLocation(location, callback) {
             color ='#ff9900';
         }
         else if (alertType == "timer" || alertType == "yank") {
-            color ='#fff000';
+            color ='#e5d800';
         }
         else if (alertType == "static") {
             color ='#5bc0de';
