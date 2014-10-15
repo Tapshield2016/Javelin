@@ -158,7 +158,7 @@ function addressForLocation(location, callback) {
         var color;
 
         if (alertType == "emergency") {
-            color ='#E46F61';
+            color ='#d73333';
         }
         else if (alertType == "call") {
             color ='#ffa700';
@@ -170,7 +170,7 @@ function addressForLocation(location, callback) {
             color ='#5bc0de';
         }
         else if (alertType == "chat") {
-            color = '#8CC474';
+            color = '#43b75b';
         }
 
         if (this.div_) {

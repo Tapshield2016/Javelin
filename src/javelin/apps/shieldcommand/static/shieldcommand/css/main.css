@@ -5412,7 +5412,7 @@ body {
   font-size: 20px; }
 
 .alert-type.emergency-alert-type {
-  background: #E46F61; }
+  background: #d73333; }
 
 .alert-type.call-alert-type {
   background: #ffa700; }
@@ -5424,7 +5424,7 @@ body {
   background: #fed048; }
 
 .alert-type.chat-alert-type {
-  background: #8CC474; }
+  background: #43b75b; }
 
 .alert-type.static-alert-type {
   background: #41c4f2; }
