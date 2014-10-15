@@ -216,6 +216,11 @@ function updateMarker(location) {
     googleMapMarker.setTitle(location.title);
     googleMapMarker.setIcon(getIconForLocation(location));
 	bringMarkerToFront(googleMapMarker);
+
+
+    if (location.type == 'alert') {
+        animatedOverlay.colorForType(location.alertType)
+    }
 	
 	if (location.accuracy) {
     	googleMapAccuracyCircle.setCenter(alert_location);
