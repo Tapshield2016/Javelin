@@ -32,7 +32,8 @@
 	}
 
 	Javelin.ALERT_TYPE_CHOICES = {
-	    'E': 'emergency',
+	    'N': 'emergency',
+        'E': 'call',
 	    'C': 'chat',
 	    'T': 'timer',
         'Y': 'yank',

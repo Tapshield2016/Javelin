@@ -5048,7 +5048,7 @@ html {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale; }
 
-.icon-checkmark, .icon-userzoom, .icon-accept_bubble, .icon-chat_bubble, .icon-emergency_type, .icon-timer_type, .icon-chat_type, .icon-static_type, .icon-view, .icon-geofence {
+.icon-checkmark, .icon-userzoom, .icon-accept_bubble, .icon-chat_bubble, .icon-emergency_type, .icon-timer_type, .icon-chat_type, .icon-static_type, .icon-call_type, .icon-yank_type, .icon-view, .icon-geofence {
   font-family: 'icomoon';
   speak: none;
   font-style: normal;
@@ -5081,6 +5081,12 @@ html {
 
 .icon-static_type:before {
   content: "\e009"; }
+
+.icon-yank_type:before {
+  content: "\e010"; }
+
+.icon-call_type:before {
+  content: "\e011"; }
 
 .icon-view:before {
   content: "\e001"; }
@@ -5408,11 +5414,17 @@ body {
 .alert-type.emergency-alert-type {
   background: #f05045; }
 
-.alert-type.chat-alert-type {
+.alert-type.call-alert-type {
   background: #ec852b; }
 
 .alert-type.timer-alert-type {
   background: #f8ee5b; }
+
+.alert-type.yank-alert-type {
+  background: #f8ee5b; }
+
+.alert-type.chat-alert-type {
+  background: lightgreen; }
 
 .alert-type.static-alert-type {
   background: #41c4f2; }
