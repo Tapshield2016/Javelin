@@ -649,6 +649,12 @@ class EntourageMember(models.Model):
     matched_user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                      related_name='existing_user',
                                      null=True, blank=True)
+    always_visible = models.BooleanField(default=False)
+    track_route = models.BooleanField(default=True)
+    notify_arrival = models.BooleanField(default=True)
+    notify_non_arrival = models.BooleanField(default=True)
+    notify_called_911 = models.BooleanField(default=False)
+
 
     def save(self, *args, **kwargs):
 
