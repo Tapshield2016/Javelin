@@ -12,8 +12,8 @@ class Migration(SchemaMigration):
                       'matched_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.AgencyUser'],
                                                                                             related_name='existing_user',
                                                                                             null=True, blank=True)),
-        db.add_column(u'core_entouragemember',
-                      'always_visible', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        # db.add_column(u'core_entouragemember',
+        #               'always_visible', self.gf('django.db.models.fields.BooleanField')(default=False)),
 
         db.add_column(u'core_entouragemember',
                       'track_route', self.gf('django.db.models.fields.BooleanField')(default=True)),
@@ -38,7 +38,7 @@ class Migration(SchemaMigration):
         db.delete_column(u'core_entouragemember', 'notify_non_arrival')
 
         db.delete_column(u'core_entouragemember', 'notify_called_911')
-        # db.delete_column(u'core_entouragemember', 'notify_yank')
+        db.delete_column(u'core_entouragemember', 'notify_yank')
 
 
     models = {
