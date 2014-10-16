@@ -25,6 +25,7 @@ class EntourageMemberAdmin(admin.ModelAdmin):
 
 class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
+    fk_name = 'user'
     extra = 0
 
 class PeriodInline(admin.StackedInline):
