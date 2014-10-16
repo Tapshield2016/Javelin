@@ -653,6 +653,7 @@ class EntourageMember(models.Model):
     track_route = models.BooleanField(default=True)
     notify_arrival = models.BooleanField(default=True)
     notify_non_arrival = models.BooleanField(default=True)
+    notify_yank = models.BooleanField(default=True)
     notify_called_911 = models.BooleanField(default=False)
 
 
