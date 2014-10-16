@@ -25,10 +25,10 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         db.delete_column(u'core_entouragemember', 'matched_user_id')
-        # db.delete_column(u'core_entouragemember', 'track_route')
-        # db.delete_column(u'core_entouragemember', 'notify_arrival')
-        # db.delete_column(u'core_entouragemember', 'notify_non_arrival')
-        # db.delete_column(u'core_entouragemember', 'notify_called_911')
+        db.delete_column(u'core_entouragemember', 'track_route')
+        db.delete_column(u'core_entouragemember', 'notify_arrival')
+        db.delete_column(u'core_entouragemember', 'notify_non_arrival')
+        db.delete_column(u'core_entouragemember', 'notify_called_911')
 
 
     models = {
