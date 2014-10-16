@@ -31,7 +31,7 @@ class Migration(SchemaMigration):
         db.delete_column(u'core_entouragemember', 'notify_arrival')
         db.delete_column(u'core_entouragemember', 'notify_non_arrival')
         db.delete_column(u'core_entouragemember', 'notify_called_911')
-        # db.delete_column(u'core_entouragemember', 'notify_yank')
+        db.delete_column(u'core_entouragemember', 'notify_yank')
 
 
     models = {
