@@ -646,6 +646,43 @@ class EntourageMember(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.CharField(max_length=24, null=True, blank=True)
     email_address = models.EmailField(max_length=254, null=True, blank=True)
+    matched_user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                                     related_name='existing_user',
+                                     null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+
+        user_matched = None
+
+        if not self.matched_user and self.phone_number:
+
+            users_matching_phone_number = AgencyUser.objects.filter(phone_number=self.phone_number)
+
+            if users_matching_phone_number:
+                for user in users_matching_phone_number:
+                    if user.phone_number_verified:
+                        self.matched_user = user
+
+        if not self.matched_user and self.email_address:
+
+            matching_email_address_objects = EmailAddress.objects.filter(email=self.email_address)
+
+            if matching_email_address_objects:
+                for email_object in matching_email_address_objects:
+                    if email_object.is_active and email_object.is_primary:
+                        self.matched_user = email_object.user
+                    elif email_object.is_active and not self.matched_user:
+                        self.matched_user = email_object.user
+
+            if not self.matched_user:
+                users_matching_email = AgencyUser.objects.filter(email=self.email_address)
+
+                if users_matching_email:
+                    for user in users_matching_email:
+                        if user.email_verified:
+                            self.matched_user = user
+
+        super(EntourageMember, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u"%s - %s" % (self.user.username, self.name)
