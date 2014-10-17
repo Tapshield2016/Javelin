@@ -14,14 +14,14 @@ from emailmgr.serializers import EmailAddressGETSerializer
 User = get_user_model()
 
 
-class EntourageMemberGETSerializer(serializers.HyperlinkedModelSerializer):
+class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageMember
-        fields = ('url', 'user', 'name')
+        fields = ('url', 'user', 'name', 'matched_user')
 
 
-class EntourageMemberUpdateSerializer(serializers.HyperlinkedModelSerializer):
+class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageMember
@@ -78,7 +78,7 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  view_name='agency-detail')
-    entourage_members = EntourageMemberGETSerializer(required=False, many=True)
+    entourage_members = EntourageMemberSerializer(required=False, many=True)
     distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
@@ -125,12 +125,17 @@ class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
-                  'phone_number', 'disarm_code', 'first_name', 'last_name',
-                  'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social',
-                  'last_reported_time', 'last_reported_latitude',
-                  'last_reported_longitude')
+        fields = ('url', 'agency', 'first_name', 'last_name', 'username', 'email')
+
+
+class DispatcherUserSerializer(serializers.HyperlinkedModelSerializer):
+    agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 view_name='agency-detail')
+
+    class Meta:
+        model = User
+        fields = ('url', 'agency', 'first_name', 'last_name', 'username', 'email', 'phone_number' 'disarm_code',
+                  'last_reported_time', 'last_reported_latitude', 'last_reported_longitude')
 
 
 class ReporterSerializer(serializers.HyperlinkedModelSerializer):

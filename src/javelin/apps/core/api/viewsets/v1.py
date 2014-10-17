@@ -37,8 +37,8 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      MassAlertSerializer,
                                      UserProfileSerializer,
                                      SocialCrimeReportSerializer,
-                                     EntourageMemberGETSerializer,
-                                     EntourageMemberUpdateSerializer,
+                                     EntourageMemberSerializer,
+                                     UnauthorizedEntourageMemberSerializer,
                                      UserUpdateSerializer, UnauthorizedUserSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
@@ -105,13 +105,19 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
     filter_fields = ('user',)
 
     def get_serializer_class(self):
-        if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return EntourageMemberGETSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
-                and not hasattr(self, 'response'):
-            return EntourageMemberUpdateSerializer
 
-        return EntourageMemberGETSerializer
+        if self.request.user == self.get_object():
+            return EntourageMemberSerializer
+        else:
+            return UnauthorizedEntourageMemberSerializer
+
+        # if self.request.method == 'GET' and not hasattr(self, 'response'):
+        #     return UnauthorizedEntourageMemberSerializer
+        # elif self.request.method in ('POST', 'PUT', 'PATCH')\
+        #         and not hasattr(self, 'response'):
+        #     return EntourageMemberSerializer
+        #
+        # return UnauthorizedEntourageMemberSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
