@@ -718,7 +718,7 @@ def set_entourage_members(request):
 
     entourage_members = json.loads(entourage_members)
 
-    return Response(UserSerializer(instance=request.user).data,
+    return Response(json.dumps(entourage_members),
                     status=status.HTTP_200_OK)
 
     # for member in entourage_members:
