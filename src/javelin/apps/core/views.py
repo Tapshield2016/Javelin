@@ -716,6 +716,8 @@ def set_entourage_members(request):
 
     entourage_members = request.DATA.get('json')
 
+    entourage_members = json.load(entourage_members)
+
     for member in entourage_members:
         new_member = EntourageMemberUpdateSerializer(data=member)
         new_member.user = request.user
