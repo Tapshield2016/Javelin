@@ -718,10 +718,13 @@ def set_entourage_members(request):
 
     # entourage_members = json.loads(entourage_members)
 
-    return Response({"json": entourage_members[0]['name']},
-                    status=status.HTTP_200_OK)
+    # return Response({"json": entourage_members[0]['name']},
+    #                 status=status.HTTP_200_OK)
 
-    # for member in entourage_members:
+    for member in entourage_members:
+
+        return Response({"json": member['name']},
+                    status=status.HTTP_200_OK)
     #     new_member = EntourageMemberUpdateSerializer(data=member)
     #     new_member.user = request.user
     #     new_member.save()
