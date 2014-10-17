@@ -633,7 +633,7 @@ class AgencyUser(AbstractUser):
                                              self.last_reported_latitude)
 
         if not self.email:
-            self.email = u"%s%s" % (self.pk, "@socialauth.com")
+            self.email = self.user.username+"@noemail.com"
 
         super(AgencyUser, self).save(*args, **kwargs)
 
