@@ -722,7 +722,7 @@ def set_entourage_members(request):
     #                 status=status.HTTP_200_OK)
 
     for member in entourage_members:
-        new_member = EntourageMemberUpdateSerializer(member)
+        new_member = EntourageMemberUpdateSerializer(name=member['name'])
         new_member.user = request.user
         new_member.save()
 
