@@ -8,6 +8,16 @@ from django.db import models
 class Migration(SchemaMigration):
 
     def forwards(self, orm):
+
+        db.add_column(u'core_entouragemember',
+                      'first', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+        db.add_column(u'core_entouragemember',
+                      'last', self.gf('django.db.models.fields.CharField')(max_length=255, null=True, blank=True)),
+
+        db.add_column(u'core_entouragemember',
+                      'record_id', self.gf('django.db.models.fields.PositiveIntegerField')(blank=True, null=True)),
+
+
         db.add_column(u'core_entouragemember',
                       'matched_user', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['core.AgencyUser'],
                                                                                             related_name='existing_user',

@@ -714,13 +714,6 @@ def find_active_alert(request):
 @api_view(['POST'])
 def set_entourage_members(request):
 
-    # entourage_members = request.DATA.get('json')
-
-    # entourage_members = json.loads(entourage_members)
-
-    # return Response({"json": entourage_members[0]['name']},
-    #                 status=status.HTTP_200_OK)
-
     for member in request.DATA:
 
         serializer = EntourageMemberUpdateSerializer(data=member)
@@ -728,18 +721,6 @@ def set_entourage_members(request):
         if serializer.is_valid():
             serializer.object.user = request.user
             serializer.save()
-
-        # return Response({"json": member['name']},
-        #             status=status.HTTP_200_OK)
-        # new_member = EntourageMember(name=member['name'],
-        #                              always_visible=1,
-        #                              notify_arrival=1,
-        #                              notify_called_911=0,
-        #                              notify_non_arrival=1,
-        #                              notify_yank=1,
-        #                              track_route=1)
-        # new_member.user = request.user
-        # new_member.save()
 
     return Response(UserSerializer(instance=request.user).data,
                     status=status.HTTP_200_OK)
