@@ -723,9 +723,9 @@ def set_entourage_members(request):
 
             existing = None
 
-            if serializer.object.phone_number:
-                existing = EntourageMember.objects.filter(user=serializer.object.user,
-                                                          phone_number=serializer.object.phone_number)
+            # if serializer.object.phone_number:
+            #     existing = EntourageMember.objects.filter(user=serializer.object.user,
+            #                                               phone_number=serializer.object.phone_number)
 
             if not existing and serializer.object.email_address:
                 existing = EntourageMember.objects.filter(user=serializer.object.user,
