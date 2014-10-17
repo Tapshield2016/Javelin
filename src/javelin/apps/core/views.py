@@ -721,7 +721,7 @@ def set_entourage_members(request):
 
     # entourage_members = json.loads(json_data)
 
-    return Response({"message": "good"},
+    return Response({"message": json_data[0]},
                     status=status.HTTP_200_OK)
 # data is now a Python list or dict representing the uploaded JSON.
 
