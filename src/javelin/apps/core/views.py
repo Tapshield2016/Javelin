@@ -723,21 +723,21 @@ def set_entourage_members(request):
 
             existing = None
 
-            # if serializer.object.phone_number:
-            #     existing = EntourageMember.objects.filter(user=serializer.object.user,
-            #                                               phone_number=serializer.object.phone_number)
+            if serializer.object.phone_number:
+                existing = EntourageMember.objects.filter(user=serializer.object.user,
+                                                          phone_number=serializer.object.phone_number)
 
             if not existing and serializer.object.email_address:
                 existing = EntourageMember.objects.filter(user=serializer.object.user,
                                                           email_address=serializer.object.email_address)
 
-            # if existing:
-            #     saved_member = existing[0]
-            #     for attr, value in member.iteritems():
-            #         setattr(saved_member, attr, value)
-            #
-            # else:
-            serializer.save()
+            if len(existing) > 0:
+                saved_member = existing[0]
+                for attr, value in member.iteritems():
+                    setattr(saved_member, attr, value)
+
+            else:
+                serializer.save()
 
     return Response(UserSerializer(instance=request.user).data,
                     status=status.HTTP_200_OK)
