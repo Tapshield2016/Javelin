@@ -1,5 +1,6 @@
 import datetime
 import requests
+import json
 
 from time import mktime
 from django.core.serializers.json import DjangoJSONEncoder
@@ -15,8 +16,6 @@ from django.shortcuts import render_to_response, render
 from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
-
-import simplejson as json
 
 from tasks import new_alert
 
@@ -720,9 +719,9 @@ def set_entourage_members(request):
 
 # json_data contains the data uploaded in request
 
-    entourage_members = json.loads(json_data)
+    # entourage_members = json.loads(json_data)
 
-    return Response({"message": "good"},
+    return Response({"message": json.dumps(json_data)},
                     status=status.HTTP_200_OK)
 # data is now a Python list or dict representing the uploaded JSON.
 
