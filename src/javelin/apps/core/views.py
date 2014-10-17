@@ -733,7 +733,7 @@ def set_entourage_members(request):
 
             if existing:
                 pass
-                # existing[0].update(**member)
+                existing[0].update(serializer.object)
                 # saved_member = existing[0]
                 # for attr, value in member.iteritems():
                 #     setattr(saved_member, attr, value)
