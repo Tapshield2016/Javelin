@@ -718,6 +718,9 @@ def set_entourage_members(request):
 # json_data contains the data uploaded in request
 
     entourage_members = json.loads(json_data)
+
+    return Response("ok",
+                    status=status.HTTP_200_OK)
 # data is now a Python list or dict representing the uploaded JSON.
 
     for member in entourage_members:
