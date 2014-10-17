@@ -718,7 +718,7 @@ def set_entourage_members(request):
 
     # entourage_members = json.loads(entourage_members)
 
-    return Response(entourage_members[0]['name'],
+    return Response({"json": entourage_members[0]['name']},
                     status=status.HTTP_200_OK)
 
     # for member in entourage_members:
