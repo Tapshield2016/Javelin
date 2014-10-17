@@ -731,11 +731,11 @@ def set_entourage_members(request):
                 existing = EntourageMember.objects.filter(user=serializer.object.user,
                                                           email_address=serializer.object.email_address)
 
-            if len(existing) > 0:
-                saved_member = existing[0]
-                for attr, value in member.iteritems():
-                    setattr(saved_member, attr, value)
-
+            if existing:
+                existing[0].update(**member)
+                # saved_member = existing[0]
+                # for attr, value in member.iteritems():
+                #     setattr(saved_member, attr, value)
             else:
                 serializer.save()
 
