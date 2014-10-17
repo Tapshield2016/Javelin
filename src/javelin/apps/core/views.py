@@ -723,16 +723,21 @@ def set_entourage_members(request):
 
     for member in entourage_members:
 
+        serializer = EntourageMemberUpdateSerializer(data=member)
+
+        if not serializer.is_valid():
+            return serializer
+
         # return Response({"json": member['name']},
         #             status=status.HTTP_200_OK)
-        new_member = EntourageMember(name=member['name'],
-                                     always_visible=1,
-                                     notify_arrival=1,
-                                     notify_called_911=0,
-                                     notify_non_arrival=1,
-                                     notify_yank=1,
-                                     track_route=1)
-        return Response(EntourageMemberUpdateSerializer(instance=new_member).data,
+        # new_member = EntourageMember(name=member['name'],
+        #                              always_visible=1,
+        #                              notify_arrival=1,
+        #                              notify_called_911=0,
+        #                              notify_non_arrival=1,
+        #                              notify_yank=1,
+        #                              track_route=1)
+        return Response(serializer.data,
                     status=status.HTTP_200_OK)
         # new_member.user = request.user
         # new_member.save()
