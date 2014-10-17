@@ -714,7 +714,7 @@ def find_active_alert(request):
 @api_view(['POST'])
 def set_entourage_members(request):
 
-    json_data = request.read()
+    json_data = request.DATA.copy()
 # json_data contains the data uploaded in request
 
     entourage_members = json.loads(json_data)
