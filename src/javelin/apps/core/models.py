@@ -632,6 +632,9 @@ class AgencyUser(AbstractUser):
             self.last_reported_point = Point(self.last_reported_longitude,
                                              self.last_reported_latitude)
 
+        if not self.email:
+            self.email = u"%s%s" % (self.pk, "@socialauth.com")
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
