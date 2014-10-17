@@ -722,11 +722,12 @@ def set_entourage_members(request):
     #                 status=status.HTTP_200_OK)
 
     for member in entourage_members:
-
+        
         serializer = EntourageMemberUpdateSerializer(data=member)
 
-        if not serializer.is_valid():
-            return serializer
+        if serializer.is_valid():
+            serializer.object.user = request.user
+            serializer.save()
 
         # return Response({"json": member['name']},
         #             status=status.HTTP_200_OK)
@@ -737,8 +738,6 @@ def set_entourage_members(request):
         #                              notify_non_arrival=1,
         #                              notify_yank=1,
         #                              track_route=1)
-        return Response(serializer.data,
-                    status=status.HTTP_200_OK)
         # new_member.user = request.user
         # new_member.save()
 
