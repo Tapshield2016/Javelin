@@ -719,7 +719,7 @@ def set_entourage_members(request):
 
 # json_data contains the data uploaded in request
 
-    entourage_members = json.dumps(json_data)
+    entourage_members = json.dumps(request.DATA)
 
     return Response({"message": json_data},
                     status=status.HTTP_200_OK)
