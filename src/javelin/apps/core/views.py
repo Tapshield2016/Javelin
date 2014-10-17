@@ -716,26 +716,10 @@ def set_entourage_members(request):
 
     entourage_members = request.DATA.get('json')
 
-    return Response({"json": entourage_members},
-                        status=status.HTTP_200_OK)
+    for member in entourage_members:
+        new_member = EntourageMemberUpdateSerializer(data=member)
+        new_member.user = request.user
+        new_member.save()
 
-    # for member in entourage_members:
-
-
-# json_data contains the data uploaded in request
-
-    # entourage_members = json.dumps(request.DATA)
-    #
-    # return Response({"message": json_data},
-    #                 status=status.HTTP_200_OK)
-# data is now a Python list or dict representing the uploaded JSON.
-
-
-
-
-        # new_member = EntourageMemberUpdateSerializer(data=member)
-    #     new_member.user = request.user
-    #     new_member.save()
-    #
-    # return Response(UserSerializer(instance=request.user).data,
-    #                 status=status.HTTP_200_OK)
+    return Response(UserSerializer(instance=request.user).data,
+                    status=status.HTTP_200_OK)
