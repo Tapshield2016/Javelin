@@ -716,9 +716,10 @@ def set_entourage_members(request):
 
     entourage_members = request.POST.get('json')
 
-    for member in entourage_members:
-        return Response({"message": "ok"},
+    return Response({"json": entourage_members},
                         status=status.HTTP_200_OK)
+
+    # for member in entourage_members:
 
 
 # json_data contains the data uploaded in request
