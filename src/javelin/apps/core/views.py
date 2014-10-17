@@ -714,10 +714,10 @@ def find_active_alert(request):
 @api_view(['POST'])
 def set_entourage_members(request):
 
-    json_data = request.DATA.copy()
+    json_data = request.POST.get('json')
 # json_data contains the data uploaded in request
 
-    entourage_members = json.loads(json_data['json'])
+    entourage_members = json.loads(json_data)
 
     return Response({"message": "ok"},
                     status=status.HTTP_200_OK)
