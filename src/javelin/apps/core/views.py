@@ -732,7 +732,7 @@ def set_entourage_members(request):
                                                           email_address=serializer.object.email_address)
 
             if existing:
-                pass
+                # pass
                 existing[0].update(serializer.object)
                 # saved_member = existing[0]
                 # for attr, value in member.iteritems():
