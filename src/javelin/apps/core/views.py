@@ -53,8 +53,7 @@ from twilio.util import TwilioCapability
 
 from models import (Agency, EntourageMember, StaticDevice, Alert)
 from forms import (AgencySettingsForm, StaticDeviceForm)
-from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
-                                EntourageMemberUpdateSerializer, StaticDeviceSerializer)
+from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer, EntourageMemberSerializer, StaticDeviceSerializer)
 
 from core.tasks import new_static_alert
 from core.utils import group_required
@@ -716,7 +715,7 @@ def set_entourage_members(request):
 
     for member in request.DATA:
 
-        serializer = EntourageMemberUpdateSerializer(data=member)
+        serializer = EntourageMemberSerializer(data=member)
 
         if serializer.is_valid():
 
