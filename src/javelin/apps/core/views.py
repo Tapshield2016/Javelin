@@ -440,7 +440,6 @@ def create_google_user(request):
         serialized.data['agency'] =\
             AgencySerializer(user.agency).data
 
-
     token, created = Token.objects.get_or_create(user=user)
     serialized.data['token'] = token.key
 
@@ -473,19 +472,6 @@ def create_linkedin_user(request):
 
     return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
-
-
-@api_view(['POST'])
-def set_entourage_members(request):
-
-    json_data = request.read()
-# json_data contains the data uploaded in request
-
-    entourage_members = json.loads(json_data)
-# data is now a Python list or dict representing the uploaded JSON.
-
-    for member in entourage_members:
-        new_member = EntourageMemberUpdateSerializer(data=member)
 
 
 def serialize_static_device_save(request):
@@ -720,3 +706,24 @@ def find_active_alert(request):
 
     return Response(AlertSerializer(instance=active_alerts[0]).data,
                         status=status.HTTP_200_OK)
+
+
+
+
+
+@api_view(['POST'])
+def set_entourage_members(request):
+
+    json_data = request.read()
+# json_data contains the data uploaded in request
+
+    entourage_members = json.loads(json_data)
+# data is now a Python list or dict representing the uploaded JSON.
+
+    for member in entourage_members:
+        new_member = EntourageMemberUpdateSerializer(data=member)
+        new_member.user = request.user
+        new_member.save()
+
+    return Response(AlertSerializer(instance=request.user).data,
+                    status=status.HTTP_200_OK)
