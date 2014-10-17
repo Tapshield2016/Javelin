@@ -717,6 +717,9 @@ def set_entourage_members(request):
     json_data = request.DATA.copy()
 # json_data contains the data uploaded in request
 
+    return Response("ok",
+                    status=status.HTTP_200_OK)
+
     entourage_members = json.loads(json_data)
 
     return Response("ok",
