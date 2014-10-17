@@ -41,6 +41,10 @@ class Migration(SchemaMigration):
     def backwards(self, orm):
         db.delete_column(u'core_entouragemember', 'matched_user_id')
 
+        db.delete_column(u'core_entouragemember', 'first')
+        db.delete_column(u'core_entouragemember', 'last')
+        db.delete_column(u'core_entouragemember', 'record_id')
+
         db.delete_column(u'core_entouragemember', 'always_visible')
 
         db.delete_column(u'core_entouragemember', 'track_route')

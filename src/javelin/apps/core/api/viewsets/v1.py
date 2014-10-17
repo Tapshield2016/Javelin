@@ -39,7 +39,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      SocialCrimeReportSerializer,
                                      EntourageMemberGETSerializer,
                                      EntourageMemberUpdateSerializer,
-                                     UserUpdateSerializer,
+                                     UserUpdateSerializer, UnauthorizedUserSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
                                      PeriodSerializer,
@@ -119,13 +119,19 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
 
     def get_serializer_class(self):
-        if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return UserSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
-                and not hasattr(self, 'response'):
-            return UserUpdateSerializer
 
-        return UserSerializer
+        if self.request.user == self.get_object():
+            return UserSerializer
+        else:
+            return UnauthorizedUserSerializer
+
+        # if self.request.method == 'GET' and not hasattr(self, 'response'):
+        #     return UserSerializer
+        # elif self.request.method in ('POST', 'PUT', 'PATCH')\
+        #         and not hasattr(self, 'response'):
+        #     return UserUpdateSerializer
+        #
+        # return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\

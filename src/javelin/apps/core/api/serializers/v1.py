@@ -119,6 +119,20 @@ class UserUpdateSerializer(serializers.HyperlinkedModelSerializer):
                   'last_reported_longitude')
 
 
+class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):
+    agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 view_name='agency-detail')
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
+                  'phone_number', 'disarm_code', 'first_name', 'last_name',
+                  'phone_number_verified', 'user_declined_push_notifications',
+                  'user_logged_in_via_social',
+                  'last_reported_time', 'last_reported_latitude',
+                  'last_reported_longitude')
+
+
 class ReporterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
