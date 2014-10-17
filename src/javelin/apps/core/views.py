@@ -715,11 +715,13 @@ def find_active_alert(request):
 def set_entourage_members(request):
 
     json_data = request.POST.get('json')
+
+
 # json_data contains the data uploaded in request
 
-    entourage_members = json.loads(json_data)
+    # entourage_members = json.loads(json_data)
 
-    return Response({"message": "ok"},
+    return Response({"message": json_data},
                     status=status.HTTP_200_OK)
 # data is now a Python list or dict representing the uploaded JSON.
 
