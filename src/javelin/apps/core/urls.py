@@ -42,4 +42,7 @@ urlpatterns = patterns('',
     # Alert
     url(r'^alert/active-alert/$', 'core.views.find_active_alert'),
     url(r'^alert/create-alert/$', 'core.views.create_alert'),
+
+    # Entourage
+    url(r'^entourage/members/$', 'core.views.set_entourage_members'),
 )
