@@ -725,7 +725,7 @@ def set_entourage_members(request):
 
         # return Response({"json": member['name']},
         #             status=status.HTTP_200_OK)
-        new_member = EntourageMember(**member)
+        new_member = EntourageMember(name=member['name'])
         return Response(EntourageMemberUpdateSerializer(instance=new_member).data,
                     status=status.HTTP_200_OK)
         # new_member.user = request.user
