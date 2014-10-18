@@ -741,10 +741,7 @@ def set_entourage_members(request):
             else:
                 member_to_save.save()
 
-            try:
-                all_members.remove(member_to_save)
-            except:
-                pass
+            all_members.exclude(pk=member_to_save.pk)
 
     for member_to_delete in all_members:
         member_to_delete.delete()
