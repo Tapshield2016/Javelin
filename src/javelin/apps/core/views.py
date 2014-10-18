@@ -741,7 +741,7 @@ def set_entourage_members(request):
             else:
                 member_to_save.save()
 
-            current_members.append(member_to_save)
+            current_members.append(member_to_save.pk)
 
     members_to_delete = EntourageMember.objects.filter(user=request.user).exclude(pk__in = current_members)
     for member in members_to_delete:
