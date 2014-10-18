@@ -713,6 +713,8 @@ def find_active_alert(request):
 @api_view(['POST'])
 def set_entourage_members(request):
 
+    all_members = EntourageMember.objects.filter(user=request.user)
+
     for member in request.DATA:
 
         serializer = EntourageMemberSerializer(data=member)
@@ -731,15 +733,21 @@ def set_entourage_members(request):
                 existing = EntourageMember.objects.filter(user=serializer.object.user,
                                                           email_address=serializer.object.email_address)
 
+            member_to_save = serializer.object
+
             if existing:
-                existing[0].__dict__.update(member)
-                # for key, value in member.items():
-                #     setattr(existing[0], key, value)
-                # saved_member = existing[0]
-                # for attr, value in member.iteritems():
-                #     setattr(saved_member, attr, value)
+                member_to_save = existing[0]
+                member_to_save.__dict__.update(member)
             else:
-                serializer.save()
+                member_to_save.save()
+
+            try:
+                all_members.remove(member_to_save)
+            except:
+                pass
+
+    for member_to_delete in all_members:
+        member_to_delete.delete()
 
     return Response(UserSerializer(instance=request.user).data,
                     status=status.HTTP_200_OK)
