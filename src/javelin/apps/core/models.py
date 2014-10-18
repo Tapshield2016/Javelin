@@ -665,10 +665,7 @@ class EntourageMember(models.Model):
     notify_yank = models.BooleanField(default=True)
     notify_called_911 = models.BooleanField(default=False)
 
-
     def save(self, *args, **kwargs):
-
-        user_matched = None
 
         if not self.matched_user and self.phone_number:
 
