@@ -89,8 +89,7 @@ class DeviceMakerOnly(permissions.BasePermission):
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        permitted_groups = []
-        permitted_groups.append(Group.objects.get(name='Device Maker'))
+        permitted_groups = [Group.objects.get(name='Device Maker'),]
         if request.user.is_authenticated():
             if bool(request.user.groups.filter(name__in=permitted_groups)) | request.user.is_superuser:
                 return True
@@ -108,8 +107,7 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         if request.method in permissions.SAFE_METHODS:
-            permitted_groups = []
-            permitted_groups.append(Group.objects.get(name='Dispatchers'))
+            permitted_groups = [Group.objects.get(name='Dispatchers'),]
             if request.user.is_authenticated():
                 if bool(request.user.groups.filter(name__in=permitted_groups)):
                     return True
