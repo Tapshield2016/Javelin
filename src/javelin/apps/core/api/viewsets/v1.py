@@ -98,6 +98,25 @@ class DeviceMakerOnly(permissions.BasePermission):
         return False
 
 
+class IsRequestUserOrDispatcher(permissions.BasePermission):
+    """
+    Object-level User account permission to only allow the user or dispatchers to access
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+
+        if request.method in permissions.SAFE_METHODS:
+            permitted_groups = []
+            permitted_groups.append(Group.objects.get(name='Dispatchers'))
+            if request.user.is_authenticated():
+                if bool(request.user.groups.filter(name__in=permitted_groups)):
+                    return True
+
+        return obj == request.user | request.user.is_superuser
+
+
 class EntourageMemberViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsOwnerOrReadOnly,)
@@ -119,16 +138,18 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     model = User
     filter_fields = ('agency',)
+    permission_classes = (IsRequestUserOrDispatcher,)
+    serializer_class = UserSerializer
 
-    def get_serializer_class(self):
-
-        if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return UnauthorizedUserSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
-                and not hasattr(self, 'response'):
-            return UserSerializer
-
-        return UserSerializer
+    # def get_serializer_class(self):
+    #
+    #     if self.request.method == 'GET' and not hasattr(self, 'response'):
+    #         return UnauthorizedUserSerializer
+    #     elif self.request.method in ('POST', 'PUT', 'PATCH')\
+    #             and not hasattr(self, 'response'):
+    #         return UserSerializer
+    #
+    #     return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\
