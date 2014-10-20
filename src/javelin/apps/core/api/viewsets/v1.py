@@ -100,16 +100,12 @@ class DeviceMakerOnly(permissions.BasePermission):
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
 
+    permission_classes = (IsOwnerOrReadOnly,)
     queryset = EntourageMember.objects.select_related('user').all()
     model = EntourageMember
     filter_fields = ('user',)
 
     def get_serializer_class(self):
-
-        # if self.request.user == self.get_object():
-        #     return EntourageMemberSerializer
-        # else:
-        #     return UnauthorizedEntourageMemberSerializer
 
         if self.request.method == 'GET' and not hasattr(self, 'response'):
             return UnauthorizedEntourageMemberSerializer
@@ -126,16 +122,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
 
-        # if self.request.user == self.get_object():
-        #     return UserSerializer
-        # else:
-        #     return UnauthorizedUserSerializer
-
         if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return UserSerializer
+            return UnauthorizedUserSerializer
         elif self.request.method in ('POST', 'PUT', 'PATCH')\
                 and not hasattr(self, 'response'):
-            return UserUpdateSerializer
+            return UserSerializer
 
         return UserSerializer
 
@@ -211,7 +202,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     Agency.objects.get(pk=info_dict['agency'])
             except Agency.DoesNotExist:
                 return Response({'message': 'No matching agency found.'},
-                                 status=status.HTTP_400_BAD_REQUEST)
+                                status=status.HTTP_400_BAD_REQUEST)
         for k, v in info_dict.items():
             if not k in valid_keys:
                 continue
