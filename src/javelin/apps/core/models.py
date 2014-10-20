@@ -30,7 +30,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       InitiatedByEmergencyAlertManager,
                       InitiatedByTimerAlertManager,
                       WaitingForActionAlertManager,
-                      ShouldReceiveAutoResponseAlertManager)
+                      ShouldReceiveAutoResponseAlertManager,
+                      TrackingEntourageSessionManager)
 
 from core.aws.s3_filefield import S3EnabledImageField, S3URLField
 
@@ -108,10 +109,18 @@ def centroid_from_boundaries(boundaries):
     return centroid;
 
 
-
 class TimeStampedModel(models.Model):
     creation_date = models.DateTimeField(auto_now_add=True)
     last_modified = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class Location(TimeStampedModel):
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
 
     class Meta:
         abstract = True
@@ -275,6 +284,7 @@ class ClosedDate(models.Model):
     start_date = models.DateTimeField(null=True, blank=True)
     end_date = models.DateTimeField(null=True, blank=True)
 
+
 class Period(models.Model):
 
     DAY = (
@@ -300,6 +310,7 @@ class Period(models.Model):
         verbose_name_plural = "Opening Hours"
         ordering = ['day']
 
+
 class DispatchCenter(models.Model):
 
     agency = models.ForeignKey('Agency',
@@ -319,6 +330,7 @@ class DispatchCenter(models.Model):
         return u''
     changeform_link.allow_tags = True
     changeform_link.short_description = 'Schedule'   # omit column header
+
 
 class Region(models.Model):
 
@@ -366,7 +378,6 @@ class Region(models.Model):
             self.radius = round(radius,2)
 
         super(Region, self).save(*args, **kwargs)
-
 
 
 class Alert(TimeStampedModel):
@@ -440,7 +451,6 @@ class Alert(TimeStampedModel):
 
     class Meta:
         ordering = ['-creation_date']
-
 
     def __unicode__(self):
         string = None
@@ -533,7 +543,7 @@ class AlertLocation(TimeStampedModel):
         self.alert.save()
 
 
-class MassAlert(TimeStampedModel):
+class MassAlert(Location):
 
     MASS_ALERT_TYPE = (
         ('AB', 'Abuse'),
@@ -565,8 +575,6 @@ class MassAlert(TimeStampedModel):
     address = models.CharField(max_length=255, null=True, blank=True)
     agency = models.ForeignKey('Agency')
     agency_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL)
-    latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)
     message = models.TextField()
     type = models.CharField(max_length=2, null=True, blank=True,
                                    choices=MASS_ALERT_TYPE)
@@ -606,8 +614,6 @@ class AgencyUser(AbstractUser):
     last_reported_time = models.DateTimeField(null=True, blank=True)
     notify_entourage_on_alert = models.BooleanField(default=False)
 
-    # entourage_session = models.ForeignKey('EntourageSession', null=True, blank=True)
-
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
 
@@ -619,7 +625,6 @@ class AgencyUser(AbstractUser):
             return u"%s" % self.email
         elif self.username:
             return u"%s" % self.username
-
 
     def get_absolute_url(self):
         return "/api/v1/users/%i/" % self.id
@@ -645,45 +650,56 @@ class AgencyUser(AbstractUser):
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
 
 
-# class EntourageSession(TimeStampedModel):
-#
-#     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-#                              related_name='session_user')
-#     start_location = models.ForeignKey('Location', null=True, blank=True,
-#                                        related_name='start_location')
-#     end_location = models.ForeignKey('Location', null=True, blank=True,
-#                                      related_name='end_location')
-#     eta = models.DateTimeField(null=True, blank=True)
-#
-#     start_time = models.DateTimeField(null=True, blank=True)
-#     arrival_time = models.DateTimeField(null=True, blank=True)
-#
-#
-#     class Meta:
-#         ordering = ['-creation_date']
-#
-#
-# class Location(models.Model):
-#
-#     name = models.CharField(max_length=255, null=True, blank=True)
-#     address = models.CharField(max_length=255, null=True, blank=True)
-#     latitude = models.FloatField(null=True, blank=True)
-#     longitude = models.FloatField(null=True, blank=True)
-#
-#
-# class TrackingLocation(TimeStampedModel):
-#     entourage_session = models.ForeignKey('EntourageSession', related_name='locations')
-#     accuracy = models.FloatField(null=True, blank=True)
-#     altitude = models.FloatField(null=True, blank=True)
-#     latitude = models.FloatField(null=True, blank=True)
-#     longitude = models.FloatField(null=True, blank=True)
-#
-#     class Meta:
-#         ordering = ['-creation_date']
-#
-#     def save(self, *args, **kwargs):
-#         super(TrackingLocation, self).save(*args, **kwargs)
-#         self.entourage_session.save()
+class EntourageSession(TimeStampedModel):
+
+    TRACKING_STATUS_CHOICES = (
+        ('T', 'Tracking'),
+        ('A', 'Arrived'),
+        ('N', 'Non-Arrival'),
+        ('C', 'Cancelled'),
+        ('U', 'Unknown'),
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name='session_user')
+    status = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
+                              default='T')
+    start_location = models.ForeignKey('Location', null=True, blank=True,
+                                       related_name='start_location')
+    end_location = models.ForeignKey('Location', null=True, blank=True,
+                                     related_name='end_location')
+    eta = models.DateTimeField(null=True, blank=True)
+    start_time = models.DateTimeField(null=True, blank=True)
+    arrival_time = models.DateTimeField(null=True, blank=True)
+    entourage_notified = models.BooleanField(default=False)
+
+    # Managers
+    tracking = TrackingEntourageSessionManager()
+
+    class Meta:
+        ordering = ['-creation_date']
+
+
+class NamedLocation(Location):
+
+    name = models.CharField(max_length=255, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
+
+    class Meta:
+        ordering = ['-creation_date']
+
+
+class TrackingLocation(Location):
+    entourage_session = models.ForeignKey('EntourageSession', related_name='locations')
+    accuracy = models.FloatField(null=True, blank=True)
+    altitude = models.FloatField(null=True, blank=True)
+
+    class Meta:
+        ordering = ['-creation_date']
+
+    def save(self, *args, **kwargs):
+        super(TrackingLocation, self).save(*args, **kwargs)
+        self.entourage_session.save()
 
 
 class EntourageMember(models.Model):
@@ -827,10 +843,10 @@ class ChatMessage(TimeStampedModel):
 
     def __unicode__(self):
 
-        if self.message.__len__() < 50:
-            return u"%s" % self.message
+        if self.message.__len__() < 47:
+            return self.message
 
-        return u"%s..." % self.message[:50]
+        return self.message[:50] + "..."
 
 
 class SocialCrimeReport(TimeStampedModel):

@@ -6,7 +6,8 @@ from rest_framework import serializers
 from core.models import (Agency, Alert, AlertLocation, Theme,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, Period, ClosedDate, StaticDevice)
+                         DispatchCenter, Period, ClosedDate, StaticDevice,
+                         EntourageSession, TrackingLocation, NamedLocation,)
 
 from emailmgr.models import EmailAddress
 from emailmgr.serializers import EmailAddressGETSerializer
@@ -19,6 +20,46 @@ class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
     class Meta:
         model = EntourageMember
         fields = ('url', 'user', 'name', 'matched_user')
+
+
+class NamedLocationMemberSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = NamedLocation
+
+
+class TrackingLocationSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = TrackingLocation
+
+
+class TrackingLocationSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = TrackingLocation
+
+
+class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
+
+    tracked_locations = TrackingLocationSerializer(required=False, many=True)
+
+    class Meta:
+        model = EntourageSession
+
+    # def to_native(self, obj):
+    #     ret = super(EntourageSessionSerializer, self).to_native(obj)
+    #     if obj:
+    #
+    #         all_locations = obj.locations
+    #         if all_locations:
+    #             ret['latest_location'] =\
+    #                 TrackingLocationSerializer(instance=all_locations.first()).data
+    #
+    #             ret['locations'] =\
+    #                 TrackingLocationSerializer(all_locations, many=True).data
+    #
+    #     return ret
 
 
 class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
@@ -86,17 +127,22 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social', 'entourage_members',
+                  'user_logged_in_via_social', 'entourage_members', 'entourage_session',
                   'last_reported_time', 'distance',)
 
-    def to_native(self, obj):
-        ret = super(UserSerializer, self).to_native(obj)
-        if obj:
-            email_address = EmailAddress.objects.filter(user=obj)
+    def to_native(self, user):
+        ret = super(UserSerializer, self).to_native(user)
+        if user:
+            email_address = EmailAddress.objects.filter(user=user)
             address = []
             for email in email_address:
                 address.append(EmailAddressGETSerializer(instance=email).data)
             ret['secondary_emails'] = address
+
+            active_session = EntourageSession.tracking.filter(user=user)
+            if active_session:
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+
         return ret
 
     def distance_if_exists(self, obj):
@@ -104,19 +150,23 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             return obj.distance.mi
 
 
-
-class UserUpdateSerializer(serializers.HyperlinkedModelSerializer):
+class UserEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  view_name='agency-detail')
+    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
-                  'phone_number', 'disarm_code', 'first_name', 'last_name',
-                  'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social',
-                  'last_reported_time', 'last_reported_latitude',
-                  'last_reported_longitude')
+        fields = ('url', 'username', 'email', 'agency',
+                  'phone_number', 'first_name', 'last_name')
+
+    def to_native(self, user):
+        ret = super(UserEntourageMemberSerializer, self).to_native(user)
+        if user:
+            active_session = EntourageSession.tracking.filter(user=user)
+            if active_session:
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+        return ret
 
 
 class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):

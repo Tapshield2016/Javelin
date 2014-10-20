@@ -79,12 +79,6 @@ class AgencyUserInline(admin.StackedInline):
     verbose_name_plural = "Dispatchers"
     fields = ('first_name', 'last_name', 'username', 'groups')
 
-    # def formfield_for_foreignkey(self, db_field, request=None, **kwargs):
-    #     field = super(AgencyUserInline, self).formfield_for_foreignkey(db_field, request, **kwargs)
-    #     field.queryset = field.queryset.filter(groups='Dispatchers')
-    #     return field
-
-
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
         ('Publish', {

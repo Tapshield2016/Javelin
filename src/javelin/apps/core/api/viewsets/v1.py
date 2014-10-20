@@ -39,12 +39,13 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      SocialCrimeReportSerializer,
                                      EntourageMemberSerializer,
                                      UnauthorizedEntourageMemberSerializer,
-                                     UserUpdateSerializer, UnauthorizedUserSerializer,
                                      RegionSerializer,
                                      DispatchCenterSerializer,
                                      PeriodSerializer,
                                      ClosedDateSerializer,
-                                     StaticDeviceSerializer, ThemeSerializer,)
+                                     StaticDeviceSerializer, ThemeSerializer,
+                                     EntourageSessionSerializer, TrackingLocationSerializer,
+                                     NamedLocationSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -53,7 +54,8 @@ from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period,
-                         ClosedDate, StaticDevice, Theme,)
+                         ClosedDate, StaticDevice, Theme,
+                         EntourageSession, TrackingLocation, NamedLocation,)
 
 from core.utils import get_agency_from_unknown
 
@@ -332,6 +334,17 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response(\
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
+
+    @action()
+    def matched_entourage_users(self, request, pk=None):
+        matching_members = EntourageMember.objects.filter(matched_user=self.get_object())
+
+        users = []
+
+        for member in matching_members:
+            users.append(member.user)
+
+
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -652,6 +665,20 @@ class ThemeViewSet(viewsets.ModelViewSet):
     queryset = Theme.objects.all()
     serializer_class = ThemeSerializer
 
+
+class EntourageSession(viewsets.ModelViewSet):
+    queryset = EntourageSession.objects.all()
+    serializer_class = EntourageSessionSerializer
+
+
+class TrackingLocation(viewsets.ModelViewSet):
+    queryset = TrackingLocation.objects.all()
+    serializer_class = TrackingLocationSerializer
+
+
+class NamedLocation(viewsets.ModelViewSet):
+    queryset = NamedLocation.objects.all()
+    serializer_class = NamedLocationSerializer
 
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
