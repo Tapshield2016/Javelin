@@ -122,18 +122,13 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
 
-        if hasattr(self, 'args'):
-            if self.args['pk'] == self.request.user.pk:
-                return UserSerializer
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UnauthorizedUserSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return UserSerializer
 
-        return UnauthorizedUserSerializer
-        # if self.request.method == 'GET' and not hasattr(self, 'response'):
-        #     return UnauthorizedUserSerializer
-        # elif self.request.method in ('POST', 'PUT', 'PATCH')\
-        #         and not hasattr(self, 'response'):
-        #     return UserSerializer
-        #
-        # return UserSerializer
+        return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\
