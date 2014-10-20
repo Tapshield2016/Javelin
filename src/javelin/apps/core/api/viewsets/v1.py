@@ -114,7 +114,7 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
                 if bool(request.user.groups.filter(name__in=permitted_groups)):
                     return True
 
-        return obj == request.user | request.user.is_superuser
+        return bool(obj == request.user | request.user.is_superuser)
 
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
