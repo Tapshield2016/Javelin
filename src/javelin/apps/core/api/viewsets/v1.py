@@ -106,18 +106,18 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
 
-        if self.request.user == self.get_object():
-            return EntourageMemberSerializer
-        else:
-            return UnauthorizedEntourageMemberSerializer
-
-        # if self.request.method == 'GET' and not hasattr(self, 'response'):
-        #     return UnauthorizedEntourageMemberSerializer
-        # elif self.request.method in ('POST', 'PUT', 'PATCH')\
-        #         and not hasattr(self, 'response'):
+        # if self.request.user == self.get_object():
         #     return EntourageMemberSerializer
-        #
-        # return UnauthorizedEntourageMemberSerializer
+        # else:
+        #     return UnauthorizedEntourageMemberSerializer
+
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UnauthorizedEntourageMemberSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return EntourageMemberSerializer
+
+        return UnauthorizedEntourageMemberSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -126,18 +126,18 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
 
-        if self.request.user == self.get_object():
-            return UserSerializer
-        else:
-            return UnauthorizedUserSerializer
-
-        # if self.request.method == 'GET' and not hasattr(self, 'response'):
+        # if self.request.user == self.get_object():
         #     return UserSerializer
-        # elif self.request.method in ('POST', 'PUT', 'PATCH')\
-        #         and not hasattr(self, 'response'):
-        #     return UserUpdateSerializer
-        #
-        # return UserSerializer
+        # else:
+        #     return UnauthorizedUserSerializer
+
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UserSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return UserUpdateSerializer
+
+        return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\

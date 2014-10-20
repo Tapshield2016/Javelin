@@ -606,6 +606,8 @@ class AgencyUser(AbstractUser):
     last_reported_time = models.DateTimeField(null=True, blank=True)
     notify_entourage_on_alert = models.BooleanField(default=False)
 
+    # entourage_session = models.ForeignKey('EntourageSession', null=True, blank=True)
+
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
 
@@ -641,6 +643,47 @@ class AgencyUser(AbstractUser):
         return u"sms-verification-topic-%s" % slugify(self.phone_number)
 
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
+
+
+# class EntourageSession(TimeStampedModel):
+#
+#     user = models.ForeignKey(settings.AUTH_USER_MODEL,
+#                              related_name='session_user')
+#     start_location = models.ForeignKey('Location', null=True, blank=True,
+#                                        related_name='start_location')
+#     end_location = models.ForeignKey('Location', null=True, blank=True,
+#                                      related_name='end_location')
+#     eta = models.DateTimeField(null=True, blank=True)
+#
+#     start_time = models.DateTimeField(null=True, blank=True)
+#     arrival_time = models.DateTimeField(null=True, blank=True)
+#
+#
+#     class Meta:
+#         ordering = ['-creation_date']
+#
+#
+# class Location(models.Model):
+#
+#     name = models.CharField(max_length=255, null=True, blank=True)
+#     address = models.CharField(max_length=255, null=True, blank=True)
+#     latitude = models.FloatField(null=True, blank=True)
+#     longitude = models.FloatField(null=True, blank=True)
+#
+#
+# class TrackingLocation(TimeStampedModel):
+#     entourage_session = models.ForeignKey('EntourageSession', related_name='locations')
+#     accuracy = models.FloatField(null=True, blank=True)
+#     altitude = models.FloatField(null=True, blank=True)
+#     latitude = models.FloatField(null=True, blank=True)
+#     longitude = models.FloatField(null=True, blank=True)
+#
+#     class Meta:
+#         ordering = ['-creation_date']
+#
+#     def save(self, *args, **kwargs):
+#         super(TrackingLocation, self).save(*args, **kwargs)
+#         self.entourage_session.save()
 
 
 class EntourageMember(models.Model):
