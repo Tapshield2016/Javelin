@@ -122,12 +122,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_serializer_class(self):
 
-        if self.kargs['pk'] == self.request.user.pk:
-            return UserSerializer
+        if hasattr(self, 'kargs'):
+            if self.kargs['pk'] == self.request.user.pk:
+                return UserSerializer
 
-        else:
-            return UnauthorizedUserSerializer
-
+        return UnauthorizedUserSerializer
         # if self.request.method == 'GET' and not hasattr(self, 'response'):
         #     return UnauthorizedUserSerializer
         # elif self.request.method in ('POST', 'PUT', 'PATCH')\
