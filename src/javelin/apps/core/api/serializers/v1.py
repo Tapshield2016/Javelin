@@ -127,7 +127,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
-                  'user_logged_in_via_social', 'entourage_members', 'entourage_session',
+                  'user_logged_in_via_social', 'entourage_members',
                   'last_reported_time', 'distance',)
 
     def to_native(self, user):
