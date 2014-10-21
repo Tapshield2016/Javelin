@@ -13,35 +13,62 @@ from emailmgr.models import EmailAddress
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
-                    Period, ClosedDate, StaticDevice, Theme,)
+                    Period, ClosedDate, StaticDevice, Theme,
+                    EntourageSession, TrackingLocation, NamedLocation,)
+
+
+class TrackingLocationInline(admin.StackedInline):
+    model = TrackingLocation
+    extra = 0
+
+
+class NamedLocationAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'address',)
+    search_fields = ['name', 'address',]
+
+
+class EntourageSessionAdmin(admin.ModelAdmin):
+    list_display = ('__unicode__', 'user', 'status', 'entourage_notified,')
+    list_filter = ('status',)
+    list_select_related = ('status',)
+    search_fields = ['user__username',]
+    inlines = [TrackingLocationInline,]
+
 
 class EmailAddressInline(admin.StackedInline):
     model = EmailAddress
     extra = 0
 
+
 class EntourageMemberAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'name', 'phone_number', 'email_address')
     search_fields = ['user__username', 'name', 'phone_number', 'email_address',]
+
 
 class EntourageMemberInline(admin.StackedInline):
     model = EntourageMember
     fk_name = 'user'
     extra = 0
 
+
 class PeriodInline(admin.StackedInline):
     model = Period
     extra = 0
+
 
 class ClosedDateInline(admin.StackedInline):
     model = ClosedDate
     extra = 0
 
+
 class RegionInline(admin.StackedInline):
     model = Region
     extra = 0
 
+
 class DispatchCenterAdmin(admin.ModelAdmin):
     inlines = [ClosedDateInline, PeriodInline]
+
 
 class DispatchCenterInline(admin.StackedInline):
     model = DispatchCenter
@@ -49,12 +76,14 @@ class DispatchCenterInline(admin.StackedInline):
     fields = ('name', 'phone_number', 'changeform_link')
     readonly_fields = ('changeform_link',)
 
+
 class StaticDeviceAdmin(geo_admin.OSMGeoAdmin):
     model = StaticDevice
     list_display = ('__unicode__', 'uuid', 'type', 'description')
     list_filter = ('agency',)
     list_select_related = ('agency',)
     search_fields = ['agency__name', 'uuid', 'description', 'type',]
+
 
 class StaticDeviceInline(admin.StackedInline):
 
@@ -71,6 +100,7 @@ class AgencyDispatchersSet(BaseInlineFormSet):
             self._queryset = qs
         return self._queryset
 
+
 class AgencyUserInline(admin.StackedInline):
     model = AgencyUser
     extra = 0
@@ -78,6 +108,7 @@ class AgencyUserInline(admin.StackedInline):
     verbose_name = "Dispatcher"
     verbose_name_plural = "Dispatchers"
     fields = ('first_name', 'last_name', 'username', 'groups')
+
 
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
@@ -143,6 +174,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.branding.id,))
         return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.branding.name))
     branding_link.short_description = 'Theme options'
+
 
 class AgencyUserAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_joined'
@@ -211,3 +243,6 @@ admin.site.register(EntourageMember, EntourageMemberAdmin)
 admin.site.register(DispatchCenter, DispatchCenterAdmin)
 admin.site.register(StaticDevice, StaticDeviceAdmin)
 admin.site.register(Theme, ThemeAdmin)
+
+admin.site.register(EntourageSession, EntourageSessionAdmin)
+admin.site.register(NamedLocation, NamedLocationAdmin)

@@ -155,13 +155,13 @@ class Agency(TimeStampedModel):
     alert_received_message = models.CharField(max_length=255, default="The authorities have been notified.")
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. "
-                                                       "Your alert session was completed by dispatcher.")
+                                                       "Your alert session was completed by dispatcher <first_name>.")
     sns_primary_topic_arn = models.CharField(max_length=255,
                                              null=True, blank=True)
     require_domain_emails = models.BooleanField(default=False)
     display_command_alert = models.BooleanField(default=False)
     loop_alert_sound = models.BooleanField(default=False)
-    launch_call_to_dispatcher_on_alert = models.BooleanField(default=False, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
+    launch_call_to_dispatcher_on_alert = models.BooleanField(default=True, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
     show_agency_name_in_app_navbar = models.BooleanField(default=False)
     enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.", verbose_name="enable chat auto-responder")
     chat_autoresponder_message =\
@@ -529,6 +529,7 @@ class Alert(TimeStampedModel):
 
 
 class AlertLocation(TimeStampedModel):
+
     alert = models.ForeignKey('Alert', related_name='locations')
     accuracy = models.FloatField(null=True, blank=True)
     altitude = models.FloatField(null=True, blank=True)
@@ -664,10 +665,8 @@ class EntourageSession(TimeStampedModel):
                              related_name='session_user')
     status = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
                               default='T')
-    start_location = models.ForeignKey('Location', null=True, blank=True,
-                                       related_name='start_location')
-    end_location = models.ForeignKey('Location', null=True, blank=True,
-                                     related_name='end_location')
+    start_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="starting_locations")
+    end_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="ending_locations")
     eta = models.DateTimeField(null=True, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
     arrival_time = models.DateTimeField(null=True, blank=True)
@@ -679,6 +678,9 @@ class EntourageSession(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        return u"%s - %s to %s" % (self.user.username, self.start_location.name, self.end_location.name)
+
 
 class NamedLocation(Location):
 
@@ -688,8 +690,12 @@ class NamedLocation(Location):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        return self.name
+
 
 class TrackingLocation(Location):
+
     entourage_session = models.ForeignKey('EntourageSession', related_name='locations')
     accuracy = models.FloatField(null=True, blank=True)
     altitude = models.FloatField(null=True, blank=True)
@@ -967,6 +973,7 @@ class StaticDevice(models.Model):
 def file_path(self, filename):
     url = "themes/%s/%s" % (self.name, filename)
     return url
+
 
 class Theme(models.Model):
 

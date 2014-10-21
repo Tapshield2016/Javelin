@@ -666,17 +666,17 @@ class ThemeViewSet(viewsets.ModelViewSet):
     serializer_class = ThemeSerializer
 
 
-class EntourageSession(viewsets.ModelViewSet):
+class EntourageSessionViewSet(viewsets.ModelViewSet):
     queryset = EntourageSession.objects.all()
     serializer_class = EntourageSessionSerializer
 
 
-class TrackingLocation(viewsets.ModelViewSet):
+class TrackingLocationViewSet(viewsets.ModelViewSet):
     queryset = TrackingLocation.objects.all()
     serializer_class = TrackingLocationSerializer
 
 
-class NamedLocation(viewsets.ModelViewSet):
+class NamedLocationViewSet(viewsets.ModelViewSet):
     queryset = NamedLocation.objects.all()
     serializer_class = NamedLocationSerializer
 
