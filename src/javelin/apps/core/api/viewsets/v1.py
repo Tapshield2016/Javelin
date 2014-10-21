@@ -345,8 +345,6 @@ class UserViewSet(viewsets.ModelViewSet):
             users.append(member.user)
 
 
-
-
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -360,6 +358,7 @@ class SocialCrimeReportModifiedSinceFilterBackend(django_filters.FilterSet):
 
     class Meta:
         model = SocialCrimeReport
+
 
 class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     model = SocialCrimeReport
