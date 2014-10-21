@@ -666,7 +666,7 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
 
 class EntourageSessionViewSet(viewsets.ModelViewSet):
-    # queryset = EntourageSession.objects.all()
+    queryset = EntourageSession.objects.all()
     serializer_class = EntourageSessionSerializer
 
 
