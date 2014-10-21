@@ -22,7 +22,7 @@ class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
         fields = ('url', 'user', 'name', 'matched_user')
 
 
-class NamedLocationMemberSerializer(serializers.HyperlinkedModelSerializer):
+class NamedLocationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = NamedLocation
