@@ -28,7 +28,7 @@ class NamedLocationAdmin(admin.ModelAdmin):
 
 
 class EntourageSessionAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'user', 'status', 'entourage_notified,')
+    list_display = ('__unicode__', 'user', 'status', 'entourage_notified',)
     list_filter = ('status',)
     list_select_related = ('status',)
     search_fields = ['user__username',]
