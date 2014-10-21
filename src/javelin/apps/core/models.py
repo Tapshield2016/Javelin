@@ -673,6 +673,7 @@ class EntourageSession(TimeStampedModel):
     entourage_notified = models.BooleanField(default=False)
 
     # Managers
+    objects = models.Manager()
     tracking = TrackingEntourageSessionManager()
 
     class Meta:
