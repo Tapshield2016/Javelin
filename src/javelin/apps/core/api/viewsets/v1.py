@@ -172,7 +172,7 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = User.objects.none()
         return qs
 
-    @detail_route(methods=['POST',])
+    @detail_route(methods=['post',])
     def message_entourage(self, request, pk=None):
         message = request.DATA.get('message', None)
         subject = request.DATA.get('subject', None)
@@ -213,7 +213,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'Success'})
 
-    @detail_route(methods=['post',])
+    @detail_route(methods=['post'])
     def update_required_info(self, request, pk=None):
         user = self.get_object()
         valid_keys = ['agency', 'phone_number', 'disarm_code',
@@ -240,7 +240,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'message': 'There was an error with the values provided.'},
                 status=status.HTTP_400_BAD_REQUEST)
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def update_device_token(self, request, pk=None):
         """
         Set the device token for the specified user.
@@ -275,7 +275,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
             phone_number = request.DATA.get('phone_number', None)
@@ -305,7 +305,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def check_sms_verification_code(self, request, pk=None):
         """
         Checks the provided code against the code sent to the user
@@ -337,7 +337,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
 
-    @detail_route()
+    @detail_route(['get'])
     def matched_entourage_users(self, request, pk=None):
 
         user = self.get_object()
@@ -409,7 +409,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             qs = SocialCrimeReport.objects.none()
         return qs
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def mark_viewed(self, request, pk=None):
 
         if not request.user.is_superuser:
@@ -464,7 +464,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
             qs = Agency.objects.none()
         return qs.exclude(hidden=True)
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def send_mass_alert(self, request, pk=None):
         """
         Sends a message to all devices subscribed to the agency's SNS topic
@@ -510,7 +510,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                      'status', 'initiated_by',)
     filter_class = AlertsModifiedSinceFilterBackend
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def complete(self, request, pk=None):
         """
         Set a alert completed.
@@ -550,7 +550,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         return Response(serialized.data)
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def disarm(self, request, pk=None):
         """
         Set a disarmed time on the alert. This indicates that the user wishes
@@ -562,7 +562,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         return Response(serialized.data)
         
 
-    @detail_route()
+    @detail_route(methods=['post'])
     def send_message(self, request, pk=None):
         """
         Sends a chat message to DynamoDB, tied to the specified alert's PK.
