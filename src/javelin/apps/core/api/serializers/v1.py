@@ -141,7 +141,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
 
         return ret
 
@@ -164,7 +164,7 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
         return ret
 
 
@@ -182,7 +182,7 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
         return ret
 
 
