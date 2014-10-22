@@ -362,7 +362,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
         serialized_data = serialized_always.data + serialized_tracking.data + serialized_no_tracking.data
 
-        return Response({"users": serialized_data},
+        return Response(serialized_data,
                         status=status.HTTP_200_OK)
 
 
