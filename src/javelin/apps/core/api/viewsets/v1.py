@@ -360,7 +360,11 @@ class UserViewSet(viewsets.ModelViewSet):
         serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True)
         serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True)
 
-        return Response({"users": [serialized_always.data, serialized_tracking.data, serialized_no_tracking.data]},
+        serialized_data = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True).data
+        serialized_data.append(UserTrackingEntourageMemberSerializer(tracking_users, many=True).data)
+        serialized_data.append(UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True).data)
+
+        return Response({"users": serialized_data},
                         status=status.HTTP_200_OK)
 
 
