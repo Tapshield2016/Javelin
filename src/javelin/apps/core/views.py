@@ -111,7 +111,7 @@ def register_user(request):
     if not 'username' in request_data:
         request_data['username'] = request_data.get('email', None)
 
-    serialized = UserSerializer(data=request_data)
+    serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
         user = RegistrationProfile.objects.create_inactive_user(
             serialized.init_data['email'].lower(),
@@ -128,7 +128,7 @@ def register_user(request):
         user.first_name = request_data.get('first_name', '')
         user.last_name = request_data.get('last_name', '')
         user.save()
-        return Response(UserSerializer(instance=user).data,
+        return Response(UserSerializer(instance=user, context={'request': request}).data,
                         status=status.HTTP_201_CREATED)
     else:
         return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
@@ -232,7 +232,7 @@ def login(request):
         serialized.data['token'] = token.key
         if request.user.agency:
             serialized.data['agency'] =\
-                AgencySerializer(request.user.agency).data
+                AgencySerializer(request.user.agency, context={'request': request}).data
         message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
     else:
         status = 401
@@ -369,7 +369,7 @@ def create_facebook_user(request):
             serialized = UserSerializer(user, context={'request': request})
             if user.agency:
                 serialized.data['agency'] =\
-                    AgencySerializer(user.agency).data
+                    AgencySerializer(user.agency, context={'request': request}).data
 
             token, created = Token.objects.get_or_create(user=user)
             serialized.data['token'] = token.key
@@ -408,7 +408,7 @@ def create_twitter_user(request):
     serialized = UserSerializer(user, context={'request': request})
     if user.agency:
         serialized.data['agency'] =\
-            AgencySerializer(user.agency).data
+            AgencySerializer(user.agency, context={'request': request}).data
 
 
     token, created = Token.objects.get_or_create(user=user)
@@ -437,7 +437,7 @@ def create_google_user(request):
     serialized = UserSerializer(user, context={'request': request})
     if user.agency:
         serialized.data['agency'] =\
-            AgencySerializer(user.agency).data
+            AgencySerializer(user.agency, context={'request': request}).data
 
     token, created = Token.objects.get_or_create(user=user)
     serialized.data['token'] = token.key
@@ -463,7 +463,7 @@ def create_linkedin_user(request):
     serialized = UserSerializer(user, context={'request': request})
     if user.agency:
         serialized.data['agency'] =\
-            AgencySerializer(user.agency).data
+            AgencySerializer(user.agency, context={'request': request}).data
 
 
     token, created = Token.objects.get_or_create(user=user)
@@ -476,16 +476,16 @@ def create_linkedin_user(request):
 def serialize_static_device_save(request):
 
     request_data = request.POST.copy()
-    request_data['user'] = UserSerializer(request.user).data['url']
+    request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
     agency_id = request_data.get('agency', None)
 
     agency = None
     if agency_id:
         agency = get_agency_from_unknown(agency_id)
     if agency:
-        request_data['agency'] = AgencySerializer(agency).data['url']
+        request_data['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
 
-    serializer = StaticDeviceSerializer(data=request_data)
+    serializer = StaticDeviceSerializer(data=request_data, context={'request': request})
 
     if not serializer.is_valid():
         return serializer
@@ -590,7 +590,7 @@ def static_alert(request):
             response = HttpResponse(content="Created")
             response.status_code = 201
             alert = new_static_alert(current_device)
-            serializer = AlertSerializer(instance=alert)
+            serializer = AlertSerializer(instance=alert, context={'request': request})
 
             headers = {}
             try:
@@ -626,7 +626,7 @@ def static_disarm(request):
         if active_alerts:
             alert = active_alerts[0]
             alert.disarm()
-            serializer = AlertSerializer(instance=alert)
+            serializer = AlertSerializer(instance=alert, context={'request': request})
 
             headers = {}
             try:
@@ -683,7 +683,7 @@ def create_alert(request):
         active_alerts = Alert.active.filter(agency_user=request.user)
         if (created):
             if active_alerts:
-                return Response(AlertSerializer(instance=active_alerts[0]).data,
+                return Response(AlertSerializer(instance=active_alerts[0], context={'request': request}).data,
                             status=status.HTTP_201_CREATED)
             else:
                 return Response({"message": "Could not find active alert"},
@@ -703,7 +703,7 @@ def find_active_alert(request):
         response.status_code = 404
         return response
 
-    return Response(AlertSerializer(instance=active_alerts[0]).data,
+    return Response(AlertSerializer(instance=active_alerts[0], context={'request': request}).data,
                         status=status.HTTP_200_OK)
 
 
@@ -717,7 +717,7 @@ def set_entourage_members(request):
 
     for member in request.DATA:
 
-        serializer = EntourageMemberSerializer(data=member)
+        serializer = EntourageMemberSerializer(data=member, context={'request': request})
 
         if serializer.is_valid():
 
@@ -747,7 +747,8 @@ def set_entourage_members(request):
     for member in members_to_delete:
         member.delete()
 
-    return Response(EntourageMemberSerializer(EntourageMember.objects.filter(user=request.user, many=True)).data,
+    return Response(EntourageMemberSerializer(EntourageMember.objects.filter(user=request.user, many=True),
+                                              context={'request': request}).data,
                     status=status.HTTP_200_OK)
     # return Response(UserSerializer(instance=request.user).data,
     #                 status=status.HTTP_200_OK)

@@ -232,7 +232,7 @@ class UserViewSet(viewsets.ModelViewSet):
             if hasattr(user, k):
                 setattr(user, k, v)
         user.save()
-        serializer = UserSerializer(user)
+        serializer = UserSerializer(user, context={'request': request})
         if serializer.data:
             return Response(serializer.data)
         else:
@@ -344,7 +344,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if not user == request.user:
             matching_members = EntourageMember.objects.filter(matched_user=user)
-            return Response(UserNoLocationEntourageMemberSerializer(matching_members, many=True).data,
+            return Response(UserNoLocationEntourageMemberSerializer(matching_members,
+                                                                    many=True,
+                                                                    context={'request': request}).data,
                             status=status.HTTP_200_OK)
 
         always_visible_users_id = EntourageMember.objects.filter(matched_user=user,
@@ -432,7 +434,9 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             reporter.device_type,
             reporter.device_endpoint_arn)
 
-        return Response(SocialCrimeReportSerializer(instance=report).data, status=status.HTTP_200_OK)
+        return Response(SocialCrimeReportSerializer(instance=report,
+                                                    context={'request': request}).data,
+                        status=status.HTTP_200_OK)
 
 
 
@@ -519,7 +523,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         alert.status = 'C'
         alert.save()
-        serialized = AlertSerializer(alert)
+        serialized = AlertSerializer(alert, context={'request': request})
 
         if not alert.agency_user:
             return Response(serialized.data)
@@ -554,7 +558,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         """
         alert = self.get_object()
         alert.disarm()
-        serialized = AlertSerializer(alert)
+        serialized = AlertSerializer(alert, context={'request': request})
         return Response(serialized.data)
         
 
@@ -629,7 +633,7 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
 
         active_alerts = Alert.active.filter(agency_user=request.user)
 
-        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES, context={'request': request})
 
         if serializer.is_valid():
             self.pre_save(serializer.object)
@@ -716,16 +720,16 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     def create(self, request):
 
         request_data = request.DATA.copy()
-        request_data['user'] = UserSerializer(request.user).data['url']
+        request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
         agency_id = request_data.get('agency', None)
 
         agency = None
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request_data['agency'] = AgencySerializer(agency).data['url']
+            request_data['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
 
-        serializer = self.get_serializer(data=request_data, files=request.FILES)
+        serializer = self.get_serializer(data=request_data, files=request.FILES, context={'request': request})
 
         if serializer.is_valid():
 
@@ -747,16 +751,16 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
-        request.DATA['user'] = UserSerializer(request.user).data['url']
+        request.DATA['user'] = UserSerializer(request.user, context={'request': request}).data['url']
         agency_id = request.DATA.get('agency', None)
 
         agency = None
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request.DATA['agency'] = AgencySerializer(agency).data['url']
+            request.DATA['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
         else:
-            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
+            request.DATA['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
 
         request.DATA._mutable = mutable
 
@@ -767,16 +771,16 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         mutable = request.DATA._mutable
         request.DATA._mutable = True
-        request.DATA['user'] = UserSerializer(request.user).data['url']
+        request.DATA['user'] = UserSerializer(request.user, context={'request': request}).data['url']
         agency_id = request.DATA.get('agency', None)
 
         agency = None
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request.DATA['agency'] = AgencySerializer(agency).data['url']
+            request.DATA['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
         else:
-            request.DATA['agency'] = StaticDeviceSerializer(self).data['agency']
+            request.DATA['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
 
         request.DATA._mutable = mutable
 
