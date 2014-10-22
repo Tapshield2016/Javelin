@@ -348,13 +348,13 @@ class UserViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_200_OK)
 
         always_visible_users = EntourageMember.objects.filter(matched_user=user,
-                                                              always_visible=True).values('user')
+                                                              always_visible=True).values('user_id')
         tracking_users = EntourageMember.objects.filter(matched_user=user,
                                                         always_visible=False,
-                                                        track_route=True).values('user')
+                                                        track_route=True).values('user_id')
         no_tracking_users = EntourageMember.objects.filter(matched_user=user,
                                                               always_visible=False,
-                                                              track_route=False).values('user')
+                                                              track_route=False).values('user_id')
 
 
 
