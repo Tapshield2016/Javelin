@@ -338,7 +338,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST)
 
     @detail_route()
-    def matched_entourage_users(self, request):
+    def matched_entourage_users(self, request, pk=None):
 
         user = self.get_object()
 
