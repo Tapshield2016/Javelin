@@ -42,7 +42,7 @@ class TrackingLocationSerializer(serializers.HyperlinkedModelSerializer):
 
 class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
-    tracked_locations = TrackingLocationSerializer(required=False, many=True)
+    locations = TrackingLocationSerializer(required=False, many=True)
 
     class Meta:
         model = EntourageSession
