@@ -47,20 +47,6 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = EntourageSession
 
-    # def to_native(self, obj):
-    #     ret = super(EntourageSessionSerializer, self).to_native(obj)
-    #     if obj:
-    #
-    #         all_locations = obj.locations
-    #         if all_locations:
-    #             ret['latest_location'] =\
-    #                 TrackingLocationSerializer(instance=all_locations.first()).data
-    #
-    #             ret['locations'] =\
-    #                 TrackingLocationSerializer(all_locations, many=True).data
-    #
-    #     return ret
-
 
 class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -108,10 +94,12 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         ret = super(AgencySerializer, self).to_native(obj)
         if obj:
             if obj.theme:
-                agency_theme = ThemeSerializer(instance=obj.theme)
+                agency_theme = ThemeSerializer(instance=obj.theme,
+                                               context={'request': self.context.get('request', None)})
                 ret['theme'] = agency_theme.data
             if obj.branding:
-                branding_theme = ThemeSerializer(instance=obj.branding)
+                branding_theme = ThemeSerializer(instance=obj.branding,
+                                                 context={'request': self.context.get('request', None)})
                 ret['branding'] = branding_theme.data
         return ret
 
@@ -136,12 +124,14 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             email_address = EmailAddress.objects.filter(user=user)
             address = []
             for email in email_address:
-                address.append(EmailAddressGETSerializer(instance=email).data)
+                address.append(EmailAddressGETSerializer(instance=email,
+                                                         context={'request': self.context.get('request', None)}).data)
             ret['secondary_emails'] = address
 
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
+                                                                      context={'request': self.context.get('request', None)}).data
 
         return ret
 
@@ -164,7 +154,8 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
+                                                                      context={'request': self.context.get('request', None)}).data
         return ret
 
 
@@ -182,7 +173,8 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0], context={'request': self.context.get('request', None)}).data
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
+                                                                      context={'request': self.context.get('request', None)}).data
         return ret
 
 
@@ -244,10 +236,12 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
         ret = super(AlertSerializer, self).to_native(obj)
         if obj:
             if obj.agency_user:
-                agency_user_meta = UserSerializer(instance=obj.agency_user)
+                agency_user_meta = UserSerializer(instance=obj.agency_user,
+                                                  context={'request': self.context.get('request', None)})
                 ret['agency_user_meta'] = agency_user_meta.data
             if obj.static_device:
-                static_device_meta = StaticDeviceSerializer(instance=obj.static_device)
+                static_device_meta = StaticDeviceSerializer(instance=obj.static_device,
+                                                            context={'request': self.context.get('request', None)})
                 ret['static_device_meta'] = static_device_meta.data
             ret['agency_dispatcher_name'] = None
             if obj.agency_dispatcher:
@@ -257,7 +251,8 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
             latest_location = obj.locations.first()
             if latest_location:
                 ret['latest_location'] =\
-                    AlertLocationSerializer(instance=latest_location).data 
+                    AlertLocationSerializer(instance=latest_location,
+                                            context={'request': self.context.get('request', None)}).data
         return ret
 
 
