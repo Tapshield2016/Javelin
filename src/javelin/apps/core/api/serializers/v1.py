@@ -169,7 +169,7 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
 
 
 class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    
+
     distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
@@ -178,7 +178,7 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
                   'phone_number', 'first_name', 'last_name')
 
     def to_native(self, user):
-        ret = super(UserEntourageMemberSerializer, self).to_native(user)
+        ret = super(UserTrackingEntourageMemberSerializer, self).to_native(user)
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
@@ -187,8 +187,7 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
 
 
 class UserNoLocationEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    agency = serializers.HyperlinkedRelatedField(required=False,
-                                                 view_name='agency-detail')
+
     distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
