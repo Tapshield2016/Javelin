@@ -347,15 +347,19 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response(UserNoLocationEntourageMemberSerializer(matching_members, many=True).data,
                             status=status.HTTP_200_OK)
 
-        always_visible_users = EntourageMember.objects.filter(matched_user=user,
+        always_visible_users_id = EntourageMember.objects.filter(matched_user=user,
                                                               always_visible=True).values('user_id')
-        tracking_users = EntourageMember.objects.filter(matched_user=user,
+        tracking_users_id = EntourageMember.objects.filter(matched_user=user,
                                                         always_visible=False,
                                                         track_route=True).values('user_id')
-        no_tracking_users = EntourageMember.objects.filter(matched_user=user,
+        no_tracking_users_id = EntourageMember.objects.filter(matched_user=user,
                                                               always_visible=False,
                                                               track_route=False).values('user_id')
 
+
+        always_visible_users = User.objects.filter(id__in=always_visible_users_id)
+        tracking_users = User.objects.filter(id__in=tracking_users_id)
+        no_tracking_users = User.objects.filter(id__in=no_tracking_users_id)
 
 
         serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True, context={'request': request})
