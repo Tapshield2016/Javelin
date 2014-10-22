@@ -6,7 +6,7 @@ from django import forms
 from django.utils.encoding import force_str
  
 from rest_framework import ISO_8601
-from rest_framework.compat import parse_datetime
+from django.utils.dateparse import parse_datetime
 from rest_framework.filters import BaseFilterBackend
 
 from exceptions import MissingAgencyQueryParameterException

@@ -337,8 +337,8 @@ class UserViewSet(viewsets.ModelViewSet):
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
 
-    @action()
-    def matched_entourage_users(self, request, pk=None):
+    @link()
+    def matched_entourage_users(self, request):
 
         user = self.get_object()
 
