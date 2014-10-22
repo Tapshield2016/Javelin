@@ -45,7 +45,9 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      ClosedDateSerializer,
                                      StaticDeviceSerializer, ThemeSerializer,
                                      EntourageSessionSerializer, TrackingLocationSerializer,
-                                     NamedLocationSerializer)
+                                     NamedLocationSerializer,
+                                     UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
+                                     UserAlwaysVisibleEntourageMemberSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -337,12 +339,30 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action()
     def matched_entourage_users(self, request, pk=None):
-        matching_members = EntourageMember.objects.filter(matched_user=self.get_object())
 
-        users = []
+        user = self.get_object()
 
-        for member in matching_members:
-            users.append(member.user)
+        if not user == request.user:
+            matching_members = EntourageMember.objects.filter(matched_user=user)
+            return Response(\
+                    UserNoLocationEntourageMemberSerializer(matching_members, many=True),
+                    status=status.HTTP_200_OK)
+
+        always_visible_users = EntourageMember.objects.filter(matched_user=user,
+                                                              always_visible=True)
+        tracking_users = EntourageMember.objects.filter(matched_user=user,
+                                                        always_visible=False,
+                                                        track_route=True)
+        no_tracking_users = EntourageMember.objects.filter(matched_user=user,
+                                                              always_visible=False,
+                                                              track_route=False)
+
+        serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True)
+        serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True)
+        serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True)
+
+        return Response({"users": [serialized_always.data, serialized_tracking.data, serialized_no_tracking.data]},
+                        status=status.HTTP_200_OK)
 
 
 class GroupViewSet(viewsets.ModelViewSet):

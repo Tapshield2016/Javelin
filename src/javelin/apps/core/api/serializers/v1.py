@@ -150,23 +150,42 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             return obj.distance.mi
 
 
-class UserEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    agency = serializers.HyperlinkedRelatedField(required=False,
-                                                 view_name='agency-detail')
+class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'agency',
+                  'phone_number', 'first_name', 'last_name',
+                  'last_reported_latitude', 'last_reported_longitude')
+
+    def to_native(self, user):
+        ret = super(UserAlwaysVisibleEntourageMemberSerializer, self).to_native(user)
+        if user:
+            active_session = EntourageSession.tracking.filter(user=user)
+            if active_session:
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
+        return ret
+
+
+class UserNoLocationEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
         fields = ('url', 'username', 'email', 'agency',
                   'phone_number', 'first_name', 'last_name')
 
+
+class UserTrackingEntourageMemberSerializer(UserNoLocationEntourageMemberSerializer):
+
     def to_native(self, user):
-        ret = super(UserEntourageMemberSerializer, self).to_native(user)
+        ret = super(UserTrackingEntourageMemberSerializer, self).to_native(user)
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
                 ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0]).data
         return ret
+
 
 
 class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):
