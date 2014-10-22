@@ -344,9 +344,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if not user == request.user:
             matching_members = EntourageMember.objects.filter(matched_user=user)
-            return Response(\
-                    UserNoLocationEntourageMemberSerializer(matching_members, many=True),
-                    status=status.HTTP_200_OK)
+            return Response(UserNoLocationEntourageMemberSerializer(matching_members, many=True).data,
+                            status=status.HTTP_200_OK)
 
         always_visible_users = EntourageMember.objects.filter(matched_user=user,
                                                               always_visible=True)
