@@ -25,7 +25,7 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.permissions import AllowAny
 from rest_framework import status, viewsets, ISO_8601
-from rest_framework.decorators import action
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
                                     SearchFilter)
 from rest_framework.response import Response
@@ -172,7 +172,7 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = User.objects.none()
         return qs
 
-    @action(methods=['POST',])
+    @detail_route(methods=['POST',])
     def message_entourage(self, request, pk=None):
         message = request.DATA.get('message', None)
         subject = request.DATA.get('subject', None)
@@ -213,7 +213,7 @@ class UserViewSet(viewsets.ModelViewSet):
         else:
             return Response({'message': 'Success'})
 
-    @action(methods=['post',])
+    @detail_route(methods=['post',])
     def update_required_info(self, request, pk=None):
         user = self.get_object()
         valid_keys = ['agency', 'phone_number', 'disarm_code',
@@ -240,7 +240,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 {'message': 'There was an error with the values provided.'},
                 status=status.HTTP_400_BAD_REQUEST)
 
-    @action()
+    @detail_route()
     def update_device_token(self, request, pk=None):
         """
         Set the device token for the specified user.
@@ -275,7 +275,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
-    @action()
+    @detail_route()
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
             phone_number = request.DATA.get('phone_number', None)
@@ -305,7 +305,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Not found.'},
                          status=status.HTTP_404_NOT_FOUND)
 
-    @action()
+    @detail_route()
     def check_sms_verification_code(self, request, pk=None):
         """
         Checks the provided code against the code sent to the user
@@ -337,7 +337,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
 
-    @link()
+    @list_route()
     def matched_entourage_users(self, request):
 
         user = self.get_object()
@@ -400,7 +400,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             qs = SocialCrimeReport.objects.none()
         return qs
 
-    @action()
+    @detail_route()
     def mark_viewed(self, request, pk=None):
 
         if not request.user.is_superuser:
@@ -453,7 +453,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
             qs = Agency.objects.none()
         return qs.exclude(hidden=True)
 
-    @action()
+    @detail_route()
     def send_mass_alert(self, request, pk=None):
         """
         Sends a message to all devices subscribed to the agency's SNS topic
@@ -499,7 +499,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                      'status', 'initiated_by',)
     filter_class = AlertsModifiedSinceFilterBackend
 
-    @action()
+    @detail_route()
     def complete(self, request, pk=None):
         """
         Set a alert completed.
@@ -539,7 +539,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         return Response(serialized.data)
 
-    @action()
+    @detail_route()
     def disarm(self, request, pk=None):
         """
         Set a disarmed time on the alert. This indicates that the user wishes
@@ -551,7 +551,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         return Response(serialized.data)
         
 
-    @action()
+    @detail_route()
     def send_message(self, request, pk=None):
         """
         Sends a chat message to DynamoDB, tied to the specified alert's PK.
@@ -582,7 +582,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                 {'message': "message and sender are required parameters"},
                 status=status.HTTP_400_BAD_REQUEST)
 
-    @action(methods=['get'])
+    @detail_route(methods=['get'])
     def messages(self, request, pk=None):
         """
         Get all messages for the given alert.
@@ -591,7 +591,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         messages = dynamo_db.get_messages_for_alert(pk)
         return Response(messages)
 
-    @action(methods=['get'])
+    @detail_route(methods=['get'])
     def messages_since(self, request, pk=None):
         """
         Get all messages for the given alert since the provided Unix timestamp.
@@ -776,7 +776,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 
     # @csrf_exempt
-    # @action(methods=['get'])
+    # @detail_route(methods=['get'])
     # def alert(self, request, pk=None):
     #
     #     response = HttpResponse(content="Created")
