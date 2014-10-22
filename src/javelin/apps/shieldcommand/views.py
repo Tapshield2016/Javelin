@@ -19,9 +19,9 @@ def index(request):
     agency = request.user.agency
     agency_boundaries_coords = []
     multi_region_boundaries = []
-    user = UserSerializer(request.user)
-    branding = ThemeSerializer(agency.branding)
-    theme = ThemeSerializer(agency.theme)
+    user = UserSerializer(request.user, context={'request': request})
+    branding = ThemeSerializer(agency.branding, context={'request': request})
+    theme = ThemeSerializer(agency.theme, context={'request': request})
 
     if agency.region:
         for region in agency.region.all():
