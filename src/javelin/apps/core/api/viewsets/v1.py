@@ -362,9 +362,9 @@ class UserViewSet(viewsets.ModelViewSet):
         no_tracking_users = User.objects.filter(id__in=no_tracking_users_id)
 
 
-        serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True)
-        serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True)
-        serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True)
+        serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True, context={'request': request})
+        serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True, context={'request': request})
+        serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True, context={'request': request})
 
         serialized_data = serialized_always.data + serialized_tracking.data + serialized_no_tracking.data
 
