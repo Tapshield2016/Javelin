@@ -629,6 +629,7 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
     serializer_class = AlertLocationSerializer
     filter_fields = ('alert',)
 
+    @detail_route(methods=['post'])
     def create(self, request):
 
         active_alerts = Alert.active.filter(agency_user=request.user)
