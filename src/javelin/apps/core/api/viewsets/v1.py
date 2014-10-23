@@ -462,6 +462,9 @@ class AgencyViewSet(viewsets.ModelViewSet):
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
+
+        if self.request.user.is_staff:
+            return qs
         return qs.exclude(hidden=True)
 
     @detail_route(methods=['post'])
