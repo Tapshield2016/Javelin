@@ -633,7 +633,7 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
 
         active_alerts = Alert.active.filter(agency_user=request.user)
 
-        serializer = self.get_serializer(data=request.DATA, files=request.FILES, context={'request': request})
+        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
 
         if serializer.is_valid():
             self.pre_save(serializer.object)
