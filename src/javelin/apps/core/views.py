@@ -748,7 +748,7 @@ def set_entourage_members(request):
     for member in members_to_delete:
         member.delete()
 
-    return Response(EntourageMemberSerializer(EntourageMember.objects.filter(user=request.user, many=True),
+    return Response(EntourageMemberSerializer(EntourageMember.objects.filter(user=request.user), many=True,
                                               context={'request': request}).data,
                     status=status.HTTP_200_OK)
     # return Response(UserSerializer(instance=request.user).data,
