@@ -738,7 +738,7 @@ def set_entourage_members(request):
 
             if existing:
                 member_to_save = existing[0]
-                # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
+                EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
             else:
                 member_to_save.save()
 
