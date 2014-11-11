@@ -718,7 +718,6 @@ def set_entourage_members(request):
 
     for member in request.DATA:
 
-        member['user'] = request.user
         serializer = EntourageMemberSerializer(data=member, context={'request': request})
 
         if serializer.is_valid():
@@ -739,6 +738,7 @@ def set_entourage_members(request):
 
             if existing:
                 member_to_save = existing[0]
+                member['user'] = request.user
                 for attr, value in member.iteritems():
                     setattr(member_to_save, attr, value)
                 # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
