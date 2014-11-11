@@ -718,6 +718,7 @@ def set_entourage_members(request):
 
     for member in request.DATA:
 
+        member['user'] = request.user
         serializer = EntourageMemberSerializer(data=member, context={'request': request})
 
         if serializer.is_valid():
