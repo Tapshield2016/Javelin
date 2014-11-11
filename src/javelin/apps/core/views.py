@@ -738,8 +738,7 @@ def set_entourage_members(request):
 
             if existing:
                 member_to_save = existing[0]
-                dictionary = json.loads(member)
-                for attr, value in dictionary.iteritems():
+                for attr, value in member.iteritems():
                     setattr(member_to_save, attr, value)
                 # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
             else:
