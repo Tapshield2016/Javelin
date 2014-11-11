@@ -738,7 +738,8 @@ def set_entourage_members(request):
 
             if existing:
                 member_to_save = existing[0]
-                member_to_save.__dict__.update(member)
+                EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
+                # member_to_save.__dict__.update(member)
             else:
                 member_to_save.save()
 
@@ -751,5 +752,3 @@ def set_entourage_members(request):
     return Response(EntourageMemberSerializer(EntourageMember.objects.filter(user=request.user), many=True,
                                               context={'request': request}).data,
                     status=status.HTTP_200_OK)
-    # return Response(UserSerializer(instance=request.user).data,
-    #                 status=status.HTTP_200_OK)
