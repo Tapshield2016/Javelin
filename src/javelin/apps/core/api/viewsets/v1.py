@@ -343,7 +343,7 @@ class UserViewSet(viewsets.ModelViewSet):
         user = self.get_object()
 
         if not user == request.user:
-            matching_members = EntourageMember.objects.filter(matched_user=user)
+            matching_members = EntourageMember.objects.filter(matched_user=user).values('user')
             return Response(UserNoLocationEntourageMemberSerializer(matching_members,
                                                                     many=True,
                                                                     context={'request': request}).data,
