@@ -740,8 +740,11 @@ def set_entourage_members(request):
             if existing:
                 member_to_save = existing[0]
                 member['user'] = request.user
-                EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
-
+                # for attr, value in member.iteritems():
+                #     setattr(member_to_save, attr, value)
+                # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
+                member_to_save.__dict__.update(member)
+            # else:
             member_to_save.save()
 
             current_members.append(member_to_save.pk)
