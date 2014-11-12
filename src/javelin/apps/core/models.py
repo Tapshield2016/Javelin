@@ -1,6 +1,8 @@
 import string
 import random
 import reversion
+import re
+
 from django.core import urlresolvers
 
 from datetime import datetime
@@ -644,6 +646,9 @@ class AgencyUser(AbstractUser):
         if not self.email:
             self.email = self.username+"@noemail.com"
 
+        if self.phone_number:
+            self.phone_number = re.sub("\D", "", self.phone_number)
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
@@ -733,6 +738,12 @@ class EntourageMember(models.Model):
     notify_called_911 = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+
+        if self.email_address:
+            self.email_address = self.email_address.lower()
+
+        if self.phone_number:
+            self.phone_number = re.sub("\D", "", self.phone_number)
 
         if not self.matched_user and self.phone_number:
 
