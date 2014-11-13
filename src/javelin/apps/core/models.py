@@ -999,12 +999,14 @@ class Theme(models.Model):
     alternate_color = models.CharField(max_length=8, null=True, blank=True,
                                        help_text="Alternate color, maybe something neutral such as white")
 
-    logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
-                               help_text="Set the location of the standard agency logo.")
-    alternate_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
-                                         help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
     small_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
-                                     help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+                                     help_text="Truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version for organization lists.")
+    navbar_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                     help_text="For light background on home screen")
+    navbar_logo_alternate = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                     help_text="For dark background on alert screen")
+    map_overlay_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True,
+                                     help_text="Large logo for overlaying on map geofence")
     shield_command_logo = S3EnabledImageField(upload_to=file_path, null=True, blank=True, max_height=50,
                                               help_text="Logo re-sized for Shield Command. 10% top and bottom padding recommended")
 
