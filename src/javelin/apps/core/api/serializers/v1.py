@@ -307,6 +307,9 @@ class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
 class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
     small_logo = serializers.CharField(source='small_logo_s3_url', read_only=True)
+    navbar_logo = serializers.CharField(source='navbar_logo_s3_url', read_only=True)
+    navbar_logo_alternate = serializers.CharField(source='navbar_logo_alternate_s3_url', read_only=True)
+    map_overlay_logo = serializers.CharField(source='map_overlay_logo_s3_url', read_only=True)
 
     class Meta:
         model = Theme

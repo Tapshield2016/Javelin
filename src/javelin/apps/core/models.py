@@ -1019,33 +1019,13 @@ class Theme(models.Model):
         return self.small_logo.secure_s3_url() if self.small_logo else None
 
     def navbar_logo_s3_url(self):
-        if not self.small_logo:
-            return None
-        return self.parse_url(self.small_logo.url)
+        return self.navbar_logo.secure_s3_url() if self.navbar_logo else None
 
     def navbar_logo_alternate_s3_url(self):
-        if not self.small_logo:
-            return None
-        return self.parse_url(self.small_logo.url)
+        return self.navbar_logo_alternate.secure_s3_url() if self.navbar_logo_alternate else None
 
     def map_overlay_logo_s3_url(self):
-        if not self.small_logo:
-            return None
-        return self.parse_url(self.small_logo.url)
-
-    def parse_url(self, url):
-        url = urlparse(self.small_logo.url)
-        bucket = urlparse(settings.AWS_S3_BUCKET_URL)
-
-        new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
-
-        if url.netloc == bucket.netloc:
-            new_path = url.path
-
-        url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
-
-
-        return url.split('?', 1)[0]
+        return self.map_overlay_logo.secure_s3_url() if self.map_overlay_logo else None
 
 
 @receiver(post_save, sender=AgencyUser)
