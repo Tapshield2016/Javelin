@@ -183,6 +183,7 @@ class S3URLField(models.URLField):
 
         return self.make_secure(value)
 
+
     def make_secure(self, value):
         """
         # Example:

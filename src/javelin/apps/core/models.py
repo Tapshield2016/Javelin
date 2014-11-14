@@ -1013,6 +1013,11 @@ class Theme(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
+    def convert_to_s3(self):
+        #paste your conversion code here
+        return self.small_logo.url
+
+
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
