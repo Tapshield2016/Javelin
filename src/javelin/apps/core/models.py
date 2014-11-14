@@ -1027,7 +1027,10 @@ class Theme(models.Model):
         if url.netloc == bucket.netloc:
             new_path = url.path
 
-        return urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
+        url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
+
+
+        return url.split('?', 1)[0]
         # return self.small_logo.url
 
 
