@@ -1015,22 +1015,23 @@ class Theme(models.Model):
     def __unicode__(self):
         return u'%s' % self.name
 
-    def convert_to_s3(self):
-        #paste your conversion code here
+    def small_logo_s3_url(self):
+        return self.parse_url(self.small_logo.url) if self.small_logo else None
+
+    def navbar_logo_s3_url(self):
         if not self.small_logo:
             return None
-        # url = urlparse(self.small_logo.url)
-        # bucket = urlparse(settings.AWS_S3_BUCKET_URL)
-        #
-        # new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
-        #
-        # if url.netloc == bucket.netloc:
-        #     new_path = url.path
-        #
-        # url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
-
         return self.parse_url(self.small_logo.url)
-        # return self.small_logo.url
+
+    def navbar_logo_alternate_s3_url(self):
+        if not self.small_logo:
+            return None
+        return self.parse_url(self.small_logo.url)
+
+    def map_overlay_logo_s3_url(self):
+        if not self.small_logo:
+            return None
+        return self.parse_url(self.small_logo.url)
 
     def parse_url(self, url):
         url = urlparse(self.small_logo.url)
