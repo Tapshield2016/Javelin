@@ -1019,6 +1019,20 @@ class Theme(models.Model):
         #paste your conversion code here
         if not self.small_logo:
             return None
+        # url = urlparse(self.small_logo.url)
+        # bucket = urlparse(settings.AWS_S3_BUCKET_URL)
+        #
+        # new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
+        #
+        # if url.netloc == bucket.netloc:
+        #     new_path = url.path
+        #
+        # url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
+
+        return self.parse_url(self, self.small_logo.url)
+        # return self.small_logo.url
+
+    def parse_url(self, url):
         url = urlparse(self.small_logo.url)
         bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
@@ -1031,7 +1045,6 @@ class Theme(models.Model):
 
 
         return url.split('?', 1)[0]
-        # return self.small_logo.url
 
 
 @receiver(post_save, sender=AgencyUser)
