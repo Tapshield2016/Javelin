@@ -20,6 +20,8 @@ from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
+from urlparse import urlparse, urlunparse, urljoin
+
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
@@ -1017,7 +1019,16 @@ class Theme(models.Model):
         #paste your conversion code here
         if not self.small_logo:
             return None
-        return self.small_logo.url
+        url = urlparse(self.small_logo.url)
+        bucket = urlparse(settings.AWS_S3_BUCKET_URL)
+
+        new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
+
+        if url.netloc == bucket.netloc:
+            new_path = url.path
+
+        return urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
+        # return self.small_logo.url
 
 
 @receiver(post_save, sender=AgencyUser)
