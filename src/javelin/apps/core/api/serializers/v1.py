@@ -307,6 +307,6 @@ class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
 class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
     small_url = serializers.CharField(source='convert_to_s3', read_only=True)
-    
+
     class Meta:
         model = Theme

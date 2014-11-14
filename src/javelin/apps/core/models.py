@@ -1015,6 +1015,8 @@ class Theme(models.Model):
 
     def convert_to_s3(self):
         #paste your conversion code here
+        if not self.small_logo:
+            return None
         return self.small_logo.url
 
 
