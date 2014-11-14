@@ -1029,7 +1029,7 @@ class Theme(models.Model):
         #
         # url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
 
-        return self.parse_url(self, self.small_logo.url)
+        return self.parse_url(self.small_logo.url)
         # return self.small_logo.url
 
     def parse_url(self, url):
