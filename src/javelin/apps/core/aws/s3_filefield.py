@@ -168,7 +168,19 @@ class S3EnabledImageField(models.ImageField):
             string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
         return string
 
+    def parse_url(self):
+        url = urlparse(self.url)
+        bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
+        new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
+
+        if url.netloc == bucket.netloc:
+            new_path = url.path
+
+        url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
+
+
+        return url.split('?', 1)[0]
 
 
 class S3URLField(models.URLField):
