@@ -306,7 +306,7 @@ class StaticDeviceSerializer(serializers.HyperlinkedModelSerializer):
 
 class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
-    small_logo = serializers.CharField(source='convert_to_s3', read_only=True)
+    small_logo = serializers.CharField(source='small_logo_s3_url', read_only=True)
 
     class Meta:
         model = Theme
