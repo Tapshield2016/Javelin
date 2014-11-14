@@ -145,7 +145,7 @@ class ResizedImageFieldFile(ImageField.attr_class):
             string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
         return string
 
-    def parse_url(self):
+    def secure_s3_url(self):
         url = urlparse(self.url)
         bucket = urlparse(settings.AWS_S3_BUCKET_URL)
 
@@ -181,25 +181,12 @@ class S3EnabledImageField(models.ImageField):
             kwargs['storage'] = S3Storage(self.bucket)
         super(S3EnabledImageField, self).__init__(verbose_name, name, width_field, height_field, **kwargs)
 
-    # def value_to_string(self, obj):
-    #     value = self._get_val_from_obj(obj)
-    #     string = self.get_prep_value(value)
-    #     if string:
-    #         string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
-    #     return string
-
-    # def parse_url(self):
-    #     url = urlparse(self.url)
-    #     bucket = urlparse(settings.AWS_S3_BUCKET_URL)
-    #
-    #     new_path = urljoin(url.netloc.replace(bucket.netloc, "").rstrip(".")+"/", url.path.lstrip("/"))
-    #
-    #     if url.netloc == bucket.netloc:
-    #         new_path = url.path
-    #
-    #     url = urlunparse(('https', bucket.netloc, new_path, url.params, url.query, url.fragment))
-    #
-    #     return url.split('?', 1)[0]
+    def value_to_string(self, obj):
+        value = self._get_val_from_obj(obj)
+        string = self.get_prep_value(value)
+        if string:
+            string = '%s%s' % (settings.AWS_S3_BUCKET_URL, urllib.quote_plus(string))
+        return string
 
 
 class S3URLField(models.URLField):
