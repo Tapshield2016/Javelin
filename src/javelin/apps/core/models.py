@@ -1016,7 +1016,7 @@ class Theme(models.Model):
         return u'%s' % self.name
 
     def small_logo_s3_url(self):
-        return self.parse_url(self.small_logo.url) if self.small_logo else None
+        return self.small_logo.value_to_string if self.small_logo else None
 
     def navbar_logo_s3_url(self):
         if not self.small_logo:

@@ -169,6 +169,8 @@ class S3EnabledImageField(models.ImageField):
         return string
 
 
+
+
 class S3URLField(models.URLField):
 
     def from_db_value(self, value, connection):
