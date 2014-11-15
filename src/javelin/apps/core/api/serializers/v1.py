@@ -46,6 +46,7 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageSession
+        fields = ('status', 'start_location', 'end_location', 'eta', 'start_time', 'arrival_time', 'entourage_notified',)
         depth = 2
 
 
