@@ -541,7 +541,7 @@ class AlertLocation(TimeStampedModel):
     longitude = models.FloatField(null=True, blank=True)    
 
     class Meta:
-        ordering = ['-creation_date']
+        ordering = ['creation_date']
 
     def save(self, *args, **kwargs):
         super(AlertLocation, self).save(*args, **kwargs)

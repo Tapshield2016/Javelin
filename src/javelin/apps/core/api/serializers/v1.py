@@ -32,12 +32,7 @@ class TrackingLocationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = TrackingLocation
-
-
-class TrackingLocationSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = TrackingLocation
+        fields = ('latitude', 'longitude',)
 
 
 class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
