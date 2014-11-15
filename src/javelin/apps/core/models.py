@@ -669,10 +669,20 @@ class EntourageSession(TimeStampedModel):
         ('U', 'Unknown'),
     )
 
+    TRAVEL_MODES = (
+        ('D', 'Driving'),
+        ('W', 'Walking'),
+        ('B', 'Bicycling'),
+        ('T', 'Transit'),
+        ('U', 'Unknown'),
+    )
+
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                              related_name='session_user')
     status = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
                               default='T')
+    travel_mode = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
+                              default='U')
     start_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="starting_locations")
     end_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="ending_locations")
     eta = models.DateTimeField(null=True, blank=True)
