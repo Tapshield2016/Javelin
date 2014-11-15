@@ -681,7 +681,7 @@ class EntourageSession(TimeStampedModel):
                              related_name='session_user')
     status = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
                               default='T')
-    travel_mode = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
+    travel_mode = models.CharField(max_length=1, choices=TRAVEL_MODES,
                               default='U')
     start_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="starting_locations")
     end_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="ending_locations")
