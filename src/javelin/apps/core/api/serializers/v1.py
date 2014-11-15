@@ -46,6 +46,7 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageSession
+        depth = 2
 
 
 class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
