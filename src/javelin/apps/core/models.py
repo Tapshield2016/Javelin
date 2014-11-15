@@ -710,7 +710,7 @@ class TrackingLocation(Location):
     altitude = models.FloatField(null=True, blank=True)
 
     class Meta:
-        ordering = ['-creation_date']
+        ordering = ['creation_date']
 
     def save(self, *args, **kwargs):
         super(TrackingLocation, self).save(*args, **kwargs)
