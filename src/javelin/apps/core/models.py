@@ -656,6 +656,27 @@ class AgencyUser(AbstractUser):
         if self.phone_number:
             self.phone_number = re.sub("\D", "", self.phone_number)
 
+        active_sessions = EntourageSession.tracking.filter(user=self)
+        if active_sessions:
+            session = active_sessions[0]
+            new_location = TrackingLocation(entourage_session=session,
+                                            accuracy=self.accuracy,
+                                            altitude=self.altitude,
+                                            latitude=self.latitude,
+                                            longitude=self.longitude)
+            new_location.save()
+            
+        active_alert = Alert.active.filter(agency_user=self)
+        if active_alert:
+            alert = active_alert[0]
+            new_location = AlertLocation(alert=alert,
+                                         altitude=self.altitude,
+                                         longitude=self.longitude,
+                                         latitude=self.latitude,
+                                         accuracy=self.accuracy,
+                                         floor_level=self.floor_level)
+            new_location.save()
+
         super(AgencyUser, self).save(*args, **kwargs)
 
     def sms_verification_topic_name(self):
