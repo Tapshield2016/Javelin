@@ -537,8 +537,9 @@ class AlertLocation(TimeStampedModel):
     alert = models.ForeignKey('Alert', related_name='locations')
     accuracy = models.FloatField(null=True, blank=True)
     altitude = models.FloatField(null=True, blank=True)
+    floor_level = models.IntegerField(null=True, blank=True)
     latitude = models.FloatField(null=True, blank=True)
-    longitude = models.FloatField(null=True, blank=True)    
+    longitude = models.FloatField(null=True, blank=True)
 
     class Meta:
         ordering = ['-creation_date']
@@ -613,12 +614,16 @@ class AgencyUser(AbstractUser):
                                    choices=DEVICE_TYPE_CHOICES)
     user_declined_push_notifications = models.BooleanField(default=False)
     user_logged_in_via_social = models.BooleanField(default=False)
-    last_reported_latitude = models.FloatField(null=True, blank=True)
-    last_reported_longitude = models.FloatField(null=True, blank=True)
-    last_reported_point = db_models.PointField(geography=True,
-                                               null=True, blank=True)
-    last_reported_time = models.DateTimeField(null=True, blank=True)
     notify_entourage_on_alert = models.BooleanField(default=False)
+
+    latitude = models.FloatField(null=True, blank=True)
+    longitude = models.FloatField(null=True, blank=True)
+    location_point = db_models.PointField(geography=True,
+                                               null=True, blank=True)
+    accuracy = models.FloatField(null=True, blank=True)
+    altitude = models.FloatField(null=True, blank=True)
+    floor_level = models.IntegerField(null=True, blank=True)
+    location_timestamp = models.DateTimeField(null=True, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username',]
@@ -641,9 +646,9 @@ class AgencyUser(AbstractUser):
         if not self.phone_number_verification_code:
             self.phone_number_verification_code =\
                 random.randrange(1001, 9999)
-        if self.last_reported_latitude and self.last_reported_longitude:
-            self.last_reported_point = Point(self.last_reported_longitude,
-                                             self.last_reported_latitude)
+        if self.latitude and self.longitude:
+            self.location_point = Point(self.longitude,
+                                        self.latitude)
 
         if not self.email:
             self.email = self.username+"@noemail.com"

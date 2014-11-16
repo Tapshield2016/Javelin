@@ -144,7 +144,8 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
         model = User
         fields = ('url', 'username', 'email', 'agency',
                   'phone_number', 'first_name', 'last_name',
-                  'last_reported_latitude', 'last_reported_longitude')
+                  'location_timestamp', 'latitude', 'longitude',
+                  'accuracy', 'altitude', 'floor_level',)
 
     def to_native(self, user):
         ret = super(UserAlwaysVisibleEntourageMemberSerializer, self).to_native(user)
@@ -170,8 +171,17 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
-                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
-                                                                      context={'request': self.context.get('request', None)}).data
+                ret = UserAlwaysVisibleEntourageMemberSerializer(instance=user,
+                                                                 context={'request': self.context.get('request', None)}).data
+                # ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
+                #                                                       context={'request': self.context.get('request', None)}).data
+                # ret['location_timestamp'] = user.location_timestamp
+                # ret['latitude'] = user.location_timestamp
+                # ret['longitude'] = user.location_timestamp
+                # ret['accuracy'] = user.location_timestamp
+                # ret['accuracy'] = user.location_timestamp
+                # ret['altitude'] = user.location_timestamp
+                # ret['floor_level'] = user.location_timestamp
         return ret
 
 
@@ -201,7 +211,7 @@ class DispatcherUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
         fields = ('url', 'agency', 'first_name', 'last_name', 'username', 'email', 'phone_number' 'disarm_code',
-                  'last_reported_time', 'last_reported_latitude', 'last_reported_longitude')
+                  'location_timestamp', 'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level',)
 
 
 class ReporterSerializer(serializers.HyperlinkedModelSerializer):
