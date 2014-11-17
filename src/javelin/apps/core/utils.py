@@ -73,11 +73,10 @@ def readable_name_for_user(user):
 
     name = user.username
 
-    if user.get_full_name():
-        # name = user.first_name + " (" + user.username + ")"
-        # if user.last_name:
-        #     name = user.first_name + " " + user.last_name
-        name = user.get_full_name()
+    if user.first_name:
+        name = user.first_name + " (" + user.username + ")"
+        if user.last_name:
+            name = user.get_full_name()
 
     return name
 
