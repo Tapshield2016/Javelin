@@ -429,7 +429,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
                         % (request.user.agency.name, request.user.first_name)
 
         reporter = report.reporter
-        notify_crime_report_marked_viewed.delay(\
+        notify_crime_report_marked_viewed.delay(
             message, report.id,
             reporter.device_type,
             reporter.device_endpoint_arn)

@@ -17,7 +17,10 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 
-from tasks import new_alert
+from tasks import (new_alert, notify_user_added_to_entourage,
+                   notify_user_called_emergency_number,
+                   notify_user_arrived_at_destination,
+                   notify_user_failed_arrival, notify_user_yank_alert)
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
@@ -714,6 +717,11 @@ def find_active_alert(request):
 @api_view(['POST'])
 def set_entourage_members(request):
 
+    """
+    Sync entourage members.
+    Send no params for remove all.
+    """
+
     current_members = []
 
     for member in request.DATA:
@@ -742,7 +750,7 @@ def set_entourage_members(request):
                 member['user'] = request.user
                 # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
                 member_to_save.__dict__.update(member)
-            # else:
+
             member_to_save.save()
 
             current_members.append(member_to_save.pk)

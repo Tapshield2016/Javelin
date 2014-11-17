@@ -69,6 +69,20 @@ def group_required(*group_names):
     return user_passes_test(in_groups)
 
 
+def readable_name_for_user(user):
+
+    name = user.username
+
+    if user.first_name:
+
+        name = user.first_name + " (" + user.username + ")"
+
+        if user.last_name:
+            name = user.first_name + " " + user.last_name
+
+    return name
+
+
 
 @transaction.atomic
 def merge_model_objects(primary_object, alias_objects=[], keep_old=False):

@@ -27,6 +27,13 @@ from rest_framework.authtoken.models import Token
 
 from emailmgr.models import EmailAddress
 
+from tasks import (notify_user_added_to_entourage,
+                   notify_user_called_emergency_number,
+                   notify_user_arrived_at_destination,
+                   notify_user_failed_arrival, notify_user_yank_alert)
+
+from notifications import added_by_user_message
+
 from managers import (ActiveAlertManager, InactiveAlertManager,
                       AcceptedAlertManager, CompletedAlertManager,
                       DisarmedAlertManager, NewAlertManager,
@@ -782,6 +789,11 @@ class EntourageMember(models.Model):
         if self.phone_number:
             self.phone_number = re.sub("\D", "", self.phone_number)
 
+        should_send_sns = False
+
+        if not self.matched_user:
+            should_send_sns = True
+
         if not self.matched_user and self.phone_number:
 
             users_matching_phone_number = AgencyUser.objects.filter(phone_number=self.phone_number)
@@ -809,6 +821,14 @@ class EntourageMember(models.Model):
                     for user in users_matching_email:
                         if user.email_verified:
                             self.matched_user = user
+
+        if self.matched_user and should_send_sns:
+
+            notify_user_added_to_entourage.delay(
+                added_by_user_message(self.user),
+                self.matched_user.id,
+                self.matched_user.device_type,
+                self.matched_user.device_endpoint_arn)
 
         super(EntourageMember, self).save(*args, **kwargs)
 
