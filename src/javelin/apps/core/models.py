@@ -27,13 +27,6 @@ from rest_framework.authtoken.models import Token
 
 from emailmgr.models import EmailAddress
 
-from tasks import (notify_user_added_to_entourage,
-                   notify_user_called_emergency_number,
-                   notify_user_arrived_at_destination,
-                   notify_user_failed_arrival, notify_user_yank_alert)
-
-from notifications import added_by_user_message
-
 from managers import (ActiveAlertManager, InactiveAlertManager,
                       AcceptedAlertManager, CompletedAlertManager,
                       DisarmedAlertManager, NewAlertManager,
@@ -782,6 +775,8 @@ class EntourageMember(models.Model):
     notify_called_911 = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
+        from tasks import notify_user_added_to_entourage
+        from notifications import added_by_user_message
 
         if self.email_address:
             self.email_address = self.email_address.lower()
