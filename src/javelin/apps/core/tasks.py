@@ -301,3 +301,54 @@ def new_static_alert(device):
     incoming_alert.save()
 
     return incoming_alert
+
+
+
+@task
+def notify_user_added_to_entourage(message, user_id,
+                                   device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "entourage", user_id, "Added Entourage Member")
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def notify_user_called_emergency_number(message, user_id,
+                                        device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "entourage", user_id, "Emergency Call")
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def notify_user_arrived_at_destination(message, user_id,
+                                       device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "entourage", user_id, "Arrival")
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def notify_user_failed_arrival(message, user_id,
+                               device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "entourage", user_id, "Non-Arrival")
+    sns.publish_to_device(msg, device_endpoint_arn)
+
+
+@task
+def notify_user_yank_alert(message, user_id,
+                           device_type, device_endpoint_arn):
+    sns = SNSManager()
+    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
+    msg = sns.get_message_json(app_endpoint, message,
+                               "entourage", user_id, "Yank")
+    sns.publish_to_device(msg, device_endpoint_arn)
