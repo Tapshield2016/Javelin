@@ -412,9 +412,9 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def mark_viewed(self, request, pk=None):
 
-        # if not request.user.is_superuser:
-        #     if request.user.groups.filter(name='Dispatchers').count() == 0:
-        #         raise PermissionDenied
+        if not request.user.is_superuser:
+            if request.user.groups.filter(name='Dispatchers').count() == 0:
+                raise PermissionDenied
 
         report = self.get_object()
         if report.viewed_by:
@@ -434,8 +434,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
             reporter.device_type,
             reporter.device_endpoint_arn)
 
-        return Response(SocialCrimeReportSerializer(instance=report,
-                                                    context={'request': request}).data,
+        return Response(SocialCrimeReportSerializer(instance=report, context={'request': request}).data,
                         status=status.HTTP_200_OK)
 
 
