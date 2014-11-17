@@ -412,9 +412,9 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def mark_viewed(self, request, pk=None):
 
-        if not request.user.is_superuser:
-            if request.user.groups.filter(name='Dispatchers').count() == 0:
-                raise PermissionDenied
+        # if not request.user.is_superuser:
+        #     if request.user.groups.filter(name='Dispatchers').count() == 0:
+        #         raise PermissionDenied
 
         report = self.get_object()
         if report.viewed_by:
