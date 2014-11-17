@@ -71,7 +71,7 @@ def group_required(*group_names):
 
 def readable_name_for_user(user):
 
-    name = user.username
+    name = user.first_name
 
     if user.first_name:
         name = user.first_name + " (" + user.username + ")"
