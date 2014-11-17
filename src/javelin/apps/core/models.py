@@ -39,7 +39,7 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
 
 from core.aws.s3_filefield import S3EnabledImageField, S3URLField
 
-from notifications import added_by_user_message
+# from notifications import added_by_user_message
 
 from tasks import (notify_user_added_to_entourage,
                    notify_user_called_emergency_number,
