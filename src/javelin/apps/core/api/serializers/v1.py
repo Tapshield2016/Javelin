@@ -151,7 +151,7 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
                   'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level',)
 
     def to_native(self, user):
-        ret = super(UserSerializer, self).to_native(user)
+        ret = super(PostUserSerializer, self).to_native(user)
         if user:
             email_address = EmailAddress.objects.filter(user=user)
             address = []
