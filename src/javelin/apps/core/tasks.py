@@ -38,6 +38,7 @@ def new_alert(message):
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
+        alert_initiated_inside = message['alert_initiated_inside']
 
         agency = user.agency
 

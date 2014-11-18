@@ -47,7 +47,7 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      EntourageSessionSerializer, TrackingLocationSerializer,
                                      NamedLocationSerializer,
                                      UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
-                                     UserAlwaysVisibleEntourageMemberSerializer)
+                                     UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -143,15 +143,15 @@ class UserViewSet(viewsets.ModelViewSet):
     permission_classes = (IsRequestUserOrDispatcher,)
     serializer_class = UserSerializer
 
-    # def get_serializer_class(self):
-    #
-    #     if self.request.method == 'GET' and not hasattr(self, 'response'):
-    #         return UnauthorizedUserSerializer
-    #     elif self.request.method in ('POST', 'PUT', 'PATCH')\
-    #             and not hasattr(self, 'response'):
-    #         return UserSerializer
-    #
-    #     return UserSerializer
+    def get_serializer_class(self):
+
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return UserSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+                and not hasattr(self, 'response'):
+            return PostUserSerializer
+
+        return UserSerializer
 
     def get_queryset(self):
         qs = User.objects.select_related('agency')\

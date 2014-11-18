@@ -136,6 +136,42 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
             return obj.distance.mi
 
 
+class PostUserSerializer(serializers.HyperlinkedModelSerializer):
+    agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 view_name='agency-detail')
+    entourage_members = EntourageMemberSerializer(required=False, many=True)
+    distance = serializers.SerializerMethodField('distance_if_exists')
+
+    class Meta:
+        model = User
+        fields = ('url', 'username', 'email', 'groups', 'agency', 'is_active',
+                  'phone_number', 'disarm_code', 'first_name', 'last_name',
+                  'phone_number_verified', 'user_declined_push_notifications',
+                  'user_logged_in_via_social', 'entourage_members', 'location_timestamp',
+                  'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level',)
+
+    def to_native(self, user):
+        ret = super(UserSerializer, self).to_native(user)
+        if user:
+            email_address = EmailAddress.objects.filter(user=user)
+            address = []
+            for email in email_address:
+                address.append(EmailAddressGETSerializer(instance=email,
+                                                         context={'request': self.context.get('request', None)}).data)
+            ret['secondary_emails'] = address
+
+            active_session = EntourageSession.tracking.filter(user=user)
+            if active_session:
+                ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
+                                                                      context={'request': self.context.get('request', None)}).data
+
+        return ret
+
+    def distance_if_exists(self, obj):
+        if getattr(obj, 'distance', None):
+            return obj.distance.mi
+
+
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
 
@@ -172,15 +208,6 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
             if active_session:
                 ret = UserAlwaysVisibleEntourageMemberSerializer(instance=user,
                                                                  context={'request': self.context.get('request', None)}).data
-                # ret['entourage_session'] = EntourageSessionSerializer(instance=active_session[0],
-                #                                                       context={'request': self.context.get('request', None)}).data
-                # ret['location_timestamp'] = user.location_timestamp
-                # ret['latitude'] = user.location_timestamp
-                # ret['longitude'] = user.location_timestamp
-                # ret['accuracy'] = user.location_timestamp
-                # ret['accuracy'] = user.location_timestamp
-                # ret['altitude'] = user.location_timestamp
-                # ret['floor_level'] = user.location_timestamp
         return ret
 
 
