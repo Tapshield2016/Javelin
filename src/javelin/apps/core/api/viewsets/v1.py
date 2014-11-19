@@ -702,6 +702,59 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
     queryset = EntourageSession.objects.all()
     serializer_class = EntourageSessionSerializer
 
+    def create(self, request):
+
+        active_sessions = EntourageSession.tracking.filter(user=request.user)
+        if active_sessions:
+            for session in active_sessions:
+                session.status = "U"
+
+        request_data = request.DATA.copy()
+        request_data['user'] = request.user
+
+        start_location_serialized = NamedLocationSerializer(data=request_data['start_location'], context={'request': request})
+        end_location_serialized = NamedLocationSerializer(data=request_data['end_location'], context={'request': request})
+
+        if not start_location_serialized.is_valid():
+            return Response(start_location_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        if not end_location_serialized.is_valid():
+            return Response(end_location_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        start_location_serialized.save()
+        end_location_serialized.save()
+
+        request_data['start_location'] = start_location_serialized.object()
+        request_data['end_location'] = end_location_serialized.object()
+
+        serializer = self.get_serializer(data=request_data, files=request.FILES)
+
+        if serializer.is_valid():
+            self.pre_save(serializer.object)
+            self.object = serializer.save(force_insert=True)
+            self.post_save(self.object, created=True)
+            headers = self.get_success_headers(serializer.data)
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED,
+                            headers=headers)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    @detail_route(methods=['post'])
+    def arrived(self, request, pk=None):
+
+        """
+        arrived at location
+        """
+
+        session = self.get_object()
+        message = session.arrived()
+        serialized = EntourageSession(session, context={'request': request})
+        if not message:
+            message = serialized.data
+        return Response(message)
+
+
 
 class TrackingLocationViewSet(viewsets.ModelViewSet):
     queryset = TrackingLocation.objects.all()

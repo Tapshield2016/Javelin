@@ -725,6 +725,20 @@ class EntourageSession(TimeStampedModel):
     def __unicode__(self):
         return u"%s - %s to %s" % (self.user.username, self.start_location.name, self.end_location.name)
 
+    def arrived(self):
+        from notifications import send_arrival_notifications
+
+        message = None
+        if not self.entourage_notified:
+            self.entourage_notified = True
+            message = send_arrival_notifications(self)
+
+        self.arrival_time = datetime.now()
+        self.status = 'A'
+        self.save()
+        return message
+
+
 
 class NamedLocation(Location):
 
@@ -819,11 +833,10 @@ class EntourageMember(models.Model):
 
         if self.matched_user and should_send_sns:
 
-            notify_user_added_to_entourage.delay(
-                added_by_user_message(self.user),
-                self.matched_user.id,
-                self.matched_user.device_type,
-                self.matched_user.device_endpoint_arn)
+            notify_user_added_to_entourage.delay(added_by_user_message(self.user),
+                                                 self.user.id,
+                                                 self.matched_user.device_type,
+                                                 self.matched_user.device_endpoint_arn)
 
         super(EntourageMember, self).save(*args, **kwargs)
 
