@@ -376,8 +376,10 @@ class UserViewSet(viewsets.ModelViewSet):
 
         request_data = request.DATA.copy()
 
-        active_sessions = EntourageSession.tracking.filter(user=self)
-        active_alert = Alert.active.filter(agency_user=self)
+        user = self.get_object()
+
+        active_sessions = EntourageSession.tracking.filter(user=user)
+        active_alert = Alert.active.filter(agency_user=user)
 
         for location_dict in request_data:
 
@@ -401,7 +403,6 @@ class UserViewSet(viewsets.ModelViewSet):
                 new_location.save()
 
             if location_dict == request_data[-1]:
-                user = self.get_object()
                 user.__dict__.update(location_dict)
                 user.save()
 
