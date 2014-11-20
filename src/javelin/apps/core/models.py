@@ -649,26 +649,6 @@ class AgencyUser(AbstractUser):
         if self.latitude and self.longitude:
             self.location_point = Point(self.longitude,
                                         self.latitude)
-            # active_sessions = EntourageSession.tracking.filter(user=self)
-            # if active_sessions:
-            #     session = active_sessions[0]
-            #     new_location = TrackingLocation(entourage_session=session,
-            #                                     accuracy=self.accuracy,
-            #                                     altitude=self.altitude,
-            #                                     latitude=self.latitude,
-            #                                     longitude=self.longitude)
-            #     new_location.save()
-            #
-            # active_alert = Alert.active.filter(agency_user=self)
-            # if active_alert:
-            #     alert = active_alert[0]
-            #     new_location = AlertLocation(alert=alert,
-            #                                  altitude=self.altitude,
-            #                                  longitude=self.longitude,
-            #                                  latitude=self.latitude,
-            #                                  accuracy=self.accuracy,
-            #                                  floor_level=self.floor_level)
-            #     new_location.save()
 
         if not self.email:
             self.email = self.username+"@noemail.com"
@@ -725,6 +705,19 @@ class EntourageSession(TimeStampedModel):
     def __unicode__(self):
         return u"%s - %s to %s" % (self.user.username, self.start_location.name, self.end_location.name)
 
+    def save(self, *args, **kwargs):
+
+        locations = TrackingLocation.objects.filter(entourage_session=self)
+
+        if not locations:
+            first_location = TrackingLocation(latitude=self.start_location.latitude,
+                                              longitude=self.start_location.longitude,
+                                              altitude=self.start_location.altitude,
+                                              accuracy=self.start_location.accuracy)
+            first_location.save()
+
+        super(EntourageSession, self).save(*args, **kwargs)
+
     def arrived(self):
         from notifications import send_arrival_notifications
 
@@ -780,9 +773,9 @@ class TrackingLocation(Location):
     class Meta:
         ordering = ['creation_date']
 
-    def save(self, *args, **kwargs):
-        super(TrackingLocation, self).save(*args, **kwargs)
-        self.entourage_session.save()
+    # def save(self, *args, **kwargs):
+    #     super(TrackingLocation, self).save(*args, **kwargs)
+    #     self.entourage_session.save()
 
 
 class EntourageMember(models.Model):
