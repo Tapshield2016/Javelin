@@ -402,9 +402,9 @@ class UserViewSet(viewsets.ModelViewSet):
                                              floor_level=location_dict['floor_level'])
                 new_location.save()
 
-            # if location_dict == request_data[-1]:
-            #     user.__dict__.update(location_dict)
-            #     user.save()
+            if location_dict == request_data[-1]:
+                user.__dict__.update(location_dict)
+                user.save()
 
         return Response({'message': "Updated"},
                         status=status.HTTP_201_CREATED)
