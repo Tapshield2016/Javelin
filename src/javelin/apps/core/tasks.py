@@ -14,7 +14,7 @@ from aws.sns import SNSManager
 from aws.sqs import SQSManager
 from models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice, EntourageSession
 from api.serializers.v1 import AlertSerializer
-from notifications import send_called_emergency_notifications, send_yank_alert_notifications
+# from notifications import send_called_emergency_notifications, send_yank_alert_notifications
 
 User = get_user_model()
 

@@ -768,6 +768,7 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         return Response(serialized.data)
 
 
+
 class TrackingLocationViewSet(viewsets.ModelViewSet):
     queryset = TrackingLocation.objects.all()
     serializer_class = TrackingLocationFullSerializer
