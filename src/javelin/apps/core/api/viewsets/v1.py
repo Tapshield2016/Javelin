@@ -50,21 +50,21 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
                                      TrackingLocationFullSerializer, EntourageSessionPostSerializer)
 
-from aws.dynamodb import DynamoDBManager
-from aws.sns import SNSManager
-from filters import IsoDateTimeFilter
-from models import (Agency, Alert, AlertLocation,
-                    ChatMessage, MassAlert, UserProfile, EntourageMember,
-                    SocialCrimeReport,  Region,
-                    DispatchCenter, Period,
-                    ClosedDate, StaticDevice, Theme,
-                    EntourageSession, TrackingLocation, NamedLocation,)
+from core.aws.dynamodb import DynamoDBManager
+from core.aws.sns import SNSManager
+from core.filters import IsoDateTimeFilter
+from core.models import (Agency, Alert, AlertLocation,
+                         ChatMessage, MassAlert, UserProfile, EntourageMember,
+                         SocialCrimeReport,  Region,
+                         DispatchCenter, Period,
+                         ClosedDate, StaticDevice, Theme,
+                         EntourageSession, TrackingLocation, NamedLocation,)
 
-from utils import get_agency_from_unknown
+from core.utils import get_agency_from_unknown
 
-from tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                   notify_new_chat_message_available, notify_crime_report_marked_viewed,
-                   notify_alert_completed, new_static_alert)
+from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
+                        notify_new_chat_message_available, notify_crime_report_marked_viewed,
+                        notify_alert_completed, new_static_alert)
 
 User = get_user_model()
 
