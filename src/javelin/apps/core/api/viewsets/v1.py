@@ -406,7 +406,7 @@ class UserViewSet(viewsets.ModelViewSet):
             #     user.__dict__.update(location_dict)
             #     user.save()
 
-        return Response("Created",
+        return Response({'message': "Updated"},
                         status=status.HTTP_201_CREATED)
 
 
