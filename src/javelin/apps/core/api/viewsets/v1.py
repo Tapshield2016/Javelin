@@ -47,7 +47,8 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      EntourageSessionSerializer, TrackingLocationSerializer,
                                      NamedLocationSerializer,
                                      UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
-                                     UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer)
+                                     UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
+                                     TrackingLocationFullSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -767,10 +768,9 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         return Response(serialized.data)
 
 
-
 class TrackingLocationViewSet(viewsets.ModelViewSet):
     queryset = TrackingLocation.objects.all()
-    serializer_class = TrackingLocationSerializer
+    serializer_class = TrackingLocationFullSerializer
 
 
 class NamedLocationViewSet(viewsets.ModelViewSet):
