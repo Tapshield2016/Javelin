@@ -1,8 +1,5 @@
 __author__ = 'adamshare'
 
-from models import (Agency, EntourageMember, EntourageSession)
-from utils import readable_name_for_user
-
 from django_twilio.client import twilio_client
 from twilio import TwilioRestException
 from django.conf import settings
@@ -10,6 +7,9 @@ from django.core.mail import send_mail
 
 from tasks import (notify_user_arrived_at_destination, notify_user_yank_alert,
                    notify_user_failed_arrival, notify_user_called_emergency_number)
+
+from models import (Agency, EntourageMember, EntourageSession)
+from utils import readable_name_for_user
 
 
 def added_by_user_message(user):
