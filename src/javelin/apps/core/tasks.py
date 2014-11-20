@@ -14,13 +14,13 @@ from aws.sns import SNSManager
 from aws.sqs import SQSManager
 from models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice, EntourageSession
 from api.serializers.v1 import AlertSerializer
-# from notifications import send_called_emergency_notifications, send_yank_alert_notifications
 
 User = get_user_model()
 
 
 @task
 def new_alert(message):
+    from notifications import send_called_emergency_notifications, send_yank_alert_notifications
     """
     We expect to see a message that's something like this:
 
@@ -327,7 +327,7 @@ def delete_file_from_s3(url):
 
 @task
 def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
-    from core.utils import send_message_to_user_for_alert
+    from utils import send_message_to_user_for_alert
     agency = Agency.objects.get(pk=agency_id)
     waiting_alerts =\
         Alert.should_receive_autoresponse.filter(agency=agency)
