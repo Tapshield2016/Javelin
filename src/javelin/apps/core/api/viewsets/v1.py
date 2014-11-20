@@ -718,6 +718,7 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         if active_sessions:
             for session in active_sessions:
                 session.status = "U"
+                session.save()
 
         request_data = request.DATA.copy()
         request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
