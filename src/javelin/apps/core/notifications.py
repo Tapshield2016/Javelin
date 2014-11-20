@@ -1,7 +1,7 @@
 __author__ = 'adamshare'
 
 from models import (Agency, EntourageMember, EntourageSession)
-from core.utils import readable_name_for_user
+from utils import readable_name_for_user
 
 from django_twilio.client import twilio_client
 from twilio import TwilioRestException
