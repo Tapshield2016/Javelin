@@ -772,8 +772,8 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         """
         session = self.get_object()
         session.cancel()
-        serialized = EntourageSession(session, context={'request': request})
-        return Response(serialized.data)
+        # serialized = EntourageSession(session, context={'request': request})
+        return Response("OK")
 
 
 
