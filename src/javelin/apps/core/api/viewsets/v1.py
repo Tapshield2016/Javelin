@@ -374,7 +374,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def locations(self, request, pk=None):
 
-        request_data = request.DATA.copy()
+        request_data = request.DATA
 
         user = self.get_object()
 
