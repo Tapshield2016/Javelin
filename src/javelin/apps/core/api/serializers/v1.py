@@ -47,8 +47,17 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageSession
-        fields = ('status', 'travel_mode', 'start_location', 'end_location', 'eta', 'start_time', 'arrival_time', 'entourage_notified', 'locations',)
+        fields = ('status', 'travel_mode', 'start_location', 'end_location', 'eta',
+                  'start_time', 'arrival_time', 'entourage_notified', 'locations',)
         depth = 2
+
+
+class EntourageSessionPostSerializer(serializers.HyperlinkedModelSerializer):
+
+    locations = TrackingLocationSerializer(required=False, many=True)
+
+    class Meta:
+        model = EntourageSession
 
 
 class EntourageMemberSerializer(serializers.HyperlinkedModelSerializer):

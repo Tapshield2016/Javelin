@@ -30,42 +30,41 @@ from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
                                     SearchFilter)
 from rest_framework.response import Response
 
-from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
-                                     AgencySerializer, AlertSerializer,
-                                     AlertLocationSerializer,
-                                     ChatMessageSerializer,
-                                     MassAlertSerializer,
-                                     UserProfileSerializer,
-                                     SocialCrimeReportSerializer,
-                                     EntourageMemberSerializer,
-                                     UnauthorizedEntourageMemberSerializer,
-                                     RegionSerializer,
-                                     DispatchCenterSerializer,
-                                     PeriodSerializer,
-                                     ClosedDateSerializer,
-                                     StaticDeviceSerializer, ThemeSerializer,
-                                     EntourageSessionSerializer, TrackingLocationSerializer,
-                                     NamedLocationSerializer,
-                                     UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
-                                     UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
-                                     TrackingLocationFullSerializer)
+from api.serializers.v1 import (UserSerializer, GroupSerializer,
+                                AgencySerializer, AlertSerializer,
+                                AlertLocationSerializer,
+                                ChatMessageSerializer,
+                                MassAlertSerializer,
+                                UserProfileSerializer,
+                                SocialCrimeReportSerializer,
+                                EntourageMemberSerializer,
+                                UnauthorizedEntourageMemberSerializer,
+                                RegionSerializer,
+                                DispatchCenterSerializer,
+                                PeriodSerializer,
+                                ClosedDateSerializer,
+                                StaticDeviceSerializer, ThemeSerializer,
+                                EntourageSessionSerializer, TrackingLocationSerializer,
+                                NamedLocationSerializer,
+                                UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
+                                UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
+                                TrackingLocationFullSerializer, EntourageSessionPostSerializer)
 
-from core.aws.dynamodb import DynamoDBManager
-from core.aws.sns import SNSManager
-from core.filters import IsoDateTimeFilter
-from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile, EntourageMember,
-                         SocialCrimeReport,  Region,
-                         DispatchCenter, Period,
-                         ClosedDate, StaticDevice, Theme,
-                         EntourageSession, TrackingLocation, NamedLocation,)
+from aws.dynamodb import DynamoDBManager
+from aws.sns import SNSManager
+from filters import IsoDateTimeFilter
+from models import (Agency, Alert, AlertLocation,
+                    ChatMessage, MassAlert, UserProfile, EntourageMember,
+                    SocialCrimeReport,  Region,
+                    DispatchCenter, Period,
+                    ClosedDate, StaticDevice, Theme,
+                    EntourageSession, TrackingLocation, NamedLocation,)
 
-from core.utils import get_agency_from_unknown
+from utils import get_agency_from_unknown
 
-from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                        notify_new_chat_message_available, notify_crime_report_marked_viewed,
-                        notify_alert_completed)
-from core.tasks import new_static_alert
+from tasks import (create_user_device_endpoint, publish_to_agency_topic,
+                   notify_new_chat_message_available, notify_crime_report_marked_viewed,
+                   notify_alert_completed, new_static_alert)
 
 User = get_user_model()
 
@@ -131,7 +130,7 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 
         if self.request.method == 'GET' and not hasattr(self, 'response'):
             return UnauthorizedEntourageMemberSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+        elif self.request.method in ('POST', 'PUT', 'PATCH') \
                 and not hasattr(self, 'response'):
             return EntourageMemberSerializer
 
@@ -148,25 +147,25 @@ class UserViewSet(viewsets.ModelViewSet):
 
         if self.request.method == 'GET' and not hasattr(self, 'response'):
             return UserSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH')\
+        elif self.request.method in ('POST', 'PUT', 'PATCH') \
                 and not hasattr(self, 'response'):
             return PostUserSerializer
 
         return UserSerializer
 
     def get_queryset(self):
-        qs = User.objects.select_related('agency')\
+        qs = User.objects.select_related('agency') \
             .prefetch_related('groups', 'entourage_members').all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
-        distance_within =\
+        distance_within = \
             self.request.QUERY_PARAMS.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = User.geo.select_related('agency')\
-                .prefetch_related('groups', 'entourage_members')\
-                .filter(last_reported_point__dwithin=(point, D(mi=dwithin)))\
+            qs = User.geo.select_related('agency') \
+                .prefetch_related('groups', 'entourage_members') \
+                .filter(last_reported_point__dwithin=(point, D(mi=dwithin))) \
                 .distance(point).order_by('last_modified')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
@@ -184,20 +183,20 @@ class UserViewSet(viewsets.ModelViewSet):
             for em in entourage_members:
                 if em.phone_number:
                     try:
-                        resp = twilio_client.messages.create(\
+                        resp = twilio_client.messages.create( \
                             to=em.phone_number,
                             from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
                             body=message)
                         if resp.status == 'failed':
-                            errors.append(\
-                                {"Entourage Member %d" %\
-                                     em.id: 'Error sending SMS Verification',
+                            errors.append( \
+                                {"Entourage Member %d" % \
+                                 em.id: 'Error sending SMS Verification',
                                  "id": em.id})
                     except TwilioRestException, e:
                         if e.code and e.code == 21211:
-                            errors.append(\
-                                {"Entourage Member %d" %\
-                                     em.id: 'Invalid phone number',
+                            errors.append( \
+                                {"Entourage Member %d" % \
+                                 em.id: 'Invalid phone number',
                                  "id": em.id})
                 elif em.email_address:
                     if not subject:
@@ -205,7 +204,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
                               [em.email_address], fail_silently=True)
         else:
-            return Response(\
+            return Response( \
                 {'message': 'message is a required parameter.'},
                 status=status.HTTP_400_BAD_REQUEST)
         if errors:
@@ -222,7 +221,7 @@ class UserViewSet(viewsets.ModelViewSet):
         info_dict = request.POST.copy()
         if 'agency' in info_dict:
             try:
-                info_dict['agency'] =\
+                info_dict['agency'] = \
                     Agency.objects.get(pk=info_dict['agency'])
             except Agency.DoesNotExist:
                 return Response({'message': 'No matching agency found.'},
@@ -237,7 +236,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.data:
             return Response(serializer.data)
         else:
-            return Response(\
+            return Response( \
                 {'message': 'There was an error with the values provided.'},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -253,11 +252,11 @@ class UserViewSet(viewsets.ModelViewSet):
             device_token = request.DATA.get('deviceToken', None)
             device_type = request.DATA.get('deviceType', None)
             if not device_token:
-                return Response(\
+                return Response( \
                     {'message': 'deviceToken is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             elif not device_type:
-                return Response(\
+                return Response( \
                     {'message': 'deviceType is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -274,29 +273,29 @@ class UserViewSet(viewsets.ModelViewSet):
                     return Response({'message': 'user not found'},
                                     status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'Not found.'},
-                         status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_404_NOT_FOUND)
 
     @detail_route(methods=['post'])
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
             phone_number = request.DATA.get('phone_number', None)
             if not phone_number:
-                return Response(\
+                return Response( \
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
                 user = self.get_object()
                 user.phone_number_verification_code = None
                 user.save()
-                resp = twilio_client.messages.create(\
+                resp = twilio_client.messages.create( \
                     to=phone_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
-                    body="Your TapShield verification code is: %s"\
-                        % user.phone_number_verification_code)
+                    body="Your TapShield verification code is: %s" \
+                         % user.phone_number_verification_code)
                 if not resp.status == 'failed':
                     return Response({'message': 'Success'})
                 else:
-                    return Response(\
+                    return Response( \
                         {'message': 'Error sending SMS Verification'},
                         status=status.HTTP_400_BAD_REQUEST)
             except TwilioRestException, e:
@@ -304,7 +303,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     return Response({'message': 'Invalid phone number'},
                                     status=status.HTTP_400_BAD_REQUEST)
         return Response({'message': 'Not found.'},
-                         status=status.HTTP_404_NOT_FOUND)
+                        status=status.HTTP_404_NOT_FOUND)
 
     @detail_route(methods=['post'])
     def check_sms_verification_code(self, request, pk=None):
@@ -317,24 +316,24 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.user.is_superuser or request.user.pk == int(pk):
             code = request.DATA.get('code', None)
             if not code:
-                return Response(\
+                return Response( \
                     {'message': 'code is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
                 code = int(code.strip())
             except ValueError:
-                return Response(\
+                return Response( \
                     {'message': 'Incorrect type for code'},
-                    status=status.HTTP_400_BAD_REQUEST)                
+                    status=status.HTTP_400_BAD_REQUEST)
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
                 user.save()
-                return Response(\
+                return Response( \
                     {'message': 'OK'},
                     status=status.HTTP_200_OK)
             else:
-                return Response(\
+                return Response( \
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -351,10 +350,10 @@ class UserViewSet(viewsets.ModelViewSet):
                             status=status.HTTP_200_OK)
 
         always_visible_users_id = EntourageMember.objects.filter(matched_user=user,
-                                                              always_visible=True).values('user_id')
+                                                                 always_visible=True).values('user_id')
         tracking_users_id = EntourageMember.objects.filter(matched_user=user,
-                                                        always_visible=False,
-                                                        track_route=True).values('user_id')
+                                                           always_visible=False,
+                                                           track_route=True).values('user_id')
         no_tracking_users_id = EntourageMember.objects.filter(matched_user=user,
                                                               always_visible=False,
                                                               track_route=False).values('user_id')
@@ -399,7 +398,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
         qs = SocialCrimeReport.objects.all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
-        distance_within =\
+        distance_within = \
             self.request.QUERY_PARAMS.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
@@ -426,8 +425,8 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
         report.viewed_time = datetime.datetime.now()
         report.save()
 
-        message = "%s dispatcher %s viewed your report. Thank you!"\
-                        % (request.user.agency.name, request.user.first_name)
+        message = "%s dispatcher %s viewed your report. Thank you!" \
+                  % (request.user.agency.name, request.user.first_name)
 
         reporter = report.reporter
         notify_crime_report_marked_viewed.delay(
@@ -450,14 +449,14 @@ class AgencyViewSet(viewsets.ModelViewSet):
         qs = Agency.objects.select_related('agency_point_of_contact').all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
-        distance_within =\
+        distance_within = \
             self.request.QUERY_PARAMS.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = Agency.geo.select_related('agency_point_of_contact')\
+            qs = Agency.geo.select_related('agency_point_of_contact') \
                 .filter(agency_center_point__dwithin=(point,
-                                                      D(mi=dwithin)))\
+                                                      D(mi=dwithin))) \
                 .distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
@@ -504,10 +503,10 @@ class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
 
 
 class AlertViewSet(viewsets.ModelViewSet):
-    queryset =\
+    queryset = \
         Alert.objects.select_related('agency', 'agency_user',
-                                     'agency_dispatcher')\
-        .prefetch_related('locations').all()
+                                     'agency_dispatcher') \
+            .prefetch_related('locations').all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
@@ -563,7 +562,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         alert.disarm()
         serialized = AlertSerializer(alert, context={'request': request})
         return Response(serialized.data)
-        
+
 
     @detail_route(methods=['post'])
     def send_message(self, request, pk=None):
@@ -578,7 +577,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         if message:
             message_id = str(uuid.uuid1())
             dynamo_db = DynamoDBManager()
-            dynamo_db.save_item_to_table(\
+            dynamo_db.save_item_to_table( \
                 settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
                 {'alert_id': int(pk), 'sender_id': request.user.id,
                  'message': message, 'timestamp': time.time(),
@@ -586,13 +585,13 @@ class AlertViewSet(viewsets.ModelViewSet):
             alert = self.get_object()
             if not request.user.id == alert.agency_user.id:
                 user = alert.agency_user
-                notify_new_chat_message_available.delay(\
+                notify_new_chat_message_available.delay( \
                     message, message_id,
                     user.device_type,
                     user.device_endpoint_arn)
             return Response({'message': 'Chat received'})
         else:
-            return Response(\
+            return Response( \
                 {'message': "message and sender are required parameters"},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -615,14 +614,14 @@ class AlertViewSet(viewsets.ModelViewSet):
         timestamp = request.GET.get('timestamp', None)
         if not timestamp:
             return Response({'message': 'timestamp is a required parameter'},
-                             status=status.HTTP_400_BAD_REQUEST)
+                            status=status.HTTP_400_BAD_REQUEST)
         try:
             dynamo_db = DynamoDBManager()
             messages = dynamo_db.get_messages_for_alert_since_time(pk,
                                                                    timestamp)
             return Response(messages)
         except ValueError:
-            return Response(\
+            return Response( \
                 {'message': "timestamp must be an Unix timestamp"},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -646,7 +645,7 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
 
             if not active_alerts:
                 return Response(serializer.data, status=status.HTTP_404_NOT_FOUND,
-                            headers=headers)
+                                headers=headers)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED,
                             headers=headers)
@@ -701,7 +700,17 @@ class ThemeViewSet(viewsets.ModelViewSet):
 
 class EntourageSessionViewSet(viewsets.ModelViewSet):
     queryset = EntourageSession.objects.all()
-    serializer_class = EntourageSessionSerializer
+    serializer_class = EntourageSessionPostSerializer
+
+    def get_serializer_class(self):
+
+        if self.request.method == 'GET' and not hasattr(self, 'response'):
+            return EntourageSessionSerializer
+        elif self.request.method in ('POST', 'PUT', 'PATCH') \
+                and not hasattr(self, 'response'):
+            return EntourageSessionPostSerializer
+
+        return EntourageSessionSerializer
 
     def create(self, request):
 
@@ -854,22 +863,22 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 
-    # @csrf_exempt
-    # @detail_route(methods=['get'])
-    # def alert(self, request, pk=None):
-    #
-    #     response = HttpResponse(content="Created")
-    #     response.status_code = 201
-    #     alert = new_static_alert(self.get_object())
-    #     serializer = AlertSerializer(instance=alert)
-    #
-    #     headers = {}
-    #     try:
-    #         headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
-    #     except (TypeError, KeyError):
-    #         pass
-    #     return Response(serializer.data, status=status.HTTP_201_CREATED,
-    #                     headers=headers)
+        # @csrf_exempt
+        # @detail_route(methods=['get'])
+        # def alert(self, request, pk=None):
+        #
+        #     response = HttpResponse(content="Created")
+        #     response.status_code = 201
+        #     alert = new_static_alert(self.get_object())
+        #     serializer = AlertSerializer(instance=alert)
+        #
+        #     headers = {}
+        #     try:
+        #         headers = {'Location': serializer.data[api_settings.URL_FIELD_NAME]}
+        #     except (TypeError, KeyError):
+        #         pass
+        #     return Response(serializer.data, status=status.HTTP_201_CREATED,
+        #                     headers=headers)
 
 
 
