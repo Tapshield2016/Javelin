@@ -23,7 +23,7 @@ class TrackingLocationInline(admin.StackedInline):
 
 
 class NamedLocationAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'address',)
+    list_display = ('__unicode__', 'formatted_address',)
     search_fields = ['name', 'address',]
 
 
