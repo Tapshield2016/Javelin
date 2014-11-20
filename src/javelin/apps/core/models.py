@@ -738,12 +738,31 @@ class EntourageSession(TimeStampedModel):
         self.save()
         return message
 
+    def non_arrival(self):
+        from notifications import send_non_arrival_notifications
+
+        message = None
+        if not self.entourage_notified:
+            self.entourage_notified = True
+            message = send_non_arrival_notifications(self)
+
+        self.status = 'N'
+        self.save()
+        return message
+
+    def cancel(self):
+        self.status = 'C'
+        self.save()
 
 
 class NamedLocation(Location):
 
     name = models.CharField(max_length=255, null=True, blank=True)
-    address = models.CharField(max_length=255, null=True, blank=True)
+    formatted_address = models.CharField(max_length=255, null=True, blank=True)
+    street = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    state = models.CharField(max_length=255, null=True, blank=True)
+    zip = models.CharField(max_length=255, null=True, blank=True)
 
     class Meta:
         ordering = ['-creation_date']

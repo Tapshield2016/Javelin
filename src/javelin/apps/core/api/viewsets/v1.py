@@ -754,6 +754,18 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
             message = serialized.data
         return Response(message)
 
+    @detail_route(methods=['post'])
+    def cancel(self, request, pk=None):
+
+        """
+        Cancelled tracking of session
+        """
+
+        session = self.get_object()
+        session.cancel()
+        serialized = EntourageSession(session, context={'request': request})
+        return Response(serialized.data)
+
 
 
 class TrackingLocationViewSet(viewsets.ModelViewSet):

@@ -9,11 +9,12 @@ from django_twilio.client import twilio_client
 from django.conf import settings
 from django.contrib.auth import get_user_model
 
-from core.aws.s3 import S3Manager
-from core.aws.sns import SNSManager
-from core.aws.sqs import SQSManager
-from core.models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice
-from core.api.serializers.v1 import AlertSerializer
+from aws.s3 import S3Manager
+from aws.sns import SNSManager
+from aws.sqs import SQSManager
+from models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice, EntourageSession
+from api.serializers.v1 import AlertSerializer
+from notifications import send_non_arrival_notifications, send_called_emergency_notifications, send_yank_alert_notifications
 
 User = get_user_model()
 
@@ -38,7 +39,22 @@ def new_alert(message):
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
-        alert_initiated_inside = message['alert_initiated_inside']
+        alert_initiated_outside = message['alert_initiated_outside']
+
+        active_sessions = EntourageSession.tracking.filter(user=user)
+        if active_sessions:
+            session = active_sessions[0]
+            if alert_initiated_by == "T":
+                session.non_arrival()
+
+        if alert_initiated_by == "N":
+            send_called_emergency_notifications(user)
+
+        if alert_initiated_by == "Y":
+            send_called_emergency_notifications(user)
+
+        if alert_initiated_outside:
+            return True
 
         agency = user.agency
 
