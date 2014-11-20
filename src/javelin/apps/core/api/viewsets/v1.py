@@ -770,7 +770,6 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         """
         Cancelled tracking of session
         """
-
         session = self.get_object()
         session.cancel()
         serialized = EntourageSession(session, context={'request': request})

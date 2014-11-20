@@ -734,7 +734,7 @@ class EntourageSession(TimeStampedModel):
             message = send_arrival_notifications(self)
 
         self.arrival_time = datetime.now()
-        self.status = 'A'
+        self.status = "A"
         self.save()
         return message
 
@@ -746,12 +746,12 @@ class EntourageSession(TimeStampedModel):
             self.entourage_notified = True
             message = send_non_arrival_notifications(self)
 
-        self.status = 'N'
+        self.status = "N"
         self.save()
         return message
 
     def cancel(self):
-        self.status = 'C'
+        self.status = "C"
         self.save()
 
 
