@@ -358,11 +358,9 @@ class UserViewSet(viewsets.ModelViewSet):
                                                               always_visible=False,
                                                               track_route=False).values('user_id')
 
-
         always_visible_users = User.objects.filter(id__in=always_visible_users_id)
         tracking_users = User.objects.filter(id__in=tracking_users_id)
         no_tracking_users = User.objects.filter(id__in=no_tracking_users_id)
-
 
         serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True, context={'request': request})
         serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True, context={'request': request})
@@ -372,6 +370,46 @@ class UserViewSet(viewsets.ModelViewSet):
 
         return Response(serialized_data,
                         status=status.HTTP_200_OK)
+
+    @detail_route(methods=['post'])
+    def locations(self, request, pk=None):
+
+        request_data = request.DATA.copy()
+
+        active_sessions = EntourageSession.tracking.filter(user=self)
+        active_alert = Alert.active.filter(agency_user=self)
+
+        for location_dict in request_data:
+
+            if active_sessions:
+                session = active_sessions[0]
+                new_location = TrackingLocation(entourage_session=session,
+                                                accuracy=location_dict['accuracy'],
+                                                altitude=location_dict['altitude'],
+                                                latitude=location_dict['latitude'],
+                                                longitude=location_dict['longitude'])
+                new_location.save()
+
+            if active_alert:
+                alert = active_alert[0]
+                new_location = AlertLocation(alert=alert,
+                                             accuracy=location_dict['accuracy'],
+                                             altitude=location_dict['altitude'],
+                                             latitude=location_dict['latitude'],
+                                             longitude=location_dict['longitude'],
+                                             floor_level=location_dict['floor_level'])
+                new_location.save()
+
+            if location_dict == request_data[-1]:
+                user = self.get_object()
+                user.__dict__.update(location_dict)
+                user.save()
+
+        return Response("Created",
+                        status=status.HTTP_201_CREATED)
+
+
+
 
 
 class GroupViewSet(viewsets.ModelViewSet):
@@ -672,20 +710,24 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     serializer_class = UserProfileSerializer
     filter_fields = ('user',)
 
+
 class PeriodViewSet(viewsets.ModelViewSet):
     queryset = Period.objects.select_related('dispatch_center').all()
     serializer_class = PeriodSerializer
     filter_fields = ('dispatch_center',)
+
 
 class ClosedDateViewSet(viewsets.ModelViewSet):
     queryset = ClosedDate.objects.select_related('dispatch_center').all()
     serializer_class = ClosedDateSerializer
     filter_fields = ('dispatch_center',)
 
+
 class RegionViewSet(viewsets.ModelViewSet):
     queryset = Region.objects.select_related('agency').all()
     serializer_class = RegionSerializer
     filter_fields = ('agency',)
+
 
 class DispatchCenterViewSet(viewsets.ModelViewSet):
     queryset = DispatchCenter.objects.select_related('agency').all()
@@ -757,7 +799,6 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         """
         arrived at location
         """
-
         session = self.get_object()
         message = session.arrived()
         serialized = EntourageSessionPostSerializer(session, context={'request': request})
