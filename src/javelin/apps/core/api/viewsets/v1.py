@@ -734,8 +734,8 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         start_location_serialized.save()
         end_location_serialized.save()
 
-        request_data['start_location'] = start_location_serialized.object()
-        request_data['end_location'] = end_location_serialized.object()
+        request_data['start_location'] = start_location_serialized.data['url']
+        request_data['end_location'] = end_location_serialized.data['url']
 
         serializer = self.get_serializer(data=request_data, files=request.FILES)
 
