@@ -760,10 +760,11 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
 
         session = self.get_object()
         message = session.arrived()
-        serialized = EntourageSession(session, context={'request': request})
+        serialized = EntourageSession(session)
         if not message:
             message = serialized.data
-        return Response(message)
+        return Response(message,
+                        status=status.HTTP_200_OK)
 
     @detail_route(methods=['post'])
     def cancel(self, request, pk=None):
@@ -773,8 +774,8 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         """
         session = self.get_object()
         session.cancel()
-        # serialized = EntourageSession(session, context={'request': request})
-        return Response("OK")
+        return Response("Cancelled",
+                        status=status.HTTP_200_OK)
 
 
 
