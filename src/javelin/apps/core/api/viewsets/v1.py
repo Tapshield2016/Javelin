@@ -760,7 +760,7 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
 
         session = self.get_object()
         message = session.arrived()
-        serialized = EntourageSession(session)
+        serialized = EntourageSessionPostSerializer(session, context={'request': request})
         if not message:
             message = serialized.data
         return Response(message,
