@@ -501,7 +501,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        if self.request.user.is_staff:
+        if self.request.user.is_superuser:
             return qs
         return qs.exclude(hidden=True)
 
