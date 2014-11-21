@@ -501,9 +501,12 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        # if self.request.user.is_superuser:
-        return qs
-        # return qs.exclude(hidden=True)
+        permitted_groups = [Group.objects.get(name='Master API Token'),]
+        if self.request.user.is_authenticated():
+            if bool(self.request.user.groups.filter(name__in=permitted_groups)) | self.request.user.is_superuser:
+                return qs
+
+        return qs.exclude(hidden=True)
 
     @detail_route(methods=['post'])
     def send_mass_alert(self, request, pk=None):
