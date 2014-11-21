@@ -498,13 +498,17 @@ class Alert(TimeStampedModel):
             active_sessions = EntourageSession.tracking.filter(user=self.agency_user)
             if active_sessions:
                 session = active_sessions[0]
-                if self.initiated_by == "T":
+                if self.initiated_by == 'T':
                     session.non_arrival()
 
-            if self.initiated_by == "N":
-                send_called_emergency_notifications(self.agency_user)
+            if self.initiated_by == 'N':
+                # notify_user_added_to_entourage.delay(added_by_user_message(self.user),
+                #                                  self.user.id,
+                #                                  self.matched_user.device_type,
+                #                                  self.matched_user.device_endpoint_arn)
+                send_called_emergency_notifications.delay(self.agency_user)
 
-            if self.initiated_by == "Y":
+            if self.initiated_by == 'Y':
                 send_yank_alert_notifications(self.agency_user)
 
         super(Alert, self).save(*args, **kwargs)
