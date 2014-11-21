@@ -748,10 +748,13 @@ def set_entourage_members(request):
             if existing:
                 member_to_save = existing[0]
                 member['user'] = request.user
-                # EntourageMember.objects.filter(pk=member_to_save.pk).update(**member)
                 member_to_save.__dict__.update(member)
 
             member_to_save.save()
+
+            if member_to_save.matched_user:
+                if member_to_save.matched_user == member_to_save.user:
+                    member_to_save.delete()
 
             current_members.append(member_to_save.pk)
 
