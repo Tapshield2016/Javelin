@@ -733,7 +733,8 @@ class EntourageSession(TimeStampedModel):
 
         if not locations:
             first_location = TrackingLocation(latitude=self.start_location.latitude,
-                                              longitude=self.start_location.longitude)
+                                              longitude=self.start_location.longitude,
+                                              entourage_session=self)
             first_location.save()
 
         super(EntourageSession, self).save(*args, **kwargs)
