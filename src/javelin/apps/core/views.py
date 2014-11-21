@@ -753,8 +753,13 @@ def set_entourage_members(request):
             member_to_save.save()
 
             if member_to_save.matched_user:
-                if member_to_save.matched_user == member_to_save.user:
+                if member_to_save.matched_user == request.user:
                     member_to_save.delete()
+                else:
+                    for old_member in request.user.entourage_members.all().exclude(instance=member_to_save):
+                        if old_member.matched_user == member_to_save.matched_user:
+                            member_to_save.delete()
+
 
             current_members.append(member_to_save.pk)
 
