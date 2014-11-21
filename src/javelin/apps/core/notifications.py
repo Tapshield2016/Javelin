@@ -19,13 +19,12 @@ def added_by_user_message(user):
 
 def called_emergency_number_message(user):
 
-    return u"%s dialed 911.\n" \
-           u"They may be in need of assistance." % readable_name_for_user(user)
+    return u"%s dialed 911. They may be in need of assistance." % readable_name_for_user(user)
 
 
 def called_emergency_number_subject(user):
 
-    return u"%s arrived at their destination." % readable_name_for_user(user)
+    return u"%s dialed 911." % readable_name_for_user(user)
 
 
 def yank_message(user):
@@ -154,11 +153,10 @@ def send_called_emergency_notifications(user):
             continue
 
         if member.matched_user:
-            send_message_to_sms_or_email(member, subject, message)
-            # notify_user_called_emergency_number.delay(message,
-            #                                           user.id,
-            #                                           member.matched_user.device_type,
-            #                                           member.matched_user.device_endpoint_arn)
+            notify_user_called_emergency_number.delay(message,
+                                                      user.id,
+                                                      member.matched_user.device_type,
+                                                      member.matched_user.device_endpoint_arn)
         else:
             send_message_to_sms_or_email(member, subject, message)
 
