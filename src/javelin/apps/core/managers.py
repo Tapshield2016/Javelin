@@ -92,7 +92,7 @@ class InitiatedBy911AlertManager(models.Manager):
 class InitiatedByStaticDeviceAlertManager(models.Manager):
     def get_queryset(self):
         return super(InitiatedBy911AlertManager, self)\
-            .get_queryset.filter(initiated_by='S')
+            .get_queryset().filter(initiated_by='S')
 
 
 class TrackingEntourageSessionManager(models.Manager):

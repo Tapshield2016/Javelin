@@ -484,7 +484,6 @@ class AgencyViewSet(viewsets.ModelViewSet):
     filter_backends = (SearchFilter,)
     search_fields = ('domain',)
 
-    @property
     def get_queryset(self):
         qs = Agency.objects.all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
