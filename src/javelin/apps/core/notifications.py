@@ -49,9 +49,8 @@ def arrived_subject(session):
 
 
 def non_arrival_message(session):
-    return u"%s has not made it to %s, %s, within their estimated time of arrival." % (readable_name_for_user(session.user),
-                                                                                       session.end_location.name,
-                                                                                       session.end_location.formatted_address)
+    return u"%s has not made it to %s, within their estimated time of arrival." % (readable_name_for_user(session.user),
+                                                                                       session.end_location.name)
 
 
 def non_arrival_subject(session):
@@ -126,7 +125,7 @@ def send_non_arrival_notifications(session):
             continue
 
         if member.matched_user:
-            notify_user_failed_arrival.delay("Nonarrival",
+            notify_user_failed_arrival.delay(message,
                                              user.id,
                                              member.matched_user.device_type,
                                              member.matched_user.device_endpoint_arn)
