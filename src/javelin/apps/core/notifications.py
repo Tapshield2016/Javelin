@@ -154,10 +154,11 @@ def send_called_emergency_notifications(user):
             continue
 
         if member.matched_user:
-            notify_user_called_emergency_number.delay(message,
-                                                      user.id,
-                                                      member.matched_user.device_type,
-                                                      member.matched_user.device_endpoint_arn)
+            send_message_to_sms_or_email(member, subject, message)
+            # notify_user_called_emergency_number.delay(message,
+            #                                           user.id,
+            #                                           member.matched_user.device_type,
+            #                                           member.matched_user.device_endpoint_arn)
         else:
             send_message_to_sms_or_email(member, subject, message)
 

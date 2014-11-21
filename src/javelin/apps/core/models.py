@@ -502,11 +502,7 @@ class Alert(TimeStampedModel):
                     session.non_arrival()
 
             if self.initiated_by == 'N':
-                # notify_user_added_to_entourage.delay(added_by_user_message(self.user),
-                #                                  self.user.id,
-                #                                  self.matched_user.device_type,
-                #                                  self.matched_user.device_endpoint_arn)
-                send_called_emergency_notifications.delay(self.agency_user)
+                send_called_emergency_notifications(self.agency_user)
 
             if self.initiated_by == 'Y':
                 send_yank_alert_notifications(self.agency_user)
