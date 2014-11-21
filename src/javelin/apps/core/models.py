@@ -727,18 +727,6 @@ class EntourageSession(TimeStampedModel):
     def __unicode__(self):
         return u"%s - %s to %s" % (self.user.username, self.start_location.name, self.end_location.name)
 
-    def save(self, *args, **kwargs):
-
-        locations = TrackingLocation.objects.filter(entourage_session=self)
-
-        if not locations:
-            first_location = TrackingLocation(latitude=self.start_location.latitude,
-                                              longitude=self.start_location.longitude,
-                                              entourage_session=self)
-            first_location.save()
-
-        super(EntourageSession, self).save(*args, **kwargs)
-
     def arrived(self):
         from notifications import send_arrival_notifications
 
@@ -794,9 +782,9 @@ class TrackingLocation(Location):
     class Meta:
         ordering = ['creation_date']
 
-    # def save(self, *args, **kwargs):
-    #     super(TrackingLocation, self).save(*args, **kwargs)
-    #     self.entourage_session.save()
+    def save(self, *args, **kwargs):
+        super(TrackingLocation, self).save(*args, **kwargs)
+        self.entourage_session.save()
 
 
 class EntourageMember(models.Model):
@@ -1123,6 +1111,15 @@ class Theme(models.Model):
     def map_overlay_logo_s3_url(self):
         return self.map_overlay_logo.secure_s3_url() if self.map_overlay_logo else None
 
+
+@receiver(post_save, sender=EntourageSession)
+def create_first_location(sender, instance=None, created=False, **kwargs):
+    if created:
+        locations = TrackingLocation.objects.filter(entourage_session=instance)
+        if not locations:
+            TrackingLocation.objects.create(latitude=instance.start_location.latitude,
+                                            longitude=instance.start_location.longitude,
+                                            entourage_session=instance)
 
 @receiver(post_save, sender=AgencyUser)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
