@@ -767,8 +767,10 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         request_data = request.DATA.copy()
         request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
 
-        start_location_serialized = NamedLocationSerializer(data=request_data['start_location'], context={'request': request})
-        end_location_serialized = NamedLocationSerializer(data=request_data['end_location'], context={'request': request})
+        start_location_serialized = NamedLocationSerializer(data=request_data['start_location'],
+                                                            context={'request': request})
+        end_location_serialized = NamedLocationSerializer(data=request_data['end_location'],
+                                                          context={'request': request})
 
         if not start_location_serialized.is_valid():
             return Response(start_location_serialized.errors, status=status.HTTP_400_BAD_REQUEST)
