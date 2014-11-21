@@ -63,9 +63,11 @@ def new_alert(message):
                 else:
                     incoming_alert = past_alert
                     incoming_alert.disarmed_time = None
+                    incoming_alert.notified_entourage = False
             else:
                 incoming_alert = past_alert
                 incoming_alert.disarmed_time = None
+                incoming_alert.notified_entourage = False
 
         if not incoming_alert:
             incoming_alert = Alert(agency=agency, agency_user=user,
@@ -101,11 +103,10 @@ def new_alert(message):
         message_valid = True
         serialized = AlertSerializer(instance=incoming_alert)
 
-
         if incoming_alert.status != "U" and incoming_alert.initiated_by != "C":
             notify_alert_received.delay(serialized.data['url'],
-                                    user.device_type,
-                                    user.device_endpoint_arn)
+                                        user.device_type,
+                                        user.device_endpoint_arn)
             incoming_alert.user_notified_of_receipt = True
         incoming_alert.save()
 
@@ -122,7 +123,7 @@ def new_alert(message):
 def send_phone_number_verification(phone_number, verification_code):
     phone_number = re.sub("\D", "", phone_number)
     phone_number = "+1%s" % phone_number[-10:]
-    resp = twilio_client.messages.create(\
+    resp = twilio_client.messages.create( \
         to=phone_number,
         from_=settings.TWILIO_SMS_FROM_NUMBER,
         body="Your TapShield verification code is: %s" % verification_code)
@@ -316,7 +317,7 @@ def delete_file_from_s3(url):
 def notify_waiting_users_of_congestion(agency_id, alert_ids=None):
     from utils import send_message_to_user_for_alert
     agency = Agency.objects.get(pk=agency_id)
-    waiting_alerts =\
+    waiting_alerts = \
         Alert.should_receive_autoresponse.filter(agency=agency)
     if alert_ids:
         waiting_alerts = waiting_alerts.filter(pk__in=alert_ids)
@@ -351,7 +352,7 @@ def new_static_alert(device):
                                             # altitude=location_altitude,
                                             longitude=location_longitude,
                                             latitude=location_latitude,)
-                                            # accuracy=location_accuracy)
+    # accuracy=location_accuracy)
     incoming_alert_location.save()
     incoming_alert.user_notified_of_receipt = True
     incoming_alert.save()
