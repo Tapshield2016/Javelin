@@ -501,10 +501,8 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        permitted_groups = [Group.objects.get(name='Dispatchers'),]
-        if self.request.user.is_authenticated():
-            if bool(self.request.user.groups.filter(name__in=permitted_groups)) | self.request.user.is_superuser:
-                return qs
+        if  self.request.user.is_superuser:
+            return qs
 
         return qs.exclude(hidden=True)
 
