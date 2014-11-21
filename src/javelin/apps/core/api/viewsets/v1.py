@@ -501,7 +501,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        permitted_groups = [Group.objects.get(name='Master API Token'),]
+        permitted_groups = [Group.objects.get(name='Staff'),]
         if self.request.user.is_authenticated():
             if bool(self.request.user.groups.filter(name__in=permitted_groups)) | self.request.user.is_superuser:
                 return qs
