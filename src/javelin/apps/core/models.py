@@ -32,7 +32,8 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       DisarmedAlertManager, NewAlertManager,
                       PendingAlertManager, InitiatedByChatAlertManager,
                       InitiatedByEmergencyAlertManager,
-                      InitiatedByTimerAlertManager,
+                      InitiatedByTimerAlertManager, InitiatedByCallAlertManager,
+                      InitiatedByYankAlertManager,
                       WaitingForActionAlertManager,
                       ShouldReceiveAutoResponseAlertManager,
                       TrackingEntourageSessionManager)
@@ -439,6 +440,8 @@ class Alert(TimeStampedModel):
 
     call_length = models.PositiveSmallIntegerField(null=True, blank=True)
 
+    notified_entourage = models.BooleanField(default=False)
+
     objects = models.Manager()
     active = ActiveAlertManager()
     inactive = InactiveAlertManager()
@@ -449,8 +452,11 @@ class Alert(TimeStampedModel):
     disarmed = DisarmedAlertManager()
     new = NewAlertManager()
     pending = PendingAlertManager()
-    initiated_by_chat = InitiatedByChatAlertManager()
+
     initiated_by_emergency = InitiatedByEmergencyAlertManager()
+    initiated_by_yank = InitiatedByYankAlertManager()
+    initiated_by_chat = InitiatedByChatAlertManager()
+    initiated_by_call = InitiatedByCallAlertManager()
     initiated_by_timer = InitiatedByTimerAlertManager()
 
     class Meta:
@@ -466,6 +472,7 @@ class Alert(TimeStampedModel):
 
     @reversion.create_revision()
     def save(self, *args, **kwargs):
+        from notifications import send_called_emergency_notifications, send_yank_alert_notifications
         super(Alert, self).save(*args, **kwargs)
         if self.status == 'C':
             if not self.completed_time:
@@ -485,6 +492,21 @@ class Alert(TimeStampedModel):
             elif self.status == 'P':
                 if not self.pending_time:
                     self.pending_time = datetime.now()
+
+        if not self.notified_entourage:
+            self.notified_entourage = True
+            active_sessions = EntourageSession.tracking.filter(user=self.agency_user)
+            if active_sessions:
+                session = active_sessions[0]
+                if self.initiated_by_timer:
+                    session.non_arrival()
+
+            if self.initiated_by_emergency:
+                send_called_emergency_notifications(self.agency_user)
+
+            if self.initiated_by_yank:
+                send_yank_alert_notifications(self.agency_user)
+
         super(Alert, self).save(*args, **kwargs)
                 
     def disarm(self):

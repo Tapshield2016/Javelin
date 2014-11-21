@@ -20,7 +20,6 @@ User = get_user_model()
 
 @task
 def new_alert(message):
-    from notifications import send_called_emergency_notifications, send_yank_alert_notifications
     """
     We expect to see a message that's something like this:
 
@@ -40,21 +39,6 @@ def new_alert(message):
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
         alert_initiated_outside = message['alert_initiated_outside']
-
-        active_sessions = EntourageSession.tracking.filter(user=user)
-        if active_sessions:
-            session = active_sessions[0]
-            if alert_initiated_by == "T":
-                session.non_arrival()
-
-        if alert_initiated_by == "N":
-            send_called_emergency_notifications(user)
-
-        if alert_initiated_by == "Y":
-            send_yank_alert_notifications(user)
-
-        if alert_initiated_outside:
-            return True
 
         agency = user.agency
 
@@ -100,6 +84,9 @@ def new_alert(message):
         elif alert_initiated_by == "C" and not agency.chat_available:
             incoming_alert.status = "U"
         elif alert_initiated_by == "S" and not agency.static_device_available:
+            incoming_alert.status = "U"
+
+        if alert_initiated_outside:
             incoming_alert.status = "U"
 
         incoming_alert.save()

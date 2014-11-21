@@ -65,9 +65,9 @@ class InitiatedByChatAlertManager(models.Manager):
             .get_queryset().filter(initiated_by='C')
 
 
-class InitiatedByEmergencyAlertManager(models.Manager):
+class InitiatedByCallAlertManager(models.Manager):
     def get_queryset(self):
-        return super(InitiatedByEmergencyAlertManager, self)\
+        return super(InitiatedByCallAlertManager, self)\
             .get_queryset().filter(initiated_by='E')
 
 
@@ -83,9 +83,9 @@ class InitiatedByYankAlertManager(models.Manager):
             .get_queryset().filter(initiated_by='Y')
 
 
-class InitiatedBy911AlertManager(models.Manager):
+class InitiatedByEmergencyAlertManager(models.Manager):
     def get_queryset(self):
-        return super(InitiatedBy911AlertManager, self)\
+        return super(InitiatedByEmergencyAlertManager, self)\
             .get_queryset().filter(initiated_by='N')
 
 
