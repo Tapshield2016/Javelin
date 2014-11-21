@@ -56,7 +56,7 @@ from core.filters import IsoDateTimeFilter
 from core.models import (Agency, Alert, AlertLocation,
                          ChatMessage, MassAlert, UserProfile, EntourageMember,
                          SocialCrimeReport,  Region,
-                         DispatchCenter, Period,
+                         DispatchCenter, Period, AgencyUser,
                          ClosedDate, StaticDevice, Theme,
                          EntourageSession, TrackingLocation, NamedLocation,)
 
@@ -501,7 +501,8 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        if  self.request.user.is_superuser:
+        user = AgencyUser.objects.filter(user=self.request.user)[0]
+        if user.is_superuser:
             return qs
 
         return qs.exclude(hidden=True)
