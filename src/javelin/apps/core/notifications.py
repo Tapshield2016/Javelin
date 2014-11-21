@@ -29,8 +29,7 @@ def called_emergency_number_subject(user):
 
 def yank_message(user):
 
-    return u"%s triggered a Yank alert using their headphones.\n" \
-           u"They may be in need of assistance." % readable_name_for_user(user)
+    return u"%s triggered a Yank alert using their headphones. They may be in need of assistance." % readable_name_for_user(user)
 
 
 def yank_subject(user):
