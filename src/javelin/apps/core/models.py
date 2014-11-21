@@ -493,18 +493,18 @@ class Alert(TimeStampedModel):
                 if not self.pending_time:
                     self.pending_time = datetime.now()
 
-        if not self.notified_entourage:
+        if not self.notified_entourage and self.status != 'C':
             self.notified_entourage = True
             active_sessions = EntourageSession.tracking.filter(user=self.agency_user)
             if active_sessions:
                 session = active_sessions[0]
-                if self.initiated_by_timer:
+                if self.initiated_by == 'T':
                     session.non_arrival()
 
-            if self.initiated_by_emergency:
+            if self.initiated_by == 'N':
                 send_called_emergency_notifications(self.agency_user)
 
-            if self.initiated_by_yank:
+            if self.initiated_by == 'Y':
                 send_yank_alert_notifications(self.agency_user)
 
         super(Alert, self).save(*args, **kwargs)
