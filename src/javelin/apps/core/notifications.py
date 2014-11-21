@@ -122,20 +122,16 @@ def send_non_arrival_notifications(session):
     errors = []
     for member in entourage_members:
 
-        # send_message_to_sms_or_email(member, subject, message)
-
         if not member.notify_non_arrival:
             continue
 
-        send_message_to_sms_or_email(member, subject, message)
-
-        # if member.matched_user:
-        #     notify_user_failed_arrival.delay(message,
-        #                                      user.id,
-        #                                      member.matched_user.device_type,
-        #                                      member.matched_user.device_endpoint_arn)
-        # else:
-        #     send_message_to_sms_or_email(member, subject, message)
+        if member.matched_user:
+            notify_user_failed_arrival.delay("Nonarrival",
+                                             user.id,
+                                             member.matched_user.device_type,
+                                             member.matched_user.device_endpoint_arn)
+        else:
+            send_message_to_sms_or_email(member, subject, message)
 
     if errors:
         return {'message': 'Partial Success',
