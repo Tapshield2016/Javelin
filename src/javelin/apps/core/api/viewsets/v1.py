@@ -501,7 +501,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
             # We got one or more values but not all we need, so return none
             qs = Agency.objects.none()
 
-        user = AgencyUser.objects.filter(user=self.request.user)[0]
+        user = AgencyUser.objects.filter(pk=self.request.user.pk)[0]
         if user.is_superuser:
             return qs
 
