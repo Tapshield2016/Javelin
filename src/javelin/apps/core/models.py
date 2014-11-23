@@ -148,7 +148,7 @@ class Agency(TimeStampedModel):
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
     agency_boundaries = models.TextField(null=True, blank=True, help_text="For multiple boundaries use Regions")
-    agency_center_from_boundaries = models.BooleanField(default=False)
+    agency_center_from_boundaries = models.BooleanField(default=True)
     agency_center_latitude = models.FloatField(default=0)
     agency_center_longitude = models.FloatField(default=0)
     agency_center_point = db_models.PointField(geography=True,
