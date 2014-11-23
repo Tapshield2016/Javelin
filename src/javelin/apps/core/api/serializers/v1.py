@@ -29,8 +29,8 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
             if obj.content_type:
                 action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
                 if isinstance(action_obj, EntourageSession):
-                    serialized = EntourageSessionSerializer(instance=obj.theme,
-                                               context={'request': self.context.get('request', None)})
+                    serialized = EntourageSessionSerializer(instance=action_obj,
+                                                            context={'request': self.context.get('request', None)})
                     ret['action_object'] = serialized.data
         return ret
 
