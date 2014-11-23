@@ -11,9 +11,12 @@ class Migration(SchemaMigration):
 
         db.add_column(u'core_alert',
                       'notified_entourage', self.gf('django.db.models.fields.BooleanField')(default=False)),
+        db.add_column(u'core_alert',
+                      'in_bounds', self.gf('django.db.models.fields.BooleanField')(default=True)),
 
     def backwards(self, orm):
         db.delete_column(u'core_alert', 'notified_entourage'),
+        db.delete_column(u'core_alert', 'in_bounds'),
 
 
     models = {

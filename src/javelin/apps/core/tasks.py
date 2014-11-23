@@ -89,6 +89,7 @@ def new_alert(message):
             incoming_alert.status = "U"
 
         if alert_initiated_outside:
+            incoming_alert.in_bounds = False
             incoming_alert.status = "U"
 
         incoming_alert.save()
@@ -262,7 +263,7 @@ def notify_user_added_to_entourage(message, user_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "entourage", user_id, "Added Entourage Member")
+                               "entourage-added", user_id, "Entourage Member Added")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -272,7 +273,7 @@ def notify_user_called_emergency_number(message, user_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "entourage", user_id, "Emergency Call")
+                               "entourage-emergency-call", user_id, "Emergency Call Alert")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -282,7 +283,7 @@ def notify_user_arrived_at_destination(message, user_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "entourage", user_id, "Arrival")
+                               "entourage-arrived", user_id, "Arrival")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -292,7 +293,7 @@ def notify_user_failed_arrival(message, user_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "entourage", user_id, "Non-Arrival")
+                               "entourage-non-arrival", user_id, "Non-Arrival")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -302,7 +303,7 @@ def notify_user_yank_alert(message, user_id,
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
     msg = sns.get_message_json(app_endpoint, message,
-                               "entourage", user_id, "Yank")
+                               "entourage-yank", user_id, "Yank Alert")
     sns.publish_to_device(msg, device_endpoint_arn)
 
 

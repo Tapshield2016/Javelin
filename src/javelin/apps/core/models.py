@@ -439,6 +439,7 @@ class Alert(TimeStampedModel):
     notes = models.TextField(null=True, blank=True)
 
     call_length = models.PositiveSmallIntegerField(null=True, blank=True)
+    in_bounds = models.BooleanField(default=True)
 
     notified_entourage = models.BooleanField(default=False)
 
