@@ -28,9 +28,8 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
         if obj:
             if obj.content_type:
                 action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
-                if isinstance(action_obj, EntourageSession):
-                    serialized = EntourageSessionSerializer(instance=action_obj,
-                                                            context={'request': self.context.get('request', None)})
+                serialized = serializer_for_unknown(action_obj, self.context.get('request', None))
+                if serialized:
                     ret['action_object'] = serialized.data
         return ret
 
@@ -381,3 +380,34 @@ class ThemeSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Theme
+
+
+def serializer_for_unknown(obj, request):
+    if isinstance(obj, EntourageSession):
+        return EntourageSessionSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, EntourageMember):
+        return EntourageMemberSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, User):
+        return UserAlwaysVisibleEntourageMemberSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, SocialCrimeReport):
+        return SocialCrimeReportSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, NamedLocation):
+        return NamedLocationSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, TrackingLocation):
+        return TrackingLocationFullSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, AlertLocation):
+        return AlertLocationSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, Alert):
+        return AlertSerializer(instance=obj, context={'request': request})
+
+    if isinstance(obj, MassAlert):
+        return MassAlertSerializer(instance=obj, context={'request': request})
+
+    return None
