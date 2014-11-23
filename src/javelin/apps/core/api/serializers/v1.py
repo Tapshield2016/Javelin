@@ -28,7 +28,7 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 #     action_object = generic.GenericForeignKey('content_type', 'object_id')
     class Meta:
         model = UserNotification
-        fields = ('url', 'title', 'message', 'type', 'read', 'content_type',)
+        fields = ('url', 'title', 'message', 'type', 'read', 'content_type', 'object_id')
         depth = 1
 
 
