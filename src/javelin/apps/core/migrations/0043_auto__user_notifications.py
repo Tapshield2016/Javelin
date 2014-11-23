@@ -33,7 +33,7 @@ class Migration(SchemaMigration):
             ('type', self.gf('django.db.models.fields.CharField')(max_length=1, default='O')),
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('object_id', self.gf('django.contrib.gis.db.models.fields.PositiveIntegerField')()),
+            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
             ('action_object', self.gf('generic.GenericForeignKey')()),
         ))
         db.send_create_signal(u'core', ['UserNotification'])
