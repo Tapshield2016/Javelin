@@ -243,7 +243,7 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
 
 class ThemeAdmin(admin.ModelAdmin):
 
-    list_filter = ('__unicode__',)
+    list_filter = ('name',)
 
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
