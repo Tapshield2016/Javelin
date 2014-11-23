@@ -135,27 +135,27 @@ class Agency(TimeStampedModel):
     DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. Call 911 if you require immediate assistance."
 
     name = models.CharField(max_length=255)
-    domain = models.CharField(max_length=255)
+    domain = models.CharField(max_length=255, default="tapshield.com")
     agency_point_of_contact =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name='agency_point_of_contact',
                           null=True, blank=True, help_text="This will be the person with full account access. "
                                                            "Edit all settings, change/add payment, add/remove dispatchers, etc.")
-    dispatcher_phone_number = models.CharField(max_length=24)
-    dispatcher_secondary_phone_number = models.CharField(max_length=24,
+    dispatcher_phone_number = models.CharField(max_length=24, default="5555555555")
+    dispatcher_secondary_phone_number = models.CharField(max_length=24, default="555",
                                                          null=True, blank=True,
                                                          help_text="Defaults to 911 within apps unless specified")
     dispatcher_schedule_start = models.TimeField(null=True, blank=True)
     dispatcher_schedule_end = models.TimeField(null=True, blank=True)
     agency_boundaries = models.TextField(null=True, blank=True, help_text="For multiple boundaries use Regions")
     agency_center_from_boundaries = models.BooleanField(default=False)
-    agency_center_latitude = models.FloatField()
-    agency_center_longitude = models.FloatField()
+    agency_center_latitude = models.FloatField(default=0)
+    agency_center_longitude = models.FloatField(default=0)
     agency_center_point = db_models.PointField(geography=True,
                                                null=True, blank=True)
     agency_radius = models.FloatField(default=0)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
-    alert_mode_name = models.CharField(max_length=24, default="Police",
+    alert_mode_name = models.CharField(max_length=24, default="Campus Police",
                                        help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
     alert_received_message = models.CharField(max_length=255, default="The authorities have been notified.")
     alert_completed_message = models.TextField(null=True, blank=True,
@@ -163,11 +163,11 @@ class Agency(TimeStampedModel):
                                                        "Your alert session was completed by dispatcher <first_name>.")
     sns_primary_topic_arn = models.CharField(max_length=255,
                                              null=True, blank=True)
-    require_domain_emails = models.BooleanField(default=False)
-    display_command_alert = models.BooleanField(default=False)
-    loop_alert_sound = models.BooleanField(default=False)
+    require_domain_emails = models.BooleanField(default=True)
+    display_command_alert = models.BooleanField(default=True)
+    loop_alert_sound = models.BooleanField(default=True)
     launch_call_to_dispatcher_on_alert = models.BooleanField(default=True, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
-    show_agency_name_in_app_navbar = models.BooleanField(default=False)
+    show_agency_name_in_app_navbar = models.BooleanField(default=True)
     enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.", verbose_name="enable chat auto-responder")
     chat_autoresponder_message =\
         models.TextField(null=True, blank=True,
@@ -190,29 +190,26 @@ class Agency(TimeStampedModel):
     theme = models.ForeignKey('Theme', related_name='agency_theme', null=True, blank=True,
                               help_text="UI elements related to agency")
     branding = models.ForeignKey('Theme', related_name="branding_theme", null=True, blank=True,
-                                 help_text="UI elements for OEM partners")
-
+                                 help_text="Internal UI elements for OEM partners")
 
     #Is account ready to be searched
     hidden = models.BooleanField(default=True, help_text="Hide organization from query list. Apps will no be "
                                                          "able to add until visible")
-
     #Mark all premium items True
-    full_version = models.BooleanField(default=False, help_text="When checked all services will be made available")
+    full_version = models.BooleanField(default=True, help_text="When checked all services will be made available")
     no_alerts = models.BooleanField(default=False, help_text="Auto-checked when no alert types are "
                                                              "available for internal use")
-
-    #standard items
+    #premium items
     crime_reports_available = models.BooleanField(default=True)
 
-    #premium items
-    emergency_call_available = models.BooleanField(default=False)
-    alert_available = models.BooleanField(default=False)
-    chat_available = models.BooleanField(default=False)
-    yank_available = models.BooleanField(default=False)
-    entourage_available = models.BooleanField(default=False)
-    static_device_available = models.BooleanField(default=False)
-    mass_alert_available = models.BooleanField(default=False)
+    #standard items
+    emergency_call_available = models.BooleanField(default=True)
+    alert_available = models.BooleanField(default=True)
+    chat_available = models.BooleanField(default=True)
+    yank_available = models.BooleanField(default=True)
+    entourage_available = models.BooleanField(default=True)
+    static_device_available = models.BooleanField(default=True)
+    mass_alert_available = models.BooleanField(default=True)
 
     objects = models.Manager()
     geo = db_models.GeoManager()
