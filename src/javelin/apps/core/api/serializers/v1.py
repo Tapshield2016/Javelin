@@ -22,6 +22,15 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
         fields = ('url', 'title', 'message', 'type', 'read', 'content_type', 'object_id', 'creation_date')
         depth = 1
 
+    def to_native(self, obj):
+        ret = super(UserNotificationSerializer, self).to_native(obj)
+
+        if obj:
+            if obj.content_type:
+                action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
+                ret['action_object'] = action_obj
+        return ret
+
 
 class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
