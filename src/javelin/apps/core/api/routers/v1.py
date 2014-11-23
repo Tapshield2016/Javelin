@@ -7,7 +7,8 @@ from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
                                   UserProfileViewSet, SocialCrimeReportViewSet,
                                   EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
                                   ClosedDateViewSet, PeriodViewSet, StaticDeviceViewSet,
-                                  EntourageSessionViewSet, TrackingLocationViewSet, NamedLocationViewSet)
+                                  EntourageSessionViewSet, TrackingLocationViewSet, NamedLocationViewSet,
+                                  UserNotificationViewSet)
 
 
 router_v1 = routers.DefaultRouter()
@@ -30,3 +31,4 @@ router_v1.register(r'theme', ThemeViewSet)
 router_v1.register(r'entourage-sessions', EntourageSessionViewSet)
 router_v1.register(r'tracking-locations', TrackingLocationViewSet)
 router_v1.register(r'named-locations', NamedLocationViewSet)
+router_v1.register(r'user-notifications', UserNotificationViewSet)

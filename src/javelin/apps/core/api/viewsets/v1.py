@@ -48,7 +48,8 @@ from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
                                      NamedLocationSerializer,
                                      UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
                                      UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
-                                     TrackingLocationFullSerializer, EntourageSessionPostSerializer)
+                                     TrackingLocationFullSerializer, EntourageSessionPostSerializer,
+                                     UserNotificationSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -58,7 +59,7 @@ from core.models import (Agency, Alert, AlertLocation,
                          SocialCrimeReport,  Region,
                          DispatchCenter, Period, AgencyUser,
                          ClosedDate, StaticDevice, Theme,
-                         EntourageSession, TrackingLocation, NamedLocation,)
+                         EntourageSession, TrackingLocation, NamedLocation, UserNotification)
 
 from core.utils import get_agency_from_unknown
 
@@ -832,6 +833,11 @@ class TrackingLocationViewSet(viewsets.ModelViewSet):
 class NamedLocationViewSet(viewsets.ModelViewSet):
     queryset = NamedLocation.objects.all()
     serializer_class = NamedLocationSerializer
+
+
+class UserNotificationViewSet(viewsets.ModelViewSet):
+    queryset = UserNotification.objects.all()
+    serializer_class = UserNotificationSerializer
 
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):

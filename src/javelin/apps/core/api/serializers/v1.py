@@ -7,12 +7,19 @@ from core.models import (Agency, Alert, AlertLocation, Theme,
                          ChatMessage, MassAlert, UserProfile,
                          EntourageMember, SocialCrimeReport, Region,
                          DispatchCenter, Period, ClosedDate, StaticDevice,
-                         EntourageSession, TrackingLocation, NamedLocation,)
+                         EntourageSession, TrackingLocation, NamedLocation, UserNotification)
 
 from emailmgr.models import EmailAddress
 from emailmgr.serializers import EmailAddressGETSerializer
 
 User = get_user_model()
+
+
+class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = UserNotification
+        depth = 2
 
 
 class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):

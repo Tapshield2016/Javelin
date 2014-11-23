@@ -19,6 +19,8 @@ from django.db import models
 from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.contenttypes import generic
 
 from urlparse import urlparse, urlunparse, urljoin
 
@@ -1108,6 +1110,29 @@ class Theme(models.Model):
 
     def map_overlay_logo_s3_url(self):
         return self.map_overlay_logo.secure_s3_url() if self.map_overlay_logo else None
+
+
+class UserNotification(TimeStampedModel):
+
+    NOTIFICATION_TYPES = (
+        ('E', 'Entourage'),
+        ('C', 'Crime Report'),
+        ('O', 'Other'),
+    )
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             related_name="notifications")
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    type = models.CharField(max_length=1, default='O', choices=NOTIFICATION_TYPES)
+    read = models.BooleanField(default=False)
+
+    content_type = models.ForeignKey(ContentType, null=True)
+    object_id = models.PositiveIntegerField(null=True)
+    action_object = generic.GenericForeignKey('content_type', 'object_id')
+
+    class Meta:
+        ordering = ['-creation_date']
 
 
 @receiver(post_save, sender=EntourageSession)
