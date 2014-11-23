@@ -16,7 +16,7 @@ class Migration(SchemaMigration):
 
     def backwards(self, orm):
         db.delete_column(u'core_alert', 'notified_entourage'),
-        # db.delete_column(u'core_alert', 'in_bounds'),
+        db.delete_column(u'core_alert', 'in_bounds'),
 
 
     models = {
