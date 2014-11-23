@@ -34,7 +34,7 @@ class Migration(SchemaMigration):
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
             ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'], null=True)),
             ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True)),
-            ('action_object', self.gf('django.contrib.contenttypes.generic.GenericForeignKey')('content_type', 'object_id')),
+            # ('action_object', self.gf('django.contrib.contenttypes.generic.GenericForeignKey')('content_type', 'object_id')),
         ))
         db.send_create_signal(u'core', ['UserNotification'])
 
