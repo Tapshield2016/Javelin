@@ -32,9 +32,9 @@ class Migration(SchemaMigration):
             ('message', self.gf('django.db.models.fields.TextField')()),
             ('type', self.gf('django.db.models.fields.CharField')(max_length=1, default='O')),
             ('read', self.gf('django.db.models.fields.BooleanField')(default=False)),
-            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'])),
-            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')()),
-            ('action_object', self.gf('django.contrib.contenttypes.generic.GenericForeignKey')()),
+            ('content_type', self.gf('django.db.models.fields.related.ForeignKey')(to=orm['contenttypes.ContentType'], null=True)),
+            ('object_id', self.gf('django.db.models.fields.PositiveIntegerField')(null=True)),
+            # ('action_object', self.gf('django.contrib.contenttypes.generic.GenericForeignKey')()),
         ))
         db.send_create_signal(u'core', ['UserNotification'])
 
