@@ -19,7 +19,6 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserNotification
-        depth = 2
 
 
 class UnauthorizedEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
