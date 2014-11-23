@@ -16,9 +16,19 @@ User = get_user_model()
 
 
 class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
-
+# user = models.ForeignKey(settings.AUTH_USER_MODEL,
+#                              related_name="notifications")
+#     title = models.CharField(max_length=255)
+#     message = models.TextField()
+#     type = models.CharField(max_length=1, default='O', choices=NOTIFICATION_TYPES)
+#     read = models.BooleanField(default=False)
+#
+#     content_type = models.ForeignKey(ContentType, null=True)
+#     object_id = models.PositiveIntegerField(null=True)
+#     action_object = generic.GenericForeignKey('content_type', 'object_id')
     class Meta:
         model = UserNotification
+        fields = ('url', 'title', 'message', 'type', 'read', 'content_type',)
         depth = 1
 
 

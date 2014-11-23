@@ -1127,7 +1127,8 @@ class UserNotification(TimeStampedModel):
     type = models.CharField(max_length=1, default='O', choices=NOTIFICATION_TYPES)
     read = models.BooleanField(default=False)
 
-    content_type = models.ForeignKey(ContentType, null=True)
+    limit = models.Q(app_label='core')
+    content_type = models.ForeignKey(ContentType, null=True, limit_choices_to=limit)
     object_id = models.PositiveIntegerField(null=True)
     action_object = generic.GenericForeignKey('content_type', 'object_id')
 
