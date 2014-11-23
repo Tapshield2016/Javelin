@@ -110,6 +110,16 @@ class AgencyUserInline(admin.StackedInline):
     fields = ('first_name', 'last_name', 'username', 'groups')
 
 
+def hide(self, request, queryset):
+        queryset.update(hidden=True)
+hide.short_description = "Make selected agencies hidden to users"
+
+
+def show(self, request, queryset):
+        queryset.update(hidden=False)
+show.short_description = "Make selected agencies public"
+
+
 class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
         ('Publish', {
@@ -164,6 +174,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     readonly_fields = ['theme_link', 'branding_link',]
     search_fields = ['name', 'agency_point_of_contact__username', 'domain',]
     list_display = ('__unicode__', 'full_version', 'domain', 'require_domain_emails', 'agency_point_of_contact', 'hidden',)
+    actions = [hide, show]
 
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
@@ -196,8 +207,8 @@ class AlertLocationInline(admin.StackedInline):
 
 
 class AlertAdmin(reversion.VersionAdmin):
-    list_display = ('__unicode__', 'agency', 'agency_dispatcher', 'status', 'creation_date', 'last_modified',)
-    list_filter = ('agency', 'status')
+    list_display = ('__unicode__', 'agency', 'agency_dispatcher', 'status', 'creation_date', 'last_modified', 'in_bounds')
+    list_filter = ('agency', 'in_bounds', 'status')
     inlines = [
         AlertLocationInline,
     ]
@@ -229,8 +240,10 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
 
+
 class ThemeAdmin(admin.ModelAdmin):
-    pass
+
+    list_filter = ('name',)
 
 admin.site.register(Agency, AgencyAdmin)
 admin.site.register(AgencyUser, AgencyUserAdmin)
