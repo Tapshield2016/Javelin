@@ -14,7 +14,11 @@ from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
                     EntourageMember, Region, DispatchCenter,
                     Period, ClosedDate, StaticDevice, Theme,
-                    EntourageSession, TrackingLocation, NamedLocation,)
+                    EntourageSession, TrackingLocation, NamedLocation, UserNotification)
+
+
+class UserNotificationAdmin(admin.ModelAdmin):
+    model = UserNotification
 
 
 class TrackingLocationInline(admin.StackedInline):
@@ -261,3 +265,4 @@ admin.site.register(Theme, ThemeAdmin)
 
 admin.site.register(EntourageSession, EntourageSessionAdmin)
 admin.site.register(NamedLocation, NamedLocationAdmin)
+admin.site.register(UserNotification, UserNotificationAdmin)
