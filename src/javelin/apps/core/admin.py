@@ -173,7 +173,8 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     ]
     readonly_fields = ['theme_link', 'branding_link',]
     search_fields = ['name', 'agency_point_of_contact__username', 'domain',]
-    list_display = ('__unicode__', 'full_version', 'domain', 'require_domain_emails', 'agency_point_of_contact', 'hidden',)
+    list_display = ('__unicode__', 'full_version', 'domain',
+                    'require_domain_emails', 'agency_point_of_contact', 'hidden',)
     actions = [hide, show]
 
     def theme_link(self, obj):
@@ -207,8 +208,9 @@ class AlertLocationInline(admin.StackedInline):
 
 
 class AlertAdmin(reversion.VersionAdmin):
-    list_display = ('__unicode__', 'agency', 'agency_dispatcher', 'status', 'creation_date', 'last_modified', 'in_bounds')
-    list_filter = ('agency', 'in_bounds', 'status')
+    list_display = ('__unicode__', 'agency', 'agency_dispatcher', 'status',
+                    'initiated_by', 'creation_date', 'last_modified', 'in_bounds')
+    list_filter = ('agency', 'in_bounds', 'status', 'initiated_by', 'in_bounds')
     inlines = [
         AlertLocationInline,
     ]
