@@ -839,6 +839,9 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     queryset = UserNotification.objects.all()
     serializer_class = UserNotificationSerializer
 
+    def get_queryset(self):
+        return UserNotification.objects.filter(user=self.request.user)
+
 
 class StaticDeviceViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, DeviceMakerOnly)
