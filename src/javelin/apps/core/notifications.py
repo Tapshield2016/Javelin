@@ -38,9 +38,8 @@ def yank_subject(user):
 
 
 def arrived_message(session):
-    return u"%s has arrived at %s, %s" % (readable_name_for_user(session.user),
-                                          session.end_location.name,
-                                          session.end_location.formatted_address)
+    return u"%s has arrived at %s" % (readable_name_for_user(session.user),
+                                          session.end_location.name)
 
 
 def arrived_subject(session):
