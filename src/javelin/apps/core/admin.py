@@ -21,6 +21,7 @@ class UserNotificationAdmin(admin.ModelAdmin):
     model = UserNotification
     list_display = ['__unicode__', 'type', 'read', 'creation_date']
     search_fields = ['user__username', 'title', 'message',]
+    raw_id_fields = ("user",)
 
 
 class TrackingLocationInline(admin.StackedInline):
