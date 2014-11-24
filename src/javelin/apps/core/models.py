@@ -481,6 +481,7 @@ class Alert(TimeStampedModel):
             if self.agency_user:
                 try:
                     profile = self.agency_user.get_profile()
+                    profile.save()
                     profile.delete()
                 except UserProfile.DoesNotExist:
                     pass
