@@ -8,7 +8,7 @@ from django.core.mail import send_mail
 from tasks import (notify_user_arrived_at_destination, notify_user_yank_alert,
                    notify_user_failed_arrival, notify_user_called_emergency_number)
 
-from models import (Agency, EntourageMember, EntourageSession)
+from models import UserNotification
 from utils import readable_name_for_user
 
 
@@ -98,6 +98,14 @@ def send_arrival_notifications(session):
             continue
 
         if member.matched_user:
+
+            user_notification = UserNotification(user=member.matched_user,
+                                                 title=subject,
+                                                 message=message,
+                                                 type='E',
+                                                 action_object=session)
+            user_notification.save()
+
             notify_user_arrived_at_destination.delay(message,
                                                      user.id,
                                                      member.matched_user.device_type,
@@ -125,6 +133,14 @@ def send_non_arrival_notifications(session):
             continue
 
         if member.matched_user:
+
+            user_notification = UserNotification(user=member.matched_user,
+                                                 title=subject,
+                                                 message=message,
+                                                 type='E',
+                                                 action_object=session)
+            user_notification.save()
+
             notify_user_failed_arrival.delay(message,
                                              user.id,
                                              member.matched_user.device_type,
@@ -151,6 +167,14 @@ def send_called_emergency_notifications(user):
             continue
 
         if member.matched_user:
+
+            user_notification = UserNotification(user=member.matched_user,
+                                                 title=subject,
+                                                 message=message,
+                                                 type='E',
+                                                 action_object=user)
+            user_notification.save()
+
             notify_user_called_emergency_number.delay(message,
                                                       user.id,
                                                       member.matched_user.device_type,
@@ -177,6 +201,14 @@ def send_yank_alert_notifications(user):
             continue
 
         if member.matched_user:
+
+            user_notification = UserNotification(user=member.matched_user,
+                                                 title=subject,
+                                                 message=message,
+                                                 type='E',
+                                                 action_object=user)
+            user_notification.save()
+
             notify_user_yank_alert.delay(message,
                                          user.id,
                                          member.matched_user.device_type,
