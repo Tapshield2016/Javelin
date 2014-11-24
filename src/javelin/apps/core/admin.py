@@ -21,6 +21,7 @@ class UserNotificationAdmin(admin.ModelAdmin):
     model = UserNotification
     list_display = ['__unicode__', 'type', 'read', 'creation_date']
     search_fields = ['user__username', 'title', 'message',]
+    raw_id_fields = ("user",)
 
 
 class TrackingLocationInline(admin.StackedInline):
@@ -39,6 +40,7 @@ class EntourageSessionAdmin(admin.ModelAdmin):
     list_select_related = ('status',)
     search_fields = ['user__username',]
     inlines = [TrackingLocationInline,]
+    raw_id_fields = ("user",)
 
 
 class EmailAddressInline(admin.StackedInline):
@@ -49,7 +51,7 @@ class EmailAddressInline(admin.StackedInline):
 class EntourageMemberAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'name', 'phone_number', 'email_address')
     search_fields = ['user__username', 'name', 'phone_number', 'email_address',]
-    raw_id_fields = ("matched_user",)
+    raw_id_fields = ("matched_user", "user")
 
 
 class EntourageMemberInline(admin.StackedInline):
@@ -183,6 +185,7 @@ class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
     list_display = ('__unicode__', 'full_version', 'domain',
                     'require_domain_emails', 'agency_point_of_contact', 'hidden',)
     actions = [hide, show]
+    raw_id_fields = ("agency_point_of_contact", "theme", "branding",)
 
     def theme_link(self, obj):
         change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
@@ -207,6 +210,7 @@ class AgencyUserAdmin(admin.ModelAdmin):
         EmailAddressInline,
         EntourageMemberInline,
     ]
+    raw_id_fields = ("agency",)
 
 
 class AlertLocationInline(admin.StackedInline):
@@ -223,17 +227,20 @@ class AlertAdmin(reversion.VersionAdmin):
     ]
     list_select_related = ('agency',)
     search_fields = ['agency_user__username', 'agency__name', 'static_device__uuid',]
+    raw_id_fields = ("agency", "agency_user")
 
 
 class MassAlertAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'agency', 'agency_dispatcher',
                     'creation_date')
     list_filter = ('agency',)
+    raw_id_fields = ("agency",)
 
 
 class ChatMessageAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'sender', 'message_sent_time',)
     search_fields = ['sender__username', 'alert__id', 'alert__agency__name',]
+    raw_id_fields = ("sender", "alert")
 
 
 class UserProfileAdmin(admin.ModelAdmin):
@@ -248,6 +255,7 @@ class SocialCrimeReportAdmin(geo_admin.OSMGeoAdmin):
     list_filter = ('report_anonymous', 'flagged_spam', 'report_type')
     list_select_related = ('reporter',)
     search_fields = ['reporter__username',]
+    raw_id_fields = ("reporter", "flagged_by_dispatcher", "viewed_by")
 
 
 class ThemeAdmin(admin.ModelAdmin):
