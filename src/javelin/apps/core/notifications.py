@@ -137,8 +137,8 @@ def send_non_arrival_notifications(session):
             user_notification = UserNotification(user=member.matched_user,
                                                  title=subject,
                                                  message=message,
-                                                 type='E',
-                                                 action_object=session)
+                                                 type='E',)
+                                                 # action_object=session)
             user_notification.save()
 
             notify_user_failed_arrival.delay(message,
