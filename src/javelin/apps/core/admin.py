@@ -19,6 +19,8 @@ from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
 
 class UserNotificationAdmin(admin.ModelAdmin):
     model = UserNotification
+    list_display = ['__unicode__', 'type', 'read', 'creation_date']
+    search_fields = ['user__username', 'title', 'message',]
 
 
 class TrackingLocationInline(admin.StackedInline):

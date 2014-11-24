@@ -1135,6 +1135,12 @@ class UserNotification(TimeStampedModel):
     class Meta:
         ordering = ['-creation_date']
 
+    def __unicode__(self):
+        if self.message.__len__() < 47:
+            return self.user.username + " - " + self.message
+
+        return self.user.username + " - " + self.message[:50] + "..."
+
 
 @receiver(post_save, sender=EntourageSession)
 def create_first_location(sender, instance=None, created=False, **kwargs):
