@@ -21,7 +21,6 @@ class UserNotificationAdmin(admin.ModelAdmin):
     model = UserNotification
     list_display = ['__unicode__', 'type', 'read', 'creation_date']
     search_fields = ['user__username', 'title', 'message',]
-    raw_id_fields = ("user",)
 
 
 class TrackingLocationInline(admin.StackedInline):
@@ -50,6 +49,7 @@ class EmailAddressInline(admin.StackedInline):
 class EntourageMemberAdmin(admin.ModelAdmin):
     list_display = ('__unicode__', 'name', 'phone_number', 'email_address')
     search_fields = ['user__username', 'name', 'phone_number', 'email_address',]
+    raw_id_fields = ("matched_user",)
 
 
 class EntourageMemberInline(admin.StackedInline):
