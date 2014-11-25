@@ -840,6 +840,8 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     serializer_class = UserNotificationSerializer
 
     def get_queryset(self):
+        if self.request.user.is_superuser:
+            return UserNotification.objects.all()
         return UserNotification.objects.filter(user=self.request.user)
 
 
