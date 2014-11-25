@@ -19,7 +19,7 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserNotification
-        fields = ('url', 'title', 'message', 'type', 'read', 'creation_date')
+        fields = ('url', 'title', 'message', 'type', 'read', 'creation_date', 'content_type')
         depth = 1
 
     def to_native(self, obj):
