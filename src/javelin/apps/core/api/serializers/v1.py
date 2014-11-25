@@ -19,7 +19,7 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = UserNotification
-        fields = ('url', 'title', 'message', 'type', 'read', 'creation_date', 'content_type')
+        fields = ('url', 'title', 'message', 'type', 'read', 'creation_date',)
         depth = 1
 
     def to_native(self, obj):
@@ -27,6 +27,7 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 
         if obj:
             if obj.content_type:
+                ret['content_type'] = obj.content_type.name
                 action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
                 serialized = serializer_for_unknown(action_obj, self.context.get('request', None))
                 if serialized:
