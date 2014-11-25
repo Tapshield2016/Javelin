@@ -332,6 +332,11 @@ class AlertLimitedSerializer(serializers.HyperlinkedModelSerializer):
     def to_native(self, obj):
         ret = super(AlertLimitedSerializer, self).to_native(obj)
         if obj:
+            if obj.agency_user:
+                agency_user_meta = UnauthorizedUserSerializer(instance=obj.agency_user,
+                                                              context={'request': self.context.get('request', None)})
+                ret['agency_user'] = agency_user_meta.data
+            
             ret['latest_location'] = {}
             latest_location = obj.locations.first()
             if latest_location:
