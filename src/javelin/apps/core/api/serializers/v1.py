@@ -324,6 +324,24 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
         return ret
 
 
+class AlertLimitedSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Alert
+
+    def to_native(self, obj):
+        ret = super(AlertLimitedSerializer, self).to_native(obj)
+        if obj:
+            ret['latest_location'] = {}
+            latest_location = obj.locations.first()
+            if latest_location:
+                ret['latest_location'] =\
+                    AlertLocationSerializer(instance=latest_location,
+                                            context={'request': self.context.get('request', None)}).data
+        return ret
+
+
+
 class ChatMessageSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
@@ -406,7 +424,7 @@ def serializer_for_unknown(obj, request):
         return AlertLocationSerializer(instance=obj, context={'request': request})
 
     if isinstance(obj, Alert):
-        return AlertSerializer(instance=obj, context={'request': request})
+        return AlertLimitedSerializer(instance=obj, context={'request': request})
 
     if isinstance(obj, MassAlert):
         return MassAlertSerializer(instance=obj, context={'request': request})
