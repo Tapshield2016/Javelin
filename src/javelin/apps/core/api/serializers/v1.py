@@ -336,7 +336,7 @@ class AlertLimitedSerializer(serializers.HyperlinkedModelSerializer):
                 agency_user_meta = UnauthorizedUserSerializer(instance=obj.agency_user,
                                                               context={'request': self.context.get('request', None)})
                 ret['agency_user'] = agency_user_meta.data
-            
+
             ret['latest_location'] = {}
             latest_location = obj.locations.first()
             if latest_location:
