@@ -503,10 +503,10 @@ class Alert(TimeStampedModel):
                     session.non_arrival()
 
             if self.initiated_by == 'N':
-                send_called_emergency_notifications(self.agency_user)
+                send_called_emergency_notifications(self.agency_user, self)
 
             if self.initiated_by == 'Y':
-                send_yank_alert_notifications(self.agency_user)
+                send_yank_alert_notifications(self.agency_user, self)
 
         super(Alert, self).save(*args, **kwargs)
                 

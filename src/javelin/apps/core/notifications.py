@@ -154,7 +154,7 @@ def send_non_arrival_notifications(session):
         return {'message': 'Success'}
 
 
-def send_called_emergency_notifications(user):
+def send_called_emergency_notifications(user, alert):
 
     message = called_emergency_number_message(user)
     subject = called_emergency_number_subject(user)
@@ -171,7 +171,7 @@ def send_called_emergency_notifications(user):
                                                  title=subject,
                                                  message=message,
                                                  type='E',
-                                                 action_object=user)
+                                                 action_object=alert)
             user_notification.save()
 
             notify_user_called_emergency_number.delay(message,
@@ -188,7 +188,7 @@ def send_called_emergency_notifications(user):
         return {'message': 'Success'}
 
 
-def send_yank_alert_notifications(user):
+def send_yank_alert_notifications(user, alert):
 
     message = yank_message(user)
     subject = yank_subject(user)
@@ -205,7 +205,7 @@ def send_yank_alert_notifications(user):
                                                  title=subject,
                                                  message=message,
                                                  type='E',
-                                                 action_object=user)
+                                                 action_object=alert)
             user_notification.save()
 
             notify_user_yank_alert.delay(message,

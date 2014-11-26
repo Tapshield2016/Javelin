@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
@@ -27,11 +28,15 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
 
         if obj:
             if obj.content_type:
-                ret['content_type'] = obj.content_type.name
-                action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
-                serialized = serializer_for_unknown(action_obj, self.context.get('request', None))
-                if serialized:
-                    ret['action_object'] = serialized.data
+                try:
+                    action_obj = obj.content_type.get_object_for_this_type(pk=obj.object_id)
+                    if action_obj:
+                        ret['content_type'] = obj.content_type.name
+                        serialized = serializer_for_unknown(action_obj, self.context.get('request', None))
+                        if serialized:
+                            ret['action_object'] = serialized.data
+                except ObjectDoesNotExist:
+                    pass
         return ret
 
 
