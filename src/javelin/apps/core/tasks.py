@@ -91,9 +91,9 @@ def new_alert(message):
         # elif alert_initiated_by == "S" and not agency.static_device_available:
         #     incoming_alert.status = "U"
 
-        if alert_initiated_outside:
-            incoming_alert.in_bounds = False
-            incoming_alert.status = "U"
+        # if alert_initiated_outside:
+        #     incoming_alert.in_bounds = False
+        #     incoming_alert.status = "U"
 
         incoming_alert.save()
 
