@@ -31,6 +31,7 @@ INSTALLED_APPS += (
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'TapShield <noreply@tapshield.com>'
+SERVER_EMAIL = 'TapShield <noreply@tapshield.com>'
 
 # django-storages
 #DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'

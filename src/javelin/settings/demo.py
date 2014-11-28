@@ -27,6 +27,7 @@ INTERNAL_IPS = ('127.0.0.1',)
 
 EMAIL_BACKEND = 'django_ses.SESBackend'
 DEFAULT_FROM_EMAIL = 'TapShield Demo <noreply@tapshield.com>'
+SERVER_EMAIL = 'TapShield Demo <noreply@tapshield.com>'
 
 # django-storages
 AWS_ACCESS_KEY_ID = 'AKIAJHIUM7YWZW2T2YIA'
