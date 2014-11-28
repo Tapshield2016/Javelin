@@ -40,7 +40,7 @@ def new_alert(message):
         alert_initiated_by = message['alert_type']
 
         alert_initiated_outside = None
-        if 'alert_initiated_outside' in dict:
+        if 'alert_initiated_outside' in message:
             alert_initiated_outside = bool(message['alert_initiated_outside'])
 
         agency = user.agency
