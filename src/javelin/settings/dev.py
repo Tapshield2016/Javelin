@@ -13,12 +13,11 @@ DATABASES = {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'javelin',
         'USER': 'javelin_user',
-        'PASSWORD': '26947&83764w',
-        'HOST': 'productionapi.cktvftiv8rvh.us-east-1.rds.amazonaws.com',
-        'PORT': '5432',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
     }
 }
-
 
 INSTALLED_APPS += (
     #'corsheaders',
