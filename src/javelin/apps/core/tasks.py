@@ -78,22 +78,22 @@ def new_alert(message):
         else:
             incoming_alert.initiated_by = alert_initiated_by
 
-        # if alert_initiated_by == "N" and not agency.emergency_call_available:
-        #     incoming_alert.status = "U"
-        # elif alert_initiated_by == "E" and not agency.alert_available:
-        #     incoming_alert.status = "U"
-        # elif alert_initiated_by == "T" and not agency.entourage_available:
-        #     incoming_alert.status = "U"
-        # elif alert_initiated_by == "Y" and not agency.yank_available:
-        #     incoming_alert.status = "U"
-        # elif alert_initiated_by == "C" and not agency.chat_available:
-        #     incoming_alert.status = "U"
-        # elif alert_initiated_by == "S" and not agency.static_device_available:
-        #     incoming_alert.status = "U"
+        if alert_initiated_by == "N" and not agency.emergency_call_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "E" and not agency.alert_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "T" and not agency.entourage_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "Y" and not agency.yank_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "C" and not agency.chat_available:
+            incoming_alert.status = "U"
+        elif alert_initiated_by == "S" and not agency.static_device_available:
+            incoming_alert.status = "U"
 
-        # if alert_initiated_outside:
-        #     incoming_alert.in_bounds = False
-        #     incoming_alert.status = "U"
+        if alert_initiated_outside:
+            incoming_alert.in_bounds = False
+            incoming_alert.status = "U"
 
         incoming_alert.save()
 
