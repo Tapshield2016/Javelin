@@ -411,9 +411,6 @@ class UserViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_201_CREATED)
 
 
-
-
-
 class GroupViewSet(viewsets.ModelViewSet):
     queryset = Group.objects.all()
     serializer_class = GroupSerializer
@@ -544,10 +541,7 @@ class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
 
 
 class AlertViewSet(viewsets.ModelViewSet):
-    queryset = \
-        Alert.objects.select_related('agency', 'agency_user',
-                                     'agency_dispatcher') \
-            .prefetch_related('locations').all()
+    queryset = Alert.objects.select_related('agency', 'agency_user', 'agency_dispatcher').prefetch_related('locations').all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
