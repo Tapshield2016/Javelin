@@ -38,7 +38,10 @@ def new_alert(message):
         location_altitude = message['location_altitude']
         location_accuracy = message['location_accuracy']
         alert_initiated_by = message['alert_type']
-        alert_initiated_outside = message['alert_initiated_outside']
+
+        alert_initiated_outside = None
+        if 'alert_initiated_outside' in dict:
+            alert_initiated_outside = bool(message['alert_initiated_outside'])
 
         agency = user.agency
 
