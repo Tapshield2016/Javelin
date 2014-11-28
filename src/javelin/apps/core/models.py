@@ -463,12 +463,12 @@ class Alert(TimeStampedModel):
         ordering = ['-creation_date']
 
     def __unicode__(self):
-        string = None
+        name = None
         if self.static_device:
-            string = u"%s" % self.static_device.uuid
+            name = u"%s" % self.static_device.uuid
         if self.agency_user:
-            string = u"%s" % self.agency_user.email
-        return string
+            name = u"%s" % self.agency_user.username
+        return name
 
     @reversion.create_revision()
     def save(self, *args, **kwargs):

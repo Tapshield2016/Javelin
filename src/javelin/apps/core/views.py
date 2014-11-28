@@ -685,7 +685,7 @@ def create_alert(request):
         request_data['user'] = request.user.username
         created = new_alert(request_data)
         active_alerts = Alert.active.filter(agency_user=request.user)
-        if (created):
+        if created:
             if active_alerts:
                 return Response(AlertSerializer(instance=active_alerts[0], context={'request': request}).data,
                             status=status.HTTP_201_CREATED)
