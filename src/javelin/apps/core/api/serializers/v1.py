@@ -321,11 +321,12 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
                 ret['agency_dispatcher_name'] =\
                     obj.agency_dispatcher.get_full_name()
             ret['latest_location'] = {}
-            latest_location = obj.locations.first()
-            if latest_location:
-                ret['latest_location'] =\
-                    AlertLocationSerializer(instance=latest_location,
-                                            context={'request': self.context.get('request', None)}).data
+            if obj.locations:
+                latest_location = obj.locations.first()
+                if latest_location:
+                    ret['latest_location'] =\
+                        AlertLocationSerializer(instance=latest_location,
+                                                context={'request': self.context.get('request', None)}).data
         return ret
 
 
