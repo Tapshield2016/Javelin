@@ -59,7 +59,7 @@ def email_add(request):
     email.save()
     user_sent_activation.send(sender=EmailAddress, email_address=email)
 
-    return Response(UserSerializer(instance=request.user).data,
+    return Response(UserSerializer(instance=request.user, context={'request': request}).data,
                     status=status.HTTP_201_CREATED)
 
 @api_view(['POST'])
@@ -91,7 +91,7 @@ def email_make_primary(request):
                         status=status.HTTP_404_NOT_FOUND)
     if email.is_active:
         if email.is_primary:
-            return Response(UserSerializer(instance=request.user).data,
+            return Response(UserSerializer(instance=request.user, context={'request': request}).data,
                         status=status.HTTP_200_OK)
         else:
             emails = EmailAddress.objects.filter(user=email.user)
@@ -101,7 +101,7 @@ def email_make_primary(request):
 
             email.is_primary = True
             email.save()
-            return Response(UserSerializer(instance=request.user).data,
+            return Response(UserSerializer(instance=request.user, context={'request': request}).data,
                         status=status.HTTP_200_OK)
 
     return Response({"message": "Email must first be activated."},
@@ -177,7 +177,7 @@ def email_check_activated(request, email=None):
                         status=status.HTTP_404_NOT_FOUND)
 
     if email_object.is_active:
-        return Response(UserSerializer(instance=request.user).data,
+        return Response(UserSerializer(instance=request.user, context={'request': request}).data,
                     status=status.HTTP_200_OK)
 
     return Response({"message": "Email not yet activated."},
@@ -250,7 +250,7 @@ def email_delete(request):
     else:
         email.delete()
 
-    return Response(UserSerializer(instance=request.user).data,
+    return Response(UserSerializer(instance=request.user, context={'request': request}).data,
                         status=status.HTTP_200_OK)
 
 
