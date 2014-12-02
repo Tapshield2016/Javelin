@@ -384,28 +384,31 @@ class UserViewSet(viewsets.ModelViewSet):
 
         for location_dict in request_data:
 
-            if active_sessions:
-                session = active_sessions[0]
-                new_location = TrackingLocation(entourage_session=session,
-                                                accuracy=location_dict['accuracy'],
-                                                altitude=location_dict['altitude'],
-                                                latitude=location_dict['latitude'],
-                                                longitude=location_dict['longitude'])
-                new_location.save()
+            accuracy = location_dict['accuracy']
 
-            if active_alert:
-                alert = active_alert[0]
-                new_location = AlertLocation(alert=alert,
-                                             accuracy=location_dict['accuracy'],
-                                             altitude=location_dict['altitude'],
-                                             latitude=location_dict['latitude'],
-                                             longitude=location_dict['longitude'],
-                                             floor_level=location_dict['floor_level'])
-                new_location.save()
+            if accuracy < 500:
+                if active_sessions:
+                    session = active_sessions[0]
+                    new_location = TrackingLocation(entourage_session=session,
+                                                    accuracy=accuracy,
+                                                    altitude=location_dict['altitude'],
+                                                    latitude=location_dict['latitude'],
+                                                    longitude=location_dict['longitude'])
+                    new_location.save()
 
-            if location_dict == request_data[-1]:
-                user.__dict__.update(location_dict)
-                user.save()
+                if active_alert:
+                    alert = active_alert[0]
+                    new_location = AlertLocation(alert=alert,
+                                                 accuracy=accuracy,
+                                                 altitude=location_dict['altitude'],
+                                                 latitude=location_dict['latitude'],
+                                                 longitude=location_dict['longitude'],
+                                                 floor_level=location_dict['floor_level'])
+                    new_location.save()
+
+                if location_dict == request_data[-1]:
+                    user.__dict__.update(location_dict)
+                    user.save()
 
         return Response({'message': "Updated"},
                         status=status.HTTP_201_CREATED)
@@ -834,7 +837,10 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     serializer_class = UserNotificationSerializer
 
     def get_queryset(self):
+        user = self.request.QUERY_PARAMS.get('user', None)
         if self.request.user.is_superuser:
+            if user:
+                return UserNotification.objects.filter(user=user)
             return UserNotification.objects.all()
         return UserNotification.objects.filter(user=self.request.user)
 

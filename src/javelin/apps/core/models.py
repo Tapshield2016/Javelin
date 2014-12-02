@@ -5,7 +5,7 @@ import re
 
 from django.core import urlresolvers
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from math import sin, cos, sqrt, atan2, radians
 
 import django.utils.timezone
@@ -724,6 +724,14 @@ class EntourageSession(TimeStampedModel):
 
     class Meta:
         ordering = ['-creation_date']
+
+    def save(self, *args, **kwargs):
+        if self.status == "T":
+            five_after = self.eta + timedelta(minutes=5)
+            if five_after < datetime.now():
+                self.status = "U"
+
+        super(EntourageSession, self).save(*args, **kwargs)
 
     def __unicode__(self):
         return u"%s - %s to %s" % (self.user.username, self.start_location.name, self.end_location.name)
