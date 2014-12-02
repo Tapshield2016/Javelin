@@ -729,7 +729,7 @@ class EntourageSession(TimeStampedModel):
 
     def save(self, *args, **kwargs):
         if self.status == "T":
-            five_after = self.eta + timedelta(minutes=5)
+            five_after = self.eta + timedelta(minutes=10)
             if five_after < datetime.utcnow().replace(tzinfo=utc):
                 self.status = "U"
 

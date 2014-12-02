@@ -817,7 +817,7 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         """
         session = self.get_object()
         session.cancel()
-        return Response("Cancelled",
+        return Response({"message": "Cancelled"},
                         status=status.HTTP_200_OK)
 
 
