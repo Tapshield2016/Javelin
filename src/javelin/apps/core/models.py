@@ -6,6 +6,8 @@ import re
 from django.core import urlresolvers
 
 from datetime import datetime, timedelta
+from django.utils.timezone import utc
+
 from math import sin, cos, sqrt, atan2, radians
 
 import django.utils.timezone
@@ -728,7 +730,7 @@ class EntourageSession(TimeStampedModel):
     def save(self, *args, **kwargs):
         if self.status == "T":
             five_after = self.eta + timedelta(minutes=5)
-            if five_after < datetime.now():
+            if five_after < datetime.utcnow().replace(tzinfo=utc):
                 self.status = "U"
 
         super(EntourageSession, self).save(*args, **kwargs)
