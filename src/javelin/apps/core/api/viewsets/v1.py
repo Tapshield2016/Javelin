@@ -837,8 +837,7 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     serializer_class = UserNotificationSerializer
 
     def get_queryset(self):
-        user_url = self.request.QUERY_PARAMS.get('user', None)
-        user = AgencyUser.objects.filter(url=user_url)
+        user = self.request.QUERY_PARAMS.get('user', None)
         if self.request.user.is_superuser:
             if user:
                 return UserNotification.objects.filter(user=user)
