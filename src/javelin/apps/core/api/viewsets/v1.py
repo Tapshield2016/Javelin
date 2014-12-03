@@ -839,8 +839,8 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.QUERY_PARAMS.get('user', None)
         if self.request.user.is_superuser:
-            # if user:
-            #     return UserNotification.objects.filter(user=user)
+            if user:
+                return UserNotification.objects.filter(user=user)
             return UserNotification.objects.all()
         return UserNotification.objects.filter(user=self.request.user)
 
