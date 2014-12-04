@@ -143,7 +143,7 @@ class Agency(TimeStampedModel):
     agency_point_of_contact =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name='agency_point_of_contact',
-                          null=True, blank=True, help_text="This will be the person with full account access. "
+                          null=True, blank=True, on_delete=models.SET_NULL, help_text="This will be the person with full account access. "
                                                            "Edit all settings, change/add payment, add/remove dispatchers, etc.")
     dispatcher_phone_number = models.CharField(max_length=24, default="5555555555")
     dispatcher_secondary_phone_number = models.CharField(max_length=24, default="555",
@@ -811,7 +811,7 @@ class EntourageMember(models.Model):
 
     matched_user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                      related_name='existing_user',
-                                     null=True, blank=True)
+                                     null=True, blank=True, on_delete=models.SET_NULL)
 
     always_visible = models.BooleanField(default=False)
     track_route = models.BooleanField(default=True)
@@ -983,7 +983,8 @@ class SocialCrimeReport(TimeStampedModel):
         ('V', 'Vandalism'),
     )
 
-    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="reporter", blank=True, null=True)
+    reporter = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="reporter",
+                                 blank=True, null=True, on_delete=models.SET_NULL)
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
     report_audio_url = S3URLField(null=True, blank=True,
@@ -1000,11 +1001,11 @@ class SocialCrimeReport(TimeStampedModel):
     flagged_spam = models.BooleanField(default=False)
     flagged_by_dispatcher = models.ForeignKey(settings.AUTH_USER_MODEL,
                                               related_name="flagged_by_dispatcher",
-                                              blank=True, null=True)
+                                              blank=True, null=True, on_delete=models.SET_NULL)
     viewed_time = models.DateTimeField(null=True, blank=True)
     viewed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name="viewed_by",
-                                  blank=True, null=True)
+                                  blank=True, null=True, on_delete=models.SET_NULL)
                                         
 
     objects = db_models.GeoManager()
