@@ -90,6 +90,13 @@ a{
 	float: right;
 	width: 96px;
 }
+
+.btn.email {
+	margin-left: auto;
+	margin-right: auto;
+	width: 96px;
+}
+
 .btn--primary {
 	color: #fff;
 	background: #70d3f5;
