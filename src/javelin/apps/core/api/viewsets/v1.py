@@ -155,6 +155,10 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
     def get_queryset(self):
+
+        if not self.request.user:
+            raise PermissionDenied
+
         qs = User.objects.select_related('agency') \
             .prefetch_related('groups', 'entourage_members').all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
