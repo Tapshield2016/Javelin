@@ -144,7 +144,7 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     model = User
     filter_fields = ('agency',)
-    permission_classes = (IsRequestUserOrDispatcher,)
+    # permission_classes = (IsRequestUserOrDispatcher,)
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
