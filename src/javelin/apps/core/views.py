@@ -112,8 +112,18 @@ def register_user(request):
         except Agency.DoesNotExist:
             agency_id = None
 
+    email = request_data.get('email', None)
+
     if 'username' not in request_data:
-        request_data['username'] = request_data.get('email', None)
+        request_data['username'] = email
+
+    try:
+        existing_user = User.objects.get(email=email)
+        if existing_user:
+            if not existing_user.email_verified and not existing_user.is_active:
+                existing_user.delete()
+    except User.DoesNotExist, RegistrationProfile.DoesNotExist:
+        pass
 
     serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
