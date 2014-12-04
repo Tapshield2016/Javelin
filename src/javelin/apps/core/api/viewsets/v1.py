@@ -117,8 +117,6 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
                 if bool(request.user.groups.filter(name__in=permitted_groups)):
                     return True
 
-        if not obj:
-            return False
         return bool(obj == request.user) | request.user.is_superuser
 
 
@@ -157,6 +155,9 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
     def get_queryset(self):
+
+        if not self.request.user.is_staff or not self.request.user.is_superuser:
+            raise PermissionDenied
 
         qs = User.objects.select_related('agency') \
             .prefetch_related('groups', 'entourage_members').all()
