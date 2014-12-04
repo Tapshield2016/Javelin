@@ -8,7 +8,7 @@
 
   <!--<body>-->
   	<!--<div class="container">-->
-		    <!--{% block content %}{% endblock %}-->
+		    {% block content %}{% endblock %}
     <!--</div>-->
   <!--</body>-->
 
@@ -20,7 +20,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" />
-        <title>Shield Command Login Screen</title>
+        <title>{% block title %}{% endblock %}</title>
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}shieldcommand/css/login.css" media="all">
         <!--[if IE]>
@@ -38,31 +38,27 @@
         <div class="main">
              <div class="l-header">
                 <div class="l-header__inner">
-                    <a href="#" class="header--logo"><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a>
+                    <a href="#" class="header--logo"><img src="{{ STATIC_URL }}shieldcommand/img/tapshield-logo.png" /></a>
                 </div>
             </div>
             <div class="alert-container">
                 <h1>Welcome</h1>
                 <div class="alert-body-container">
-                    {% if form.errors %}
-                    <h2 class="error">Invalid username/password combination, please try again </h2>
-                    {% else %}
-                    <h2>Please enter your login information</h2>
-                    {% endif %}
-                    <form action="{% url 'django.contrib.auth.views.login' %}" method="post">
-                        {% csrf_token %}
-                        <div class="inner" id="firstOfType">
-                            <h3>Email</h3>
-                            <input id="id_username" maxlength="254" name="username" type="text" /><br>
-                        </div>
-                        <div class="inner">
-                            <h3>Password</h3>
-                            <input id="id_password" name="password" type="password" /><br>
-                            <a href="{% url 'password_reset' %}">Forgot your password?</a>
-                        </div>
-                        <input type="hidden" name="next" value="{% url 'shieldcommand-index' %}" />
-                        <input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Log in" />
-                    </form>
+                    {% block content %}{% endblock %}
+                    <!--<form action="{% url 'django.contrib.auth.views.login' %}" method="post">-->
+                        <!--{% csrf_token %}-->
+                        <!--<div class="inner" id="firstOfType">-->
+                            <!--<h3>Email</h3>-->
+                            <!--<input id="id_username" maxlength="254" name="username" type="text" /><br>-->
+                        <!--</div>-->
+                        <!--<div class="inner">-->
+                            <!--<h3>Password</h3>-->
+                            <!--<input id="id_password" name="password" type="password" /><br>-->
+                            <!--<a href="{% url 'password_reset' %}">Forgot your password?</a>-->
+                        <!--</div>-->
+                        <!--<input type="hidden" name="next" value="{% url 'shieldcommand-index' %}" />-->
+                        <!--<input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Log in" />-->
+                    <!--</form>-->
                 </div>
             </div>
         </div>
