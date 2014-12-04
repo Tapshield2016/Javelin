@@ -4,7 +4,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
         <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" />
-        <title>Unauthorized user</title>
+        <title>Not found</title>
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic" rel="stylesheet" type="text/css">
         <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}shieldcommand/css/login.css" media="all">
         <link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
@@ -27,13 +27,13 @@
                 </div>
             </div>
             <div class="alert-container">
-                <h1>Unauthorized</h1>
+                <h1>Oops!</h1>
                 <div class="alert-body-container">
-                    <h2 class="error">Sorry {{ request.user.first_name }}, you are not authorized to access Shield Command.</h2>
-					<p>Please use a verified dispatcher account.
-						If you believe you've received this message in error please call our support line at (877) 553-9049.</p>
-					<form action="{% url 'shieldcommand-logout' %}">
-						<input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Log out" />
+                    <h2>Sorry! There seems to be a problem</h2>
+					<p>Don't worry we have deployed a number of fail-safes to ensure our users' safety.
+                        If this problem persists, please send us an email at support@tapshield.com describing your issue or call our support line at (877) 553-9049.</p>
+					<form action="mailto:support@tapshield.com">
+						<input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Email support" />
 					</form>
                 </div>
             </div>
