@@ -23,7 +23,7 @@ from django.core.exceptions import PermissionDenied
 from rest_framework.settings import api_settings
 from rest_framework import generics
 from rest_framework import permissions
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import detail_route, list_route
 from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
@@ -144,7 +144,7 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
 class UserViewSet(viewsets.ModelViewSet):
     model = User
     filter_fields = ('agency',)
-    # permission_classes = (IsRequestUserOrDispatcher,)
+    permission_classes = (IsRequestUserOrDispatcher, IsAuthenticated,)
     serializer_class = UserSerializer
 
     def get_serializer_class(self):
@@ -158,9 +158,6 @@ class UserViewSet(viewsets.ModelViewSet):
         return UserSerializer
 
     def get_queryset(self):
-
-        if not self.request.user.is_authenticated():
-            raise PermissionDenied
 
         qs = User.objects.select_related('agency') \
             .prefetch_related('groups', 'entourage_members').all()
