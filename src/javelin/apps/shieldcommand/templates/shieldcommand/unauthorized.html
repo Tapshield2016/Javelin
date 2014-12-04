@@ -31,7 +31,7 @@
                 <div class="alert-body-container">
                     <h2 class="error">Sorry {{ request.user.first_name }}, you are not authorized to access Shield Command.</h2>
 					<p>Please use a verified dispatcher account.
-						If you believe you've received this message in error please call our support line at (877) 553-9049.</p>
+						If you believe you've received this message in error, please send us an email at support@tapshield.com or call our support line at (877) 553-9049.</p>
 					<form action="{% url 'shieldcommand-logout' %}">
 						<input class="btn btn--primary submit" type="submit" id="submit" name="submit" value="Log out" />
 					</form>
