@@ -127,16 +127,6 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
     model = EntourageMember
     filter_fields = ('user',)
 
-    def get_serializer_class(self):
-
-        if self.request.method == 'GET' and not hasattr(self, 'response'):
-            return UnauthorizedEntourageMemberSerializer
-        elif self.request.method in ('POST', 'PUT', 'PATCH') \
-                and not hasattr(self, 'response'):
-            return EntourageMemberSerializer
-
-        return UnauthorizedEntourageMemberSerializer
-
 
     def get_queryset(self):
 
