@@ -121,7 +121,10 @@ def register_user(request):
         existing_user = User.objects.get(email=email)
         if existing_user:
             if not existing_user.email_verified and not existing_user.is_active:
+                profile = RegistrationProfile.objects.get(user=existing_user)
+                profile.delete()
                 existing_user.delete()
+
     except User.DoesNotExist, RegistrationProfile.DoesNotExist:
         pass
 
