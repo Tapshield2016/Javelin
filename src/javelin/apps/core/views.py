@@ -112,7 +112,7 @@ def register_user(request):
         except Agency.DoesNotExist:
             agency_id = None
 
-    if not 'username' in request_data:
+    if 'username' not in request_data:
         request_data['username'] = request_data.get('email', None)
 
     serialized = UserSerializer(data=request_data, context={'request': request})
@@ -222,6 +222,17 @@ def login(request):
                     response = HttpResponse(content='User email address has not been verified')
                     response.status_code = 401
                     response['Auth-Response'] = 'Email unverified'
+                    if not user.is_active:
+                        try:
+                            profile = RegistrationProfile.objects.get(user=user)
+                            if profile.activation_key_expired():
+                                profile.delete()
+                                profile = RegistrationProfile.objects.create_profile(user)
+                                profile.send_activation_email(get_current_site(request))
+                                user.date_joined = datetime.datetime.now()
+                                user.save()
+                        except RegistrationProfile.DoesNotExist:
+                            pass
                     return response
                 if not user.is_active:
                     return HttpResponseForbidden(\
