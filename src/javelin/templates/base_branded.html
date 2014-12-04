@@ -1,0 +1,36 @@
+
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" />
+        <title>{% block title %}{% endblock %}</title>
+        <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}shieldcommand/css/login.css" media="all">
+        <!--[if IE]>
+           <style type="text/css">
+               .main {
+                   background:transparent;
+                   filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#7F000000,endColorstr=#7F000000);
+                   zoom: 1;
+                }
+            </style>
+        <![endif]-->
+    </head>
+    <body>
+
+        <div class="main">
+             <div class="l-header">
+                <div class="l-header__inner">
+                    <a href="http://tapshield.com/" class="header--logo"><img src="{{ STATIC_URL }}shieldcommand/img/tapshield-logo.png" /></a>
+                </div>
+            </div>
+            <div class="alert-container">
+                <h1></h1>
+                <div class="alert-body-container" align="center">
+                  {% block content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
