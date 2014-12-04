@@ -2,7 +2,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.models import get_current_site
 from django.core.urlresolvers import reverse
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
@@ -13,7 +13,7 @@ from core.api.serializers.v1 import UserSerializer, ThemeSerializer
 def index(request):
     if not request.user.is_superuser:
         if request.user.groups.filter(name='Dispatchers').count() == 0:
-            return Http404
+            return HttpResponseForbidden
             # return render_to_response('shieldcommand/unauthorized.html',
             #                           context_instance=RequestContext(request))
     site = get_current_site(request)
