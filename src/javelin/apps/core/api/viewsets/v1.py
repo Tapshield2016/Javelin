@@ -111,7 +111,7 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
-        if not request.user:
+        if not request.is_authenticated():
             return False
 
         if request.method in permissions.SAFE_METHODS:
