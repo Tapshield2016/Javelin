@@ -111,15 +111,14 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
-        if not request.user.is_authenticated():
-            return False
-
         if request.method in permissions.SAFE_METHODS:
             permitted_groups = [Group.objects.get(name='Dispatchers'),]
             if request.user.is_authenticated():
                 if bool(request.user.groups.filter(name__in=permitted_groups)):
                     return True
 
+        if not obj:
+            return False
         return bool(obj == request.user) | request.user.is_superuser
 
 
