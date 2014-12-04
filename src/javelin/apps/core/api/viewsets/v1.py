@@ -122,7 +122,7 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
 
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsOwnerOrReadOnly, IsAuthenticated,)
     queryset = EntourageMember.objects.select_related('user').all()
     model = EntourageMember
     filter_fields = ('user',)
@@ -136,6 +136,15 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
             return EntourageMemberSerializer
 
         return UnauthorizedEntourageMemberSerializer
+
+
+    def get_queryset(self):
+
+        if not self.request.user.is_staff and not self.request.user.is_superuser:
+            return EntourageMember.objects.filter(user=self.request.user)
+
+        return EntourageMember.objects.select_related('user').all()
+
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -439,9 +448,6 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     filter_class = SocialCrimeReportModifiedSinceFilterBackend
 
     def get_queryset(self):
-
-        if not self.request.user.is_authenticated():
-            raise PermissionDenied
 
         qs = SocialCrimeReport.objects.all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
