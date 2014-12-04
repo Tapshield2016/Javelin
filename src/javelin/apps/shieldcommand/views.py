@@ -13,7 +13,7 @@ from core.api.serializers.v1 import UserSerializer, ThemeSerializer
 def index(request):
     if not request.user.is_superuser:
         if request.user.groups.filter(name='Dispatchers').count() == 0:
-            return HttpResponseForbidden
+            return HttpResponseForbidden()
             # return render_to_response('shieldcommand/unauthorized.html',
             #                           context_instance=RequestContext(request))
     site = get_current_site(request)
