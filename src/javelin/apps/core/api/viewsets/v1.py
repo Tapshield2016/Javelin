@@ -111,6 +111,9 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # Read permissions are allowed to any request,
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
+        if not request.user.is_authenticated():
+            return False
+
         if request.method in permissions.SAFE_METHODS:
             permitted_groups = [Group.objects.get(name='Dispatchers'),]
             if request.user.is_authenticated():
@@ -439,6 +442,10 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     filter_class = SocialCrimeReportModifiedSinceFilterBackend
 
     def get_queryset(self):
+
+        if not self.request.user.is_authenticated():
+            raise PermissionDenied
+
         qs = SocialCrimeReport.objects.all()
         latitude = self.request.QUERY_PARAMS.get('latitude', None)
         longitude = self.request.QUERY_PARAMS.get('longitude', None)
