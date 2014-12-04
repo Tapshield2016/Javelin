@@ -127,7 +127,6 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
     model = EntourageMember
     filter_fields = ('user',)
 
-
     def get_queryset(self):
 
         if not self.request.user.is_staff and not self.request.user.is_superuser:
@@ -155,8 +154,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        if not self.request.user.is_staff or not self.request.user.is_superuser:
-            raise PermissionDenied
+        # if not self.request.user.is_staff or not self.request.user.is_superuser:
+        #     raise PermissionDenied
 
         qs = User.objects.select_related('agency') \
             .prefetch_related('groups', 'entourage_members').all()
