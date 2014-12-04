@@ -984,7 +984,7 @@ class SocialCrimeReport(TimeStampedModel):
     )
 
     reporter = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                 related_name="reporter")
+                                 related_name="reporter", null=True)
     body = models.TextField()
     report_type = models.CharField(max_length=2, choices=CRIME_TYPE_CHOICES)
     report_audio_url = S3URLField(null=True, blank=True,
