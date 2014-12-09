@@ -6,8 +6,8 @@
         <meta name="viewport" content="width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0" />
         <title>Server error</title>
         <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,300italic,400italic,600italic" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}shieldcommand/css/login.css" media="all">
-        <link rel="icon" type="image/png" href="{{ STATIC_URL }}shieldcommand/img/Shield_Favicon.png">
+        <link rel="stylesheet" type="text/css" href="/media/static/shieldcommand/css/login.css" media="all">
+        <link rel="icon" type="image/png" href="/media/static/shieldcommand/img/Shield_Favicon.png">
         <!--[if IE]>
            <style type="text/css">
                .main {
@@ -23,14 +23,14 @@
         <div class="main">
              <div class="l-header">
                 <div class="l-header__inner">
-                    <a href="{% url 'shieldcommand-index' %}" class="header--logo"><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a>
+                    <a href="http://tapshield.com/" class="header--logo"><img src="/media/static/shieldcommand/img/logo.png" /></a>
                 </div>
             </div>
             <div class="alert-container">
                 <h1>Oops!</h1>
                 <div class="alert-body-container" align="center">
                     <h2>Sorry! There seems to be a problem</h2>
-					<p>Don't worry we have deployed a number of fail-safes to ensure our users' safety.
+					<p>Don't worry, we have deployed a number of fail-safes to ensure our users' safety.
                         If this problem persists, please send us an email at support@tapshield.com describing your issue or call our support line at (877) 553-9049.</p>
 					<form action="mailto:support@tapshield.com">
 						<input class="btn btn--primary email" type="submit" id="submit" name="submit" value="Email us" />
