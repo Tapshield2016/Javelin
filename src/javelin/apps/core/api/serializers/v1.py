@@ -72,7 +72,7 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = EntourageSession
-        fields = ('status', 'travel_mode', 'start_location', 'end_location', 'eta',
+        fields = ('url', 'status', 'travel_mode', 'start_location', 'end_location', 'eta',
                   'start_time', 'arrival_time', 'entourage_notified', 'locations',)
         depth = 2
 
@@ -284,7 +284,7 @@ class ReporterSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = User
-        fields = ('email', 'phone_number', 'first_name', 'last_name',)
+        fields = ('url', 'email', 'phone_number', 'first_name', 'last_name',)
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
