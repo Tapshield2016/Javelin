@@ -125,6 +125,7 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticated,)
     queryset = EntourageMember.objects.select_related('user').all()
     model = EntourageMember
+    serializer_class = EntourageMemberSerializer
     filter_fields = ('user',)
 
     def get_queryset(self):
