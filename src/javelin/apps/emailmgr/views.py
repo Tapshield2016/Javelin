@@ -192,7 +192,7 @@ def email_activate(request, identifier="somekey"):
 
     identifier -- (Required) Randomly generated identifier for email
     """
-    title = "Verification complete"
+    title = "Verification Complete"
     message_response = None
 
     try:
@@ -213,8 +213,8 @@ def email_activate(request, identifier="somekey"):
             #     email.user.save()
             email.save()
             user_activated_email.send(sender=EmailAddress, email_address=email)
-            Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
-            message_response = "Email address verified"
+            Msg.add_message (request, Msg.SUCCESS, _('Your email is now activated.'))
+            message_response = "Your email is now activated."
     context = {"title": title, "message_response": message_response,}
     return render_to_response(get_template('verification_complete.html'), context,
                               context_instance=RequestContext(request))
