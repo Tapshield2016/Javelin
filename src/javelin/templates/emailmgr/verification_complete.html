@@ -1,9 +1,10 @@
-{% extends "base.html" %}
+{% extends "base_branded.html" %}
 
-{% block title %}{{ title }}{% endblock %}
-{% block content_title %}<h1>{{ title }}</h1>{% endblock %}
+{% block type_title %}Verification Complete{% endblock %}
+
+{% block title %}Email activated!{% endblock %}
+
 {% block content %}
-
-<h2> {{ message_response }} </h2>
+<h2>Your email is now activated.</h2>
 <p>Thank you for using TapShield!</p>
 {% endblock %}
