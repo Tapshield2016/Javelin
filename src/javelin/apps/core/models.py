@@ -686,6 +686,16 @@ class AgencyUser(AbstractUser):
     def sms_verification_topic_name(self):
         return u"sms-verification-topic-%s" % slugify(self.phone_number)
 
+    def match_with_entourage_members(self):
+
+        if self.phone_number_verified and self.phone_number:
+            entourage_members_matching = EntourageMember.objects.filter(phone_number=self.phone_number)
+
+            for member in entourage_members_matching:
+                member.matched_user = self
+                member.save()
+
+
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
 
 

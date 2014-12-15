@@ -339,6 +339,8 @@ class UserViewSet(viewsets.ModelViewSet):
                                                                     context={'request': request}).data,
                             status=status.HTTP_200_OK)
 
+        user.match_with_entourage_members()
+
         always_visible_users_id = EntourageMember.objects.filter(matched_user=user,
                                                                  always_visible=True).values('user_id')
         tracking_users_id = EntourageMember.objects.filter(matched_user=user,
