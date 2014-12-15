@@ -692,7 +692,7 @@ class AgencyUser(AbstractUser):
             entourage_members_matching = EntourageMember.objects.filter(phone_number=self.phone_number)
 
             for member in entourage_members_matching:
-                if member.user != self:
+                if member.user is not self:
                     member.matched_user = self
                     member.save()
 
