@@ -49,7 +49,7 @@ class EmailAddressInline(admin.StackedInline):
 
 
 class EntourageMemberAdmin(admin.ModelAdmin):
-    list_display = ('__unicode__', 'name', 'phone_number', 'email_address')
+    list_display = ('__unicode__', 'name', 'matched_user', 'phone_number', 'email_address')
     search_fields = ['user__username', 'name', 'phone_number', 'email_address',]
     raw_id_fields = ("matched_user", "user")
 
