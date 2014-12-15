@@ -692,8 +692,9 @@ class AgencyUser(AbstractUser):
             entourage_members_matching = EntourageMember.objects.filter(phone_number=self.phone_number)
 
             for member in entourage_members_matching:
-                member.matched_user = self
-                member.save()
+                if member.user != self:
+                    member.matched_user = self
+                    member.save()
 
 
 AgencyUser._meta.get_field_by_name('email')[0]._unique=True
