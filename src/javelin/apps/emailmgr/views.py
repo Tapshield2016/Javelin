@@ -216,7 +216,8 @@ def email_activate(request, identifier="somekey"):
             Msg.add_message (request, Msg.SUCCESS, _('email address is now active'))
             message_response = "Email address verified"
     context = {"title": title, "message_response": message_response,}
-    return render_to_response(get_template('verification_complete.html'), context)
+    return render_to_response(get_template('verification_complete.html'), context,
+                              context_instance=RequestContext(request))
 
 @api_view(['POST'])
 def email_delete(request):
