@@ -1164,6 +1164,15 @@ class UserNotification(TimeStampedModel):
         return self.user.username + " - " + self.message[:50] + "..."
 
 
+
+@receiver(post_save, sender=EntourageMember)
+def check_matched_user(sender, instance=None, created=False, **kwargs):
+    if instance.matched_user:
+        matched_users_with_user = EntourageMember.objects.filter(user=instance.user, matched_user=instance.matched_user).exclude(pk=instance.pk)
+        for member in matched_users_with_user:
+            member.delete()
+
+
 @receiver(post_save, sender=EntourageSession)
 def create_first_location(sender, instance=None, created=False, **kwargs):
     if created:
