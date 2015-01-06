@@ -12,7 +12,6 @@ User = get_user_model()
 
 class SocialAuthAdapter(DefaultSocialAccountAdapter):
     def pre_social_login(self, request, sociallogin):
-        # This isn't tested, but should work
         try:
             if sociallogin.account.user:
                 user = User.objects.get(email=sociallogin.account.user.email)
