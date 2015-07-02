@@ -19,7 +19,7 @@
 	Javelin.lastCheckedCrimeTipsTimestamp = null;
 	Javelin.spotCrimeURL = 'https://api.spotcrime.com/crimes.json';
 	Javelin.spotCrimeDetailURL = 'https://api.spotcrime.com/crimes/<CDID>.json';
-	Javelin.spotCrimeKey = '246c313f9889be187cfbca0c3f5a09f9e4a5d8224edbf86ad795c72b0561';
+	Javelin.spotCrimeKey = null;
 
 	// If jQuery or Zepto has been included, grab a reference to it.
 	if (typeof($) !== "undefined") {
@@ -719,7 +719,7 @@
  	}
 	
 	Javelin.getSpotCrimes = function(callback) {
-		if ( ! Javelin.activeAgency)
+		if ( ! Javelin.activeAgency || ! Javelin.spotCrimeKey)
  		{
  			callback(null);
  		}

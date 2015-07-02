@@ -66,16 +66,16 @@ $('#agencySettingsForm').on('submit', function(event) {
 	    <textarea cols="40" id="id_chat_autoresponder_message" name="chat_autoresponder_message" rows="3" class="form-control">{{ form.chat_autoresponder_message.value }}</textarea>
 	  </div>
 
-      <h4>SpotCrime History</h4>
-	  <div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">
-	    <div class="text">
-	      <label for="id_spot_crime_days_visible" class="control-label">
-              Visible days
-		{{ form.spot_crime_days_visible }}
-	      </label>
-	      {% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}
-	    </div>
-	  </div>
+      <!--<h4>SpotCrime History</h4>-->
+	  <!--<div class="form-group{% if form.spot_crime_days_visible.errors %} has-error{% endif %}">-->
+	    <!--<div class="text">-->
+	      <!--<label for="id_spot_crime_days_visible" class="control-label">-->
+              <!--Visible days-->
+		<!--{{ form.spot_crime_days_visible }}-->
+	      <!--</label>-->
+	      <!--{% if form.spot_crime_days_visible.errors %}<span class="help-block">{{ form.spot_crime_days_visible.errors.as_text }}</span>{% endif %}-->
+	    <!--</div>-->
+	  <!--</div>-->
 
 	  <!-- captures agency ID for use in POSTing form -->
 	  <input type="hidden" name="agency_id" value="{{ form.instance.id }}">
