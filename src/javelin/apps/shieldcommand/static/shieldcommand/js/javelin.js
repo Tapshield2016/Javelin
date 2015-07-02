@@ -722,6 +722,7 @@
 		if ( ! Javelin.activeAgency || ! Javelin.spotCrimeKey)
  		{
  			callback(null);
+ 			return;
  		}
 
  		var agency = Javelin.activeAgency;
