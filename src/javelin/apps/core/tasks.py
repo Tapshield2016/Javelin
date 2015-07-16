@@ -126,9 +126,16 @@ def new_alert(message):
 @task
 def send_phone_number_verification(phone_number, verification_code):
     phone_number = re.sub("\D", "", phone_number)
-    phone_number = "+1%s" % phone_number[-10:]
+
+    text_number = "+1%s" % phone_number[-10:]
+
+    if len(phone_number) > 10:
+        prefix = phone_number[:2]
+        if int(prefix) == 91:
+            text_number = "+%s" % phone_number
+
     resp = twilio_client.messages.create( \
-        to=phone_number,
+        to=text_number,
         from_=settings.TWILIO_SMS_FROM_NUMBER,
         body="Your TapShield verification code is: %s" % verification_code)
 
