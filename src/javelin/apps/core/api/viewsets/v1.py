@@ -275,7 +275,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST)
             try:
                 phone_number = re.sub("\D", "", phone_number)
-                text_number = "+1%s" % phone_number[-10:]
+                text_number = "+1%s" % phone_number
 
                 if len(phone_number) > 10:
                     text_number = "+%s" % phone_number

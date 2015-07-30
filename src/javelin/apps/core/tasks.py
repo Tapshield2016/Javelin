@@ -127,7 +127,7 @@ def new_alert(message):
 def send_phone_number_verification(phone_number, verification_code):
     phone_number = re.sub("\D", "", phone_number)
 
-    text_number = "+1%s" % phone_number[-10:]
+    text_number = "+1%s" % phone_number
 
     if len(phone_number) > 10:
         text_number = "+%s" % phone_number

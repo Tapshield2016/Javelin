@@ -4,6 +4,7 @@ from django_twilio.client import twilio_client
 from twilio import TwilioRestException
 from django.conf import settings
 from django.core.mail import send_mail
+import re
 
 from tasks import (notify_user_arrived_at_destination, notify_user_yank_alert,
                    notify_user_failed_arrival, notify_user_called_emergency_number)
@@ -59,11 +60,18 @@ def non_arrival_subject(session):
 
 def send_message_to_sms_or_email(member, subject, message):
 
+    phone_number = member.phone_number
     errors = []
-    if member.phone_number:
+    if phone_number:
         try:
+            phone_number = re.sub("\D", "", phone_number)
+            text_number = "+1%s" % phone_number
+
+            if len(phone_number) > 10:
+                text_number = "+%s" % phone_number
+
             resp = twilio_client.messages.create(
-                to=member.phone_number,
+                to=text_number,
                 from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
                 body=message)
             if resp.status == 'failed':
