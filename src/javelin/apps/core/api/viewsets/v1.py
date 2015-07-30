@@ -274,11 +274,17 @@ class UserViewSet(viewsets.ModelViewSet):
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
+                phone_number = re.sub("\D", "", phone_number)
+                text_number = "+1%s" % phone_number[-10:]
+
+                if len(phone_number) > 10:
+                    text_number = "+%s" % phone_number
+
                 user = self.get_object()
                 user.phone_number_verification_code = None
                 user.save()
                 resp = twilio_client.messages.create( \
-                    to=phone_number,
+                    to=text_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
                     body="Your TapShield verification code is: %s" \
                          % user.phone_number_verification_code)
