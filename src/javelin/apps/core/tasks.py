@@ -130,9 +130,7 @@ def send_phone_number_verification(phone_number, verification_code):
     text_number = "+1%s" % phone_number[-10:]
 
     if len(phone_number) > 10:
-        prefix = phone_number[:2]
-        if int(prefix) == 91:
-            text_number = "+%s" % phone_number
+        text_number = "+%s" % phone_number
 
     resp = twilio_client.messages.create( \
         to=text_number,
