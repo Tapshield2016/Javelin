@@ -1,8 +1,7 @@
 from django.conf import settings
 
 from boto.dynamodb2 import connect_to_region
-from boto.dynamodb2.fields import HashKey, RangeKey, KeysOnlyIndex, AllIndex
-from boto.dynamodb2.layer1 import DynamoDBConnection
+from boto.dynamodb2.fields import HashKey, RangeKey, AllIndex
 from boto.dynamodb2.table import Table
 from boto.dynamodb2.types import NUMBER
 

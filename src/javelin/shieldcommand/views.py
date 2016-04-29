@@ -1,12 +1,10 @@
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib.sites.models import get_current_site
-from django.core.urlresolvers import reverse
-from django.core.exceptions import PermissionDenied
+# from django.contrib.sites.shortcuts import get_current_site
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
-from core.api.serializers.v1 import UserSerializer, ThemeSerializer
+from ..core.api.serializers.v1 import UserSerializer, ThemeSerializer
 
 
 @login_required(login_url='shieldcommand-login')
@@ -15,8 +13,13 @@ def index(request):
         if request.user.groups.filter(name='Dispatchers').count() == 0:
             return render_to_response('shieldcommand/unauthorized.html',
                                       context_instance=RequestContext(request))
-    site = get_current_site(request)
+    # site = get_current_site(request)
     agency = request.user.agency
+
+    if not agency:
+        return render_to_response('shieldcommand/unauthorized.html',
+                                  context_instance=RequestContext(request))
+
     agency_boundaries_coords = []
     multi_region_boundaries = []
     user = UserSerializer(request.user, context={'request': request})

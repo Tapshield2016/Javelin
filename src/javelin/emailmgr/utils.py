@@ -5,12 +5,9 @@ import time
 from hashlib import sha1
 import defaults
 from django.conf import settings
-from django.db import models, IntegrityError
 from django.template.loader import render_to_string
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.contrib.sites.models import Site
-from django.contrib.auth.models import User
-from django.utils.translation import gettext_lazy as _
 from django.core.mail import send_mail
 
 

@@ -13,15 +13,12 @@ __author__ = 'adamshare'
 # ########################################################
 
 from django.db import models
-from django.conf import settings
-from boto.s3.connection import S3Connection
+from boto.s3.connection import S3Connection, OrdinaryCallingFormat
 from boto.s3.key import Key
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 import urllib
 import os
-import re
-from django.core.exceptions import ValidationError
 from urlparse import urlparse, urlunparse, urljoin
 
 try:
@@ -110,7 +107,9 @@ class S3Storage(FileSystemStorage):
 class S3EnabledFileField(models.FileField):
     def __init__(self, bucket=settings.AWS_STORAGE_BUCKET_NAME, verbose_name=None, name=None, upload_to="", storage=None, **kwargs):
         if settings.USE_AMAZON_S3:
-            self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID,
+                                           settings.AWS_SECRET_ACCESS_KEY,
+                                           calling_format=OrdinaryCallingFormat())
             self.bucket = self.connection.get_bucket(bucket, validate=False)
             if not self.bucket:
                 self.bucket = self.connection.create_bucket(bucket)
@@ -174,7 +173,9 @@ class S3EnabledImageField(models.ImageField):
             self.max_height = 100000
 
         if settings.USE_AMAZON_S3:
-            self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID, settings.AWS_SECRET_ACCESS_KEY)
+            self.connection = S3Connection(settings.AWS_ACCESS_KEY_ID,
+                                           settings.AWS_SECRET_ACCESS_KEY,
+                                           calling_format=OrdinaryCallingFormat())
             self.bucket = self.connection.get_bucket(bucket, validate=False)
             if not self.bucket:
                 self.bucket = self.connection.create_bucket(bucket)

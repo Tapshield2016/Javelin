@@ -1,8 +1,6 @@
 from models import EmailAddress
 from django.forms import ModelForm, ValidationError
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, UserManager
-from django.utils.translation import ugettext as _
 
 
 class EmailAddressForm(ModelForm):

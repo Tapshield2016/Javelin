@@ -3,7 +3,7 @@ from boto.exception import JSONResponseError
 from django.conf import settings
 from django.core.management.base import BaseCommand
 
-from core.aws.dynamodb import DynamoDBManager
+from aws.dynamodb import DynamoDBManager
 
 
 class Command(BaseCommand):

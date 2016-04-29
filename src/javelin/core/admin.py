@@ -1,4 +1,4 @@
-import reversion
+from reversion import admin as reversion_admin
 
 from django.forms.models import BaseInlineFormSet
 from django import forms
@@ -8,7 +8,7 @@ from django.utils.safestring import mark_safe
 from django.core import urlresolvers
 from django.contrib.auth.models import Group
 
-from emailmgr.models import EmailAddress
+from ..emailmgr.models import EmailAddress
 
 from models import (Agency, AgencyUser, Alert, AlertLocation, MassAlert,
                     ChatMessage, UserProfile, SocialCrimeReport,
@@ -129,7 +129,7 @@ def show(self, request, queryset):
 show.short_description = "Make selected agencies public"
 
 
-class AgencyAdmin(reversion.VersionAdmin, geo_admin.OSMGeoAdmin):
+class AgencyAdmin(reversion_admin.VersionAdmin, geo_admin.OSMGeoAdmin):
     fieldsets = (
         ('Publish', {
                 'fields': (['hidden',]),
@@ -218,7 +218,7 @@ class AlertLocationInline(admin.StackedInline):
     extra = 0
 
 
-class AlertAdmin(reversion.VersionAdmin):
+class AlertAdmin(reversion_admin.VersionAdmin):
     list_display = ('__unicode__', 'agency', 'agency_dispatcher', 'status',
                     'initiated_by', 'creation_date', 'last_modified', 'in_bounds')
     list_filter = ('agency', 'in_bounds', 'status', 'initiated_by', 'in_bounds')

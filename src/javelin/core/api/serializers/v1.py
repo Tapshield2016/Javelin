@@ -4,14 +4,14 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
 
-from core.models import (Agency, Alert, AlertLocation, Theme,
-                         ChatMessage, MassAlert, UserProfile,
-                         EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, Period, ClosedDate, StaticDevice,
-                         EntourageSession, TrackingLocation, NamedLocation, UserNotification)
+from ....core.models import (Agency, Alert, AlertLocation, Theme,
+                             ChatMessage, MassAlert, UserProfile,
+                             EntourageMember, SocialCrimeReport, Region,
+                             DispatchCenter, Period, ClosedDate, StaticDevice,
+                             EntourageSession, TrackingLocation, NamedLocation, UserNotification)
 
-from emailmgr.models import EmailAddress
-from emailmgr.serializers import EmailAddressGETSerializer
+from ....emailmgr.models import EmailAddress
+from ....emailmgr.serializers import EmailAddressGETSerializer
 
 User = get_user_model()
 
@@ -142,6 +142,7 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 read_only=True,
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberSerializer(required=False, many=True)
     distance = serializers.SerializerMethodField('distance_if_exists')
@@ -177,6 +178,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class PostUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 read_only=True,
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberSerializer(required=False, many=True)
     distance = serializers.SerializerMethodField('distance_if_exists')
@@ -262,6 +264,7 @@ class UserNoLocationEntourageMemberSerializer(serializers.HyperlinkedModelSerial
 
 class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 read_only=True,
                                                  view_name='agency-detail')
 
     class Meta:
@@ -271,6 +274,7 @@ class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):
 
 class DispatcherUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 read_only=True,
                                                  view_name='agency-detail')
 
     class Meta:

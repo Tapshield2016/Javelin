@@ -8,19 +8,15 @@ from django.conf import settings
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
 from django.contrib.auth.models import Group
-from django.contrib.sites.models import get_current_site
+from django.contrib.sites.shortcuts import get_current_site
 from django.http import (HttpResponse, HttpResponseForbidden,
                          Http404, HttpResponseRedirect)
 from django.shortcuts import get_object_or_404
-from django.shortcuts import render_to_response, render
-from django.template import RequestContext
+from django.shortcuts import render
 from django.core.urlresolvers import reverse
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 
-from tasks import (new_alert, notify_user_added_to_entourage,
-                   notify_user_called_emergency_number,
-                   notify_user_arrived_at_destination,
-                   notify_user_failed_arrival, notify_user_yank_alert)
+from tasks import new_alert
 
 from allauth.socialaccount import providers
 from allauth.socialaccount.models import SocialLogin, SocialToken, SocialApp
@@ -41,15 +37,10 @@ from allauth.socialaccount.helpers import complete_social_login
 
 from registration.models import RegistrationProfile
 
-from rest_framework import serializers
 from rest_framework.decorators import api_view
-from rest_framework.views import APIView
 from rest_framework import status
-from rest_framework import parsers
-from rest_framework import renderers
 from rest_framework.response import Response
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.settings import api_settings
 
 from twilio.util import TwilioCapability
@@ -59,10 +50,9 @@ from forms import (AgencySettingsForm, StaticDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
                                 EntourageMemberSerializer, StaticDeviceSerializer)
 
-from core.tasks import new_static_alert
-from core.utils import group_required
-from core.utils import get_agency_from_unknown
-from core.api.viewsets.v1 import StaticDeviceViewSet
+from tasks import new_static_alert
+from utils import group_required
+from utils import get_agency_from_unknown
 
 
 User = get_user_model()

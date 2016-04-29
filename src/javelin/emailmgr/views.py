@@ -2,26 +2,18 @@ from forms import EmailAddressForm
 from django import forms
 from django.core.exceptions import ValidationError
 from models import EmailAddress
-from django.conf import settings
 from utils import send_activation, get_template, sort_email
 from signals import user_added_email, user_sent_activation, user_activated_email
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 from django.contrib import messages as Msg
-from django.http import HttpResponseRedirect
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404
-# from django.contrib.auth.models import User
 from django.utils.translation import ugettext_lazy as _
-from django.core.urlresolvers import reverse
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework import status, serializers, viewsets
-from emailmgr.serializers import (EmailAddressGETSerializer, EmailAddressUpdateSerializer,
-                                  EmailAddressViewSet,)
+from rest_framework import status
 from django.contrib.auth import (authenticate, get_user_model,
                                  login as auth_login)
-from core.api.serializers.v1 import UserSerializer
+from ..core.api.serializers.v1 import UserSerializer
 
 User = get_user_model()
 

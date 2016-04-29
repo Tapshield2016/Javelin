@@ -13,59 +13,53 @@ from django.contrib.auth.models import Group
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
 from django.core.mail import send_mail
-from django.http import HttpResponse
-from django.contrib.sites.models import get_current_site
-from django.contrib.auth.decorators import user_passes_test
 
-from django.views.decorators.csrf import ensure_csrf_cookie, csrf_exempt
 from django.core.exceptions import PermissionDenied
 
-from rest_framework.settings import api_settings
 from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status, viewsets, ISO_8601
 from rest_framework.decorators import detail_route, list_route
-from rest_framework.filters import (DjangoFilterBackend, OrderingFilter,
-                                    SearchFilter)
+from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
-from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
-                                     AgencySerializer, AlertSerializer,
-                                     AlertLocationSerializer,
-                                     ChatMessageSerializer,
-                                     MassAlertSerializer,
-                                     UserProfileSerializer,
-                                     SocialCrimeReportSerializer,
-                                     EntourageMemberSerializer,
-                                     UnauthorizedEntourageMemberSerializer,
-                                     RegionSerializer,
-                                     DispatchCenterSerializer,
-                                     PeriodSerializer,
-                                     ClosedDateSerializer,
-                                     StaticDeviceSerializer, ThemeSerializer,
-                                     EntourageSessionSerializer, TrackingLocationSerializer,
-                                     NamedLocationSerializer,
-                                     UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
-                                     UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
-                                     TrackingLocationFullSerializer, EntourageSessionPostSerializer,
-                                     UserNotificationSerializer)
+from ..serializers.v1 import (UserSerializer, GroupSerializer,
+                              AgencySerializer, AlertSerializer,
+                              AlertLocationSerializer,
+                              ChatMessageSerializer,
+                              MassAlertSerializer,
+                              UserProfileSerializer,
+                              SocialCrimeReportSerializer,
+                              EntourageMemberSerializer,
+                              UnauthorizedEntourageMemberSerializer,
+                              RegionSerializer,
+                              DispatchCenterSerializer,
+                              PeriodSerializer,
+                              ClosedDateSerializer,
+                              StaticDeviceSerializer, ThemeSerializer,
+                              EntourageSessionSerializer, TrackingLocationSerializer,
+                              NamedLocationSerializer,
+                              UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
+                              UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
+                              TrackingLocationFullSerializer, EntourageSessionPostSerializer,
+                              UserNotificationSerializer)
 
-from core.aws.dynamodb import DynamoDBManager
-from core.aws.sns import SNSManager
-from core.filters import IsoDateTimeFilter
-from core.models import (Agency, Alert, AlertLocation,
-                         ChatMessage, MassAlert, UserProfile, EntourageMember,
-                         SocialCrimeReport,  Region,
-                         DispatchCenter, Period, AgencyUser,
-                         ClosedDate, StaticDevice, Theme,
-                         EntourageSession, TrackingLocation, NamedLocation, UserNotification)
+from ....core.aws.dynamodb import DynamoDBManager
+from ....core.aws.sns import SNSManager
+from ....core.filters import IsoDateTimeFilter
+from ....core.models import (Agency, Alert, AlertLocation,
+                             ChatMessage, MassAlert, UserProfile, EntourageMember,
+                             SocialCrimeReport, Region,
+                             DispatchCenter, Period, AgencyUser,
+                             ClosedDate, StaticDevice, Theme,
+                             EntourageSession, TrackingLocation, NamedLocation, UserNotification)
 
-from core.utils import get_agency_from_unknown
+from ....core.utils import get_agency_from_unknown
 
-from core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
-                        notify_new_chat_message_available, notify_crime_report_marked_viewed,
-                        notify_alert_completed, new_static_alert)
+from ....core.tasks import (create_user_device_endpoint, publish_to_agency_topic,
+                            notify_new_chat_message_available, notify_crime_report_marked_viewed,
+                            notify_alert_completed, new_static_alert)
 
 User = get_user_model()
 
@@ -85,16 +79,18 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
         # Instance must have an attribute named `user`.
         return obj.user == request.user
 
+
 class DeviceMakerOnly(permissions.BasePermission):
     """
     Only allows Device Maker group to view or edit.
     """
+
     def has_object_permission(self, request, view, obj):
 
         if request.method in permissions.SAFE_METHODS:
             return True
 
-        permitted_groups = [Group.objects.get(name='Device Maker'),]
+        permitted_groups = [Group.objects.get(name='Device Maker'), ]
         if request.user.is_authenticated():
             if bool(request.user.groups.filter(name__in=permitted_groups)) | request.user.is_superuser:
                 return True
@@ -112,7 +108,7 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         if request.method in permissions.SAFE_METHODS:
-            permitted_groups = [Group.objects.get(name='Dispatchers'),]
+            permitted_groups = [Group.objects.get(name='Dispatchers'), ]
             if request.user.is_authenticated():
                 if bool(request.user.groups.filter(name__in=permitted_groups)):
                     return True
@@ -121,7 +117,6 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
 
 
 class EntourageMemberViewSet(viewsets.ModelViewSet):
-
     permission_classes = (IsOwnerOrReadOnly, IsAuthenticated,)
     queryset = EntourageMember.objects.select_related('user').all()
     model = EntourageMember
@@ -129,12 +124,10 @@ class EntourageMemberViewSet(viewsets.ModelViewSet):
     filter_fields = ('user',)
 
     def get_queryset(self):
-
         if not self.request.user.is_staff and not self.request.user.is_superuser:
             return EntourageMember.objects.filter(user=self.request.user)
 
         return EntourageMember.objects.select_related('user').all()
-
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -158,11 +151,11 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.request.user.is_staff or self.request.user.is_superuser:
             qs = User.objects.select_related('agency').prefetch_related('groups', 'entourage_members').all()
         else:
-            qs = User.objects.select_related('agency').prefetch_related('groups', 'entourage_members')\
+            qs = User.objects.select_related('agency').prefetch_related('groups', 'entourage_members') \
                 .filter(pk=self.request.user.pk)
         return qs
 
-    @detail_route(methods=['post',])
+    @detail_route(methods=['post', ])
     def message_entourage(self, request, pk=None):
         message = request.DATA.get('message', None)
         subject = request.DATA.get('subject', None)
@@ -360,9 +353,12 @@ class UserViewSet(viewsets.ModelViewSet):
         tracking_users = User.objects.filter(id__in=tracking_users_id)
         no_tracking_users = User.objects.filter(id__in=no_tracking_users_id)
 
-        serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True, context={'request': request})
-        serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True, context={'request': request})
-        serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True, context={'request': request})
+        serialized_always = UserAlwaysVisibleEntourageMemberSerializer(always_visible_users, many=True,
+                                                                       context={'request': request})
+        serialized_tracking = UserTrackingEntourageMemberSerializer(tracking_users, many=True,
+                                                                    context={'request': request})
+        serialized_no_tracking = UserNoLocationEntourageMemberSerializer(no_tracking_users, many=True,
+                                                                         context={'request': request})
 
         serialized_data = serialized_always.data + serialized_tracking.data + serialized_no_tracking.data
 
@@ -476,7 +472,6 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_200_OK)
 
 
-
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
     serializer_class = AgencySerializer
@@ -542,7 +537,8 @@ class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
 
 
 class AlertViewSet(viewsets.ModelViewSet):
-    queryset = Alert.objects.select_related('agency', 'agency_user', 'agency_dispatcher').prefetch_related('locations').all()
+    queryset = Alert.objects.select_related('agency', 'agency_user', 'agency_dispatcher').prefetch_related(
+        'locations').all()
     serializer_class = AlertSerializer
     filter_fields = ('agency', 'agency_user', 'agency_dispatcher',
                      'status', 'initiated_by',)
@@ -584,7 +580,8 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         if not request.user.id == alert.agency_user.id:
             user = alert.agency_user
-            notify_alert_completed.delay(push_notification_message, serialized.data['url'], user.device_type, user.device_endpoint_arn)
+            notify_alert_completed.delay(push_notification_message, serialized.data['url'], user.device_type,
+                                         user.device_endpoint_arn)
 
         return Response(serialized.data)
 
@@ -598,7 +595,6 @@ class AlertViewSet(viewsets.ModelViewSet):
         alert.disarm()
         serialized = AlertSerializer(alert, context={'request': request})
         return Response(serialized.data)
-
 
     @detail_route(methods=['post'])
     def send_message(self, request, pk=None):
@@ -819,7 +815,6 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_200_OK)
 
 
-
 class TrackingLocationViewSet(viewsets.ModelViewSet):
     queryset = TrackingLocation.objects.all()
     serializer_class = TrackingLocationFullSerializer
@@ -898,7 +893,6 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
         return super(StaticDeviceViewSet, self).update(request, *args, **kwargs)
 
-
     def partial_update(self, request, *args, **kwargs):
 
         mutable = request.DATA._mutable
@@ -936,10 +930,8 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         #                     headers=headers)
 
 
-
 class StaticDeviceDetail(generics.RetrieveAPIView):
     permission_classes = (AllowAny,)
     lookup_field = 'uuid'
     queryset = StaticDevice.objects.all()
     serializer_class = StaticDeviceSerializer
-

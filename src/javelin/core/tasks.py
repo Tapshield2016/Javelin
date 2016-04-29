@@ -11,8 +11,7 @@ from django.contrib.auth import get_user_model
 
 from aws.s3 import S3Manager
 from aws.sns import SNSManager
-from aws.sqs import SQSManager
-from models import Agency, AgencyUser, Alert, AlertLocation, StaticDevice, EntourageSession
+from models import (Agency, AgencyUser, Alert, AlertLocation)
 from api.serializers.v1 import AlertSerializer
 
 User = get_user_model()
