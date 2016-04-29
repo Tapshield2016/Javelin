@@ -141,12 +141,10 @@ INSTALLED_APPS = (
     'reversion',
     'rest_framework',
     'rest_framework.authtoken',
-    'south',
     'storages',
-    'emailmgr',
-
-    'core',
-    'shieldcommand',
+    'javelin.emailmgr',
+    'javelin.core',
+    'javelin.shieldcommand',
 )
 
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'

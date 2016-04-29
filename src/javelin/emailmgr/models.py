@@ -1,9 +1,7 @@
 from utils import get_unique_random
 from django.conf import settings
 from django.db import models
-from django.contrib.auth.models import AbstractUser, UserManager
 from django.utils.translation import ugettext_lazy as _
-from django.db.models import signals
 
 
 class EmailAddress(models.Model):

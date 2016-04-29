@@ -11,20 +11,16 @@ from django.core.urlresolvers import reverse, NoReverseMatch
 from django.contrib.sites.models import Site
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+from django.core.mail import send_mail
 
-
-# some people might like to user mailer by jtauber, accomodate them
-if "mailer" in settings.INSTALLED_APPS:
-    from mailer import send_mail
-else:
-    from django.core.mail import send_mail
 
 # get a random string of known length
 def get_unique_random(length=10):
     randtime = str(time.time()).split('.')[0]
     rand = ''.join([random.choice(randtime+string.letters+string.digits) for i in range(length)])
     return sha1(rand).hexdigest()[:length]
- 
+
+
 # given a template name, return its path
 def get_template(name):
     return os.path.join(getattr(defaults, "EMAIL_MGR_TEMPLATE_PATH"), name)
@@ -54,6 +50,7 @@ def send_activation(email, is_secure):
     subject = "".join(render_to_string(get_template("emailmgr_activation_subject.txt"), context).splitlines())
     message = render_to_string(get_template("emailmgr_activation_message.txt"), context)
     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email.email])
+
 
 def sort_email():
     return ['-is_primary', '-is_active', '-is_activation_sent']

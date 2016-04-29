@@ -22,14 +22,16 @@ from django.db.models.signals import post_delete, pre_save, post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericForeignKey
+
+from ..core.tasks import delete_file_from_s3
 
 from urlparse import urlparse, urlunparse, urljoin
 
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
-from emailmgr.models import EmailAddress
+from ..emailmgr.models import EmailAddress
 
 from managers import (ActiveAlertManager, InactiveAlertManager,
                       AcceptedAlertManager, CompletedAlertManager,
@@ -42,7 +44,7 @@ from managers import (ActiveAlertManager, InactiveAlertManager,
                       ShouldReceiveAutoResponseAlertManager,
                       TrackingEntourageSessionManager)
 
-from core.aws.s3_filefield import S3EnabledImageField, S3URLField
+from ..core.aws.s3_filefield import S3EnabledImageField, S3URLField
 
 from pygeocoder import Geocoder
 
@@ -511,7 +513,7 @@ class Alert(TimeStampedModel):
                 send_yank_alert_notifications(self.agency_user, self)
 
         super(Alert, self).save(*args, **kwargs)
-                
+
     def disarm(self):
         if not self.disarmed_time:
             self.disarmed_time = datetime.now()
@@ -1155,7 +1157,7 @@ class UserNotification(TimeStampedModel):
     limit = models.Q(app_label='core')
     content_type = models.ForeignKey(ContentType, null=True, limit_choices_to=limit)
     object_id = models.PositiveIntegerField(null=True)
-    action_object = generic.GenericForeignKey('content_type', 'object_id')
+    action_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
         ordering = ['-creation_date']
@@ -1233,14 +1235,12 @@ def delete_profile_image_if_changed(sender, instance, **kwargs):
     else:
         if obj.profile_image_url and\
                 not obj.profile_image_url == instance.profile_image_url:
-            from core.tasks import delete_file_from_s3
             delete_file_from_s3.delay(obj.profile_image_url)
 
 
 @receiver(post_delete, sender=UserProfile)
 def delete_profile_image(sender, instance, **kwargs):
     if instance.profile_image_url:
-        from core.tasks import delete_file_from_s3
         delete_file_from_s3.delay(instance.profile_image_url)
 
 
@@ -1255,7 +1255,7 @@ def send_phone_number_verification_code(sender, instance, **kwargs):
     else:
         if not obj.phone_number == instance.phone_number\
                 or perform_check_anyway:
-            from core.tasks import send_phone_number_verification
+            from ..core.tasks import send_phone_number_verification
             send_phone_number_verification.delay(\
                 instance.phone_number,
                 instance.phone_number_verification_code)
