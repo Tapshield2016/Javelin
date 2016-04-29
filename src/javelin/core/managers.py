@@ -91,7 +91,7 @@ class InitiatedByEmergencyAlertManager(models.Manager):
 
 class InitiatedByStaticDeviceAlertManager(models.Manager):
     def get_queryset(self):
-        return super(InitiatedBy911AlertManager, self)\
+        return super(InitiatedByEmergencyAlertManager, self)\
             .get_queryset().filter(initiated_by='S')
 
 

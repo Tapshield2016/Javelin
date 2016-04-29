@@ -13,15 +13,12 @@ __author__ = 'adamshare'
 # ########################################################
 
 from django.db import models
-from django.conf import settings
 from boto.s3.connection import S3Connection
 from boto.s3.key import Key
 from django.core.files.storage import FileSystemStorage
 from django.core.files import File
 import urllib
 import os
-import re
-from django.core.exceptions import ValidationError
 from urlparse import urlparse, urlunparse, urljoin
 
 try:

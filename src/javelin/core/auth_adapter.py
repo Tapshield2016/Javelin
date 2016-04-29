@@ -5,7 +5,7 @@ from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 
 from rest_framework.response import Response
 
-from core.api.serializers.v1 import UserSerializer
+from api.serializers.v1 import UserSerializer
 
 User = get_user_model()
 

@@ -7,7 +7,7 @@ from optparse import make_option
 from django.core.management.base import BaseCommand
 from django.utils.text import slugify
 
-from core.models import Agency, Alert
+from ....core.models import Agency, Alert
 
 
 class Command(BaseCommand):

@@ -1,14 +1,14 @@
 from rest_framework import routers
 from django.conf.urls import patterns, include, url
 
-from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
-                                  AlertViewSet, AlertLocationViewSet, ThemeViewSet,
-                                  ChatMessageViewSet, MassAlertViewSet,
-                                  UserProfileViewSet, SocialCrimeReportViewSet,
-                                  EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
-                                  ClosedDateViewSet, PeriodViewSet, StaticDeviceViewSet,
-                                  EntourageSessionViewSet, TrackingLocationViewSet, NamedLocationViewSet,
-                                  UserNotificationViewSet)
+from ..viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
+                           AlertViewSet, AlertLocationViewSet, ThemeViewSet,
+                           ChatMessageViewSet, MassAlertViewSet,
+                           UserProfileViewSet, SocialCrimeReportViewSet,
+                           EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
+                           ClosedDateViewSet, PeriodViewSet, StaticDeviceViewSet,
+                           EntourageSessionViewSet, TrackingLocationViewSet, NamedLocationViewSet,
+                           UserNotificationViewSet)
 
 
 router_v1 = routers.DefaultRouter()

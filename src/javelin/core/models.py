@@ -26,8 +26,6 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 
 from ..core.tasks import delete_file_from_s3
 
-from urlparse import urlparse, urlunparse, urljoin
-
 from registration.signals import user_activated
 from rest_framework.authtoken.models import Token
 
@@ -138,15 +136,19 @@ class Location(TimeStampedModel):
 
 
 class Agency(TimeStampedModel):
-    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. Call 911 if you require immediate assistance."
+    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. " \
+                                    "Call 911 if you require immediate assistance."
 
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255, default="tapshield.com")
     agency_point_of_contact =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name='agency_point_of_contact',
-                          null=True, blank=True, on_delete=models.SET_NULL, help_text="This will be the person with full account access. "
-                                                           "Edit all settings, change/add payment, add/remove dispatchers, etc.")
+                          null=True,
+                          blank=True,
+                          on_delete=models.SET_NULL,
+                          help_text="This will be the person with full account access.  "
+                                    "Edit all settings, change/add payment, add/remove dispatchers, etc.")
     dispatcher_phone_number = models.CharField(max_length=24, default="5555555555")
     dispatcher_secondary_phone_number = models.CharField(max_length=24, default="555",
                                                          null=True, blank=True,
@@ -162,7 +164,8 @@ class Agency(TimeStampedModel):
     agency_radius = models.FloatField(default=0)
     default_map_zoom_level = models.PositiveIntegerField(default=15)
     alert_mode_name = models.CharField(max_length=24, default="Campus Police",
-                                       help_text="This can be changed on the wishes of the organization to be 'Police', 'Alert', etc.")
+                                       help_text="This can be changed on the wishes of the organization to be "
+                                                 "'Police', 'Alert', etc.")
     alert_received_message = models.CharField(max_length=255, default="The authorities have been notified.")
     alert_completed_message = models.TextField(null=True, blank=True,
                                                default="Thank you for using TapShield. "
@@ -172,26 +175,46 @@ class Agency(TimeStampedModel):
     require_domain_emails = models.BooleanField(default=True)
     display_command_alert = models.BooleanField(default=True)
     loop_alert_sound = models.BooleanField(default=True)
-    launch_call_to_dispatcher_on_alert = models.BooleanField(default=True, help_text="When a mobile user begins an alert, immediately launch a VoIP call to the primary dispatcher number for the user's organization.")
+    launch_call_to_dispatcher_on_alert = models.BooleanField(default=True,
+                                                             help_text="When a mobile user begins an alert, "
+                                                                       "immediately launch a VoIP call to the primary "
+                                                                       "dispatcher number for the user's organization.")
     show_agency_name_in_app_navbar = models.BooleanField(default=True)
-    enable_chat_autoresponder = models.BooleanField(default=False, help_text="If enabled, please set the chat autoresponder message below if you wish to respond with something that differs from the default text.", verbose_name="enable chat auto-responder")
+    enable_chat_autoresponder = models.BooleanField(default=False,
+                                                    help_text="If enabled, please set the chat autoresponder message "
+                                                              "below if you wish to respond with something that "
+                                                              "differs from the default text.",
+                                                    verbose_name="enable chat auto-responder")
     chat_autoresponder_message =\
         models.TextField(null=True, blank=True,
                          default=DEFAULT_AUTORESPONDER_MESSAGE,
                          verbose_name="chat auto-responder message")
-    enable_user_location_requests = models.BooleanField(default=False, help_text="If enabled, this allows for Shield Command dispatchers to request the latest location from users belonging to the organization. This is accomplished by sending a push notification to the organization's SNS topic to prompt devices to send a location update in the background. This does not disturb the users.")
+    enable_user_location_requests = models.BooleanField(default=False,
+                                                        help_text="If enabled, this allows for Shield "
+                                                                  "Command dispatchers to request the latest location "
+                                                                  "from users belonging to the organization. "
+                                                                  "This is accomplished by sending a push "
+                                                                  "notification to the organization's SNS topic "
+                                                                  "to prompt devices to send a location update "
+                                                                  "in the background. This does not disturb "
+                                                                  "the users.")
     agency_logo = models.URLField(null=True, blank=True,
                                   help_text="Set the location of the standard agency logo.")
     agency_alternate_logo = models.URLField(null=True, blank=True,
-                                            help_text="This could be an inverted version of the standard logo or other differently colorized/formatted version.")
+                                            help_text="This could be an inverted version of the "
+                                                      "standard logo or other differently "
+                                                      "colorized/formatted version.")
     agency_small_logo = models.URLField(null=True, blank=True,
-                                        help_text="This could be a truncated or minimized form of the logo, e.g. 'UF' versus the larger logo version.")
+                                        help_text="This could be a truncated or minimized form of the "
+                                                  "logo, e.g. 'UF' versus the larger logo version.")
     agency_theme = models.TextField(null=True, blank=True, default="{}",
                                     help_text="Use properly formatted JSON here to provide data as necessary.")
     agency_info_url = models.CharField(max_length=255, null=True, blank=True,
-                                        help_text="This could be a web page with important info pertaining to emergency situations")
+                                        help_text="This could be a web page with important info "
+                                                  "pertaining to emergency situations")
     agency_rss_url = models.CharField(max_length=255, null=True, blank=True,
-                                       help_text="RSS feed for mass alerts already populated by the system in use")
+                                       help_text="RSS feed for mass alerts already populated by "
+                                                 "the system in use")
     spot_crime_days_visible = models.PositiveIntegerField(default=1)
     theme = models.ForeignKey('Theme', related_name='agency_theme', null=True, blank=True,
                               help_text="UI elements related to agency")
@@ -437,8 +460,16 @@ class Alert(TimeStampedModel):
     initiated_by = models.CharField(max_length=2,
                                     choices=ALERT_INITIATED_BY_CHOICES,
                                     default='E')
-    user_notified_of_receipt = models.BooleanField(default=False, help_text="Indicates if a push notification has been sent to the user to notify the app that the alert has been received.")
-    user_notified_of_dispatcher_congestion = models.BooleanField(default=False, help_text="If an organization has the chat auto-responder functionality enabled, this flag is to indicate if the user has been sent the auto-responder message.")
+    user_notified_of_receipt = models.BooleanField(default=False,
+                                                   help_text="Indicates if a push notification has "
+                                                             "been sent to the user to notify the app "
+                                                             "that the alert has been received.")
+    user_notified_of_dispatcher_congestion = models.BooleanField(default=False,
+                                                                 help_text="If an organization has the "
+                                                                           "chat auto-responder functionality "
+                                                                           "enabled, this flag is to indicate if "
+                                                                           "the user has been sent the "
+                                                                           "auto-responder message.")
     notes = models.TextField(null=True, blank=True)
 
     call_length = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -646,7 +677,8 @@ class AgencyUser(AbstractUser):
     latitude = models.FloatField(null=True, blank=True)
     longitude = models.FloatField(null=True, blank=True)
     location_point = db_models.PointField(geography=True,
-                                               null=True, blank=True)
+                                          null=True,
+                                          blank=True)
     accuracy = models.FloatField(null=True, blank=True)
     altitude = models.FloatField(null=True, blank=True)
     floor_level = models.IntegerField(null=True, blank=True)

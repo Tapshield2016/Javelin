@@ -4,7 +4,7 @@ import string
 import random
 import ast
 from django.contrib.auth.models import Group
-from core.models import AgencyUser, Agency
+from ....core.models import AgencyUser, Agency
 from optparse import make_option
 from django.core.management.base import BaseCommand
 
