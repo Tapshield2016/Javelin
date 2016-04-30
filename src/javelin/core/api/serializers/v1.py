@@ -192,7 +192,7 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members', 'location_timestamp',
-                  'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level',)
+                  'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level', 'distance')
 
     def to_native(self, user):
         ret = super(PostUserSerializer, self).to_native(user)
