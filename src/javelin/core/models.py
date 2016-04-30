@@ -1300,9 +1300,8 @@ def closest_agency(point):
 
     dwithin = 20
     qs = Agency.geo.select_related('agency_point_of_contact')\
-                .filter(agency_center_point__dwithin=(point,
-                                                      D(mi=dwithin)))\
-                .distance(point).order_by('distance')
+        .filter(agency_center_point__dwithin=(point, D(mi=dwithin)))\
+        .distance(point).order_by('distance')
 
     if qs:
         return qs[0]

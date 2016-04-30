@@ -32,3 +32,11 @@ router_v1.register(r'entourage-sessions', EntourageSessionViewSet)
 router_v1.register(r'tracking-locations', TrackingLocationViewSet)
 router_v1.register(r'named-locations', NamedLocationViewSet)
 router_v1.register(r'user-notifications', UserNotificationViewSet, base_name="UserNotification")
+
+user_detail = UserViewSet.as_view({
+    'get': 'retrieve'
+})
+
+urls = [
+    url(r'^users/(?P<pk>[0-9]+)/$', user_detail, name='agencyuser-detail')
+]

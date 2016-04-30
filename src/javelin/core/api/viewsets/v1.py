@@ -108,9 +108,8 @@ class IsRequestUserOrDispatcher(permissions.BasePermission):
         # so we'll always allow GET, HEAD or OPTIONS requests.
 
         if request.method in permissions.SAFE_METHODS:
-            permitted_groups = [Group.objects.get(name='Dispatchers'), ]
             if request.user.is_authenticated():
-                if bool(request.user.groups.filter(name__in=permitted_groups)):
+                if request.user.groups.filter(name='Dispatchers').count() != 0:
                     return True
 
         return bool(obj == request.user) | request.user.is_superuser
@@ -430,10 +429,10 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
 
         qs = SocialCrimeReport.objects.all()
-        latitude = self.request.QUERY_PARAMS.get('latitude', None)
-        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        latitude = self.request.query_params.get('latitude', None)
+        longitude = self.request.query_params.get('longitude', None)
         distance_within = \
-            self.request.QUERY_PARAMS.get('distance_within', None)
+            self.request.query_params.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
@@ -480,10 +479,10 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         qs = Agency.objects.all()
-        latitude = self.request.QUERY_PARAMS.get('latitude', None)
-        longitude = self.request.QUERY_PARAMS.get('longitude', None)
+        latitude = self.request.query_params.get('latitude', None)
+        longitude = self.request.query_params.get('longitude', None)
         distance_within = \
-            self.request.QUERY_PARAMS.get('distance_within', None)
+            self.request.query_params.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
@@ -830,7 +829,7 @@ class UserNotificationViewSet(viewsets.ModelViewSet):
     serializer_class = UserNotificationSerializer
 
     def get_queryset(self):
-        user = self.request.QUERY_PARAMS.get('user', None)
+        user = self.request.query_params.get('user', None)
         if self.request.user.is_superuser:
             if user:
                 return UserNotification.objects.filter(user=user)

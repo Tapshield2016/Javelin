@@ -7,6 +7,7 @@ from django.contrib.gis import admin as geo_admin
 from django.utils.safestring import mark_safe
 from django.core import urlresolvers
 from django.contrib.auth.models import Group
+from django.core.exceptions import ObjectDoesNotExist
 
 from ..emailmgr.models import EmailAddress
 
@@ -105,9 +106,13 @@ class StaticDeviceInline(admin.StackedInline):
 class AgencyDispatchersSet(BaseInlineFormSet):
     def get_queryset(self):
         if not hasattr(self, '_queryset'):
-            qs = super(AgencyDispatchersSet, self).get_queryset().filter(groups=Group.objects.get(name='Dispatchers'))
-            self._queryset = qs
-        return self._queryset
+            try:
+                group = Group.objects.get(name='Dispatchers')
+                qs = super(AgencyDispatchersSet, self).get_queryset().filter(groups=group)
+                self.queryset = qs
+            except ObjectDoesNotExist:
+                pass
+        return self.queryset
 
 
 class AgencyUserInline(admin.StackedInline):

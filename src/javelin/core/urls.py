@@ -1,6 +1,7 @@
 from django.conf.urls import include, url
 
 from api.routers.v1 import router_v1
+from api.routers.v1 import urls as api_urls
 from api.viewsets.v1 import StaticDeviceDetail
 
 from ..emailmgr import urls as emailmgr_urls
@@ -31,6 +32,7 @@ urlpatterns = [
 
     # Models
     url(r'^v1/', include(router_v1.urls)),
+    url(r'^v1/', include(api_urls)),
 
     # Email manager
     url(r'^', include(emailmgr_urls)),
