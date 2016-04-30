@@ -14,7 +14,6 @@ celery==3.1.23
 kombu==3.0.3
 pytz==2016.4
 django-allauth==0.25.2
-oauthlib==1.1.0
 python-openid==2.2.5
 requests==2.9.1
 requests-oauthlib==0.6.1
@@ -55,3 +54,4 @@ uWSGI==2.0.12
 unittest2==1.1.0
 uwsgitop==0.9
 wsgiref==0.1.2
+oauthlib==1.1.0
