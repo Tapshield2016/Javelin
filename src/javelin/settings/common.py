@@ -1,7 +1,6 @@
 import os.path
 
 DEBUG = True
-TEMPLATE_DEBUG = DEBUG
 PROJECT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 ADMINS = (
@@ -102,7 +101,7 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.contrib.messages.context_processors.messages',
 
-                "django.core.context_processors.request",
+                "django.template.context_processors.request",
             ],
         },
     },
