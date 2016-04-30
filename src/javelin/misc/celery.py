@@ -9,11 +9,10 @@ from django.conf import settings
 
 sys.path.append('/srv/www/javelin/src')
 sys.path.append('/srv/www/javelin/src/javelin')
-sys.path.append('/srv/www/javelin/src/javelin/apps')
 
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'settings.prod')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'javelin.settings.prod')
 
 app = Celery('javelin')
 
