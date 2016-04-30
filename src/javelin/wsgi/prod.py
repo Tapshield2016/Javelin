@@ -24,7 +24,7 @@ sys.path.append('/srv/www/javelin/src/javelin/apps')
 # if running multiple sites in the same mod_wsgi process. To fix this, use
 # mod_wsgi daemon mode with each site in its own daemon process, or use
 # os.environ["DJANGO_SETTINGS_MODULE"] = "javelin.settings"
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.prod")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "javelin.settings.prod")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
