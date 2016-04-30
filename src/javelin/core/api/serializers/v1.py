@@ -214,6 +214,7 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
+        return None
 
 
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
