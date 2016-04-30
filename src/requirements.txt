@@ -48,7 +48,6 @@ psycopg2==2.6.1
 pygeocoder==1.2.5
 pylibmc==1.5.1
 python-dateutil==2.5.3
-python-openid==2.2.5
 simplejson==3.8.2
 six==1.7.3
 supervisor==3.2.3
