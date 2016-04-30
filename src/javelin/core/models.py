@@ -961,7 +961,7 @@ class UserProfile(models.Model):
         ('O', 'Other'),
     )
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, unique=True)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
     birthday = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     hair_color = models.CharField(max_length=2, choices=HAIR_COLOR_CHOICES,

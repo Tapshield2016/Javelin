@@ -36,7 +36,11 @@ router_v1.register(r'user-notifications', UserNotificationViewSet, base_name="Us
 user_detail = UserViewSet.as_view({
     'get': 'retrieve'
 })
+agency_detail = AgencyViewSet.as_view({
+    'get': 'retrieve'
+})
 
 urls = [
-    url(r'^users/(?P<pk>[0-9]+)/$', user_detail, name='agencyuser-detail')
+    url(r'^users/(?P<pk>[0-9]+)/$', user_detail, name='agencyuser-detail'),
+    url(r'^agencies/(?P<pk>[0-9]+)/$', agency_detail, name='agency-detail')
 ]
