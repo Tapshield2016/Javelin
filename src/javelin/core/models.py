@@ -239,7 +239,6 @@ class Agency(TimeStampedModel):
     mass_alert_available = models.BooleanField(default=True)
 
     objects = models.Manager()
-    geo = db_models.GeoManager()
 
     class Meta:
         ordering = ['name',]
@@ -687,7 +686,6 @@ class AgencyUser(AbstractUser):
     REQUIRED_FIELDS = ['username',]
 
     objects = UserManager()
-    geo = db_models.GeoManager()
 
     def __unicode__(self):
         if self.email:
@@ -1051,9 +1049,6 @@ class SocialCrimeReport(TimeStampedModel):
     viewed_by = models.ForeignKey(settings.AUTH_USER_MODEL,
                                   related_name="viewed_by",
                                   blank=True, null=True, on_delete=models.SET_NULL)
-                                        
-
-    objects = db_models.GeoManager()
 
     def save(self, *args, **kwargs):
         if self.report_latitude and self.report_longitude:
@@ -1299,7 +1294,7 @@ user_activated.connect(set_email_verified)
 def closest_agency(point):
 
     dwithin = 20
-    qs = Agency.geo.select_related('agency_point_of_contact')\
+    qs = Agency.objects.select_related('agency_point_of_contact')\
         .filter(agency_center_point__dwithin=(point, D(mi=dwithin)))\
         .distance(point).order_by('distance')
 

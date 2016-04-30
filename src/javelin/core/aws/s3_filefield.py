@@ -192,7 +192,7 @@ class S3EnabledImageField(models.ImageField):
 
 class S3URLField(models.URLField):
 
-    def from_db_value(self, value, connection):
+    def from_db_value(self, value, expression, connection, context):
         if value is None:
             return value
         return self.make_secure(value)
