@@ -30,7 +30,7 @@ django-filter==0.13.0
 django-phonenumber-field==1.1.0
 django-registration-redux==1.4
 djangorestframework==3.3.3
-PyYAML-3.11
+PyYAML==3.11
 django-rest-swagger==0.3.6
 django-reversion==1.10.2
 django-ses==0.7.1
