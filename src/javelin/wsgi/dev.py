@@ -14,10 +14,10 @@ framework.
 
 """
 import os
-import sys
-
-sys.path.append('/srv/www/javelin/src')
-sys.path.append('/srv/www/javelin/src/javelin')
+# import sys
+#
+# sys.path.append('/srv/www/javelin/src')
+# sys.path.append('/srv/www/javelin/src/javelin')
 
 # We defer to a DJANGO_SETTINGS_MODULE already in the environment. This breaks
 # if running multiple sites in the same mod_wsgi process. To fix this, use
