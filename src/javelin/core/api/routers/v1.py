@@ -39,8 +39,20 @@ user_detail = UserViewSet.as_view({
 agency_detail = AgencyViewSet.as_view({
     'get': 'retrieve'
 })
+social_crime_detail = SocialCrimeReportViewSet.as_view({
+    'get': 'retrieve'
+})
+entourage_member_detail = EntourageMemberViewSet.as_view({
+    'get': 'retrieve'
+})
+user_note_detail = UserNotificationViewSet.as_view({
+    'get': 'retrieve'
+})
 
 urls = [
     url(r'^users/(?P<pk>[0-9]+)/$', user_detail, name='agencyuser-detail'),
-    url(r'^agencies/(?P<pk>[0-9]+)/$', agency_detail, name='agency-detail')
+    url(r'^agencies/(?P<pk>[0-9]+)/$', agency_detail, name='agency-detail'),
+    url(r'^social-crime-reports/(?P<pk>[0-9]+)/$', social_crime_detail, name='socialcrimereport-detail'),
+    url(r'^entourage-members/(?P<pk>[0-9]+)/$', entourage_member_detail, name='entouragemember-detail'),
+    url(r'^user-notifications/(?P<pk>[0-9]+)/$', user_note_detail, name='usernotification-detail'),
 ]
