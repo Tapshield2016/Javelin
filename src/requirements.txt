@@ -54,4 +54,4 @@ uWSGI==2.0.12
 unittest2==1.1.0
 uwsgitop==0.9
 wsgiref==0.1.2
-oauthlib==1.1.0
+oauthlib>=1.0.0
