@@ -428,7 +428,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
 
-        qs = SocialCrimeReport.objects.all()
+        qs = SocialCrimeReport.geo.all()
         latitude = self.request.query_params.get('latitude', None)
         longitude = self.request.query_params.get('longitude', None)
         distance_within = \
@@ -436,7 +436,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = qs.filter(report_point__dwithin=(point, D(mi=dwithin))).order_by('distance') #.distance(point)
+            qs = qs.filter(report_point__dwithin=(point, D(mi=dwithin))).distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
             qs = SocialCrimeReport.objects.none()
@@ -478,7 +478,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
     search_fields = ('domain',)
 
     def get_queryset(self):
-        qs = Agency.objects.all()
+        qs = Agency.geo.all()
         latitude = self.request.query_params.get('latitude', None)
         longitude = self.request.query_params.get('longitude', None)
         distance_within = \
@@ -486,7 +486,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = Agency.objects.select_related('agency_point_of_contact') \
+            qs = qs.select_related('agency_point_of_contact') \
                 .filter(agency_center_point__dwithin=(point,
                                                       D(mi=dwithin))) \
                 .distance(point).order_by('distance')

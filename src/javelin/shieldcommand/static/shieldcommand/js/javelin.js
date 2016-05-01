@@ -29,7 +29,7 @@
 	Javelin.GENDER_CHOICES = {
 	    'M': 'Male',
 	    'F': 'Female',
-	}
+	};
 
 	Javelin.ALERT_TYPE_CHOICES = {
 	    'N': 'emergency',
@@ -38,7 +38,7 @@
 	    'T': 'timer',
         'Y': 'yank',
         'S': 'static',
-	}
+	};
 
 	Javelin.HAIR_COLOR_CHOICES = {
 	    'Y': 'Blonde',
@@ -48,7 +48,7 @@
 	    'BA': 'Bald',
 	    'GR': 'Gray',
 	    'O': 'Other',
-	}
+	};
 
 	Javelin.RACE_CHOICES = {
 	    'BA': 'Black/African Descent',
@@ -60,7 +60,7 @@
 	    'PI': 'Pacific Islander',
 	    'NA': 'Native American',
 	    'O': 'Other',	    
-	}
+	};
 
 	Javelin.RELATIONSHIP_CHOICES = {
 	    'F': 'Father',
@@ -72,7 +72,7 @@
 	    'SI': 'Sister',
 	    'FR': 'Friend',
 	    'O': 'Other',
-	}
+	};
 	
 	Javelin.CRIME_TYPE_CHOICES = {
 	    'AB': 'Abuse',
@@ -88,7 +88,7 @@
 		'SA': 'Suspicious Activity',
 		'T': 'Theft',
 		'V': 'Vandalism',
-	}
+	};
 	
 	function getObjectProperty(obj, key)
 	{
@@ -106,7 +106,7 @@
 		this.parseIDFromURL = function(url) {
 			var tokens = url.split('/');
 			return tokens[tokens.length - 2];
-		}
+		};
 
 		this.url = attributes.url;
 		this.object_id = this.parseIDFromURL(attributes.url);
@@ -203,13 +203,11 @@
 
         if (!$.isEmptyObject(attributes.theme)) {
 			this.theme = new Theme(attributes.theme);
-		};
-
+        }
         if (!$.isEmptyObject(attributes.branding)) {
 			this.branding = new Theme(attributes.branding);
-		};
-
-		return this;
+        }
+        return this;
 	}
 
 	function Alert(attributes) {
@@ -233,17 +231,14 @@
 
 		if (!$.isEmptyObject(attributes.agency_user_meta)) {
 			this.agencyUserMeta = new AgencyUser(attributes.agency_user_meta);
-		};
-
+        }
         if (!$.isEmptyObject(attributes.static_device_meta)) {
 			this.staticDeviceMeta = new StaticDevice(attributes.static_device_meta);
-		};
-
-		if (!$.isEmptyObject(attributes.latest_location)) {
+        }
+        if (!$.isEmptyObject(attributes.latest_location)) {
 			this.location = new AlertLocation(attributes.latest_location);
-		};
-
-		this.hasNewChatMessage = false;
+        }
+        this.hasNewChatMessage = false;
 		this.chatMessages = [];
 
 		return this;
@@ -407,19 +402,19 @@
 
 	Javelin.setActiveAgencyUserAttributes = function(attributes) {
 		Javelin.activeAgencyUser = new AgencyUser(attributes);
-	}
+	};
 
 	Javelin.setActiveAlert = function(alert) {
 		Javelin.activeAlert = alert;
-	}
+	};
 	
 	Javelin.setActiveCrimeTip = function(crimeTip) {
 		Javelin.activeCrimeTip = crimeTip;
-	}
+	};
 	
 	Javelin.setActiveCrimeTipUser = function(user) {
 		Javelin.activeCrimeTipUser = user;
-	}
+	};
 
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
@@ -429,14 +424,14 @@
 		request.done(function(data) {
 			callback(data);
 		});
-	}
+	};
 
 	Javelin.markAlertAsCompleted = function(alert, callback) {
 		var request = Javelin.client.alerts.complete.create(alert.object_id);
 		request.done(function(data) {
 			callback(data);
 		})
-	}
+	};
 
 	Javelin.markAlertAsPending = function(alertID, callback) {
 		var request = Javelin.client.alerts.patch(alertID, {
@@ -445,7 +440,7 @@
 		request.done(function(data) {
 			callback(data);
 		})
-	}
+	};
 
 	Javelin.loadInitialAlerts = function(callback) {
 		var now = getTimestamp(milliseconds=true);
@@ -528,52 +523,57 @@
 		var request = Javelin.client.alerts.read(params=Javelin.$.extend(defaultOptions, options));
 		request.done(function(data) {
 			var retrievedAlerts = [];
-			var latestDate = Javelin.lastCheckedAlertsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
-			for (var i = 0; i < data.results.length; i++) {
-				newAlert = new Alert(data.results[i]);
-				retrievedAlerts.push(newAlert);
-				newAlertDate = createTimestampFromDate(new Date(newAlert.lastModified));
-				if (newAlertDate > latestDate) {
-					latestDate = newAlertDate;
-				}
-			}
+            var latestDate = Javelin.lastCheckedAlertsTimestamp ||
+                createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+                
+			if (data['results'].length > 0) {
+                for (var i = 0; i < data.results.length; i++) {
+                    newAlert = new Alert(data.results[i]);
+                    retrievedAlerts.push(newAlert);
+                    newAlertDate = createTimestampFromDate(new Date(newAlert.lastModified));
+                    if (newAlertDate > latestDate) {
+                        latestDate = newAlertDate;
+                    }
+                }
+            }
 			if (latestDate > Javelin.lastCheckedAlertsTimestamp) {
 				Javelin.lastCheckedAlertsTimestamp = latestDate;
-			};
+			}
+
 			callback(retrievedAlerts);
 		})
-	}
+	};
 
 	Javelin.getAlertsModifiedSinceLastCheck = function(callback) {
 		Javelin.getAlerts({
 			modified_since: Javelin.lastCheckedAlertsTimestamp,
 		}, callback);
-	}
+	};
 
 	Javelin.getAcceptedAlerts = function(dispatcherID, callback) {
 		Javelin.getAlerts({
 			status: "A",
 			agency_dispatcher: dispatcherID,
 		}, callback);
-	}
+	};
 
 	Javelin.getDisarmedAlerts = function(callback) {
 		Javelin.getAlerts({
 			status: "D",
 		}, callback);
-	}
+	};
 
 	Javelin.getNewAlerts = function(callback) {
 		Javelin.getAlerts({
 			status: "N",
 		}, callback);
-	}
+	};
 
 	Javelin.getPendingAlerts = function(callback) {
 		Javelin.getAlerts({
 			status: "P",
 		}, callback);
-	}
+	};
 
 	Javelin.getLatestLocationForAlert = function(alertID, callback) {
 		var request = Javelin.client.alerts.read(alertID);
@@ -586,7 +586,7 @@
 				callback(null);
 			}
 		})
-	}
+	};
 
 	Javelin.getAllChatMessagesForAlert = function(alert, callback) {
 		if (!alert) {
@@ -608,7 +608,7 @@
 				callback(chatMessages, latestTimestamp);
 			});
 		}
-	}
+	};
 
 	Javelin.getAllChatMessagesForAlertSinceLastChecked = function(alert, since_timestamp, callback) {
 		if (!alert) {
@@ -630,7 +630,7 @@
 				callback(chatMessages, latestTimestamp);
 			});
 		}
-	}
+	};
 
 	Javelin.sendChatMessageForAlert = function(alert, message, callback) {
 		var request = Javelin.client.alerts.send_message.create(alert.object_id, {message: message});
@@ -645,7 +645,7 @@
 		request.fail(function(data) {
 			callback(false);
 		});
-	}
+	};
 
 	Javelin.sendMassAlert = function(message, callback) {
 		var request = Javelin.client.agencies.send_mass_alert.create(Javelin.agencyID, {message: message});
@@ -660,7 +660,7 @@
 		request.fail(function(data) {
 			callback(false);
 		});
-	}
+	};
 	
 	Javelin.getCrimeTips = function(options, callback) {
 		if ( ! Javelin.activeAgency)
@@ -716,7 +716,7 @@
  		    })
         }
 
- 	}
+ 	};
 	
 	Javelin.getSpotCrimes = function(callback) {
 		if ( ! Javelin.activeAgency || ! Javelin.spotCrimeKey)
@@ -762,7 +762,7 @@
 				}
 			}
 		});
- 	}
+ 	};
 	
 	Javelin.getSpotCrime = function(id, callback) {
 		Javelin.$.ajax({
@@ -787,7 +787,7 @@
 				}
 			}
 		});
- 	}
+ 	};
 	
 	Javelin.loadInitialCrimeTips = function(callback) {
 		//var now = getTimestamp(milliseconds=true);
@@ -796,20 +796,20 @@
 			//modified_since: then,
 			page_size: 100,
 		}, callback);		
-	}
+	};
 
 	Javelin.updateCrimeTips = function(callback) {
 		Javelin.getCrimeTipsModifiedSinceLastCheck(function(updatedCrimeTips) {
 			callback(updatedCrimeTips);
 		});
-	}
+	};
 	
 	Javelin.getCrimeTipsModifiedSinceLastCheck = function(callback) {
 		Javelin.getCrimeTips({
 			modified_since: Javelin.lastCheckedCrimeTipsTimestamp,
 			page_size: 100,
 		}, callback);
-	}
+	};
 	
 	Javelin.markCrimeTipViewed = function(crimeTip, callback) {
 
@@ -838,7 +838,7 @@
 //		request.done(function(data) {
 //			callback(data);
 //		})
-	}
+	};
 	
 	Javelin.markCrimeTipSpam = function(crimeTip, callback) {
 		var old = new Date("March 25, 1981 11:33:00");

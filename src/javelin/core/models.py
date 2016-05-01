@@ -239,6 +239,7 @@ class Agency(TimeStampedModel):
     mass_alert_available = models.BooleanField(default=True)
 
     objects = models.Manager()
+    geo = db_models.GeoManager()
 
     class Meta:
         ordering = ['name',]
@@ -379,6 +380,9 @@ class Region(models.Model):
     center_point = db_models.PointField(geography=True,
                                         null=True, blank=True)
     radius = models.FloatField(default=0)
+
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def __unicode__(self):
         return self.name
@@ -686,6 +690,7 @@ class AgencyUser(AbstractUser):
     REQUIRED_FIELDS = ['username',]
 
     objects = UserManager()
+    geo = db_models.GeoManager()
 
     def __unicode__(self):
         if self.email:
@@ -1050,6 +1055,8 @@ class SocialCrimeReport(TimeStampedModel):
                                   related_name="viewed_by",
                                   blank=True, null=True, on_delete=models.SET_NULL)
 
+    geo = db_models.GeoManager()
+
     def save(self, *args, **kwargs):
         if self.report_latitude and self.report_longitude:
             self.report_point = Point(self.report_longitude,
@@ -1082,6 +1089,9 @@ class StaticDevice(models.Model):
                               null=True, blank=True,
                               help_text="Will be used in the future to limit edit/updated permissions "
                                         "to a particular authorization token")
+
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def save(self, *args, **kwargs):
         if self.latitude and self.longitude:
@@ -1294,7 +1304,7 @@ user_activated.connect(set_email_verified)
 def closest_agency(point):
 
     dwithin = 20
-    qs = Agency.objects.select_related('agency_point_of_contact')\
+    qs = Agency.geo.select_related('agency_point_of_contact')\
         .filter(agency_center_point__dwithin=(point, D(mi=dwithin)))\
         .distance(point).order_by('distance')
 
