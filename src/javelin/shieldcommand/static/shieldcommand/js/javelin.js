@@ -480,8 +480,8 @@
 	Javelin.getUserProfileForUser = function(userID, callback) {
 		var request = Javelin.client.userprofiles.read({user: userID});
 		request.done(function(data) {
-			if (data['results'].length > 0) {
-				callback(new AgencyUserProfile(data['results'][0]));
+			if (data.results.length > 0) {
+				callback(new AgencyUserProfile(data.results[0]));
 			}
 			else {
 				callback(null);
@@ -492,7 +492,7 @@
     Javelin.getRegions = function(agencyID, callback) {
 		var request = Javelin.client.region.read({agency: agencyID});
 		request.done(function(data) {
-			if (data['results'].length > 0) {
+			if (data.results.length > 0) {
                 var allRegions = [];
                 for (var i = 0; i < data.results.length; i++) {
 				    newRegion = new Region(data.results[i]);
@@ -525,8 +525,8 @@
 			var retrievedAlerts = [];
             var latestDate = Javelin.lastCheckedAlertsTimestamp ||
                 createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
-                
-			if (data['results'].length > 0) {
+
+			if (data.results) {
                 for (var i = 0; i < data.results.length; i++) {
                     newAlert = new Alert(data.results[i]);
                     retrievedAlerts.push(newAlert);
@@ -578,8 +578,8 @@
 	Javelin.getLatestLocationForAlert = function(alertID, callback) {
 		var request = Javelin.client.alerts.read(alertID);
 		request.done(function(data) {
-			if (data && data['locations'].length > 0) {
-				latestLocation = new AlertLocation(data['locations'][0]);
+			if (data && data.locations.length > 0) {
+				latestLocation = new AlertLocation(data.locations[0]);
 				callback(latestLocation);
 			}
 			else {
