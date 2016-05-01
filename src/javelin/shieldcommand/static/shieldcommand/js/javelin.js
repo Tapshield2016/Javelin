@@ -480,7 +480,7 @@
 	Javelin.getUserProfileForUser = function(userID, callback) {
 		var request = Javelin.client.userprofiles.read({user: userID});
 		request.done(function(data) {
-			if (data.results.length > 0) {
+			if (data.results && data.results.length > 0) {
 				callback(new AgencyUserProfile(data.results[0]));
 			}
 			else {
@@ -492,7 +492,7 @@
     Javelin.getRegions = function(agencyID, callback) {
 		var request = Javelin.client.region.read({agency: agencyID});
 		request.done(function(data) {
-			if (data.results.length > 0) {
+			if (data.results && data.results.length > 0) {
                 var allRegions = [];
                 for (var i = 0; i < data.results.length; i++) {
 				    newRegion = new Region(data.results[i]);
@@ -510,10 +510,12 @@
 		var request = Javelin.client.agencies.read();
 		request.done(function (data) {
 			var retrievedAgencies = [];
-			for (var i = data.results.length - 1; i >= 0; i--) {
-				newAgency = new Agency(data.results[i]);
-				retrievedAgencies.push(newAgency);
-			}
+            if (data.results) {
+                for (var i = data.results.length - 1; i >= 0; i--) {
+				    newAgency = new Agency(data.results[i]);
+				    retrievedAgencies.push(newAgency);
+			    }
+            }
 			callback(retrievedAgencies);
 		});
 	};
@@ -663,8 +665,7 @@
 	};
 	
 	Javelin.getCrimeTips = function(options, callback) {
-		if ( ! Javelin.activeAgency)
- 		{
+		if ( ! Javelin.activeAgency) {
  			callback(null);
  		}
 
@@ -681,39 +682,33 @@
             allParameters.push(defaultOptions);
         }
 
-        var retrievedCrimeTips = [];
-        var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
-
         for (var i = allParameters.length - 1; i >= 0; i--) {
            var request = Javelin.client.crimetips.read(params=Javelin.$.extend(allParameters[i], options));
  		    request.done(function(data) {
 
- 			    for (var i = data.results.length - 1; i >= 0; i--) {
- 				    var newCrimeTip = new CrimeTip(data.results[i]);
- 				    var past24 = createPastTimestamp(24 * 3600);
- 				    var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
+                var retrievedCrimeTips = [];
+                var latestDate = Javelin.lastCheckedCrimeTipsTimestamp || createTimestampFromDate(new Date("March 25, 1981 11:33:00"));
+                if (data.results) {
+                    for (var i = data.results.length - 1; i >= 0; i--) {
+                        var newCrimeTip = new CrimeTip(data.results[i]);
+                        var past24 = createPastTimestamp(24 * 3600);
+                        var newCrimeTipDate = createTimestampFromDate(new Date(newCrimeTip.lastModified));
 
- 				    if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null)
- 				    {
- 				    	newCrimeTip.showPin = true;
- 				    }
+                        if (newCrimeTipDate >= past24 && newCrimeTip.flaggedSpam == false && newCrimeTip.viewedTime == null) {
+                            newCrimeTip.showPin = true;
+                        }
+                        retrievedCrimeTips.push(newCrimeTip);
 
-// 				    if (newCrimeTipDate < past24 && (newCrimeTip.flaggedSpam || newCrimeTip.viewedTime))
-//					{
-//						continue;
-//					}
-					
-					retrievedCrimeTips.push(newCrimeTip);
-
-				    if (newCrimeTipDate > latestDate) {
-				    	latestDate = newCrimeTipDate;
-				    }
-			    }
-			    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
-		    		Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
-		    	}
+                        if (newCrimeTipDate > latestDate) {
+                            latestDate = newCrimeTipDate;
+                        }
+                    }
+                    if (latestDate > Javelin.lastCheckedCrimeTipsTimestamp) {
+                        Javelin.lastCheckedCrimeTipsTimestamp = latestDate;
+                    }
+                }
                 callback(retrievedCrimeTips);
- 		    })
+            })
         }
 
  	};
