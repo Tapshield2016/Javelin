@@ -177,7 +177,14 @@ LOGGING = {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
+        'applogfile': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(PROJECT_DIR, 'javelin.log'),
+            'maxBytes': 1024 * 1024 * 15,  # 15MB
+            'backupCount': 10,
+        },
     },
     'loggers': {
         'django.request': {
@@ -185,7 +192,12 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+        'django': {
+            'handlers': ['applogfile'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
 }
 
 AUTH_USER_MODEL = 'core.AgencyUser'
