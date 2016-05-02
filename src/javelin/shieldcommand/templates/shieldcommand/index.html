@@ -27,7 +27,7 @@
 	<div class="container-full">
 		<div class="navbar-header">
 			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> </button>
-			{% if agency.branding.shield_command_logo %}
+			{% if agency.branding && agency.branding.shield_command_logo %}
 			    <a id="logo" href=""><img src="{{ branding.shield_command_logo }}" /></a> </div>
             {% else %}
                 <a id="logo" href=""><img src="{{ STATIC_URL }}shieldcommand/img/logo.png" /></a> </div>

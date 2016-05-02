@@ -179,7 +179,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'applogfile': {
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PROJECT_DIR, 'javelin.log'),
             'maxBytes': 1024 * 1024 * 15,  # 15MB
@@ -194,7 +194,7 @@ LOGGING = {
         },
         'django': {
             'handlers': ['applogfile'],
-            'level': 'DEBUG',
+            'level': 'ERROR',
             'propagate': True,
         },
     },
