@@ -232,7 +232,7 @@ class AlertAdmin(reversion_admin.VersionAdmin):
     ]
     list_select_related = ('agency',)
     search_fields = ['agency_user__username', 'agency__name', 'static_device__uuid',]
-    raw_id_fields = ("agency", "agency_user")
+    raw_id_fields = ("agency", "agency_user", 'agency_dispatcher', 'static_device')
 
 
 class MassAlertAdmin(admin.ModelAdmin):

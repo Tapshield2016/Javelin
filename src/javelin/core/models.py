@@ -446,8 +446,8 @@ class Alert(TimeStampedModel):
                                     related_name="alert_agency_user",
                                     blank=True, null=True)
     static_device = models.ForeignKey('StaticDevice',
-                                        related_name="static_device",
-                                        blank=True, null=True)
+                                      related_name="static_device",
+                                      blank=True, null=True)
     agency_dispatcher =\
         models.ForeignKey(settings.AUTH_USER_MODEL,
                           related_name="alert_agency_dispatcher",

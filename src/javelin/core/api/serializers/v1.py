@@ -22,8 +22,8 @@ class UserNotificationSerializer(serializers.HyperlinkedModelSerializer):
         model = UserNotification
         fields = ('url', 'user', 'title', 'message', 'type', 'read', 'creation_date',)
 
-    def to_native(self, obj):
-        ret = super(UserNotificationSerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        ret = super(UserNotificationSerializer, self).to_representation(obj)
 
         if obj:
             if obj.content_type:
@@ -129,8 +129,8 @@ class AgencySerializer(serializers.HyperlinkedModelSerializer):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
 
-    def to_native(self, obj):
-        ret = super(AgencySerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        ret = super(AgencySerializer, self).to_representation(obj)
         if obj:
             if obj.theme:
                 agency_theme = ThemeSerializer(instance=obj.theme,
@@ -157,8 +157,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members', 'distance')
 
-    def to_native(self, user):
-        ret = super(UserSerializer, self).to_native(user)
+    def to_representation(self, user):
+        ret = super(UserSerializer, self).to_representation(user)
         if user:
             email_address = EmailAddress.objects.filter(user=user)
             address = []
@@ -194,8 +194,8 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
                   'user_logged_in_via_social', 'entourage_members', 'location_timestamp',
                   'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level', 'distance')
 
-    def to_native(self, user):
-        ret = super(PostUserSerializer, self).to_native(user)
+    def to_representation(self, user):
+        ret = super(PostUserSerializer, self).to_representation(user)
         if user:
             email_address = EmailAddress.objects.filter(user=user)
             address = []
@@ -227,8 +227,8 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
                   'location_timestamp', 'latitude', 'longitude',
                   'accuracy', 'altitude', 'floor_level',)
 
-    def to_native(self, user):
-        ret = super(UserAlwaysVisibleEntourageMemberSerializer, self).to_native(user)
+    def to_representation(self, user):
+        ret = super(UserAlwaysVisibleEntourageMemberSerializer, self).to_representation(user)
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
@@ -246,8 +246,8 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
         fields = ('url', 'username', 'email', 'agency',
                   'phone_number', 'first_name', 'last_name')
 
-    def to_native(self, user):
-        ret = super(UserTrackingEntourageMemberSerializer, self).to_native(user)
+    def to_representation(self, user):
+        ret = super(UserTrackingEntourageMemberSerializer, self).to_representation(user)
         if user:
             active_session = EntourageSession.tracking.filter(user=user)
             if active_session:
@@ -312,8 +312,8 @@ class AlertSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Alert
 
-    def to_native(self, obj):
-        ret = super(AlertSerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        ret = super(AlertSerializer, self).to_representation(obj)
         if obj:
             if obj.agency_user:
                 agency_user_meta = UserSerializer(instance=obj.agency_user,
@@ -342,8 +342,8 @@ class AlertLimitedSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Alert
 
-    def to_native(self, obj):
-        ret = super(AlertLimitedSerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        ret = super(AlertLimitedSerializer, self).to_representation(obj)
         if obj:
             if obj.agency_user:
                 agency_user_meta = UnauthorizedUserSerializer(instance=obj.agency_user,
@@ -384,8 +384,8 @@ class SocialCrimeReportSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = SocialCrimeReport
 
-    def to_native(self, obj):
-        ret = super(SocialCrimeReportSerializer, self).to_native(obj)
+    def to_representation(self, obj):
+        ret = super(SocialCrimeReportSerializer, self).to_representation(obj)
         if obj:
 
             if obj.viewed_by:
