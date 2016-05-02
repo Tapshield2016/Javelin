@@ -6,7 +6,7 @@ ALLOWED_HOSTS = ['127.0.0.1:8000']
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'javelin',
+        'NAME': 'prod_copy',
         'USER': '',
         'PASSWORD': '',
         'HOST': 'localhost',

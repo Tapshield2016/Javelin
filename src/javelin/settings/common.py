@@ -179,7 +179,7 @@ LOGGING = {
             'class': 'django.utils.log.AdminEmailHandler'
         },
         'applogfile': {
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': os.path.join(PROJECT_DIR, 'javelin.log'),
             'maxBytes': 1024 * 1024 * 15,  # 15MB
@@ -194,7 +194,7 @@ LOGGING = {
         },
         'django': {
             'handlers': ['applogfile'],
-            'level': 'ERROR',
+            'level': 'DEBUG',
             'propagate': True,
         },
     },
@@ -232,9 +232,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',
                                 'rest_framework.filters.OrderingFilter',),
-    'PAGINATE_BY': 20,
+    'PAGE_SIZE': 20,
     'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 100
 }
 
 # django-registration
