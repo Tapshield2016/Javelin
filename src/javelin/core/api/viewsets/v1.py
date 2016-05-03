@@ -156,8 +156,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @detail_route(methods=['post', ])
     def message_entourage(self, request, pk=None):
-        message = request.DATA.get('message', None)
-        subject = request.DATA.get('subject', None)
+        message = request.data.get('message', None)
+        subject = request.data.get('subject', None)
         if message:
             user = self.get_object()
             entourage_members = user.entourage_members.all()
@@ -231,8 +231,8 @@ class UserViewSet(viewsets.ModelViewSet):
         deviceType -- iOS, Android, etc. Use 'I' for iOS, 'A' for Android.
         """
         if request.user.is_superuser or request.user.pk == int(pk):
-            device_token = request.DATA.get('deviceToken', None)
-            device_type = request.DATA.get('deviceType', None)
+            device_token = request.data.get('deviceToken', None)
+            device_type = request.data.get('deviceType', None)
             if not device_token:
                 return Response( \
                     {'message': 'deviceToken is a required parameter'},
@@ -260,7 +260,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def send_sms_verification_code(self, request, pk=None):
         if request.user.is_superuser or request.user.pk == int(pk):
-            phone_number = request.DATA.get('phone_number', None)
+            phone_number = request.data.get('phone_number', None)
             if not phone_number:
                 return Response( \
                     {'message': 'phone_number is a required parameter'},
@@ -302,7 +302,7 @@ class UserViewSet(viewsets.ModelViewSet):
         code -- The code to check
         """
         if request.user.is_superuser or request.user.pk == int(pk):
-            code = request.DATA.get('code', None)
+            code = request.data.get('code', None)
             if not code:
                 return Response( \
                     {'message': 'code is a required parameter'},
@@ -367,7 +367,7 @@ class UserViewSet(viewsets.ModelViewSet):
     @detail_route(methods=['post'])
     def locations(self, request, pk=None):
 
-        request_data = request.DATA
+        request_data = request.data
 
         user = self.get_object()
 
@@ -486,7 +486,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = qs.select_related('agency_point_of_contact') \
+            qs = qa.select_related('agency_point_of_contact') \
                 .filter(agency_center_point__dwithin=(point,
                                                       D(mi=dwithin))) \
                 .distance(point).order_by('distance')
@@ -507,7 +507,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
         message -- The message to send
         """
-        message = request.DATA.get('message', None)
+        message = request.data.get('message', None)
         if not message:
             return Response({'message': 'message is a required parameter'},
                             status=status.HTTP_400_BAD_REQUEST)
@@ -604,7 +604,7 @@ class AlertViewSet(viewsets.ModelViewSet):
 
         message -- The message to send
         """
-        message = request.DATA.get('message', None)
+        message = request.data.get('message', None)
         if message:
             message_id = str(uuid.uuid1())
             dynamo_db = DynamoDBManager()
@@ -666,7 +666,7 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
 
         active_alerts = Alert.active.filter(agency_user=request.user)
 
-        serializer = self.get_serializer(data=request.DATA, files=request.FILES)
+        serializer = self.get_serializer(data=request.data, files=request.FILES)
 
         if serializer.is_valid():
             self.pre_save(serializer.object)
@@ -755,7 +755,7 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
                 session.status = "U"
                 session.save()
 
-        request_data = request.DATA.copy()
+        request_data = request.data.copy()
         request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
 
         start_location_serialized = NamedLocationSerializer(data=request_data['start_location'],
@@ -845,7 +845,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
     def create(self, request):
 
-        request_data = request.DATA.copy()
+        request_data = request.data.copy()
         request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
         agency_id = request_data.get('agency', None)
 
@@ -875,39 +875,39 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
 
-        mutable = request.DATA._mutable
-        request.DATA._mutable = True
-        request.DATA['user'] = UserSerializer(request.user, context={'request': request}).data['url']
-        agency_id = request.DATA.get('agency', None)
+        mutable = request.data._mutable
+        request.data._mutable = True
+        request.data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
+        agency_id = request.data.get('agency', None)
 
         agency = None
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request.DATA['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
+            request.data['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
         else:
-            request.DATA['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
+            request.data['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
 
-        request.DATA._mutable = mutable
+        request.data._mutable = mutable
 
         return super(StaticDeviceViewSet, self).update(request, *args, **kwargs)
 
     def partial_update(self, request, *args, **kwargs):
 
-        mutable = request.DATA._mutable
-        request.DATA._mutable = True
-        request.DATA['user'] = UserSerializer(request.user, context={'request': request}).data['url']
-        agency_id = request.DATA.get('agency', None)
+        mutable = request.data._mutable
+        request.data._mutable = True
+        request.data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
+        agency_id = request.data.get('agency', None)
 
         agency = None
         if agency_id:
             agency = get_agency_from_unknown(agency_id)
         if agency:
-            request.DATA['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
+            request.data['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
         else:
-            request.DATA['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
+            request.data['agency'] = StaticDeviceSerializer(self, context={'request': request}).data['agency']
 
-        request.DATA._mutable = mutable
+        request.data._mutable = mutable
 
         return super(StaticDeviceViewSet, self).partial_update(request, *args, **kwargs)
 

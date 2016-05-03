@@ -92,7 +92,7 @@ def register_user(request):
     last_name -- (Optional) The user's last name
 
     """
-    request_data = request.DATA.copy()
+    request_data = request.data.copy()
     agency_id = request_data.get('agency', None)
     agency = None
     if agency_id:
@@ -156,7 +156,7 @@ def resend_verification_email(request):
 
     email -- (Required) The email address of the user requesting resending.
     """
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
     message = "Ok"
     response_status = status.HTTP_200_OK
     if email:
@@ -370,7 +370,7 @@ def create_facebook_user(request):
     allauth.socialaccount.providers.facebook.views.login_by_token           
     as of allauth 0.15.0.                                                   
     """
-    form = FacebookConnectForm(request.DATA)
+    form = FacebookConnectForm(request.data)
     if form.is_valid():
         try:
             app = providers.registry.by_id(FacebookProvider.id) \
@@ -407,8 +407,8 @@ def create_facebook_user(request):
 def create_twitter_user(request):
     app = providers.registry.by_id(TwitterProvider.id) \
         .get_app(request)
-    oauth_token = request.DATA.get('oauth_token')
-    oauth_token_secret = request.DATA.get('oauth_token_secret')
+    oauth_token = request.data.get('oauth_token')
+    oauth_token_secret = request.data.get('oauth_token_secret')
     token = SocialToken(app=app,
                         token=oauth_token,
                         token_secret=oauth_token_secret)
@@ -441,8 +441,8 @@ def create_twitter_user(request):
 def create_google_user(request):
     app = providers.registry.by_id(GoogleProvider.id) \
         .get_app(request)
-    access_token = request.DATA.get('access_token')
-    refresh_token = request.DATA.get('refresh_token')
+    access_token = request.data.get('access_token')
+    refresh_token = request.data.get('refresh_token')
     token = SocialToken(app=app,
                         token=access_token)
     adapter = GoogleOAuth2Adapter()
@@ -468,7 +468,7 @@ def create_google_user(request):
 def create_linkedin_user(request):
     app = providers.registry.by_id(LinkedInOAuth2Provider.id) \
         .get_app(request)
-    access_token = request.DATA.get('access_token')
+    access_token = request.data.get('access_token')
     token = SocialToken(app=app,
                         token=access_token)
     adapter = LinkedInOAuth2Adapter()
@@ -693,7 +693,7 @@ def static_device_form(request):
 @api_view(['POST'])
 def create_alert(request):
 
-    request_data = request.DATA.copy()
+    request_data = request.data.copy()
 
     if request_data:
         request_data['user'] = request.user.username
@@ -738,7 +738,7 @@ def set_entourage_members(request):
 
     current_members = []
 
-    for member in request.DATA:
+    for member in request.data:
 
         member['user'] = UserSerializer(request.user, context={'request': request}).data['url']
         serializer = EntourageMemberSerializer(data=member, context={'request': request})
