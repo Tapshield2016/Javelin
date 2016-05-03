@@ -1,4 +1,4 @@
-from api.serializers.v1 import UserSerializer
+from src.javelin.core.api.serializers.v1 import UserSerializer
 from django.contrib.auth import get_user_model
 
 from allauth.exceptions import ImmediateHttpResponse
