@@ -1,4 +1,4 @@
-from .api.serializers.v1 import UserSerializer
+from api.serializers.v1 import UserSerializer
 from django.contrib.auth import get_user_model
 
 from allauth.exceptions import ImmediateHttpResponse

@@ -435,7 +435,6 @@ def create_twitter_user(request):
                     status=status.HTTP_201_CREATED)
 
 
-
 @api_view(['POST'])
 def create_google_user(request):
     app = providers.registry.by_id(GoogleProvider.id) \
