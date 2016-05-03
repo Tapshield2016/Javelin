@@ -30,8 +30,7 @@ from allauth.socialaccount.providers.facebook.forms import FacebookConnectForm
 from allauth.socialaccount.providers.facebook.provider import FacebookProvider
 from allauth.socialaccount.providers.facebook.views import fb_complete_login
 from allauth.socialaccount.providers.twitter.provider import TwitterProvider
-from allauth.socialaccount.providers.twitter.views import (TwitterAPI,
-                                                           TwitterOAuthAdapter)
+from allauth.socialaccount.providers.twitter.views import TwitterOAuthAdapter
 
 from allauth.socialaccount.helpers import complete_social_login
 
@@ -415,7 +414,7 @@ def create_twitter_user(request):
     request.session['oauth_api.twitter.com_access_token'] =\
         {"oauth_token": oauth_token,
          "oauth_token_secret": oauth_token_secret}
-    adapter = TwitterOAuthAdapter()
+    adapter = TwitterOAuthAdapter(request)
     login = adapter.complete_login(request, app, token)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
@@ -445,7 +444,7 @@ def create_google_user(request):
     refresh_token = request.data.get('refresh_token')
     token = SocialToken(app=app,
                         token=access_token)
-    adapter = GoogleOAuth2Adapter()
+    adapter = GoogleOAuth2Adapter(request)
     login = adapter.complete_login(request, app, token)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
@@ -471,7 +470,7 @@ def create_linkedin_user(request):
     access_token = request.data.get('access_token')
     token = SocialToken(app=app,
                         token=access_token)
-    adapter = LinkedInOAuth2Adapter()
+    adapter = LinkedInOAuth2Adapter(request)
     login = adapter.complete_login(request, app, token)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
