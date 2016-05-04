@@ -506,8 +506,8 @@ class Alert(TimeStampedModel):
             name = u"%s" % self.agency_user.username
         return name
 
-    @transaction.atomic()
-    @reversion.create_revision()
+    # @transaction.atomic()
+    # @reversion.create_revision()
     def save(self, *args, **kwargs):
         from notifications import send_called_emergency_notifications, send_yank_alert_notifications
         super(Alert, self).save(*args, **kwargs)
