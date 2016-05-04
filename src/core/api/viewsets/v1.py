@@ -486,7 +486,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = qa.select_related('agency_point_of_contact') \
+            qs = qs.select_related('agency_point_of_contact') \
                 .filter(agency_center_point__dwithin=(point,
                                                       D(mi=dwithin))) \
                 .distance(point).order_by('distance')
