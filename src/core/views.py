@@ -47,7 +47,7 @@ from twilio.util import TwilioCapability
 from models import (Agency, EntourageMember, StaticDevice, Alert)
 from forms import (AgencySettingsForm, StaticDeviceForm)
 from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
-                                EntourageMemberSerializer, StaticDeviceSerializer)
+                                EntourageMemberSerializer, StaticDeviceSerializer, UserLoginSerializer)
 
 from tasks import new_static_alert
 from utils import group_required
@@ -242,12 +242,7 @@ def login(request):
 
     if request.user.is_authenticated():
         status = 200
-        serialized = UserSerializer(request.user, context={'request': request})
-        token, created = Token.objects.get_or_create(user=user)
-        serialized.data['token'] = token.key
-        if request.user.agency:
-            serialized.data['agency'] = \
-                AgencySerializer(request.user.agency, context={'request': request}).data
+        serialized = UserLoginSerializer(request.user, context={'request': request})
         message = json.dumps(serialized.data, cls=DjangoJSONEncoder)
     else:
         status = 401
@@ -368,31 +363,25 @@ def create_facebook_user(request):
     """
     form = FacebookConnectForm(request.data)
     if form.is_valid():
-        # try:
-        app = providers.registry.by_id(FacebookProvider.id) \
-            .get_app(request)
-        access_token = form.cleaned_data['access_token']
-        token = SocialToken(app=app,
-                            token=access_token)
-        login = fb_complete_login(request, app, token)
-        login.token = token
-        login.state = SocialLogin.state_from_request(request)
-        complete_social_login(request, login)
-        user = set_necessary_fields_on_social_user(login.account.user)
+        try:
+            app = providers.registry.by_id(FacebookProvider.id) \
+                .get_app(request)
+            access_token = form.cleaned_data['access_token']
+            token = SocialToken(app=app,
+                                token=access_token)
+            login = fb_complete_login(request, app, token)
+            login.token = token
+            login.state = SocialLogin.state_from_request(request)
+            complete_social_login(request, login)
+            user = set_necessary_fields_on_social_user(login.account.user)
 
-        serialized = UserSerializer(user, context={'request': request})
-        if user.agency:
-            serialized.data['agency'] = \
-                AgencySerializer(user.agency, context={'request': request}).data
+            serialized = UserLoginSerializer(user, context={'request': request})
 
-        token, created = Token.objects.get_or_create(user=user)
-        serialized.data['token'] = token.key
+            return Response(serialized.data,
+                            status=status.HTTP_201_CREATED)
 
-        return Response(serialized.data,
-                        status=status.HTTP_201_CREATED)
-
-        # except requests.RequestException:
-        #     errors = {'access_token': ['Error accessing FB user profile.']}
+        except requests.RequestException:
+            errors = {'access_token': ['Error accessing FB user profile.']}
     else:
         errors = dict(form.errors.items())
 
@@ -419,13 +408,7 @@ def create_twitter_user(request):
     user = set_necessary_fields_on_social_user(login.account.user)
     user.save()
 
-    serialized = UserSerializer(user, context={'request': request})
-    if user.agency:
-        serialized.data['agency'] = \
-            AgencySerializer(user.agency, context={'request': request}).data
-
-    token, created = Token.objects.get_or_create(user=user)
-    serialized.data['token'] = token.key
+    serialized = UserLoginSerializer(user, context={'request': request})
 
     return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
@@ -446,13 +429,7 @@ def create_google_user(request):
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
 
-    serialized = UserSerializer(user, context={'request': request})
-    if user.agency:
-        serialized.data['agency'] = \
-            AgencySerializer(user.agency, context={'request': request}).data
-
-    token, created = Token.objects.get_or_create(user=user)
-    serialized.data['token'] = token.key
+    serialized = UserLoginSerializer(user, context={'request': request})
 
     return Response(serialized.data,
                     status=status.HTTP_201_CREATED)
@@ -472,7 +449,7 @@ def create_linkedin_user(request):
     complete_social_login(request, login)
     user = set_necessary_fields_on_social_user(login.account.user)
 
-    serialized = UserSerializer(user, context={'request': request})
+    serialized = UserLoginSerializer(user, context={'request': request})
     if user.agency:
         serialized.data['agency'] = \
             AgencySerializer(user.agency, context={'request': request}).data

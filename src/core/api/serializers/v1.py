@@ -11,6 +11,7 @@ from django.contrib.auth.models import Group
 from django.core.exceptions import ObjectDoesNotExist
 
 from rest_framework import serializers
+from rest_framework.authtoken.models import Token
 
 User = get_user_model()
 
@@ -165,6 +166,19 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     def distance_if_exists(self, obj):
         if getattr(obj, 'distance', None):
             return obj.distance.mi
+
+
+class UserLoginSerializer(UserSerializer):
+    def to_representation(self, user):
+        ret = super(UserLoginSerializer, self).to_representation(user)
+        if user:
+            if user.agency:
+                ret['agency'] = AgencySerializer(user.agency,
+                                                 context={'request': self.context.get('request', None)}).data
+            token, created = Token.objects.get_or_create(user=user)
+            ret['token'] = token.key
+
+        return ret
 
 
 class PostUserSerializer(serializers.HyperlinkedModelSerializer):
