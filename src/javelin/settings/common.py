@@ -296,6 +296,21 @@ SOCIALACCOUNT_PROVIDERS = {
                                            'email-address',
                                            'picture-url',
                                            'public-profile-url']},
+    'facebook':
+        {'METHOD': 'oauth2',
+         'SCOPE': ['email', 'public_profile'],
+         'AUTH_PARAMS': {'auth_type': 'reauthenticate'},
+         'FIELDS': [
+             'id',
+             'email',
+             'name',
+             'first_name',
+             'last_name',
+             'verified',],
+         'EXCHANGE_TOKEN': True,
+         'LOCALE_FUNC': 'path.to.callable',
+         'VERIFIED_EMAIL': False,
+         'VERSION': 'v2.4'},
 }
 
 SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'
