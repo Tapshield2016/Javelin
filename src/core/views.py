@@ -369,27 +369,27 @@ def create_facebook_user(request):
     form = FacebookConnectForm(request.data)
     if form.is_valid():
         # try:
-            app = providers.registry.by_id(FacebookProvider.id) \
-                .get_app(request)
-            access_token = form.cleaned_data['access_token']
-            token = SocialToken(app=app,
-                                token=access_token)
-            login = fb_complete_login(request, app, token)
-            login.token = token
-            login.state = SocialLogin.state_from_request(request)
-            complete_social_login(request, login)
-            user = set_necessary_fields_on_social_user(login.account.user)
+        app = providers.registry.by_id(FacebookProvider.id) \
+            .get_app(request)
+        access_token = form.cleaned_data['access_token']
+        token = SocialToken(app=app,
+                            token=access_token)
+        login = fb_complete_login(request, app, token)
+        login.token = token
+        login.state = SocialLogin.state_from_request(request)
+        complete_social_login(request, login)
+        user = set_necessary_fields_on_social_user(login.account.user)
 
-            serialized = UserSerializer(user, context={'request': request})
-            if user.agency:
-                serialized.data['agency'] = \
-                    AgencySerializer(user.agency, context={'request': request}).data
+        serialized = UserSerializer(user, context={'request': request})
+        if user.agency:
+            serialized.data['agency'] = \
+                AgencySerializer(user.agency, context={'request': request}).data
 
-            token, created = Token.objects.get_or_create(user=user)
-            serialized.data['token'] = token.key
+        token, created = Token.objects.get_or_create(user=user)
+        serialized.data['token'] = token.key
 
-            return Response(serialized.data,
-                            status=status.HTTP_201_CREATED)
+        return Response(serialized.data,
+                        status=status.HTTP_201_CREATED)
 
         # except requests.RequestException:
         #     errors = {'access_token': ['Error accessing FB user profile.']}
