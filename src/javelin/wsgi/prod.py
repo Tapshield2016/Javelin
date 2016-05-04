@@ -17,7 +17,7 @@ import os
 import sys
 from django.core.wsgi import get_wsgi_application
 
-sys.path.append('/srv/www/javelin')
+sys.path.append('/srv/www/javelin/src')
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "javelin.settings.prod")
 

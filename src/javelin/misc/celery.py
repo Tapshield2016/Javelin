@@ -7,7 +7,7 @@ from celery import Celery
 
 from django.conf import settings
 
-sys.path.append('/srv/www/javelin/')
+sys.path.append('/srv/www/javelin/src')
 
 
 # set the default Django settings module for the 'celery' program.
