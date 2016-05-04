@@ -17,7 +17,6 @@ class Command(BaseCommand):
             help='The numerical ID of the agency to report on'),
         )
 
-
     def handle(self, *args, **options):
         agency_id = int(options['agency'])
         agency = Agency.objects.get(pk=agency_id)

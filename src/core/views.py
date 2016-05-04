@@ -368,7 +368,7 @@ def create_facebook_user(request):
     """
     form = FacebookConnectForm(request.data)
     if form.is_valid():
-        try:
+        # try:
             app = providers.registry.by_id(FacebookProvider.id) \
                 .get_app(request)
             access_token = form.cleaned_data['access_token']
@@ -391,8 +391,8 @@ def create_facebook_user(request):
             return Response(serialized.data,
                             status=status.HTTP_201_CREATED)
 
-        except requests.RequestException:
-            errors = {'access_token': ['Error accessing FB user profile.']}
+        # except requests.RequestException:
+        #     errors = {'access_token': ['Error accessing FB user profile.']}
     else:
         errors = dict(form.errors.items())
 
