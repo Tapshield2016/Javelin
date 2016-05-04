@@ -104,7 +104,7 @@ def new_alert(message):
         incoming_alert_location.save()
 
         message_valid = True
-        serialized = AlertSerializer(instance=incoming_alert)
+        serialized = AlertSerializer(instance=incoming_alert, context={'request': None})
 
         if incoming_alert.status != "U" and incoming_alert.initiated_by != "C":
             notify_alert_received.delay(serialized.data['url'],
