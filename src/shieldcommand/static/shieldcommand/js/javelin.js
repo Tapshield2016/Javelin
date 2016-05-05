@@ -385,6 +385,7 @@
 
 		Javelin.client.add('alerts');
         Javelin.client.alerts.add('complete');
+        Javelin.client.alerts.add('claim');
 		Javelin.client.alerts.add('send_message');
 		Javelin.client.alerts.add('messages');
 		Javelin.client.alerts.add('messages_since');
@@ -417,10 +418,7 @@
 	};
 
 	Javelin.claimAlertForActiveUser = function(alertID, callback) {
-		var request = Javelin.client.alerts.patch(alertID, {
-			agency_dispatcher: Javelin.activeAgencyUser.url,
-			status: 'A'
-		});
+		var request = Javelin.client.alerts.claim.create(alertID);
 		request.done(function(data) {
 			callback(data);
 		});

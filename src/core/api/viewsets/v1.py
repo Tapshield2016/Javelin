@@ -550,6 +550,27 @@ class AlertViewSet(viewsets.ModelViewSet):
     filter_class = AlertsModifiedSinceFilterBackend
 
     @detail_route(methods=['post'])
+    def claim(self, request, pk=None):
+        """
+        Set an alert to dispatcher.
+        """
+        alert = self.get_object()
+
+        if not request.user.is_superuser:
+            if request.user.groups.filter(name='Dispatchers').count() == 0:
+                raise PermissionDenied
+        if alert.agency_user == request.user:
+            raise PermissionDenied
+
+        alert.agency_dispatcher = request.user
+
+        alert.status = 'A'
+        alert.save()
+        serialized = AlertSerializer(alert, context={'request': request})
+
+        return Response(serialized.data)
+
+    @detail_route(methods=['post'])
     def complete(self, request, pk=None):
         """
         Set a alert completed.
