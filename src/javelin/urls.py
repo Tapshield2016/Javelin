@@ -11,7 +11,7 @@ from allauth import urls as allauth_urls
 from core import urls as core_urls
 from shieldcommand import urls as shieldcommand_urls
 
-from grappelli import urls as grappelli_urls
+# from grappelli import urls as grappelli_urls
 from registration.backends.default import urls as registration_urls
 
 from django.contrib import admin
@@ -22,7 +22,7 @@ admin.autodiscover()
 urlpatterns = [
 
     # (r'^admin/filebrowser/', include(site.urls)),
-    url(r'^grappelli/', include(grappelli_urls)), # grappelli URLS
+    # url(r'^grappelli/', include(grappelli_urls)), # grappelli URLS
 
     url(r'^accounts/password/reset/$',
         auth_views.password_reset,
