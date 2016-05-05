@@ -131,10 +131,11 @@ def send_phone_number_verification(phone_number, verification_code):
     if len(phone_number) > 10:
         text_number = "+%s" % phone_number
 
-    resp = twilio_client.messages.create( \
+    _ = twilio_client.messages.create(
         to=text_number,
         from_=settings.TWILIO_SMS_FROM_NUMBER,
-        body="Your TapShield verification code is: %s" % verification_code)
+        body="Your TapShield verification code is: %s" % verification_code
+    )
 
 
 @task
@@ -211,15 +212,6 @@ def request_location_from_agency_topic_members(agency_topic_arn, message):
 
 
 @task
-def request_location_from_single_agency_member(device_type,
-                                               device_endpoint_arn):
-    sns = SNSManager()
-    app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_location_report_topic_message_json(app_endpoint)
-    return sns.publish_to_device(msg, device_endpoint_arn)
-
-
-@task
 def publish_to_device(device_endpoint_arn, message):
     sns = SNSManager()
     return sns.publish_to_device(message, device_endpoint_arn)
@@ -238,8 +230,13 @@ def notify_alert_completed(message, alert_id, device_type, device_endpoint_arn):
 def notify_alert_received(alert_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, "The authorities have been notified of your emergency, and help is on the way!",
-                               "alert-received", alert_id, "Alert Received")
+    msg = sns.get_message_json(
+        app_endpoint,
+        "The authorities have been notified of your emergency, and help is on the way!",
+        "alert-received",
+        alert_id,
+        "Alert Received"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -254,33 +251,45 @@ def notify_new_chat_message_available(chat_message, chat_message_id,
 
 
 @task
-def notify_crime_report_marked_viewed(message, user_id,
-                                      device_type, device_endpoint_arn):
+def notify_crime_report_marked_viewed( message, user_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "crime-report", user_id, "Crime Report Viewed")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "crime-report",
+        user_id,
+        "Crime Report Viewed"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
 
 @task
-def notify_user_added_to_entourage(message, user_id,
-                                   device_type, device_endpoint_arn):
+def notify_user_added_to_entourage(message, user_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "entourage-added", user_id, "Entourage Member Added")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "entourage-added",
+        user_id,
+        "Entourage Member Added"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
 @task
-def notify_user_called_emergency_number(message, user_id,
-                                        device_type, device_endpoint_arn):
+def notify_user_called_emergency_number(message, user_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "entourage-emergency-call", user_id, "Emergency Call Alert")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "entourage-emergency-call",
+        user_id,
+        "Emergency Call Alert"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -289,8 +298,13 @@ def notify_user_arrived_at_destination(message, user_id,
                                        device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "entourage-arrived", user_id, "Arrival")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "entourage-arrived",
+        user_id,
+        "Arrival"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
@@ -299,20 +313,28 @@ def notify_user_failed_arrival(message, user_id,
                                device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "entourage-non-arrival", user_id, "Non-Arrival")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "entourage-non-arrival",
+        user_id,
+        "Non-Arrival"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
 
 
 @task
-def notify_user_yank_alert(message, user_id,
-                           device_type, device_endpoint_arn):
+def notify_user_yank_alert(message, user_id, device_type, device_endpoint_arn):
     sns = SNSManager()
     app_endpoint = settings.SNS_APP_ENDPOINTS.get(device_type, None)
-    msg = sns.get_message_json(app_endpoint, message,
-                               "entourage-yank", user_id, "Yank Alert")
+    msg = sns.get_message_json(
+        app_endpoint,
+        message,
+        "entourage-yank",
+        user_id,
+        "Yank Alert"
+    )
     sns.publish_to_device(msg, device_endpoint_arn)
-
 
 
 @task

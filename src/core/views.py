@@ -235,8 +235,9 @@ def login(request):
                             pass
                     return response
                 if not user.is_active:
-                    return HttpResponseForbidden( \
-                        content='Your account is not active.')
+                    return HttpResponseForbidden(
+                        content='Your account is not active.'
+                    )
         else:
             login_failed = True
 
@@ -323,7 +324,7 @@ def agency_settings_form(request):
         if form.is_valid():
             form.save()
             if request.is_ajax():
-                return HttpResponse("OK");
+                return HttpResponse("OK")
             else:
                 return HttpResponseRedirect("%s?agency_id=%d" % (reverse('core_agency_settings'), agency_id))
     else:
@@ -401,7 +402,7 @@ def create_twitter_user(request):
         {"oauth_token": oauth_token,
          "oauth_token_secret": oauth_token_secret}
     adapter = TwitterOAuthAdapter(request)
-    login = adapter.complete_login(request, app, token)
+    login = adapter.complete_login(request, app, token, None)
     login.token = token
     login.state = SocialLogin.state_from_request(request)
     complete_social_login(request, login)

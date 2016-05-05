@@ -4,6 +4,24 @@ from django.template.defaultfilters import slugify
 from boto.sns import SNSConnection
 
 
+def ios_message_json(message_body, alert_type, alert_id):
+    prefix = """"{\\"aps\\": {\\"alert\\": """
+    middle = """{\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}""" % (
+        message_body,
+        alert_type,
+        alert_id
+    )
+    post = """, \\"badge\\": 1, \\"sound\\": \\"default\\"}}", """
+    return prefix + middle + post
+
+def android_message_json(message_body, alert_type, alert_id):
+    msg_android = """ "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}" """
+    return msg_android % (
+        message_body,
+        alert_type,
+        alert_id
+    )
+
 class SNSManager(object):
 
     def __init__(self):
@@ -42,29 +60,36 @@ class SNSManager(object):
                                        message_structure='json',
                                        topic=agency_topic_arn)
 
-    def get_topic_message_json(self, message_body, alert_type, alert_id):
-        msg_json ="""{"default": \"%s\", "%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 1, \\"sound\\": \\"default\\"}}", "%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}"}""" % (message_body, settings.SNS_IOS_PLATFORM, message_body, alert_type, alert_id, settings.SNS_ANDROID_PLATFORM, message_body, alert_type, alert_id)
+    @staticmethod
+    def get_topic_message_json(message_body, alert_type, alert_id):
+        msg_json = """{"default": \"%s\", "%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 1, \\"sound\\": \\"default\\"}}", "%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}}"}""" % (
+            message_body,
+            settings.SNS_IOS_PLATFORM,
+            message_body, alert_type,
+            alert_id, settings.SNS_ANDROID_PLATFORM,
+            message_body,
+            alert_type,
+            alert_id
+        )
         return msg_json
 
-    def get_message_json(self, endpoint, message_body, alert_type, alert_id, title):
+    @staticmethod
+    def get_message_json(endpoint, message_body, alert_type, alert_id, title):
         if endpoint == settings.SNS_APP_ENDPOINTS["I"]:
-            msg_json = """{"%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 1, \\"sound\\": \\"default\\", \\"content-available\\": 1}}"}""" % (endpoint, message_body, alert_type, alert_id)
+            msg_json = """{"%s": "{\\"aps\\": {\\"alert\\": {\\"body\\":\\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\"}, \\"badge\\": 1, \\"sound\\": \\"default\\", \\"content-available\\": 1}}"}""" % (
+                endpoint,
+                message_body,
+                alert_type,
+                alert_id
+            )
         elif endpoint == settings.SNS_APP_ENDPOINTS["A"]:
-            msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\", \\"title\\": \\"%s\\"}}"}""" % (endpoint, message_body, alert_type, alert_id, title)
+            msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"%s\\", \\"alert_type\\": \\"%s\\", \\"alert_id\\": \\"%s\\", \\"title\\": \\"%s\\"}}"}""" % (
+                endpoint,
+                message_body,
+                alert_type,
+                alert_id,
+                title
+            )
         else:
             msg_json = """{"default": "%s"}""" % message_body
-        return msg_json
-
-    # location reporting
-    def get_location_report_topic_message_json(self):
-        msg_json = """{"default": \"location-report\", "%s": "{\\"aps\\": {\\"content-available\\": 1}, \\"alert_type\\": \\"location-report\\"}, "%s": "{ \\"data\\": { \\"message\\": \\"location-report\\", \\"alert_type\\": \\"location-report\\"}}}""" % ("content-available", settings.SNS_IOS_PLATFORM, settings.SNS_ANDROID_PLATFORM)
-        return msg_json
-
-    def get_location_report_message_json(self, endpoint):
-        if endpoint == settings.SNS_APP_ENDPOINTS["I"]:
-            msg_json = """{"%s": "{\\"aps\\": {\\"content-available\\": 1}, \\"alert_type\\": \\"location-report\\"}"}""" % (endpoint)
-        elif endpoint == settings.SNS_APP_ENDPOINTS["A"]:
-            msg_json = """{"%s": "{ \\"data\\": { \\"message\\": \\"location-report\\", \\"alert_type\\": \\"location-report\\"}}"}""" % (endpoint)
-        else:
-            msg_json = """{"default": "location-report"}"""
         return msg_json
