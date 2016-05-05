@@ -139,6 +139,7 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_fields = ('agency',)
     permission_classes = (IsRequestUserOrDispatcher, IsAuthenticated,)
     serializer_class = UserSerializer
+    queryset = AgencyUser.objects.none()
 
     def get_serializer_class(self):
 
@@ -431,22 +432,21 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
     model = SocialCrimeReport
     serializer_class = SocialCrimeReportSerializer
     filter_class = SocialCrimeReportModifiedSinceFilterBackend
+    queryset = SocialCrimeReport.objects.none()
 
     def get_queryset(self):
 
-        qs = SocialCrimeReport.geo.all()
         latitude = self.request.query_params.get('latitude', None)
         longitude = self.request.query_params.get('longitude', None)
-        distance_within = \
-            self.request.query_params.get('distance_within', None)
+        distance_within = self.request.query_params.get('distance_within', None)
         if (latitude and longitude) and distance_within:
             point = Point(float(longitude), float(latitude))
             dwithin = float(distance_within)
-            qs = qs.filter(report_point__dwithin=(point, D(mi=dwithin))).distance(point).order_by('distance')
+            return SocialCrimeReport.geo.filter(report_point__dwithin=(point, D(mi=dwithin))).distance(point).order_by('distance')
         elif latitude or longitude or distance_within:
             # We got one or more values but not all we need, so return none
-            qs = SocialCrimeReport.objects.none()
-        return qs
+            return SocialCrimeReport.objects.none()
+        return SocialCrimeReport.objects.all()
 
     @detail_route(methods=['post'])
     def mark_viewed(self, request, pk=None):
@@ -482,6 +482,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
     serializer_class = AgencySerializer
     filter_backends = (SearchFilter,)
     search_fields = ('domain',)
+    queryset = Agency.objects.none()
 
     def get_queryset(self):
         qs = Agency.geo.all()

@@ -44,7 +44,7 @@ urlpatterns = [
                                namespace='rest_framework')),
     url(r'^api/retrieve-token/$',
         obtain_auth_token),
-    url(r'^api/', include(core_urls)),
+    url(r'^api/', include(core_urls)), #, namespace='api')),
     url(r'^docs/', include(rest_framework_swagger_urls)),
     url(r'^social-accounts/', include(allauth_urls)),
     url(r'^', include(shieldcommand_urls)),
