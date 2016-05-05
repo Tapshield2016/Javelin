@@ -517,7 +517,7 @@ class Alert(TimeStampedModel):
 
             if self.agency_user:
                 try:
-                    profile = self.agency_user.user_profile
+                    profile = self.agency_user.profile
                     profile.save()
                     profile.delete()
                 except UserProfile.DoesNotExist:
@@ -964,7 +964,7 @@ class UserProfile(models.Model):
         ('O', 'Other'),
     )
 
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="profile")
     birthday = models.DateField(null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     hair_color = models.CharField(max_length=2, choices=HAIR_COLOR_CHOICES,
