@@ -7,6 +7,8 @@ import django_filters
 from django_twilio.client import twilio_client
 from twilio import TwilioRestException
 
+from django.db import transaction
+
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
@@ -20,30 +22,33 @@ from rest_framework import generics
 from rest_framework import permissions
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework import status, viewsets, ISO_8601
-from rest_framework.decorators import detail_route, list_route
+from rest_framework.decorators import detail_route
 from rest_framework.filters import SearchFilter
 from rest_framework.response import Response
 
-from core.api.serializers.v1 import (UserSerializer, GroupSerializer,
-                              AgencySerializer, AlertSerializer,
-                              AlertLocationSerializer,
-                              ChatMessageSerializer,
-                              MassAlertSerializer,
-                              UserProfileSerializer,
-                              SocialCrimeReportSerializer,
-                              EntourageMemberSerializer,
-                              UnauthorizedEntourageMemberSerializer,
-                              RegionSerializer,
-                              DispatchCenterSerializer,
-                              PeriodSerializer,
-                              ClosedDateSerializer,
-                              StaticDeviceSerializer, ThemeSerializer,
-                              EntourageSessionSerializer, TrackingLocationSerializer,
-                              NamedLocationSerializer,
-                              UserNoLocationEntourageMemberSerializer, UserTrackingEntourageMemberSerializer,
-                              UserAlwaysVisibleEntourageMemberSerializer, PostUserSerializer,
-                              TrackingLocationFullSerializer, EntourageSessionPostSerializer,
-                              UserNotificationSerializer)
+from core.api.serializers.v1 import (UserSerializer,
+                                     GroupSerializer,
+                                     AgencySerializer, AlertSerializer,
+                                     AlertLocationSerializer,
+                                     ChatMessageSerializer,
+                                     MassAlertSerializer,
+                                     UserProfileSerializer,
+                                     SocialCrimeReportSerializer,
+                                     EntourageMemberSerializer,
+                                     RegionSerializer,
+                                     DispatchCenterSerializer,
+                                     PeriodSerializer,
+                                     ClosedDateSerializer,
+                                     StaticDeviceSerializer, ThemeSerializer,
+                                     EntourageSessionSerializer,
+                                     NamedLocationSerializer,
+                                     UserNoLocationEntourageMemberSerializer,
+                                     UserTrackingEntourageMemberSerializer,
+                                     UserAlwaysVisibleEntourageMemberSerializer,
+                                     PostUserSerializer,
+                                     TrackingLocationFullSerializer,
+                                     EntourageSessionPostSerializer,
+                                     UserNotificationSerializer)
 
 from core.aws.dynamodb import DynamoDBManager
 from core.aws.sns import SNSManager
@@ -165,18 +170,18 @@ class UserViewSet(viewsets.ModelViewSet):
             for em in entourage_members:
                 if em.phone_number:
                     try:
-                        resp = twilio_client.messages.create( \
+                        resp = twilio_client.messages.create(
                             to=em.phone_number,
                             from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
                             body=message)
                         if resp.status == 'failed':
-                            errors.append( \
+                            errors.append(
                                 {"Entourage Member %d" % \
                                  em.id: 'Error sending SMS Verification',
                                  "id": em.id})
                     except TwilioRestException, e:
                         if e.code and e.code == 21211:
-                            errors.append( \
+                            errors.append(
                                 {"Entourage Member %d" % \
                                  em.id: 'Invalid phone number',
                                  "id": em.id})
@@ -186,7 +191,7 @@ class UserViewSet(viewsets.ModelViewSet):
                     send_mail(subject, message, settings.DEFAULT_FROM_EMAIL,
                               [em.email_address], fail_silently=True)
         else:
-            return Response( \
+            return Response(
                 {'message': 'message is a required parameter.'},
                 status=status.HTTP_400_BAD_REQUEST)
         if errors:
@@ -209,7 +214,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 return Response({'message': 'No matching agency found.'},
                                 status=status.HTTP_400_BAD_REQUEST)
         for k, v in info_dict.items():
-            if not k in valid_keys:
+            if k not in valid_keys:
                 continue
             if hasattr(user, k):
                 setattr(user, k, v)
@@ -218,7 +223,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if serializer.data:
             return Response(serializer.data)
         else:
-            return Response( \
+            return Response(
                 {'message': 'There was an error with the values provided.'},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -234,11 +239,11 @@ class UserViewSet(viewsets.ModelViewSet):
             device_token = request.data.get('deviceToken', None)
             device_type = request.data.get('deviceType', None)
             if not device_token:
-                return Response( \
+                return Response(
                     {'message': 'deviceToken is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             elif not device_type:
-                return Response( \
+                return Response(
                     {'message': 'deviceType is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             else:
@@ -262,7 +267,7 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.user.is_superuser or request.user.pk == int(pk):
             phone_number = request.data.get('phone_number', None)
             if not phone_number:
-                return Response( \
+                return Response(
                     {'message': 'phone_number is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
@@ -275,7 +280,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 user = self.get_object()
                 user.phone_number_verification_code = None
                 user.save()
-                resp = twilio_client.messages.create( \
+                resp = twilio_client.messages.create(
                     to=text_number,
                     from_=settings.TWILIO_SMS_VERIFICATION_FROM_NUMBER,
                     body="Your TapShield verification code is: %s" \
@@ -283,7 +288,7 @@ class UserViewSet(viewsets.ModelViewSet):
                 if not resp.status == 'failed':
                     return Response({'message': 'Success'})
                 else:
-                    return Response( \
+                    return Response(
                         {'message': 'Error sending SMS Verification'},
                         status=status.HTTP_400_BAD_REQUEST)
             except TwilioRestException, e:
@@ -304,24 +309,24 @@ class UserViewSet(viewsets.ModelViewSet):
         if request.user.is_superuser or request.user.pk == int(pk):
             code = request.data.get('code', None)
             if not code:
-                return Response( \
+                return Response(
                     {'message': 'code is a required parameter'},
                     status=status.HTTP_400_BAD_REQUEST)
             try:
                 code = int(code.strip())
             except ValueError:
-                return Response( \
+                return Response(
                     {'message': 'Incorrect type for code'},
                     status=status.HTTP_400_BAD_REQUEST)
             user = self.get_object()
             if code == user.phone_number_verification_code:
                 user.phone_number_verified = True
                 user.save()
-                return Response( \
+                return Response(
                     {'message': 'OK'},
                     status=status.HTTP_200_OK)
             else:
-                return Response( \
+                return Response(
                     {'message': 'Incorrect code'},
                     status=status.HTTP_400_BAD_REQUEST)
 
@@ -364,6 +369,7 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serialized_data,
                         status=status.HTTP_200_OK)
 
+    @transaction.atomic
     @detail_route(methods=['post'])
     def locations(self, request, pk=None):
 
@@ -608,7 +614,7 @@ class AlertViewSet(viewsets.ModelViewSet):
         if message:
             message_id = str(uuid.uuid1())
             dynamo_db = DynamoDBManager()
-            dynamo_db.save_item_to_table( \
+            dynamo_db.save_item_to_table(
                 settings.DYNAMO_DB_CHAT_MESSAGES_TABLE,
                 {'alert_id': int(pk), 'sender_id': request.user.id,
                  'message': message, 'timestamp': time.time(),
@@ -616,13 +622,13 @@ class AlertViewSet(viewsets.ModelViewSet):
             alert = self.get_object()
             if not request.user.id == alert.agency_user.id:
                 user = alert.agency_user
-                notify_new_chat_message_available.delay( \
+                notify_new_chat_message_available.delay(
                     message, message_id,
                     user.device_type,
                     user.device_endpoint_arn)
             return Response({'message': 'Chat received'})
         else:
-            return Response( \
+            return Response(
                 {'message': "message and sender are required parameters"},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -652,7 +658,7 @@ class AlertViewSet(viewsets.ModelViewSet):
                                                                    timestamp)
             return Response(messages)
         except ValueError:
-            return Response( \
+            return Response(
                 {'message': "timestamp must be an Unix timestamp"},
                 status=status.HTTP_400_BAD_REQUEST)
 
@@ -662,16 +668,16 @@ class AlertLocationViewSet(viewsets.ModelViewSet):
     serializer_class = AlertLocationSerializer
     filter_fields = ('alert',)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
 
         active_alerts = Alert.active.filter(agency_user=request.user)
 
-        serializer = self.get_serializer(data=request.data, files=request.FILES)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
 
         if serializer.is_valid():
-            self.pre_save(serializer.object)
+            self.perform_create(serializer)
             self.object = serializer.save(force_insert=True)
-            self.post_save(self.object, created=True)
+            self.perform_update(serializer)
             headers = self.get_success_headers(serializer.data)
 
             if not active_alerts:
@@ -747,7 +753,8 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
 
         return EntourageSessionSerializer
 
-    def create(self, request):
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
 
         active_sessions = EntourageSession.tracking.filter(user=request.user)
         if active_sessions:
@@ -775,12 +782,13 @@ class EntourageSessionViewSet(viewsets.ModelViewSet):
         request_data['start_location'] = start_location_serialized.data['url']
         request_data['end_location'] = end_location_serialized.data['url']
 
-        serializer = self.get_serializer(data=request_data, files=request.FILES)
+        serializer = self.get_serializer(data=request_data, context={'request': request})
 
         if serializer.is_valid():
-            self.pre_save(serializer.object)
+            self.perform_create(serializer)
             self.object = serializer.save(force_insert=True)
-            self.post_save(self.object, created=True)
+            self.perform_update(serializer)
+
             headers = self.get_success_headers(serializer.data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED,
@@ -843,7 +851,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
     serializer_class = StaticDeviceSerializer
     filter_fields = ('agency',)
 
-    def create(self, request):
+    def create(self, request, *args, **kwargs):
 
         request_data = request.data.copy()
         request_data['user'] = UserSerializer(request.user, context={'request': request}).data['url']
@@ -855,7 +863,7 @@ class StaticDeviceViewSet(viewsets.ModelViewSet):
         if agency:
             request_data['agency'] = AgencySerializer(agency, context={'request': request}).data['url']
 
-        serializer = self.get_serializer(data=request_data, files=request.FILES, context={'request': request})
+        serializer = self.get_serializer(data=request_data, context={'request': request})
 
         if serializer.is_valid():
 
