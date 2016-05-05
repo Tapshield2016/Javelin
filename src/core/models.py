@@ -1055,8 +1055,8 @@ class SocialCrimeReport(TimeStampedModel):
                                   related_name="viewed_by",
                                   blank=True, null=True, on_delete=models.SET_NULL)
 
-    geo = models.Manager()
-    objects = db_models.GeoManager()
+    objects = models.Manager()
+    geo = db_models.GeoManager()
 
     def save(self, *args, **kwargs):
         if self.report_latitude and self.report_longitude:
