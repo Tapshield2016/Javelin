@@ -3,17 +3,17 @@ import random
 from reversion import revisions as reversion
 import re
 
-from django.core import urlresolvers
+from django.core import urlresolvers, validators
+from django.core.mail import send_mail
 
 from datetime import datetime, timedelta
-from django.utils.timezone import utc
 
 from math import sin, cos, sqrt, atan2, radians
 
-import django.utils.timezone
+from django.utils import timezone
 
 from django.conf import settings
-from django.contrib.auth.models import AbstractUser, UserManager
+from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.contrib.gis.db import models as db_models
 from django.contrib.gis.geos import Point
 from django.contrib.gis.measure import D
@@ -652,7 +652,67 @@ class MassAlert(Location):
         return u"%s" % self.message
 
 
-class AgencyUser(AbstractUser):
+class AgencyUser(AbstractBaseUser, PermissionsMixin):
+    username = models.CharField(
+        'username',
+        max_length=255,
+        unique=True,
+        help_text='Required. 255 characters or fewer. Letters, digits and @/./+/-/_ only.',
+        validators=[
+            validators.RegexValidator(
+                r'^[\w.@+-]+$',
+                'Enter a valid username. This value may contain only '
+                'letters, numbers ' 'and @/./+/-/_ characters.'
+            ),
+        ],
+        error_messages={
+            'unique': "A user with that username already exists.",
+        },
+    )
+    first_name = models.CharField('first name', max_length=30, blank=True)
+    last_name = models.CharField('last name', max_length=30, blank=True)
+    email = models.EmailField('email address', blank=True, unique=True)
+    is_staff = models.BooleanField(
+        'staff status',
+        default=False,
+        help_text='Designates whether the user can log into this admin site.',
+    )
+    is_active = models.BooleanField(
+        'active',
+        default=True,
+        help_text='Designates whether this user should be treated as active. '
+                  'Unselect this instead of deleting accounts.',
+    )
+    date_joined = models.DateTimeField('date joined', default=timezone.now)
+
+    class Meta:
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
+
+    def get_full_name(self):
+        """
+        Returns the first_name plus the last_name, with a space in between.
+        """
+        full_name = '%s %s' % (self.first_name, self.last_name)
+        return full_name.strip()
+
+    def get_short_name(self):
+        """
+        Returns the short name for the user.
+        """
+        return self.first_name
+
+    def email_user(self, subject, message, from_email=None, **kwargs):
+        """
+        Sends an email to this User.
+        """
+        send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username', ]
+
+    objects = UserManager()
+    geo = db_models.GeoManager()
 
     DEVICE_TYPE_CHOICES = (
         ('I', 'iOS'),
@@ -685,12 +745,6 @@ class AgencyUser(AbstractUser):
     altitude = models.FloatField(null=True, blank=True)
     floor_level = models.IntegerField(null=True, blank=True)
     location_timestamp = models.DateTimeField(null=True, blank=True)
-
-    USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username',]
-
-    objects = UserManager()
-    geo = db_models.GeoManager()
 
     def __unicode__(self):
         if self.email:
@@ -734,8 +788,6 @@ class AgencyUser(AbstractUser):
                     member.matched_user = self
                     member.save()
 
-AgencyUser._meta.get_field('email')._unique=True
-
 
 class EntourageSession(TimeStampedModel):
 
@@ -755,14 +807,32 @@ class EntourageSession(TimeStampedModel):
         ('U', 'Unknown'),
     )
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                             related_name='session_user')
-    status = models.CharField(max_length=1, choices=TRACKING_STATUS_CHOICES,
-                              default='T')
-    travel_mode = models.CharField(max_length=1, choices=TRAVEL_MODES,
-                              default='U')
-    start_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="starting_locations")
-    end_location = models.ForeignKey('NamedLocation', null=True, blank=True, related_name="ending_locations")
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        related_name='session_user'
+    )
+    status = models.CharField(
+        max_length=1,
+        choices=TRACKING_STATUS_CHOICES,
+        default='T'
+    )
+    travel_mode = models.CharField(
+        max_length=1,
+        choices=TRAVEL_MODES,
+        default='U'
+    )
+    start_location = models.ForeignKey(
+        'NamedLocation',
+        null=True,
+        blank=True,
+        related_name="starting_locations"
+    )
+    end_location = models.ForeignKey(
+        'NamedLocation',
+        null=True,
+        blank=True,
+        related_name="ending_locations"
+    )
     eta = models.DateTimeField(null=True, blank=True)
     start_time = models.DateTimeField(null=True, blank=True)
     arrival_time = models.DateTimeField(null=True, blank=True)
@@ -778,7 +848,7 @@ class EntourageSession(TimeStampedModel):
     def save(self, *args, **kwargs):
         if self.status == "T":
             five_after = self.eta + timedelta(minutes=10)
-            if five_after < datetime.utcnow().replace(tzinfo=utc):
+            if five_after < datetime.utcnow().replace(tzinfo=timezone.utc):
                 self.status = "U"
 
         super(EntourageSession, self).save(*args, **kwargs)
@@ -1000,7 +1070,7 @@ class ChatMessage(TimeStampedModel):
     sender = models.ForeignKey(settings.AUTH_USER_MODEL)
     message = models.TextField()
     message_id = models.CharField(max_length=100, unique=True)
-    message_sent_time = models.DateTimeField(default=django.utils.timezone.now)
+    message_sent_time = models.DateTimeField(default=timezone.now)
 
     class Meta:
         ordering = ['message_sent_time']
