@@ -517,7 +517,7 @@ class Alert(TimeStampedModel):
 
             if self.agency_user:
                 try:
-                    profile = self.agency_user.get_profile()
+                    profile = self.agency_user.user_profile
                     profile.save()
                     profile.delete()
                 except UserProfile.DoesNotExist:
@@ -1268,13 +1268,13 @@ def delete_profile_image_if_changed(sender, instance, **kwargs):
     else:
         if obj.profile_image_url and\
                 not obj.profile_image_url == instance.profile_image_url:
-            from ..core.tasks import delete_file_from_s3
+            from core.tasks import delete_file_from_s3
             delete_file_from_s3.delay(obj.profile_image_url)
 
 @receiver(post_delete, sender=UserProfile)
 def delete_profile_image(sender, instance, **kwargs):
     if instance.profile_image_url:
-        from ..core.tasks import delete_file_from_s3
+        from core.tasks import delete_file_from_s3
         delete_file_from_s3.delay(instance.profile_image_url)
 
 
@@ -1289,7 +1289,7 @@ def send_phone_number_verification_code(sender, instance, **kwargs):
     else:
         if not obj.phone_number == instance.phone_number\
                 or perform_check_anyway:
-            from ..core.tasks import send_phone_number_verification
+            from core.tasks import send_phone_number_verification
             send_phone_number_verification.delay(\
                 instance.phone_number,
                 instance.phone_number_verification_code)
