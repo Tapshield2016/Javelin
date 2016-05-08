@@ -1,6 +1,6 @@
 from django.forms import ModelForm
 
-from core.models import (Agency, StaticDevice)
+from models import Agency
 
 
 class AgencySettingsForm(ModelForm):
@@ -9,9 +9,3 @@ class AgencySettingsForm(ModelForm):
         fields = ['enable_chat_autoresponder',
                   'chat_autoresponder_message',
                   'spot_crime_days_visible',]
-
-
-class StaticDeviceForm(ModelForm):
-    class Meta:
-        model = StaticDevice
-        fields = '__all__'

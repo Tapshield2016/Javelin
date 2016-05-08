@@ -66,6 +66,8 @@ INSTALLED_APPS = [
 
 
     'core',
+    'agency',
+    'staticdevice',
     'shieldcommand',
     'emailmgr',
 ]

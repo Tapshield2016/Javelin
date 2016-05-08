@@ -44,8 +44,13 @@ from rest_framework.settings import api_settings
 
 from twilio.util import TwilioCapability
 
-from models import (Agency, EntourageMember, StaticDevice, Alert)
-from forms import (AgencySettingsForm, StaticDeviceForm)
+
+from agency.models import Agency
+from agency.forms import AgencySettingsForm
+
+from staticdevice.forms import StaticDeviceForm
+
+from models import (EntourageMember, StaticDevice, Alert)
 from api.serializers.v1 import (AgencySerializer, UserSerializer, AlertSerializer,
                                 EntourageMemberSerializer, StaticDeviceSerializer, UserLoginSerializer)
 

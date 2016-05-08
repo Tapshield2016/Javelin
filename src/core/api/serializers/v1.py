@@ -1,8 +1,19 @@
-from core.models import (Agency, Alert, AlertLocation, Theme,
-                         ChatMessage, MassAlert, UserProfile,
-                         EntourageMember, SocialCrimeReport, Region,
-                         DispatchCenter, Period, ClosedDate, StaticDevice,
-                         EntourageSession, TrackingLocation, NamedLocation, UserNotification)
+from core.models import (
+    Alert,
+    AlertLocation,
+    ChatMessage,
+    MassAlert,
+    UserProfile,
+    EntourageMember,
+    SocialCrimeReport,
+    EntourageSession,
+    TrackingLocation,
+    NamedLocation,
+    UserNotification
+)
+from agency.models import Agency, Region, DispatchCenter, Period, ClosedDate, Theme, ClosedDate
+from staticdevice.models import StaticDevice
+
 from emailmgr.models import EmailAddress
 from emailmgr.serializers import EmailAddressGETSerializer
 

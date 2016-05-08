@@ -5,7 +5,8 @@ import ast
 from django.conf import settings
 
 from aws.dynamodb import DynamoDBManager
-from models import Agency, AgencyUser
+from models import AgencyUser
+from agency.models import Agency
 from tasks import notify_new_chat_message_available
 from django.contrib.auth.decorators import user_passes_test
 from django.db import transaction
