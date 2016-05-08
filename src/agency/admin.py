@@ -2,15 +2,18 @@ from django.contrib import admin
 from reversion.admin import VersionAdmin
 from django.contrib.gis.admin import OSMGeoAdmin
 
-from django.forms.models import BaseInlineFormSet
-from django.utils.safestring import mark_safe
-from django.core import urlresolvers
-from django.contrib.auth.models import Group
-from django.core.exceptions import ObjectDoesNotExist
+from ajax_select.admin import AjaxSelectAdmin
 
 from core.models import AgencyUser
+
+from django.utils.safestring import mark_safe
+from django.core import urlresolvers
 from models import Region, DispatchCenter, Period, ClosedDate, Theme, Agency
 from staticdevice.models import StaticDevice
+
+from django import forms
+
+from ajax_select import make_ajax_form
 
 
 class StaticDeviceInline(admin.StackedInline):
@@ -19,16 +22,6 @@ class StaticDeviceInline(admin.StackedInline):
     extra = 0
     fields = ('uuid', 'type', 'description', 'changeform_link')
     readonly_fields = ('changeform_link',)
-
-
-class AgencyUserInline(admin.StackedInline):
-    model = Agency.dispatchers.through
-    extra = 0
-    # fields = ['username']
-    # formset = AgencyDispatchersSet
-    # verbose_name = "Dispatcher"
-    # verbose_name_plural = "Dispatchers"
-    # fields = ('first_name', 'last_name', 'username')
 
 
 def hide(self, request, queryset):
@@ -67,13 +60,18 @@ class DispatchCenterInline(admin.StackedInline):
     readonly_fields = ('changeform_link',)
 
 
-class AgencyAdmin(VersionAdmin, OSMGeoAdmin):
+class AgencyAdmin(AjaxSelectAdmin, OSMGeoAdmin):
+    form = make_ajax_form(Agency, {
+        # fieldname: channel_name
+        'dispatchers': 'users'
+    })
+
     fieldsets = (
         ('Publish', {
                 'fields': (['hidden',]),
         }),
         ('Account Administrator', {
-                'fields': (['agency_point_of_contact',])
+                'fields': (['agency_point_of_contact', 'dispatchers'])
         }),
         ('Required Fields', {
                 'fields': (['name', 'domain',
@@ -116,7 +114,7 @@ class AgencyAdmin(VersionAdmin, OSMGeoAdmin):
         }),
     )
     inlines = [
-        RegionInline, DispatchCenterInline, AgencyUserInline, StaticDeviceInline,
+        RegionInline, DispatchCenterInline, StaticDeviceInline,
     ]
     readonly_fields = ['theme_link', 'branding_link',]
     search_fields = ['name', 'agency_point_of_contact__username', 'domain',]

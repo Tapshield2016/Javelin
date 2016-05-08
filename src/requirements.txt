@@ -55,3 +55,4 @@ unittest2==1.1.0
 uwsgitop==0.9
 wsgiref==0.1.2
 oauthlib>=1.0.0
+django-ajax-selects==1.4.3

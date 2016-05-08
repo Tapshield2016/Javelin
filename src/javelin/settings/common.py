@@ -36,7 +36,6 @@ INSTALLED_APPS = [
     # 'grappelli',
     # 'filebrowser',
 
-
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,7 +62,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'storages',
-
+    'ajax_select',
 
     'core',
     'agency',

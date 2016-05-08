@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url
 from django.views.static import serve
-from filebrowser.sites import site
+# from filebrowser.sites import site
 
 from rest_framework.authtoken.views import obtain_auth_token
 from rest_framework import urls as rest_framework_urls
@@ -16,6 +16,11 @@ from registration.backends.default import urls as registration_urls
 
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+
+from ajax_select import urls as ajax_select_urls
+
+from core.autocomplete import *
+
 admin.autodiscover()
 
 
@@ -23,6 +28,7 @@ urlpatterns = [
 
     # (r'^admin/filebrowser/', include(site.urls)),
     # url(r'^grappelli/', include(grappelli_urls)), # grappelli URLS
+    url(r'^ajax_select/', include(ajax_select_urls)),
 
     url(r'^accounts/password/reset/$',
         auth_views.password_reset,

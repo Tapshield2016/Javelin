@@ -13,9 +13,14 @@ from core.base_model import TimeStampedModel
 DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. " \
                                 "Call 911 if you require immediate assistance."
 
+
 class Agency(TimeStampedModel):
 
-    dispatchers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="agency_access")
+    dispatchers = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name="agency_access",
+
+    )
 
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255, default="tapshield.com")

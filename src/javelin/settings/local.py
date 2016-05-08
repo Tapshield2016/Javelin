@@ -1,5 +1,8 @@
 from common import *
 
+from psycopg2cffi import compat
+compat.register()
+
 ALLOWED_HOSTS = ['127.0.0.1:8000']
 
 
