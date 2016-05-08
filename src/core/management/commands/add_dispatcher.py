@@ -21,11 +21,22 @@ class Command(BaseCommand):
         make_option('--list',
                     dest='list',
                     help='Email of the dispatcher user to add "first,last,email"'),
+        make_option('--migrate',
+                    dest='migrate',
+                    help='Groups to new agency model dispatcher field'),
     )
 
     def handle(self, *args, **options):
 
         user_group = Group.objects.get(name='Dispatchers')
+
+        if options['migrate']:
+            all_dispatcher_users = AgencyUser.objects.filter(groups__id__exact=user_group.id)
+            for user in all_dispatcher_users:
+                user.agency.dispatchers.add(user)
+                user.agency.save()
+            return
+
         agency = options['agency']
 
         if type(agency) is str:

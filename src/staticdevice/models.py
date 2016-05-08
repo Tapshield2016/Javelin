@@ -28,7 +28,7 @@ def closest_agency(point):
 class StaticDevice(models.Model):
 
     class Meta:
-        db_table = 'core_static_device'
+        db_table = 'staticdevice_staticdevice'
 
     uuid = models.SlugField(max_length=255, unique=True,
                             help_text="Unique identifier (e.g. serial number)")
@@ -86,7 +86,7 @@ class StaticDevice(models.Model):
     def changeform_link(self):
         if self.id:
             changeform_url = urlresolvers.reverse(
-                'admin:core_staticdevice_change', args=(self.id,)
+                'admin:staticdevice_staticdevice_change', args=(self.id,)
             )
             return u'<a href="%s" target="_blank">View more options</a>' % changeform_url
         return u''

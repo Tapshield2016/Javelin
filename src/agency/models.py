@@ -10,10 +10,12 @@ from utils import *
 from core.aws.s3_filefield import S3EnabledImageField
 from core.base_model import TimeStampedModel
 
+DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. " \
+                                "Call 911 if you require immediate assistance."
 
 class Agency(TimeStampedModel):
-    DEFAULT_AUTORESPONDER_MESSAGE = "Due to high volume, we are currently experiencing delays. " \
-                                    "Call 911 if you require immediate assistance."
+
+    dispatchers = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="agency_access")
 
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255, default="tapshield.com")
@@ -120,7 +122,7 @@ class Agency(TimeStampedModel):
     geo = db_models.GeoManager()
 
     class Meta:
-        db_table = 'core_agency'
+        db_table = 'agency_agency'
         ordering = ['name',]
         verbose_name_plural = "Agencies"
 
@@ -128,8 +130,10 @@ class Agency(TimeStampedModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        from tasks import (create_agency_topic,
-                           notify_waiting_users_of_congestion)
+        from core.tasks import (
+            create_agency_topic,
+            notify_waiting_users_of_congestion
+        )
 
         if not self.alert_completed_message:
             self.alert_completed_message = Agency._meta.get_field('alert_completed_message').get_default()
@@ -159,7 +163,7 @@ class Agency(TimeStampedModel):
         if self.agency_boundaries and self.agency_center_from_boundaries:
             boundaries = eval(self.agency_boundaries)
 
-        #Find centroid
+        # Find centroid
         if boundaries:
 
             centroid = centroid_from_boundaries(boundaries)
@@ -193,7 +197,7 @@ class ClosedDate(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'core_closed_date'
+        db_table = 'agency_closeddate'
 
 
 class Period(models.Model):
@@ -217,7 +221,7 @@ class Period(models.Model):
     close = models.TimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'core_period'
+        db_table = 'agency_period'
         verbose_name = "Period"
         verbose_name_plural = "Opening Hours"
         ordering = ['day']
@@ -236,7 +240,7 @@ class DispatchCenter(models.Model):
     def changeform_link(self):
         if self.id:
             changeform_url = urlresolvers.reverse(
-                'admin:core_dispatchcenter_change', args=(self.id,)
+                'admin:agency_dispatchcenter_change', args=(self.id,)
             )
             return u'<a href="%s" target="_blank">View Schedule</a>' % changeform_url
         return u''
@@ -244,7 +248,7 @@ class DispatchCenter(models.Model):
     changeform_link.short_description = 'Schedule'   # omit column header
 
     class Meta:
-        db_table = 'core_dispatch_center'
+        db_table = 'agency_dispatchcenter'
 
 
 class Region(models.Model):
@@ -297,7 +301,7 @@ class Region(models.Model):
         super(Region, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = 'core_region'
+        db_table = 'agency_region'
 
 
 def file_path(self, filename):
@@ -362,7 +366,7 @@ class Theme(models.Model):
     )
 
     class Meta:
-        db_table = 'core_theme'
+        db_table = 'agency_theme'
 
     def __unicode__(self):
         return u'%s' % self.name

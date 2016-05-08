@@ -21,25 +21,14 @@ class StaticDeviceInline(admin.StackedInline):
     readonly_fields = ('changeform_link',)
 
 
-class AgencyDispatchersSet(BaseInlineFormSet):
-    def get_queryset(self):
-        if not hasattr(self, '_queryset'):
-            try:
-                group = Group.objects.get(name='Dispatchers')
-                qs = super(AgencyDispatchersSet, self).get_queryset().filter(groups=group)
-                self.queryset = qs
-            except ObjectDoesNotExist:
-                pass
-        return self.queryset
-
-
 class AgencyUserInline(admin.StackedInline):
-    model = AgencyUser
+    model = Agency.dispatchers.through
     extra = 0
-    formset = AgencyDispatchersSet
-    verbose_name = "Dispatcher"
-    verbose_name_plural = "Dispatchers"
-    fields = ('first_name', 'last_name', 'username', 'groups')
+    # fields = ['username']
+    # formset = AgencyDispatchersSet
+    # verbose_name = "Dispatcher"
+    # verbose_name_plural = "Dispatchers"
+    # fields = ('first_name', 'last_name', 'username')
 
 
 def hide(self, request, queryset):
@@ -137,12 +126,12 @@ class AgencyAdmin(VersionAdmin, OSMGeoAdmin):
     raw_id_fields = ("agency_point_of_contact", "theme", "branding",)
 
     def theme_link(self, obj):
-        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.theme.id,))
+        change_url = urlresolvers.reverse('admin:agency_theme_change', args=(obj.theme.id,))
         return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.theme.name))
     theme_link.short_description = 'Theme options'
 
     def branding_link(self, obj):
-        change_url = urlresolvers.reverse('admin:core_theme_change', args=(obj.branding.id,))
+        change_url = urlresolvers.reverse('admin:agency_theme_change', args=(obj.branding.id,))
         return mark_safe('<a href="%s">Edit %s</a>' % (change_url, obj.branding.name))
     branding_link.short_description = 'Theme options'
 
