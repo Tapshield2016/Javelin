@@ -33,8 +33,9 @@ class Command(BaseCommand):
         if options['migrate']:
             all_dispatcher_users = AgencyUser.objects.filter(groups__id__exact=user_group.id)
             for user in all_dispatcher_users:
-                user.agency.dispatchers.add(user)
-                user.agency.save()
+                if user.agency and not user.agency.dispatchers.filter(id=user.id).exists():
+                    user.agency.dispatchers.add(user)
+                    user.agency.save()
             return
 
         agency = options['agency']
