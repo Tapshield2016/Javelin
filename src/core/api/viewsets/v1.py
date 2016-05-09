@@ -86,6 +86,23 @@ from staticdevice.models import StaticDevice
 User = get_user_model()
 
 
+class IsAgencyContactOrReadOnly(permissions.BasePermission):
+    """
+    Object-level permission to only allow owners of an object to edit it.
+    Assumes the model instance has a `agency_point_of_contact` attribute.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `user`.
+        return obj.agency_point_of_contact == request.user
+
+
+
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Object-level permission to only allow owners of an object to edit it.
@@ -496,7 +513,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
 
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = (IsAgencyContactOrReadOnly,)
     serializer_class = AgencySerializer
     filter_backends = (SearchFilter,)
     search_fields = ('domain',)
