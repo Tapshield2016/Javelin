@@ -981,7 +981,7 @@ class StaticDeviceDetail(generics.RetrieveAPIView):
 
 
 @require_http_methods(["POST"])
-def send_mass_alert(self, request, pk=None):
+def send_mass_alert(request, pk=None):
     """
     Sends a message to all devices subscribed to the agency's SNS topic
     endpoint.
