@@ -496,6 +496,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
 
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
+    permission_classes = (IsOwnerOrReadOnly,)
     serializer_class = AgencySerializer
     filter_backends = (SearchFilter,)
     search_fields = ('domain',)
