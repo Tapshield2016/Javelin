@@ -994,7 +994,7 @@ def send_mass_alert(request, pk=None):
     if not message:
         return Response({'message': 'message is a required parameter'},
                         status=status.HTTP_400_BAD_REQUEST)
-    
+
     agency = Agency.objects.get(pk=pk)
     publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
     mass_alert = MassAlert(agency_dispatcher=request.user,
