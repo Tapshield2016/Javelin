@@ -52,15 +52,15 @@
 				<li class="status-indicator"> <a href="" id="status-indicator-ok" title="Connected to Shield Command"><span class="glyphicon glyphicon-ok-circle"></span></a> <a href="" id="status-indicator-disconnected" class="hide" title="Connection Problems Detected"><span class="glyphicon glyphicon-remove-circle"></span></a> </li>
 			</ul>
 		</div>
-		<!--/.nav-collapse --> 
+		<!--/.nav-collapse -->
 	</div>
 </div>
 {% verbatim %}
-<div class="container-full"> 
-	
+<div class="container-full">
+
 	<!-- Agency Settings Modal -->
 	<div class="modal fade" id="agencySettingsModal" tabindex="-1" role="dialog" aria-labelledby="agencySettingsModalLabel" aria-hidden="true"></div>
-	
+
 	<!-- Command Alert Modal -->
 	<div class="modal fade" id="commandAlert" tabindex="-1" role="dialog" aria-labelledby="commandAlertLabel" aria-hidden="true" command-alert-modal ng-controller="CommandAlertController" ng-cloak>
 		<div class="modal-dialog">
@@ -78,13 +78,13 @@
 					<button type="button" class="btn btn-primary" ng-click="sendCommandAlertMessage()">Send Message</button>
 				</div>
 			</div>
-			<!-- /.modal-content --> 
+			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog --> 
+		<!-- /.modal-dialog -->
 	</div>
 	<!-- /.modal -->
 
-	<div class="row full-height"> 
+	<div class="row full-height">
 		<!-- sidebar -->
 		<div id="alerts-list" class="sidebar" ng-controller="AlertsListController" ng-cloak>
 			<div class="panel-group" id="accordion">
@@ -93,7 +93,7 @@
 						<h4 class="panel-title"> My Alerts ({{ myAlertsLength }}) </h4>
 					</div>
 					<div id="collapseOne" class="panel-collapse collapse in">
-						<div class="panel-body accordion-panel-body"> 
+						<div class="panel-body accordion-panel-body">
 							<!-- My Alerts -->
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'A'} | byAgencyDispatcher" ng-class="selectedClass(alert)">
@@ -118,9 +118,9 @@
 						<h4 class="panel-title"> New Alerts ({{ newAlertsLength }}) </h4>
 					</div>
 					<div id="collapseTwo" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body"> 
+						<div class="panel-body accordion-panel-body">
 							<!-- New Alerts -->
-							
+
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'N'}" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
@@ -144,9 +144,9 @@
 						<h4 class="panel-title"> Pending Alerts ({{ pendingAlertsLength }}) </h4>
 					</div>
 					<div id="collapseThree" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body"> 
+						<div class="panel-body accordion-panel-body">
 							<!-- Pending Alerts -->
-							
+
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'P'}" ng-class="selectedClass(alert)">
 									<div id="{{ alert.object_id }}" class="alert-container" ng-click="alertClicked(alert)">
@@ -170,7 +170,7 @@
 						<h4 class="panel-title"> Past Alerts ({{ completedAlertsLength }}) </h4>
 					</div>
 					<div id="collapseFour" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body"> 
+						<div class="panel-body accordion-panel-body">
 							<!-- Completed Alerts -->
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="alert in alerts | filter:{status: 'C'}" ng-class="selectedClass(alert)">
@@ -195,7 +195,7 @@
 						<h4 class="panel-title"> Crime Tips ({{ unviewedCrimeTipsLength }}) </h4>
 					</div>
 					<div id="collapseFive" class="panel-collapse collapse">
-						<div class="panel-body accordion-panel-body" id="crimeTipList"> 
+						<div class="panel-body accordion-panel-body" id="crimeTipList">
 							<!-- Crime Tips -->
 							<ul class="alerts-list">
 								<li class="alert" ng-repeat="crimeTip in crimeTips | orderBy:'-creationDate'" ng-class="selectedClass(crimeTip)">
@@ -215,14 +215,14 @@
 				</div>
 			</div>
 		</div>
-		
+
 		<!-- map -->
 		<div class="" >
-			<div class="full-width sidebar-offset" ng-controller="UserProfileController" ng-cloak> 
-				
+			<div class="full-width sidebar-offset" ng-controller="UserProfileController" ng-cloak>
+
 				<!-- Modal -->
 				<dismiss-mark-completed-modal mark-complete="markActiveAlertAsCompleted()" alert="activeAlert"></dismiss-mark-completed-modal>
-				
+
 				<!-- Modal -->
 				<div class="modal fade" id="markAlertPending" tabindex="-1" role="dialog" aria-labelledby="markAlertPendingLabel" aria-hidden="true" dismiss-mark-pending-modal>
 					<div class="modal-dialog">
@@ -239,12 +239,12 @@
 								<button type="button" class="btn btn-primary" ng-click="markActiveAlertAsPending()">Mark Pending</button>
 							</div>
 						</div>
-						<!-- /.modal-content --> 
+						<!-- /.modal-content -->
 					</div>
-					<!-- /.modal-dialog --> 
+					<!-- /.modal-dialog -->
 				</div>
 				<!-- /.modal -->
-				
+
 				<div id="map-container" class="col-md-12">
 					<div id="alert-address" class="hide" ng-class="(isProfileVisible) ? 'alert-address-profile-open' : ''">
 						<p></p>
@@ -269,7 +269,7 @@
 						</ul>
 					</nav>
 				</div>
-				
+
 				<!-- profile -->
 				<div id="profile" ng-class="(isProfileVisible) ? 'profile-open' : 'profile-closed'">
 					<!--<p class="profile-title">{{ profileType == 'alert' ? 'Profile' : 'Crime Tip' }}</p>-->
@@ -288,18 +288,18 @@
 										</div>
 										<div class="modal-body"> <img ng-src="{{ getProfileImage() }}" /> </div>
 									</div>
-									<!-- /.modal-content --> 
+									<!-- /.modal-content -->
 								</div>
-								<!-- /.modal-dialog --> 
+								<!-- /.modal-dialog -->
 							</div>
 							<!-- /.modal -->
 							<div class="disarm-code">
 								<div class="title">Disarm Code</div>
 								<div class="code">{{ activeAlert.agencyUserMeta.disarmCode }}</div>
 							</div>
-							<!-- /.title --> 
+							<!-- /.title -->
 						</div>
-						<!-- /.disarm-code --> 
+						<!-- /.disarm-code -->
 					</div>
 					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.imageURL" id="crimeTipImage" tabindex="-1" role="dialog" aria-labelledby="crimeTipImageLabel" aria-hidden="true">
 						<div class="modal-dialog" style="width: 800px;">
@@ -312,9 +312,9 @@
 									<img ng-src="{{ activeCrimeTip.imageURL }}" style="max-width: 775px;" />
 								</div>
 							</div>
-							<!-- /.modal-content --> 
+							<!-- /.modal-content -->
 						</div>
-						<!-- /.modal-dialog --> 
+						<!-- /.modal-dialog -->
 					</div>
 					<!-- /.modal -->
 					<div class="modal fade" ng-if="profileType == 'crimeTip' && activeCrimeTip.videoURL && isVideoSupported(activeCrimeTip.videoURL)" id="crimeTipVideo" tabindex="-1" role="dialog" aria-labelledby="crimeTipVideoLabel" aria-hidden="true">
@@ -330,9 +330,9 @@
 									</video>
 								</div>
 							</div>
-							<!-- /.modal-content --> 
+							<!-- /.modal-content -->
 						</div>
-						<!-- /.modal-dialog --> 
+						<!-- /.modal-dialog -->
 					</div>
 					<!-- /.modal -->
 					<div class="profile-information" style="clear: both;">
@@ -508,10 +508,10 @@
                                             <td>Bar Fight</td>
                                         </tr>
                                     </table> -->
-						
+
 					</div>
 					<!-- /.profile-information -->
-					
+
 					<div class="profile-buttons" ng-if="(profileType == 'alert' || profileType == 'staticAlert')" ng-class="(shouldDisplayProfileButtons()) ? 'col-md-3' : 'hidden'">
 						<h5>Mark Alert As</h5>
 						<div class="btn-group btn-group-justified"> <a href="#" type="button" class="btn btn-primary" data-toggle="modal" data-target="#markAlertComplete">Complete</a> <a href="#" type="button" class="btn btn-default" data-toggle="modal" data-target="#markAlertPending">Pending</a> </div>
@@ -533,11 +533,11 @@
 						<p>{{ activeCrimeTip.flaggedByName }}</p>
 					</div>
 				</div>
-				<!-- /.profile-content --> 
+				<!-- /.profile-content -->
 			</div>
-			<!-- /.profile --> 
-			
-			<!-- /.profile --> 
+			<!-- /.profile -->
+
+			<!-- /.profile -->
 		</div>
 	</div>
 </div>
@@ -574,24 +574,24 @@
 
 <script>
             {% if agency_boundaries %}
-                googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}];
+                googleMapAgencyBoundaries = [{% for pair in agency_boundaries %}new google.maps.LatLng("{{ pair.0 }}", "{{ pair.1 }}"), {% endfor %}];
             {% endif %}
 
 
             {% if region_boundaries %}
                 {% for region in region_boundaries %}
-                    googleMapRegions.push([{% for pair in region %}new google.maps.LatLng({{ pair.0 }}, {{ pair.1 }}), {% endfor %}]);
+                    googleMapRegions.push([{% for pair in region %}new google.maps.LatLng("{{ pair.0 }}", "{{ pair.1 }}"), {% endfor %}]);
                 {% endfor %}
             {% endif %}
 
             googleMapOptions = {
-                center: new google.maps.LatLng({{ agency.agency_center_latitude }}, {{ agency.agency_center_longitude }}),
+                center: new google.maps.LatLng("{{ agency.agency_center_latitude }}", "{{ agency.agency_center_longitude }}"),
                 zoom: {{ agency.default_map_zoom_level }},
                 mapTypeId: google.maps.MapTypeId.ROADMAP
-            };
+            }
 
             google.maps.event.addDomListener(window, 'load', initializeMap);
-            Javelin.initialize("/api/{{ api_version }}/", {{ agency.id }}, '{{ auth_token }}');
+            Javelin.initialize("/api/{{ api_version }}/", "{{ agency.id }}", '{{ auth_token }}');
             Javelin.setActiveAgencyUserAttributes({
                 url: "{{ user.url }}",
                 username: "{{ user.username }}",
@@ -602,7 +602,7 @@
                 first_name: "{{ user.first_name }}",
                 last_name: "{{ user.last_name }}",
             });
-        </script> 
+        </script>
 <script>
             (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
             function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
@@ -610,9 +610,9 @@
             e.src='//www.google-analytics.com/analytics.js';
             r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
             ga('create','UA-XXXXX-X');ga('send','pageview');
-        </script> 
+        </script>
 
-<!-- Preloader --> 
+<!-- Preloader -->
 <script type="text/javascript">
           //<![CDATA[
             $(window).load(function() { // makes sure the whole site is loaded

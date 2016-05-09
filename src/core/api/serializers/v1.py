@@ -116,6 +116,14 @@ class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
         model = DispatchCenter
 
 
+class AgencyListSerializer(serializers.HyperlinkedModelSerializer):
+
+    class Meta:
+        model = Agency
+        fields = ("url", "id", "name")
+
+
+
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
     distance = serializers.SerializerMethodField('distance_if_exists')
     dispatch_center = DispatchCenterSerializer(required=False, many=True)
