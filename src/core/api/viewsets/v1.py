@@ -101,14 +101,12 @@ class DispatcherAgencyPermission(permissions.BasePermission):
             return False
         if view.action in ['retrieve', 'create']:
             return True
-        elif view.action in ['update', 'send_mass_alert', 'partial_update']:
-            return obj.agency_point_of_contact == request.user or \
-                   request.user.is_superuser or \
-                   obj.dispatchers.filter(pk=request.user.pk).count() != 0
         elif view.action == 'destroy':
             return request.user.is_authenticated() and request.user.is_superuser
-        else:
-            return False
+
+        return obj.agency_point_of_contact == request.user \
+            or request.user.is_superuser \
+            or obj.dispatchers.filter(pk=request.user.pk).count() != 0
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -524,7 +522,7 @@ class AgencyViewSet(viewsets.ModelViewSet):
     permission_classes = (DispatcherAgencyPermission,)
     serializer_class = AgencySerializer
     filter_backends = (SearchFilter,)
-    search_fields = ('domain',)
+    search_fields = ('name', 'domain',)
     queryset = Agency.objects.none()
 
     def get_queryset(self):
