@@ -69,7 +69,7 @@ from core.models import (
     UserNotification
 )
 
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 
 from django.views.decorators.http import require_http_methods
 
@@ -982,6 +982,19 @@ class StaticDeviceDetail(generics.RetrieveAPIView):
     serializer_class = StaticDeviceSerializer
 
 
+class IsAgencyDispatcher(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        # Read permissions are allowed to any request,
+        # so we'll always allow GET, HEAD or OPTIONS requests.
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        # Instance must have an attribute named `user`.
+        return True
+
+
+@permission_classes(IsAgencyDispatcher)
 @api_view(['POST'])
 def send_mass_alert(request, pk=None):
     """
