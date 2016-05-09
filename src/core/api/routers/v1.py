@@ -1,14 +1,29 @@
 from rest_framework import routers
 from django.conf.urls import url
 
-from core.api.viewsets.v1 import (UserViewSet, GroupViewSet, AgencyViewSet,
-                                  AlertViewSet, AlertLocationViewSet, ThemeViewSet,
-                                  ChatMessageViewSet, MassAlertViewSet,
-                                  UserProfileViewSet, SocialCrimeReportViewSet,
-                                  EntourageMemberViewSet, RegionViewSet, DispatchCenterViewSet,
-                                  ClosedDateViewSet, PeriodViewSet, StaticDeviceViewSet,
-                                  EntourageSessionViewSet, TrackingLocationViewSet, NamedLocationViewSet,
-                                  UserNotificationViewSet)
+from core.api.viewsets.v1 import (
+    UserViewSet,
+    GroupViewSet,
+    AgencyViewSet,
+    AlertViewSet,
+    AlertLocationViewSet,
+    ThemeViewSet,
+    ChatMessageViewSet,
+    MassAlertViewSet,
+    UserProfileViewSet,
+    SocialCrimeReportViewSet,
+    EntourageMemberViewSet,
+    RegionViewSet,
+    DispatchCenterViewSet,
+    ClosedDateViewSet,
+    PeriodViewSet,
+    StaticDeviceViewSet,
+    EntourageSessionViewSet,
+    TrackingLocationViewSet,
+    NamedLocationViewSet,
+    UserNotificationViewSet,
+    send_mass_alert
+)
 
 router_v1 = routers.DefaultRouter()
 router_v1.register(r'users', UserViewSet)
@@ -31,3 +46,8 @@ router_v1.register(r'entourage-sessions', EntourageSessionViewSet)
 router_v1.register(r'tracking-locations', TrackingLocationViewSet)
 router_v1.register(r'named-locations', NamedLocationViewSet)
 router_v1.register(r'user-notifications', UserNotificationViewSet)
+
+
+urlpatterns = [
+    url(r'^agencies/(?P<pk>[0-9]+)/send_mass_alert/$', send_mass_alert, name='send-mass-alert')
+]

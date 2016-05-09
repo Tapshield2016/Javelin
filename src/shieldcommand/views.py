@@ -16,7 +16,7 @@ from core.api.serializers.v1 import UserSerializer, ThemeSerializer, AgencyListS
 
 @login_required(login_url='shieldcommand-login')
 def select_agency(request):
-    agencies = request.user.agency_access
+    agencies = request.user.agency_access.exclude(hidden=True)
 
     if request.user.is_superuser:
         agencies = Agency.objects.all()

@@ -69,6 +69,8 @@ from core.models import (
     UserNotification
 )
 
+from django.views.decorators.http import require_http_methods
+
 from core.utils import get_agency_from_unknown
 
 from core.tasks import (
@@ -541,29 +543,6 @@ class AgencyViewSet(viewsets.ModelViewSet):
 
         return qs.exclude(hidden=True)
 
-    @detail_route(methods=['post'])
-    def send_mass_alert(self, request, pk=None):
-        """
-        Sends a message to all devices subscribed to the agency's SNS topic
-        endpoint.
-
-        message -- The message to send
-        """
-        message = request.data.get('message', None)
-        if not message:
-            return Response({'message': 'message is a required parameter'},
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        sns = SNSManager()
-        agency = self.get_object()
-        publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
-        mass_alert = MassAlert(agency_dispatcher=request.user,
-                               agency=agency,
-                               message=message)
-        mass_alert.save()
-        return Response({'message': 'Ok'},
-                        status=status.HTTP_200_OK)
-
 
 class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
     last_alert_received = django_filters.NumberFilter(name="id",
@@ -999,3 +978,27 @@ class StaticDeviceDetail(generics.RetrieveAPIView):
     lookup_field = 'uuid'
     queryset = StaticDevice.objects.all()
     serializer_class = StaticDeviceSerializer
+
+
+@require_http_methods(["POST"])
+def send_mass_alert(self, request, pk=None):
+    """
+    Sends a message to all devices subscribed to the agency's SNS topic
+    endpoint.
+
+    message -- The message to send
+    """
+    message = request.data.get('message', None)
+    if not message:
+        return Response({'message': 'message is a required parameter'},
+                        status=status.HTTP_400_BAD_REQUEST)
+
+    sns = SNSManager()
+    agency = self.get_object()
+    publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
+    mass_alert = MassAlert(agency_dispatcher=request.user,
+                           agency=agency,
+                           message=message)
+    mass_alert.save()
+    return Response({'message': 'Ok'},
+                    status=status.HTTP_200_OK)
