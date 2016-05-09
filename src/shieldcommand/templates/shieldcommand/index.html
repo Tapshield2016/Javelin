@@ -44,7 +44,7 @@
 						<li role="presentation"><a href="">(877) 553-9049</a></li>
 						<li role="presentation"><a href="mailto:support@tapshield.com">support@tapshield.com</a></li>
 						<li role="presentation" class="divider"></li>
-						<li role="presentation"><a data-toggle="modal" href="{% url 'core_agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">{{ agency.name }} Settings</a></li>
+						<li role="presentation"><a data-toggle="modal" href="{% url 'agency_settings' %}?agency_id={{ agency.id }}" data-target="#agencySettingsModal">{{ agency.name }} Settings</a></li>
 						<li role="presentation" class="divider"></li>
 						<li role="presentation"><a role="menuitem" tabindex="-1" href="{% url 'shieldcommand-logout' %}">Log out</a></li>
 					</ul>

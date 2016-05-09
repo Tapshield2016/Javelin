@@ -22,7 +22,7 @@ $('#agencySettingsForm').on('submit', function(event) {
     });
 
     event.preventDefault();
-    location.reload();
+//    location.reload();
 });
 
 </script>
@@ -34,7 +34,7 @@ $('#agencySettingsForm').on('submit', function(event) {
       <h4 class="modal-title" id="agencySettingsModalLabel">{{ form.instance.name }} Settings</h4>
     </div>
     <div class="modal-body">
-	<form action="{% url 'core_agency_settings' %}" method="POST" class="form" role="form" data-form-async data-target="#agencySettingsModal" id="agencySettingsForm">{% csrf_token %}
+	<form action="{% url 'agency_settings' %}" method="POST" class="form" role="form" data-form-async data-target="#agencySettingsModal" id="agencySettingsForm">{% csrf_token %}
       <p>
 
 	  {% if form.errors %}

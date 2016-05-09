@@ -5,6 +5,9 @@ from api.routers.v1 import urlpatterns as api_views
 from api.viewsets.v1 import StaticDeviceDetail
 
 from emailmgr import urls as emailmgr_urls
+from agency.views import agency_settings_form
+
+from staticdevice.views import static_device_form, static_alert, static_disarm, register_static_device
 
 import views
 
@@ -19,10 +22,10 @@ urlpatterns = [
     url(r'^dial/$', views.dial),
 
     # Agency Settings
-    url(r'^agency-settings/$', views.agency_settings_form,
-        name='core_agency_settings'),
-    url(r'^static-device-form/$', views.static_device_form,
-        name='core_static_device_form'),
+    url(r'^agency-settings/$', agency_settings_form,
+        name='agency_settings'),
+    url(r'^static-device-form/$', static_device_form,
+        name='static_device_form'),
 
     # Social login
     url(r'^create-facebook-user/$', views.create_facebook_user),
@@ -31,16 +34,16 @@ urlpatterns = [
     url(r'^create-linkedin-user/$', views.create_linkedin_user),
 
     # Models
-    url(r'^v1/', include(router_v1.urls)), #, namespace='v1')),
+    url(r'^v1/', include(router_v1.urls)),
     url(r'^v1/', include(api_views)),
 
     # Email manager
     url(r'^', include(emailmgr_urls)),
 
     # Static device
-    url(r'^static-device/register/$', views.register_static_device),
-    url(r'^static-device/alert/$', views.static_alert),
-    url(r'^static-device/disarm/$', views.static_disarm),
+    url(r'^static-device/register/$', register_static_device),
+    url(r'^static-device/alert/$', static_alert),
+    url(r'^static-device/disarm/$', static_disarm),
     url(r'^static-device/(?P<uuid>\w+)/$', StaticDeviceDetail.as_view(),
         name='core_static_device_details'),
 
