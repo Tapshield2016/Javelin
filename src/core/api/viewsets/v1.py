@@ -104,7 +104,7 @@ class DispatcherAgencyPermission(permissions.BasePermission):
         elif view.action in ['update', 'send_mass_alert', 'partial_update']:
             return obj.agency_point_of_contact == request.user or \
                    request.user.is_superuser or \
-                   request.user.agency_access.filter(pk=obj.pk).count != 0
+                   obj.dispatchers.filter(pk=request.user.pk).count() != 0
         elif view.action == 'destroy':
             return request.user.is_authenticated() and request.user.is_superuser
         else:
