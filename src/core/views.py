@@ -102,9 +102,11 @@ def register_user(request):
         try:
             agency = Agency.objects.get(pk=agency_id)
         except Agency.DoesNotExist:
-            agency_id = None
+            pass
 
     email = request_data.get('email', None)
+    if email:
+        email = email.lower()
 
     if 'username' not in request_data:
         request_data['username'] = email
