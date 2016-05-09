@@ -988,13 +988,12 @@ def send_mass_alert(request, pk=None):
 
     message -- The message to send
     """
-    message = request.data.get('message', None)
+    message = request.POST.get('message', None)
     if not message:
         return Response({'message': 'message is a required parameter'},
                         status=status.HTTP_400_BAD_REQUEST)
 
-    sns = SNSManager()
-    agency = self.get_object()
+    agency = Agency.objects.get(pk=pk)
     publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
     mass_alert = MassAlert(agency_dispatcher=request.user,
                            agency=agency,
