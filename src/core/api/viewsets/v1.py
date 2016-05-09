@@ -69,6 +69,8 @@ from core.models import (
     UserNotification
 )
 
+from rest_framework.decorators import api_view
+
 from django.views.decorators.http import require_http_methods
 
 from core.utils import get_agency_from_unknown
@@ -980,7 +982,7 @@ class StaticDeviceDetail(generics.RetrieveAPIView):
     serializer_class = StaticDeviceSerializer
 
 
-@require_http_methods(["POST"])
+@api_view(['POST'])
 def send_mass_alert(request, pk=None):
     """
     Sends a message to all devices subscribed to the agency's SNS topic
@@ -992,7 +994,7 @@ def send_mass_alert(request, pk=None):
     if not message:
         return Response({'message': 'message is a required parameter'},
                         status=status.HTTP_400_BAD_REQUEST)
-
+    
     agency = Agency.objects.get(pk=pk)
     publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
     mass_alert = MassAlert(agency_dispatcher=request.user,
