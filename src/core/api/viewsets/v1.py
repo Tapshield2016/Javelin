@@ -71,8 +71,6 @@ from core.models import (
 
 from rest_framework.decorators import api_view, permission_classes
 
-from django.views.decorators.http import require_http_methods
-
 from core.utils import get_agency_from_unknown
 
 from core.tasks import (
@@ -90,21 +88,27 @@ from staticdevice.models import StaticDevice
 User = get_user_model()
 
 
-class IsAgencyContactOrReadOnly(permissions.BasePermission):
-    """
-    Object-level permission to only allow owners of an object to edit it.
-    Assumes the model instance has a `agency_point_of_contact` attribute.
-    """
+from rest_framework import permissions
+
+
+class DispatcherAgencyPermission(permissions.BasePermission):
+
+    def has_permission(self, request, view):
+        return request.user.is_authenticated()
 
     def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in permissions.SAFE_METHODS:
+        if not request.user.is_authenticated():
+            return False
+        if view.action in ['retrieve', 'create']:
             return True
-
-        # Instance must have an attribute named `user`.
-        return obj.agency_point_of_contact == request.user
-
+        elif view.action in ['update', 'send_mass_alert', 'partial_update']:
+            return obj.agency_point_of_contact == request.user or \
+                   request.user.is_superuser or \
+                   request.user.agency_access.filter(pk=obj.pk).count != 0
+        elif view.action == 'destroy':
+            return request.user.is_authenticated() and request.user.is_superuser
+        else:
+            return False
 
 
 class IsOwnerOrReadOnly(permissions.BasePermission):
@@ -517,7 +521,7 @@ class SocialCrimeReportViewSet(viewsets.ModelViewSet):
 
 class AgencyViewSet(viewsets.ModelViewSet):
     model = Agency
-    permission_classes = (IsAgencyContactOrReadOnly,)
+    permission_classes = (DispatcherAgencyPermission,)
     serializer_class = AgencySerializer
     filter_backends = (SearchFilter,)
     search_fields = ('domain',)
@@ -544,6 +548,27 @@ class AgencyViewSet(viewsets.ModelViewSet):
             return qs
 
         return qs.exclude(hidden=True)
+
+    @detail_route(methods=['post'])
+    def send_mass_alert(self, request, pk=None):
+        """
+        Sends a message to all devices subscribed to the agency's SNS topic
+        endpoint.
+        message -- The message to send
+        """
+        message = request.data.get('message', None)
+        if not message:
+            return Response({'message': 'message is a required parameter'},
+                            status=status.HTTP_400_BAD_REQUEST)
+
+        agency = self.get_object()
+        publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
+        mass_alert = MassAlert(agency_dispatcher=request.user,
+                               agency=agency,
+                               message=message)
+        mass_alert.save()
+        return Response({'message': 'Ok'},
+                        status=status.HTTP_200_OK)
 
 
 class AlertsModifiedSinceFilterBackend(django_filters.FilterSet):
@@ -982,37 +1007,37 @@ class StaticDeviceDetail(generics.RetrieveAPIView):
     serializer_class = StaticDeviceSerializer
 
 
-class IsAgencyDispatcher(permissions.BasePermission):
-
-    def has_object_permission(self, request, view, obj):
-        # Read permissions are allowed to any request,
-        # so we'll always allow GET, HEAD or OPTIONS requests.
-        if request.method in permissions.SAFE_METHODS:
-            return True
-
-        # Instance must have an attribute named `user`.
-        return True
-
-
-@permission_classes(IsAgencyDispatcher)
-@api_view(['POST'])
-def send_mass_alert(request, pk=None):
-    """
-    Sends a message to all devices subscribed to the agency's SNS topic
-    endpoint.
-
-    message -- The message to send
-    """
-    message = request.POST.get('message', None)
-    if not message:
-        return Response({'message': 'message is a required parameter'},
-                        status=status.HTTP_400_BAD_REQUEST)
-
-    agency = Agency.objects.get(pk=pk)
-    publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
-    mass_alert = MassAlert(agency_dispatcher=request.user,
-                           agency=agency,
-                           message=message)
-    mass_alert.save()
-    return Response({'message': 'Ok'},
-                    status=status.HTTP_200_OK)
+# class IsAgencyDispatcher(permissions.BasePermission):
+#
+#     def has_object_permission(self, request, view, obj):
+#         # Read permissions are allowed to any request,
+#         # so we'll always allow GET, HEAD or OPTIONS requests.
+#         if request.method in permissions.SAFE_METHODS:
+#             return True
+#
+#         # Instance must have an attribute named `user`.
+#         return True
+#
+#
+# @permission_classes(IsAgencyDispatcher)
+# @api_view(['POST'])
+# def send_mass_alert(request, pk=None):
+#     """
+#     Sends a message to all devices subscribed to the agency's SNS topic
+#     endpoint.
+#
+#     message -- The message to send
+#     """
+#     message = request.POST.get('message', None)
+#     if not message:
+#         return Response({'message': 'message is a required parameter'},
+#                         status=status.HTTP_400_BAD_REQUEST)
+#
+#     agency = Agency.objects.get(pk=pk)
+#     publish_to_agency_topic.delay(agency.sns_primary_topic_arn, message)
+#     mass_alert = MassAlert(agency_dispatcher=request.user,
+#                            agency=agency,
+#                            message=message)
+#     mass_alert.save()
+#     return Response({'message': 'Ok'},
+#                     status=status.HTTP_200_OK)

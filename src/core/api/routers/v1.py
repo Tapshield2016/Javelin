@@ -22,7 +22,7 @@ from core.api.viewsets.v1 import (
     TrackingLocationViewSet,
     NamedLocationViewSet,
     UserNotificationViewSet,
-    send_mass_alert
+    # send_mass_alert
 )
 
 router_v1 = routers.DefaultRouter()
@@ -49,5 +49,5 @@ router_v1.register(r'user-notifications', UserNotificationViewSet)
 
 
 urlpatterns = [
-    url(r'^agencies/(?P<pk>[0-9]+)/send_mass_alert/$', send_mass_alert, name='send-mass-alert')
+    # url(r'^agencies/(?P<pk>[0-9]+)/send_mass_alert/$', send_mass_alert, name='send-mass-alert')
 ]
