@@ -11,13 +11,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 
 from django.core.exceptions import ObjectDoesNotExist
 
-from core.api.serializers.v1 import UserSerializer, ThemeSerializer, AgencySerializer, AgencyListSerializer
-
-from rest_framework.renderers import JSONRenderer
-
-# from django.utils.
-
-
+from core.api.serializers.v1 import UserSerializer, ThemeSerializer, AgencyListSerializer
 
 
 @login_required(login_url='shieldcommand-login')
