@@ -1,7 +1,7 @@
 from common import *
 
-from psycopg2cffi import compat
-compat.register()
+# from psycopg2cffi import compat
+# compat.register()
 
 ALLOWED_HOSTS = ['127.0.0.1:8000']
 
@@ -9,7 +9,7 @@ ALLOWED_HOSTS = ['127.0.0.1:8000']
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'prod_copy',
+        'NAME': 'javelin',
         'USER': '',
         'PASSWORD': '',
         'HOST': 'localhost',

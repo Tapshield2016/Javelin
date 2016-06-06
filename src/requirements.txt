@@ -9,9 +9,9 @@ amqp==1.4.9
 anyjson==0.3.3
 argparse==1.2.1
 billiard==3.3.0.23
-boto==2.5.2
+boto==2.40.0
 celery==3.1.23
-kombu==3.0.3
+kombu>=3.0
 pytz==2016.4
 django-allauth==0.25.2
 python-openid==2.2.5
