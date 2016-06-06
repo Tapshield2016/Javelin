@@ -1,30 +1,28 @@
 from common import *
 
+# from psycopg2cffi import compat
+# compat.register()
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.memcached.PyLibMCCache',
-        'LOCATION': 'localhost:11211',
-    }
-}
+ALLOWED_HOSTS = ['127.0.0.1:8000']
+
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
         'NAME': 'javelin',
-        'USER': 'javelin_user',
+        'USER': '',
         'PASSWORD': '',
-        'HOST': '',
-        'PORT': '',
-    }
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
 }
 
 INSTALLED_APPS += (
     #'corsheaders',
     #'devserver',
     'rest_framework_swagger',
-    # 'debug_toolbar',
-    'gunicorn',
+    #'debug_toolbar',
+    # 'gunicorn',
 )
 
 MIDDLEWARE_CLASSES += (
@@ -48,7 +46,7 @@ AWS_HEADERS = {
 }
 AWS_S3_BUCKET_URL = 'https://s3.amazonaws.com/%s/' % AWS_STORAGE_BUCKET_NAME
 DEFAULT_BUCKET = AWS_STORAGE_BUCKET_NAME
-USE_AMAZON_S3 = True
+USE_AMAZON_S3 = False
 
 # AWS
 DYNAMO_DB_ACCESS_KEY_ID = 'AKIAJJX2VM346XUKRROA'
@@ -92,21 +90,6 @@ TWILIO_APP_SID = 'AP299c4eeef7fb59999a8258140fc3d8a2'
 TWILIO_SMS_FROM_NUMBER = '+18778296008'
 TWILIO_SMS_VERIFICATION_FROM_NUMBER = '+14075455729'
 
-# Swagger
-SWAGGER_SETTINGS = {
-    "exclude_namespaces": [], # List URL namespaces to ignore
-    "api_version": '1',  # Specify your API's version
-    "enabled_methods": [  # Specify which methods to enable in Swagger UI
-        'get',
-        'post',
-        'put',
-        'patch',
-        'delete'
-    ],
-    "is_authenticated": True,  # Set to True to enforce user authentication,
-    "is_superuser": True,  # Set to True to enforce admin only access
-}
-
 # cors
 CORS_ORIGIN_ALLOW_ALL = True
 
@@ -116,8 +99,3 @@ SHIELD_COMMAND_API_VERSION = "v1"
 # compressor
 COMPRESS_ENABLED = False
 
-# Import local dev settings if file exists
-try:
-    from local_settings import *
-except:
-    pass

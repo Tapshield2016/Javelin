@@ -1,45 +1,63 @@
 from django.conf import settings
-from django.conf.urls import patterns, include, url
-from filebrowser.sites import site
+from django.conf.urls import include, url
+from django.views.static import serve
+# from filebrowser.sites import site
+
+from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework import urls as rest_framework_urls
+from rest_framework_swagger import urls as rest_framework_swagger_urls
+from allauth import urls as allauth_urls
+
+from core import urls as core_urls
+from shieldcommand import urls as shieldcommand_urls
+
+# from grappelli import urls as grappelli_urls
+from registration.backends.default import urls as registration_urls
 
 from django.contrib import admin
+from django.contrib.auth import views as auth_views
+
+from ajax_select import urls as ajax_select_urls
+
+from core.autocomplete import *
+
 admin.autodiscover()
 
 
-urlpatterns = patterns('',
+urlpatterns = [
 
     # (r'^admin/filebrowser/', include(site.urls)),
-    (r'^grappelli/', include('grappelli.urls')), # grappelli URLS
+    # url(r'^grappelli/', include(grappelli_urls)), # grappelli URLS
+    url(r'^ajax_select/', include(ajax_select_urls)),
 
     url(r'^accounts/password/reset/$',
-        'django.contrib.auth.views.password_reset', 
+        auth_views.password_reset,
         {'post_reset_redirect' : '/accounts/password/reset/done/'},
         name='password_reset'),
     url(r'^accounts/password/reset/done/$',
-        'django.contrib.auth.views.password_reset_done',
+        auth_views.password_reset_done,
         name='password_reset_done'),
     url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        'django.contrib.auth.views.password_reset_confirm', 
+        auth_views.password_reset_confirm,
         {'post_reset_redirect' : '/accounts/password/done/'},
         name='password_reset_confirm'),
     url(r'^accounts/password/done/$',
-        'django.contrib.auth.views.password_reset_complete',
+        auth_views.password_reset_complete,
         name='password_reset_complete'),
-    url(r'^registration/', include('registration.backends.default.urls')),
+    url(r'^registration/', include(registration_urls)),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^api-auth/', include('rest_framework.urls',
+    url(r'^api-auth/', include(rest_framework_urls,
                                namespace='rest_framework')),
     url(r'^api/retrieve-token/$',
-        'rest_framework.authtoken.views.obtain_auth_token'),
-    url(r'^api/', include('core.urls')),
-    url(r'^docs/', include('rest_framework_swagger.urls')),
-    (r'^social-accounts/', include('allauth.urls')),
-    url(r'^', include('shieldcommand.urls')),
-
-)
+        obtain_auth_token),
+    url(r'^api/', include(core_urls)), #, namespace='api')),
+    url(r'^docs/', include(rest_framework_swagger_urls)),
+    url(r'^social-accounts/', include(allauth_urls)),
+    url(r'^', include(shieldcommand_urls)),
+]
 
 if settings.DEBUG:
-    urlpatterns += patterns('',
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
+    urlpatterns += [
+        url(r'^media/(?P<path>.*)$', serve, {
             'document_root': settings.MEDIA_ROOT,}),
-)
+]
