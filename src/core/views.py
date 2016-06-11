@@ -124,9 +124,9 @@ def register_user(request):
     serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
         user = RegistrationProfile.objects.create_inactive_user(
-            serialized.data['email'].lower(),
-            serialized.data['username'].lower(),
-            serialized.data['password'],
+            serialized.initial_data['email'].lower(),
+            serialized.initial_data['username'].lower(),
+            serialized.initial_data['password'],
             get_current_site(request),
         )
         user_group = Group.objects.get(name='Users')
@@ -483,19 +483,18 @@ def set_entourage_members(request):
 
         if serializer.is_valid():
 
-            serializer.user = request.user
+            member_to_save = EntourageMember(member)
+            member_to_save.user = request.user
 
             existing = None
 
-            if serializer.phone_number:
-                existing = EntourageMember.objects.filter(user=serializer.user,
-                                                          phone_number=serializer.phone_number)
+            if member_to_save.phone_number:
+                existing = EntourageMember.objects.filter(user=member_to_save.user,
+                                                          phone_number=member_to_save.phone_number)
 
-            if not existing and serializer.email_address:
-                existing = EntourageMember.objects.filter(user=serializer.user,
-                                                          email_address=serializer.email_address)
-
-            member_to_save = serializer
+            if not existing and member_to_save.email_address:
+                existing = EntourageMember.objects.filter(user=member_to_save.user,
+                                                          email_address=member_to_save.email_address)
 
             if existing:
                 member_to_save = existing[0]
