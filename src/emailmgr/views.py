@@ -28,7 +28,7 @@ def email_add(request):
     """
 
     f = forms.EmailField()
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
 
     try:
         f.clean(email)
@@ -65,7 +65,7 @@ def email_make_primary(request):
     email -- (Required) The user's secondary email address
     """
     f = forms.EmailField()
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
 
     try:
         f.clean(email)
@@ -111,7 +111,7 @@ def email_send_activation(request):
     email -- (Required) The user's secondary email address
     """
     f = forms.EmailField()
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
 
     try:
         f.clean(email)
@@ -149,7 +149,7 @@ def email_check_activated(request, email=None):
 
     email -- (Required) The user's secondary email address
     """
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
     if not email:
         email = request.GET.get('email', None)
     f = forms.EmailField()
@@ -217,7 +217,7 @@ def email_delete(request):
     Email needs to be removed from User's account, primary email address cannot be removed
     """
     f = forms.EmailField()
-    email = request.DATA.get('email', None)
+    email = request.data.get('email', None)
 
     try:
         f.clean(email)
