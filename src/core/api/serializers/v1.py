@@ -204,8 +204,9 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  read_only=True,
                                                  view_name='agency-detail')
-    entourage_members = EntourageMemberSerializer(required=False, many=True)
-    distance = serializers.SerializerMethodField('distance_if_exists')
+    entourage_members = EntourageMemberSerializer(required=False,
+                                                  read_only=True,
+                                                  many=True)
 
     class Meta:
         model = User
@@ -213,7 +214,7 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
                   'phone_number', 'disarm_code', 'first_name', 'last_name',
                   'phone_number_verified', 'user_declined_push_notifications',
                   'user_logged_in_via_social', 'entourage_members', 'location_timestamp',
-                  'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level', 'distance')
+                  'latitude', 'longitude', 'accuracy', 'altitude', 'floor_level',)
 
     def to_representation(self, user):
         ret = super(PostUserSerializer, self).to_representation(user)
@@ -233,14 +234,8 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
 
         return ret
 
-    def distance_if_exists(self, obj):
-        if getattr(obj, 'distance', None):
-            return obj.distance.mi
-        return -1
-
 
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = User
@@ -261,7 +256,6 @@ class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSer
 
 
 class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = User
@@ -280,7 +274,6 @@ class UserTrackingEntourageMemberSerializer(serializers.HyperlinkedModelSerializ
 
 
 class UserNoLocationEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
-    distance = serializers.SerializerMethodField('distance_if_exists')
 
     class Meta:
         model = User

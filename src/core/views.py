@@ -124,9 +124,9 @@ def register_user(request):
     serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
         user = RegistrationProfile.objects.create_inactive_user(
-            serialized.init_data['email'].lower(),
-            serialized.init_data['username'].lower(),
-            serialized.init_data['password'],
+            serialized.data['email'].lower(),
+            serialized.data['username'].lower(),
+            serialized.data['password'],
             get_current_site(request),
         )
         user_group = Group.objects.get(name='Users')
