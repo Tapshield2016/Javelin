@@ -397,6 +397,8 @@ class AgencyUser(AbstractBaseUser, PermissionsMixin):
         return "/api/v1/users/%i/" % self.id
 
     def save(self, *args, **kwargs):
+        if not self.last_login:
+            self.last_login = timezone.now()
         if not self.has_usable_password():
             self.set_password(''.join([random.choice(string.ascii_letters + string.digits) for n in xrange(8)]));
         if not self.phone_number_verification_code:
