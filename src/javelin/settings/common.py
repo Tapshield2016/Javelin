@@ -315,3 +315,4 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 SOCIALACCOUNT_ADAPTER = 'core.auth_adapter.SocialAuthAdapter'
+ACCOUNT_ADAPTER =       'core.auth_adapter.MessageFreeAdapter'
