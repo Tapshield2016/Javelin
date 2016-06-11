@@ -127,7 +127,7 @@ class Agency(TimeStampedModel):
     geo = db_models.GeoManager()
 
     class Meta:
-        db_table = 'agency_agency'
+        db_table = 'core_agency'
         ordering = ['name',]
         verbose_name_plural = "Agencies"
 
@@ -202,7 +202,7 @@ class ClosedDate(models.Model):
     end_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'agency_closeddate'
+        db_table = 'core_closeddate'
 
 
 class Period(models.Model):
@@ -226,7 +226,7 @@ class Period(models.Model):
     close = models.TimeField(null=True, blank=True)
 
     class Meta:
-        db_table = 'agency_period'
+        db_table = 'core_period'
         verbose_name = "Period"
         verbose_name_plural = "Opening Hours"
         ordering = ['day']
@@ -253,7 +253,7 @@ class DispatchCenter(models.Model):
     changeform_link.short_description = 'Schedule'   # omit column header
 
     class Meta:
-        db_table = 'agency_dispatchcenter'
+        db_table = 'core_dispatchcenter'
 
 
 class Region(models.Model):
@@ -306,7 +306,7 @@ class Region(models.Model):
         super(Region, self).save(*args, **kwargs)
 
     class Meta:
-        db_table = 'agency_region'
+        db_table = 'core_region'
 
 
 def file_path(self, filename):
@@ -371,7 +371,7 @@ class Theme(models.Model):
     )
 
     class Meta:
-        db_table = 'agency_theme'
+        db_table = 'core_theme'
 
     def __unicode__(self):
         return u'%s' % self.name
