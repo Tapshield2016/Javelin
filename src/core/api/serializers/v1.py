@@ -234,15 +234,6 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
 
         return ret
 
-    # def update(self, instance, validated_data):
-    #     # agency_data = validated_data.pop('agency')
-    #     # Unless the application properly enforces that this field is
-    #     # always set, the follow could raise a `DoesNotExist`, which
-    #     # would need to be handled.
-    #     instance.save()
-    #
-    #     return instance
-
 
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -288,6 +279,11 @@ class UserNoLocationEntourageMemberSerializer(serializers.HyperlinkedModelSerial
         model = User
         fields = ('url', 'username', 'email', 'agency',
                   'phone_number', 'first_name', 'last_name')
+
+
+class InternalUserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = User
 
 
 class UnauthorizedUserSerializer(serializers.HyperlinkedModelSerializer):

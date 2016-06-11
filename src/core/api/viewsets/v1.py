@@ -48,7 +48,8 @@ from core.api.serializers.v1 import (UserSerializer,
                                      PostUserSerializer,
                                      TrackingLocationFullSerializer,
                                      EntourageSessionPostSerializer,
-                                     UserNotificationSerializer
+                                     UserNotificationSerializer,
+                                     InternalUserSerializer
                                      )
 
 from core.aws.dynamodb import DynamoDBManager
@@ -199,6 +200,23 @@ class UserViewSet(viewsets.ModelViewSet):
             qs = User.objects.select_related('agency').prefetch_related('groups', 'entourage_members') \
                 .filter(pk=self.request.user.pk)
         return qs
+
+    def create(self, request, *args, **kwargs):
+        serializer = InternalUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        serializer = PostUserSerializer(instance=serializer.instance)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = InternalUserSerializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        serializer = PostUserSerializer(instance=serializer.instance)
+        return Response(serializer.data)
 
     @detail_route(methods=['post', ])
     def message_entourage(self, request, pk=None):
