@@ -103,12 +103,9 @@ def register_user(request):
         except Agency.DoesNotExist:
             pass
 
-    email = request_data.get('email', None)
-    if email:
-        email = email.lower()
-
-    if 'username' not in request_data:
-        request_data['username'] = email
+    email = request_data.get('email', "").lower()
+    request_data['username'] = email
+    request_data['email'] = email
 
     try:
         existing_user = User.objects.get(email=email)
@@ -124,11 +121,10 @@ def register_user(request):
     serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
         user = RegistrationProfile.objects.create_inactive_user(
-            serialized.initial_data['email'].lower(),
-            serialized.initial_data['username'].lower(),
-            serialized.initial_data['password'],
-            get_current_site(request),
+            site=get_current_site(request),
+            **serialized.validated_data,
         )
+
         user_group = Group.objects.get(name='Users')
         user.groups.add(user_group)
         if agency:
