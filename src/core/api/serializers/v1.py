@@ -202,6 +202,7 @@ class UserLoginSerializer(UserSerializer):
 
 class PostUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
+                                                 read_only=True,
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberSerializer(required=False,
                                                   read_only=True,
@@ -233,14 +234,14 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
 
         return ret
 
-    def update(self, instance, validated_data):
-        # agency_data = validated_data.pop('agency')
-        # Unless the application properly enforces that this field is
-        # always set, the follow could raise a `DoesNotExist`, which
-        # would need to be handled.
-        instance.save()
-
-        return instance
+    # def update(self, instance, validated_data):
+    #     # agency_data = validated_data.pop('agency')
+    #     # Unless the application properly enforces that this field is
+    #     # always set, the follow could raise a `DoesNotExist`, which
+    #     # would need to be handled.
+    #     instance.save()
+    #
+    #     return instance
 
 
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
