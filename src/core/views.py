@@ -478,13 +478,14 @@ def set_entourage_members(request):
 
     for member in request.data:
 
-        member['user'] = UserSerializer(request.user, context={'request': request}).data['url']
+        request_user_url = UserSerializer(request.user, context={'request': request}).data['url']
+        member['user'] = request_user_url
         serializer = EntourageMemberSerializer(data=member, context={'request': request})
 
         if serializer.is_valid():
 
             member_to_save = EntourageMember(member)
-            member_to_save.user = request.user
+            # member_to_save.user = request.user
 
             existing = None
 
@@ -498,7 +499,7 @@ def set_entourage_members(request):
 
             if existing:
                 member_to_save = existing[0]
-                member['user'] = request.user
+                member['user'] = request_user_url
                 member_to_save.__dict__.update(member)
 
             member_to_save.save()
