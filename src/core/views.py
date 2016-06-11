@@ -311,7 +311,7 @@ def dial(request):
     </Dial>
     <Say>Thank you, goodbye!</Say>
 </Response>""" % (from_number, request.GET.get('To', None))
-    return HttpResponse(content, mimetype='text/xml')
+    return HttpResponse(content, content_type='text/xml')
 
 
 def set_necessary_fields_on_social_user(user):
