@@ -72,7 +72,7 @@ class TrackingLocationFullSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
-    locations = TrackingLocationSerializer(required=False, many=True)
+    locations = TrackingLocationSerializer(required=False, many=True, read_only=True)
 
     class Meta:
         model = EntourageSession
@@ -82,7 +82,7 @@ class EntourageSessionSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class EntourageSessionPostSerializer(serializers.HyperlinkedModelSerializer):
-    locations = TrackingLocationSerializer(required=False, many=True)
+    locations = TrackingLocationSerializer(required=False, many=True, read_only=True)
 
     class Meta:
         model = EntourageSession
@@ -109,8 +109,8 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class DispatchCenterSerializer(serializers.HyperlinkedModelSerializer):
-    closed_date = ClosedDateSerializer(required=False, many=True)
-    opening_hours = PeriodSerializer(required=False, many=True)
+    closed_date = ClosedDateSerializer(required=False, many=True, read_only=True)
+    opening_hours = PeriodSerializer(required=False, many=True, read_only=True)
 
     class Meta:
         model = DispatchCenter
@@ -125,9 +125,9 @@ class AgencyListSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class AgencySerializer(serializers.HyperlinkedModelSerializer):
-    distance = serializers.SerializerMethodField('distance_if_exists')
-    dispatch_center = DispatchCenterSerializer(required=False, many=True)
-    region = RegionSerializer(required=False, many=True)
+    distance = serializers.SerializerMethodField('distance_if_exists', read_only=True)
+    dispatch_center = DispatchCenterSerializer(required=False, many=True, read_only=True)
+    region = RegionSerializer(required=False, many=True, read_only=True)
 
     class Meta:
         model = Agency
@@ -154,8 +154,8 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
                                                  read_only=True,
                                                  view_name='agency-detail')
-    entourage_members = EntourageMemberSerializer(required=False, many=True)
-    distance = serializers.SerializerMethodField('distance_if_exists')
+    entourage_members = EntourageMemberSerializer(required=False, many=True, read_only=True)
+    distance = serializers.SerializerMethodField('distance_if_exists', read_only=True)
 
     class Meta:
         model = User
@@ -233,6 +233,15 @@ class PostUserSerializer(serializers.HyperlinkedModelSerializer):
                                                                                                            None)}).data
 
         return ret
+
+    def update(self, instance, validated_data):
+        # agency_data = validated_data.pop('agency')
+        # Unless the application properly enforces that this field is
+        # always set, the follow could raise a `DoesNotExist`, which
+        # would need to be handled.
+        instance.save()
+
+        return instance
 
 
 class UserAlwaysVisibleEntourageMemberSerializer(serializers.HyperlinkedModelSerializer):
