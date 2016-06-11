@@ -120,7 +120,8 @@ def register_user(request):
 
     serialized = UserSerializer(data=request_data, context={'request': request})
     if serialized.is_valid():
-        user = RegistrationProfile.objects.create_inactive_user(get_current_site(request), **request_data)
+        user_data = serialized.validated_data
+        user = RegistrationProfile.objects.create_inactive_user(get_current_site(request), **user_data)
         user_group = Group.objects.get(name='Users')
         user.groups.add(user_group)
         if agency:
