@@ -202,20 +202,20 @@ class UserViewSet(viewsets.ModelViewSet):
         return qs
 
     def create(self, request, *args, **kwargs):
-        serializer = InternalUserSerializer(data=request.data)
+        serializer = InternalUserSerializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        serializer = PostUserSerializer(instance=serializer.instance)
+        serializer = PostUserSerializer(instance=serializer.instance, context={'request': request})
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
-        serializer = InternalUserSerializer(instance, data=request.data, partial=partial)
+        serializer = InternalUserSerializer(instance, data=request.data, partial=partial, context={'request': request})
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        serializer = PostUserSerializer(instance=serializer.instance)
+        serializer = PostUserSerializer(instance=serializer.instance, context={'request': request})
         return Response(serializer.data)
 
     @detail_route(methods=['post', ])
