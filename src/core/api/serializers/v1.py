@@ -202,7 +202,6 @@ class UserLoginSerializer(UserSerializer):
 
 class PostUserSerializer(serializers.HyperlinkedModelSerializer):
     agency = serializers.HyperlinkedRelatedField(required=False,
-                                                 read_only=True,
                                                  view_name='agency-detail')
     entourage_members = EntourageMemberSerializer(required=False,
                                                   read_only=True,
