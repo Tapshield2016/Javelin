@@ -83,10 +83,10 @@ def register_user(request):
     Email addresses are unique identifiers in this system and registration
     will fail if a user has previously registered with the provided address.
 
-    agency -- (Required) Numerical ID of the agency
     username -- (Required) The user's email address
     email -- (Required) The user's email address
     password -- (Required) The user's desired password in plain text
+    agency -- (Optional) Numerical ID of the agency
     phone_number -- (Optional) The user's phone number
     disarm_code -- (Optional) The user's alert disarm code
     first_name -- (Optional) The user's first name
@@ -102,8 +102,10 @@ def register_user(request):
             agency = Agency.objects.get(pk=agency_id)
         except Agency.DoesNotExist:
             pass
-        
+
     email = request_data.get('email', "").lower()
+    if email:
+        request_data['username'] = email
 
     try:
         existing_user = User.objects.get(email=email)
