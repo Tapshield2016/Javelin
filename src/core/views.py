@@ -484,8 +484,8 @@ def set_entourage_members(request):
 
         if serializer.is_valid():
 
-            member_to_save = EntourageMember(member)
-            # member_to_save.user = request.user
+            member_to_save = EntourageMember(**member)
+            member_to_save.user = request.user
 
             existing = None
 
