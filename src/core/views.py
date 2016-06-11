@@ -316,8 +316,9 @@ def dial(request):
 
 def set_necessary_fields_on_social_user(user):
     if not user.email:
-        user.email = user.username
+        user.email = user.username + "@noemail.com"
 
+    user.username = user.email
     user.email_verified = True
     user.user_logged_in_via_social = True
     user_group = Group.objects.get(name='Users')
