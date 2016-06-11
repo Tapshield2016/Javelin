@@ -483,19 +483,19 @@ def set_entourage_members(request):
 
         if serializer.is_valid():
 
-            serializer.instance.user = request.user
+            serializer.user = request.user
 
             existing = None
 
-            if serializer.instance.phone_number:
-                existing = EntourageMember.objects.filter(user=serializer.instance.user,
-                                                          phone_number=serializer.instance.phone_number)
+            if serializer.phone_number:
+                existing = EntourageMember.objects.filter(user=serializer.user,
+                                                          phone_number=serializer.phone_number)
 
-            if not existing and serializer.instance.email_address:
-                existing = EntourageMember.objects.filter(user=serializer.instance.user,
-                                                          email_address=serializer.instance.email_address)
+            if not existing and serializer.email_address:
+                existing = EntourageMember.objects.filter(user=serializer.user,
+                                                          email_address=serializer.email_address)
 
-            member_to_save = serializer.instance
+            member_to_save = serializer
 
             if existing:
                 member_to_save = existing[0]
